@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>All Payment allocations to Drawdowns.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Amount__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Amount of Transaction (negative for payments)</inlineHelpText>
+        <label>Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Before_Temp_Payout_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>Transaction_Date__c &lt;=Temp_Payout_Date__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Indicates this transaction was recorded before the temp payout date and therefore can be included in the rollup. 
+ Used in DLRS for filtering the &quot;*b4 Temp Date&quot; rollups.</inlineHelpText>
+        <label>Before Temp Payout Date</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Drawdown__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Drawdown that this applies to</inlineHelpText>
+        <label>Drawdown</label>
+        <referenceTo>Drawdown__c</referenceTo>
+        <relationshipLabel>Payments Allocated to this Drawdown</relationshipLabel>
+        <relationshipName>Payments_Allocated_to_this_Drawdown</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Accrued_to_Transaction_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Interest Accrued to the date of the Payment</inlineHelpText>
+        <label>Interest Accrued to Transaction Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Interest_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The date interest was accrued to when this Payment Allocation was created.</inlineHelpText>
+        <label>Interest End Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity the parent Drawdown is linked to.   This is required to allow efficient replication down from Opportunity.</inlineHelpText>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Drawdown Payment Allocations</relationshipLabel>
+        <relationshipName>Drawdown_Payment_Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Payment__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Payment associated with this Drawdown</inlineHelpText>
+        <label>Payment</label>
+        <referenceTo>Drawdown__c</referenceTo>
+        <relationshipLabel>Drawdowns Allocated to this Payment</relationshipLabel>
+        <relationshipName>Drawdowns_Allocated_to_this_Payment</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Payout_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The Payout Date replicated down from the Opportunity.  It&apos;s required hear for the DLRS to trigger aggregation.</inlineHelpText>
+        <label>Payout Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Temp_Payout_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The Temp Payout Date replicated down from the Opportunity.  It&apos;s required here to allow the DLRS to aggregate up to Drawdown.</inlineHelpText>
+        <label>Temp Payout Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Transaction_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of Transaction</inlineHelpText>
+        <label>Transaction Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <label>Drawdown Payment Allocation</label>
+    <nameField>
+        <displayFormat>PA-{00000}</displayFormat>
+        <label>Allocation Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Drawdown Payment Allocations</pluralLabel>
+    <searchLayouts>
+        <searchFilterFields>Drawdown__c</searchFilterFields>
+        <searchFilterFields>Payment__c</searchFilterFields>
+        <searchFilterFields>NAME</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Cannot_Change_Payment</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(not(isNew()),isChanged(Payment__c))</errorConditionFormula>
+        <errorMessage>Payment Allocation cannot be moved to a different Payment.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Transaction_Date_Required</fullName>
+        <active>true</active>
+        <description>Just ensuring a basic field is filled.</description>
+        <errorConditionFormula>ISBLANK(Transaction_Date__c)</errorConditionFormula>
+        <errorMessage>Transaction Date is required</errorMessage>
+    </validationRules>
+    <visibility>Public</visibility>
+</CustomObject>
