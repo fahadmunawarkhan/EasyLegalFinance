@@ -1,0 +1,12 @@
+.THIS .slds-modal__container{
+       max-width: 50rem !important;
+       width:100% !important;
+
+}
+.THIS .slds-tabs--default__nav li.NEW{
+     background: red;
+}
+
+.THIS .slds-card{
+    background: #f7f7f7 !important;
+}

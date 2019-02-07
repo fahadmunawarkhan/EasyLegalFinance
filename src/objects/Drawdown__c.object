@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Accrued_Interest_In_Reporting_Period__c</fullName>
+        <externalId>false</externalId>
+        <formula>Accrued_Interest_as_of_To_Date__c -  Accrued_Interest_as_of_From_Date__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Accrued Interest In Reporting Period</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Accrued_Interest_as_of_From_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Accrued interest on the From Date</inlineHelpText>
+        <label>Accrued Interest as of From Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Accrued_Interest_as_of_Payout_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
+IF(  ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),0,(Outstanding_Balance_as_of_Payout_Date__c-Amount_Adjusted_for_Repayments__c)+Interest_up_to_Last_Repayment__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Interest Accrued up to Payout Date</inlineHelpText>
+        <label>Accrued Interest</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Accrued_Interest_as_of_Temp_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
+IF( ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),0,(Outstanding_Balance_as_of_Temp_Date__c-Amount_Adjusted_for_Payments_b4_Temp_Dt__c)+Interest_up_to_Last_Repayment_b4_Temp_Dt__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Interest Accrued up to Temp Payout Date</inlineHelpText>
+        <label>Accrued Interest as of Temp Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Accrued_Interest_as_of_To_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Accrued Interest as of To Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Admin_Accrued_Interest__c</fullName>
+        <externalId>false</externalId>
+        <label>Admin Accrued Interest</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Admin_Fee__c</fullName>
+        <externalId>false</externalId>
+        <label>Admin Fee</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Admin_Outstanding_Balance__c</fullName>
+        <externalId>false</externalId>
+        <label>Admin Outstanding Balance</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Admin_Per_Diem__c</fullName>
+        <externalId>false</externalId>
+        <label>Admin Per Diem</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Allocate_Payment__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check to trigger payment allocation</inlineHelpText>
+        <label>Allocate Payment</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Amount_Adjusted_for_Payments_b4_Temp_Dt__c</fullName>
+        <externalId>false</externalId>
+        <formula>(Amount__c - Sum_of_Repayments_b4_Temp_Date__c )+ Interest_up_to_Last_Repayment_b4_Temp_Dt__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Calculated Balance after last repayment made before Temp Date.
+This field will be used for calc of outstanding balance.</inlineHelpText>
+        <label>Amount Adjusted for Payments b4 Temp Dt</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Amount_Adjusted_for_Repayments__c</fullName>
+        <externalId>false</externalId>
+        <formula>(Amount__c -  Sum_of_Repayments__c )+ Interest_up_to_Last_Repayment__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Calculated Balance after last repayment.  This field will be used for calculating outstanding balance.</inlineHelpText>
+        <label>Amount Adjusted for Repayments</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Amount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <externalId>false</externalId>
+        <label>Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Balance_Change_In_Reporting_Period__c</fullName>
+        <externalId>false</externalId>
+        <formula>Outstanding_Balance_as_of_To_Date__c -  Outstanding_Balance_as_of_From_Date__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Balance Change In Reporting Period</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>CHQ__c</fullName>
+        <externalId>false</externalId>
+        <label>CHQ #</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Compounding_Frequency__c</fullName>
+        <description>The Opportunity__r.Interest_Compounding_Period__c replicated down to the Drawdown to avoid hitting limits in formula calculations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of times per year that interest compounds.   Expressed as an integer.   For Daily interest this value will be adjusted to either 365 or 366 depending on the interest start date.</inlineHelpText>
+        <label>Compounding Frequency</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Compounding_Interest__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>The opportunity__r.compounding_Interest__c field has been replicated here to avoid exceeding cross object formula lmits.   Field was transformed to a checkbox to simplify usage in formulas as well.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates if loan interest is compounding or simple.</inlineHelpText>
+        <label>Compounding Interest</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Date__c</fullName>
+        <defaultValue>Today()</defaultValue>
+        <externalId>false</externalId>
+        <label>Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Date_of_Last_Repayment__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of last repayment applied to this Drawdown.   This field is a roll up summary (DLRS) of the Payment Allocations and should not be updated directly.</inlineHelpText>
+        <label>Date of Last Repayment</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Date_of_Last_Repayment_b4_Temp_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of last repayment applied to this Drawdown before the the Temp date.   This field is a roll-up summary (DLRS) and should not be directly updated.</inlineHelpText>
+        <label>Date of Last Repayment b4 Temp Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Drop_Down_No__c</fullName>
+        <externalId>false</externalId>
+        <label>Drop Down No</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EFT__c</fullName>
+        <externalId>false</externalId>
+        <label>EFT #</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Include_in_Portfolio_Reports__c</fullName>
+        <externalId>false</externalId>
+        <formula>OR( Accrued_Interest_In_Reporting_Period__c &gt; 0,
+     Outstanding_Balance_as_of_To_Date__c &gt; 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Used for Portfolio Reports - If anything interest is Accrued in the reporting period or there&apos;s a balance outstanding, include the Drawdown in the report.</inlineHelpText>
+        <label>Include in Portfolio Reports</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Accrual_Days_Pymt_to_Temp_Dt__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF((Interest_End_Date_Temp_Date__c-Interest_Start_Date_Temp_Date__c)&lt;0,0,(Interest_End_Date_Temp_Date__c-Interest_Start_Date_Temp_Date__c)+1)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Days between Interest Start and End on which interest accrues. This has been adjusted for prior payments, minimum interest duration, and deferred interest.</inlineHelpText>
+        <label>Interest Accrual (Days) Pymt to Temp Dt</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Interest_Accrual_Days__c</fullName>
+        <externalId>false</externalId>
+        <formula>(IF((Interest_End_Date__c-Interest_Start_Date__c)&lt;0,0,(Interest_End_Date__c-Interest_Start_Date__c)+1))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Days between Interest Start and End on which interest accrues.  This has been adjusted for prior payments, minimum interest duration, and deferred interest.</inlineHelpText>
+        <label>Interest Accrual (Days)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Interest_Accrual_Years_Pymt_to_Temp_Dt__c</fullName>
+        <externalId>false</externalId>
+        <formula>Interest_Accrual_Days_Pymt_to_Temp_Dt__c/365</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Fraction of a year(s) on which interest is based. Calculation is based on a 365 day year and will therefore be slightly low for leap years (field is calculated from Interest Accrual (Days) / 365).</inlineHelpText>
+        <label>Interest Accrual (Years) Pymt to Temp Dt</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Interest_Accrual_Years__c</fullName>
+        <externalId>false</externalId>
+        <formula>Interest_Accrual_Days__c/365</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Fraction of a year(s) on which interest is based.   Calculation is based on a 365 day year and will therefore be slightly low for leap years (field is calculated from Interest Accrual (Days) / 365).</inlineHelpText>
+        <label>Interest Accrual (Years)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>5</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Interest_Deferral_Period__c</fullName>
+        <description>The Interest Deferral Period from the Opportunity, replicated here to avoid cross object formula size limitations.  Also converted to an number from a picklist value so it&apos;s readily usable in formulas.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The months to defer interest on this Drawdown.</inlineHelpText>
+        <label>Interest Deferral Period</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Interest_End_Date_Temp_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF( Temp_Payout_Date__c &gt;ADDMONTHS(Date__c,Minimum_Interest_Period__c),Temp_Payout_Date__c,ADDMONTHS(Date__c,Minimum_Interest_Period__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Date Interest will be calculated TO. Date is adjusted for minimum interest period.</inlineHelpText>
+        <label>Interest End Date - Temp Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_End_Date__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(Payout_Date__c&gt;ADDMONTHS(Date__c,Minimum_Interest_Period__c),Payout_Date__c,ADDMONTHS(Date__c,Minimum_Interest_Period__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Date Interest will be calculated TO.   Date is adjusted for minimum interest period.</inlineHelpText>
+        <label>Interest End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_End_Date_at_Last_Repayment__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The date the interest had accrued to when last payment was recorded.    As this is a DLRS roll up summary, do no update directly.  Instead, update Payments.</inlineHelpText>
+        <label>Interest End Date at Last Repayment</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_End_Date_at_Last_Rpymnt_b4_Temp__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The date the interest had accrued to when last payment was recorded (last payment before Temp date).    As this is a DLRS roll up summary, do no update directly.  Instead, update Payments.</inlineHelpText>
+        <label>Interest End Date at Last Rpymnt b4 Temp</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Rate__c</fullName>
+        <description>The interest rate pulled down from the Opportunity.  Duplicated here to allow formulas to access without exceeding limits.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Loan Interest Rate</inlineHelpText>
+        <label>Interest Rate</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>3</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Start_Date_Temp_Date__c</fullName>
+        <description>NOTE: Adding one to the repayment date so we don&apos;t double count interest on the date of repayment.</description>
+        <externalId>false</externalId>
+        <formula>IF(not(isblank(Date_of_Last_Repayment_b4_Temp_Date__c)), Interest_End_Date_at_Last_Rpymnt_b4_Temp__c+ 1,
+   IF(Interest_Deferral_Period__c&gt;0, ADDMONTHS(Date__c,Interest_Deferral_Period__c),
+      Date__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Start date of interest accrual adjusted for the minimum interest period and for interest already accounted for in prior periods.</inlineHelpText>
+        <label>Interest Start Date - Temp Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_Start_Date__c</fullName>
+        <description>NOTE: Adding one to the repayment date so we don&apos;t double count interest on the date of repayment.</description>
+        <externalId>false</externalId>
+        <formula>IF(not(isblank(Date_of_Last_Repayment__c)), Interest_End_Date_at_Last_Repayment__c + 1,
+ IF(Interest_Deferral_Period__c&gt;0, ADDMONTHS(Date__c,Interest_Deferral_Period__c),
+    Date__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Start date of interest accrual adjusted for the minimum interest period and for interest already accounted for in prior periods.</inlineHelpText>
+        <label>Interest Start Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Interest_up_to_Last_Repayment__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Sum of all Interest Accrued up to the point of last repayment.   Used to calculate Outstanding Balance as Interest Accrued before Payment cannot be re-calculated dynamically.   This is a roll-up summary field (DLRS) and should not be updated directly.</inlineHelpText>
+        <label>Interest up to Last Repayment</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Interest_up_to_Last_Repayment_b4_Temp_Dt__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Sum of all Interest Accrued up to the point of last repayment but before Temp Date. This is a roll-up summary field (DLRS) and should not be updated directly.</inlineHelpText>
+        <label>Interest up to Last Repayment b4 Temp Dt</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Minimum_Interest_Period__c</fullName>
+        <description>The minimum Interest period from the Opportunity.   Replicated here to avoid exceeding cross object formula limitations.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of months of interest which must be charged at a minimum.</inlineHelpText>
+        <label>Minimum Interest Period</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Display_Name__c</fullName>
+        <description>Needed a non hyperlinked form so it exported cleanly inreports</description>
+        <externalId>false</externalId>
+        <formula>Opportunity__r.Name &amp;&quot; - &quot;&amp; TEXT(Opportunity__r.Loan_Requests__c) &amp; &quot; - &quot;&amp; TEXT(Opportunity__r.Loan_Type__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Opportunity Name</inlineHelpText>
+        <label>Opportunity</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Service_Provider__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Opportunity Service Provider</label>
+        <referenceTo>Opportunity_Service_Provider__c</referenceTo>
+        <relationshipLabel>Drawdowns</relationshipLabel>
+        <relationshipName>Drawdowns</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Opportunity_Status__c</fullName>
+        <externalId>false</externalId>
+        <formula>If (NOT(IsPickVal(Opportunity__r.StageName,&apos;Closed With Loan&apos;)),&apos;Inactive&apos;,
+     If (ISBLANK(TEXT(Opportunity__r.Stage_Status__c)),&apos;Active&apos;,
+         If (IsPickVal(Opportunity__r.Stage_Status__c,&apos;Partial Payment&apos;),&apos;Partial Payment&apos;,
+             If (IsPickVal(Opportunity__r.Stage_Status__c,&apos;Payments Halted&apos;),&apos;Payments Halted&apos;,&apos;Inactive&apos;))))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Opportunity states summarizing those still accruing interest.   Used for ELFI 2 report.</inlineHelpText>
+        <label>Opportunity Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Opportunity__c</fullName>
+        <externalId>false</externalId>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Drawdowns</relationshipLabel>
+        <relationshipName>Drawdowns</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Outstanding_Balance_as_of_From_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Outstanding balance on the From date</inlineHelpText>
+        <label>Outstanding Balance as of From Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Outstanding_Balance_as_of_Payout_Date__c</fullName>
+        <description>NOTE: Used EXP and LN as the normal exponent function does not handle fractional numbers:  See: https://developer.salesforce.com/forums/?id=906F00000008vDHIAY</description>
+        <externalId>false</externalId>
+        <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
+IF(  ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),Sum_of_Payment_Allocations__c - Amount__c,
+IF(Compounding_Interest__c,(Amount_Adjusted_for_Repayments__c*(EXP(LN(1 + (Interest_Rate__c/Compounding_Frequency__c))*   
+(Compounding_Frequency__c*Interest_Accrual_Years__c)))),Amount_Adjusted_for_Repayments__c*(1+((Interest_Rate__c/365)* Interest_Accrual_Days__c)))))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Outstanding Balance as it will be at the Payout Date.  This Accounts for compounding interest or Simple Interest depending on the Loan.  This is set to zero when Drawdown is Payment.   For Payments, negative amounts represent unallocated payment amounts.</inlineHelpText>
+        <label>Outstanding Balance</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Outstanding_Balance_as_of_Temp_Date__c</fullName>
+        <description>NOTE: Used EXP and LN as the normal exponent function does not handle fractional numbers: See: https://developer.salesforce.com/forums/?id=906F00000008vDHIAY</description>
+        <externalId>false</externalId>
+        <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
+IF( ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),Sum_of_Payment_Allocations__c - Amount__c, 
+IF(Compounding_Interest__c,(Amount_Adjusted_for_Payments_b4_Temp_Dt__c*(EXP(LN(1 + (Interest_Rate__c/Compounding_Frequency__c))* 
+(Compounding_Frequency__c*Interest_Accrual_Years_Pymt_to_Temp_Dt__c)))),Amount_Adjusted_for_Payments_b4_Temp_Dt__c*(1+((Interest_Rate__c/365)* Interest_Accrual_Days_Pymt_to_Temp_Dt__c)))))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Outstanding Balance as it will be at the Temp Payout Date. This Accounts for compounding interest or Simple Interest depending on the Loan. This is set to zero when Drawdown is Payment.  For Payments this contains the unallocated payment amount.</inlineHelpText>
+        <label>Outstanding Balance as of Temp Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Outstanding_Balance_as_of_To_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Balance on To Date</inlineHelpText>
+        <label>Outstanding Balance as of To Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Method__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Method</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Admin Fee</fullName>
+                    <default>false</default>
+                    <label>Admin Fee</label>
+                </value>
+                <value>
+                    <fullName>Cheque</fullName>
+                    <default>false</default>
+                    <label>Cheque</label>
+                </value>
+                <value>
+                    <fullName>e-Transfer</fullName>
+                    <default>false</default>
+                    <label>e-Transfer</label>
+                </value>
+                <value>
+                    <fullName>Other</fullName>
+                    <default>false</default>
+                    <label>Other</label>
+                </value>
+                <value>
+                    <fullName>Payment</fullName>
+                    <default>false</default>
+                    <label>Payment</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Payout_Date__c</fullName>
+        <description>The Payout Date pulled down from the Opportunity to work around calculated field length limitations.  Do not update directly here, update on Opportunity instead and let it replicate down.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Expected or Actual Payout Date of the Drawdown.  Do not update directly here, update on Opportunity instead and let it replicate down to here.</inlineHelpText>
+        <label>Payout Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Per_Diem_as_of_Payout_Date__c</fullName>
+        <description>o	The daily interest rate (using a 365 base) on the total outstanding balance (Principle + Interest) at the payout date.   The Per Diem will be adjusted to zero in two scenarios:
+1.	When the payout date is less than the minimum interest date.  In this situation, the interest accrued to 6 months is already included in the payout and therefore charging Per Diem would be double charging.  
+2.	When the payout date is still within the interest deferral period.</description>
+        <externalId>false</externalId>
+        <formula>If(
+    OR((Payout_Date__c&lt;(ADDMONTHS(Date__c,Interest_Deferral_Period__c))),
+       (Payout_Date__c&lt;(ADDMONTHS(Date__c,Minimum_Interest_Period__c))),
+	    ISPICKVAL(Payment_Method__c , &quot;Payment&quot;))   
+    ,0,
+	(Interest_Rate__c/365)*Outstanding_Balance_as_of_Payout_Date__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>The daily interest rate on the total outstanding balance at the payout date. The Per Diem will be adjusted to zero when the payout date is less than the minimum interest date and when payout date is within the interest deferral period.</inlineHelpText>
+        <label>Per Diem</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Reference_Notes__c</fullName>
+        <externalId>false</externalId>
+        <label>Reference Notes</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <controllingField>Payment_Method__c</controllingField>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Admin Fee</fullName>
+                    <default>false</default>
+                    <label>Admin Fee</label>
+                </value>
+                <value>
+                    <fullName>Admin Fee charged up front</fullName>
+                    <default>false</default>
+                    <label>Admin Fee charged up front</label>
+                </value>
+                <value>
+                    <fullName>Bad Debt</fullName>
+                    <default>false</default>
+                    <label>Bad Debt</label>
+                </value>
+                <value>
+                    <fullName>EFT Reject</fullName>
+                    <default>false</default>
+                    <label>EFT Reject</label>
+                </value>
+                <value>
+                    <fullName>EFT Reprocessed</fullName>
+                    <default>false</default>
+                    <label>EFT Reprocessed</label>
+                </value>
+                <value>
+                    <fullName>EFT to Client</fullName>
+                    <default>false</default>
+                    <label>EFT to Client</label>
+                </value>
+                <value>
+                    <fullName>Fee</fullName>
+                    <default>false</default>
+                    <label>Fee</label>
+                </value>
+                <value>
+                    <fullName>Loan Payout</fullName>
+                    <default>false</default>
+                    <label>Loan Payout</label>
+                </value>
+                <value>
+                    <fullName>Other Fee</fullName>
+                    <default>false</default>
+                    <label>Other Fee</label>
+                </value>
+                <value>
+                    <fullName>Partial Payment</fullName>
+                    <default>false</default>
+                    <label>Partial Payment</label>
+                </value>
+                <value>
+                    <fullName>Payment Rejected</fullName>
+                    <default>false</default>
+                    <label>Payment Rejected</label>
+                </value>
+                <value>
+                    <fullName>Payment Re-processed</fullName>
+                    <default>false</default>
+                    <label>Payment Re-processed</label>
+                </value>
+                <value>
+                    <fullName>Payment Shortfall</fullName>
+                    <default>false</default>
+                    <label>Payment Shortfall</label>
+                </value>
+                <value>
+                    <fullName>Payment Surplus</fullName>
+                    <default>false</default>
+                    <label>Payment Surplus</label>
+                </value>
+                <value>
+                    <fullName>Payment to Client</fullName>
+                    <default>false</default>
+                    <label>Payment to Client</label>
+                </value>
+                <value>
+                    <fullName>Payment to Lawyer</fullName>
+                    <default>false</default>
+                    <label>Payment to Lawyer</label>
+                </value>
+                <value>
+                    <fullName>Payment to other lender</fullName>
+                    <default>false</default>
+                    <label>Payment to other lender</label>
+                </value>
+                <value>
+                    <fullName>Payment to Third-Party</fullName>
+                    <default>false</default>
+                    <label>Payment to Third-Party</label>
+                </value>
+                <value>
+                    <fullName>Payment to Treatment - Service Provider</fullName>
+                    <default>false</default>
+                    <label>Payment to Treatment - Service Provider</label>
+                </value>
+                <value>
+                    <fullName>Referral Fee</fullName>
+                    <default>false</default>
+                    <label>Referral Fee</label>
+                </value>
+                <value>
+                    <fullName>Waived Fee</fullName>
+                    <default>false</default>
+                    <label>Waived Fee</label>
+                </value>
+                <value>
+                    <fullName>Miscellaneous Payment</fullName>
+                    <default>false</default>
+                    <label>Miscellaneous Payment</label>
+                </value>
+            </valueSetDefinition>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Other</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Admin Fee</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Other Fee</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment Rejected</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment Re-processed</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment to Client</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment to Lawyer</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment to other lender</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment to Third-Party</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Payment to Treatment - Service Provider</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Cheque</controllingFieldValue>
+                <controllingFieldValue>e-Transfer</controllingFieldValue>
+                <controllingFieldValue>Admin Fee</controllingFieldValue>
+                <valueName>Waived Fee</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Other</controllingFieldValue>
+                <valueName>Referral Fee</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Bad Debt</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Loan Payout</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Partial Payment</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Payment Shortfall</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Payment Surplus</valueName>
+            </valueSettings>
+            <valueSettings>
+                <controllingFieldValue>Payment</controllingFieldValue>
+                <valueName>Miscellaneous Payment</valueName>
+            </valueSettings>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Reporting_Days_Outstanding__c</fullName>
+        <externalId>false</externalId>
+        <formula>(Reporting_To_Date__c - Date__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Days Outstanding  at the end of the reporting period.    On ELFI 2 just shortened to &quot;Days Outstanding&quot;</inlineHelpText>
+        <label>Reporting Days Outstanding</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Reporting_From_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Start date of reporting information</inlineHelpText>
+        <label>Reporting From Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Reporting_To_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>End date of reporting information</inlineHelpText>
+        <label>Reporting To Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Service_Provider_Allowed_Balance__c</fullName>
+        <externalId>false</externalId>
+        <formula>Opportunity_Service_Provider__r.Allowance_Balance__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Service Provider Allowed Balance</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sum_of_Payment_Allocations__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Only applies to Payments. Sum of payment allocations which allocate the funds on this payment.</inlineHelpText>
+        <label>Sum of Payment Allocations</label>
+        <summarizedField>Drawdown_Payment_Allocation__c.Amount__c</summarizedField>
+        <summaryForeignKey>Drawdown_Payment_Allocation__c.Payment__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Sum_of_Repayments__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Sum of payments applied to this Drawdown</inlineHelpText>
+        <label>Sum of Repayments</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Sum_of_Repayments_b4_Temp_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of last repayment applied to this Drawdown before the Temp date.  This field is a roll up summary (DLRS) from Payment Allocations and should not be updated directly.</inlineHelpText>
+        <label>Sum of Repayments b4 Temp Date</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Temp_Payout_Date__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Used to calculate outstanding balance and date as of a scratch date.  This field should not be updated directly on the Drawdown, instead update from Opportunity and let it replicate down.  Used for Payment Allocation and Reporting From/To amount calc.</inlineHelpText>
+        <label>Temp Payout Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Total_Accrued_Interest__c</fullName>
+        <externalId>false</externalId>
+        <formula>Accrued_Interest_as_of_Payout_Date__c  +   NULLVALUE( Admin_Accrued_Interest__c , 0.0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Accrued Interest</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Amount__c</fullName>
+        <externalId>false</externalId>
+        <formula>NULLVALUE( Amount__c , 0 ) +  NULLVALUE( Admin_Fee__c , 0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Outstanding_Balance__c</fullName>
+        <externalId>false</externalId>
+        <formula>Outstanding_Balance_as_of_Payout_Date__c  +  NULLVALUE( Admin_Outstanding_Balance__c , 0.0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Outstanding Balance</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Per_Diem__c</fullName>
+        <externalId>false</externalId>
+        <formula>Per_Diem_as_of_Payout_Date__c  + NULLVALUE(  Admin_Per_Diem__c , 0.0)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Per Diem</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Lump-Sum Admin Fee</fullName>
+                    <default>false</default>
+                    <label>Lump-Sum Admin Fee</label>
+                </value>
+                <value>
+                    <fullName>Lump-Sum Amount Paid to Borrower</fullName>
+                    <default>false</default>
+                    <label>Lump-Sum Amount Paid to Borrower</label>
+                </value>
+                <value>
+                    <fullName>Facility Drawdown</fullName>
+                    <default>true</default>
+                    <label>Facility Drawdown</label>
+                </value>
+                <value>
+                    <fullName>Treatment Loan</fullName>
+                    <default>false</default>
+                    <label>Treatment Loan</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Drawdown</label>
+    <listViews>
+        <fullName>All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>D-{00000000}</displayFormat>
+        <label>Drawdown</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Drawdowns</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>Cannot_Allocate_Payments</fullName>
+        <active>true</active>
+        <description>Can only trigger Payment allocation on Payment type Drowdowns and when outstanding balance is less than zero.</description>
+        <errorConditionFormula>AND ( Allocate_Payment__c,
+      OR( Outstanding_Balance_as_of_Payout_Date__c &gt;0 ,
+          NOT(ispickval( Payment_Method__c , &quot;Payment&quot;))))</errorConditionFormula>
+        <errorDisplayField>Allocate_Payment__c</errorDisplayField>
+        <errorMessage>Can only trigger Payment allocation on Payment type Drowdowns and when outstanding balance is less than zero.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Cannot_Change_Key_Fields_after_Paid_Out</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( NOT(ISBLANK(Date_of_Last_Repayment__c )),
+     OR(
+        IsChanged(Amount__c),
+        IsChanged(Date__c),
+		IsPickval(Payment_Method__c,&quot;Payment&quot;),
+		IsPickval(Reference_Notes__c,&quot;Payment Rejected&quot;),
+		IsPickval(Reference_Notes__c,&quot;Payment Re-processed&quot;)))</errorConditionFormula>
+        <errorMessage>Cannot change the Amount, Date, Payment Method, or Reference Notes after payments are allocated.  Remove payment first.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Cannot_create_drawdown_wo_loan_set_up</fullName>
+        <active>true</active>
+        <description>Prevent users from creating drawdown records before the loan set up section in the opportunity is populated.</description>
+        <errorConditionFormula>AND( 
+    ISNEW(), 
+    OR( 
+        AND(
+            ISPICKVAL(Opportunity__r.Minimum_Interest_Period__c, &apos;&apos;), 
+            NOT(OR(IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&apos;0&apos;), 
+                   IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&apos;&apos;)))
+            ),
+        ISBLANK( Opportunity__r.Interest_Rate__c), 
+		ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&apos;&apos;),
+		AND(
+            ISPICKVAL(Opportunity__r.Compounding_Interest__c, &apos;&apos;),
+			ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&apos;Compounding Interest&apos;)
+           )
+		) 
+    )</errorConditionFormula>
+        <errorMessage>You cannot create drawdowns before populating the loan set up.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Payment_Rejected_Needs_to_be_Negative</fullName>
+        <active>true</active>
+        <description>Payment Rejected needs a negative amount, please fix and try again.</description>
+        <errorConditionFormula>AND(
+ISPICKVAL(Reference_Notes__c, &apos;Payment Rejected&apos;),
+Amount__c &gt; 0
+)</errorConditionFormula>
+        <errorMessage>Payment Rejected needs a negative amount, please fix and try again.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>SPD_Total_Balance_Check</fullName>
+        <active>true</active>
+        <description>Total Drawdowns cannot be greater than Service Provider allowance</description>
+        <errorConditionFormula>AND(
+NOT(ISBLANK(Opportunity_Service_Provider__c)),
+ISCHANGED(Amount__c),
+Amount__c &gt; Service_Provider_Allowed_Balance__c,
+NOT( ISPICKVAL( Payment_Method__c , &apos;Payment&apos;) )
+)</errorConditionFormula>
+        <errorMessage>This Service Provider Drawdown record cannot be saved as it will exceed the Service Provider Allowance.</errorMessage>
+    </validationRules>
+    <visibility>Public</visibility>
+</CustomObject>

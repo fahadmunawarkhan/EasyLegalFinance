@@ -1,0 +1,13 @@
+<project default="test" basedir="." xmlns:sf="antlib:com.salesforce">
+
+    <property file="build.properties" />
+    <property environment="env" />
+
+    <target name="deploy">
+        <sf:deploy username="${username}" password="${password}" serverurl="${serverurl}" deployRoot="src" />
+    </target>
+
+    <target name="validate">
+        <sf:deploy username="${username}" password="${password}" serverurl="${serverurl}" deployRoot="src" checkOnly="true"  />
+    </target>
+</project>
