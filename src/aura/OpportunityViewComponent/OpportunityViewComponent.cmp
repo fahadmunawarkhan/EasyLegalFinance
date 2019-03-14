@@ -5,6 +5,7 @@
     <aura:attribute name="recordId" type="String" /> 
     <aura:attribute name="oppObj" type="Opportunity" default="{ 'sobjectType': 'Opportunity' }"/> 
     <aura:attribute name="drawDownList" type="Drawdown__c[]"/>
+    <!--<aura:attribute name="criticalDateList" type="Critical_Date__c[]" />-->
     <aura:attribute name="contactHistory" type="Contact_History__c" default="{ 'sobjectType': 'Contact_History__c' }"/>
     <aura:attribute name="serviceProviderList" type="Opportunity_Service_Provider__c[]"/>
     <aura:attribute name="selectedLookUpServiceProvider" type="Opportunity_Service_Provider__c"/>    
@@ -37,7 +38,9 @@
     
     <!-- FETCHING PICKLIST VALUES -->   
     <aura:attribute name="refNotesOptions" type="List" default="[]"/>
-    <aura:attribute name="paymentMethod" type="List" default="[]"/>   
+    <aura:attribute name="paymentMethod" type="List" default="[]"/>
+    
+    <!--<aura:attribute name="criticalDateName" type="List" default="[]"/>-->
     
     <aura:attribute name="providerRefNotesOptions" type="List" default="[]"/>
     <aura:attribute name="providerPaymentMethod" type="List" default="[]"/>   
@@ -283,7 +286,7 @@
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Funding Requested</span>
                             <div class="slds-form-element__control">
                                 <span class=""> 
-                                    <lightning:input tabindex="6" type="Number" formatter="currency" class="field" value="{!v.oppObj.Funding_Requested__c}"/>
+                                    <lightning:input tabindex="6" type="Number" formatter="currency" class="field" value="{!v.oppObj.Funding_Requested__c}" step="0.01"/>
                                 </span>
                             </div>
                         </div>
@@ -363,97 +366,117 @@
                 </lightning:layout>
                 <lightning:layout class="slds-m-left_xx-large">
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <!--
-         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Name of Court / File #:</span>
-                            <div class="slds-form-element__control"><span class=""> <ui:inputText class="field" value="{!v.oppObj.Name_of_Court_File__c}" disabled="true" /></span></div>
-                        </div>
-     -->
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Amount</span>
-                            <div class="slds-form-element__control"><span class=""> <lightning:input type="Number" formatter="currency" step="0.01" tabindex="17" class="field" value="{!v.oppObj.Pre_Existing_Loan_Amount__c}"/></span></div>
-                        </div>
-                    </lightning:layoutItem>                     
-                </lightning:layout>  
-                <lightning:layout class="slds-m-left_xx-large">
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control"><span class=""> </span></div>
-                        </div>
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Name of Lender</span>
-                            <div class="slds-form-element__control"><span class=""> <lightning:input type="Text" variant="label-hidden" tabindex="18" class="field" value="{!v.oppObj.Name_of_Lender__c}"/></span></div>
-                        </div>
-                    </lightning:layoutItem>                     
-                </lightning:layout>    
-                <lightning:layout class="slds-m-left_xx-large">
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control"><span class=""></span></div>
-                        </div>
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Payout Statements on File</span>
-                            <div class="slds-form-element__control">
-                                <span class="slds-form-element__static" tabindex="19" >
-                                    <!-- <lightning:combobox name="PayoutStatements" value="{!v.oppObj.Payout_Statements_on_File__c}" placeholder="None" options="{! v.payoutStatementOptions }" />  -->
-                                    <ui:inputCheckbox value="{!v.oppObj.Payout_Statements_on_File__c}" /> 
-                                </span>
-                            </div>
-                        </div>
-                    </lightning:layoutItem>                     
-                </lightning:layout>  
-                <lightning:layout class="slds-m-left_xx-large">
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control"><span class=""> </span></div>
-                        </div>
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                            <div class="slds-form-element__control">
-                                <span class=""> 
-                                    <lightning:input label="Date Payout Valid Until" tabindex="20" type="date" value="{!v.oppObj.Date_Payout_Valid_Until__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" />
-                                </span>
+                            <!--<div class="date-in-table">
+                                <lightning:card title="Critical Dates" iconName="standard:case" variant="base" >
+                                    <aura:set attribute="actions">                                
+                                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewCriticalDate}" />
+                                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveCriticalDates}" />
+                                    </aura:set>
+                                    <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                                        <thead>
+                                            <tr class="slds-text-title_caps">
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:45%">
+                                                    <div class="slds-truncate" title="Name">Name</div>
+                                                </th>
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:45%">
+                                                    <div class="slds-truncate" title="Date">Date</div>
+                                                </th>
+                                                <th style="width:10%" ></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <aura:iteration items="{!v.criticalDateList}" var="item" indexVar="i">
+                                                <tr class="slds-hint-parent">                                                    
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" >
+                                                        
+                                                        <div style="margin-top:-20px;">
+                                                            <lightning:select name="controllerFld"
+                                                                              value="{!item.Name__c}" >
+                                                                <aura:iteration items="{!v.criticalDateName}" var="val">
+                                                                    <option value="{!val.value}" selected="{!val.value == item.Name__c}">{!val.label}</option>
+                                                                </aura:iteration>
+                                                            </lightning:select>
+                                                        </div>
+                                                        <span data-index="{!i}"></span>
+                                                    </td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                        <lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" />
+                                                    </td>
+                                                    <td class="">                            
+                                                        <form class="criticalDate-form" onsubmit="{!c.deleteCriticalDateItem}">
+                                                            <input type="hidden" value="{!i}" class="criticalDate-item-index"/>
+                                                            <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.deleteCriticalDateItem}" alternativeText="Delete" />
+                                                        </form>                                 
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>                                    
+                                        </tbody>
+                                    </table>
+                                </lightning:card>
+                            </div>-->
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                    <div class="slds-form-element__control"><span class=""> <lightning:input type="Number" formatter="currency" step="0.01" tabindex="17" class="field" label="Amount" value="{!v.oppObj.Pre_Existing_Loan_Amount__c}"/></span></div>
+                                </div>
                             </div>
                         </div>
-                    </lightning:layoutItem>                     
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Name of Lender</span>
+                                    <div class="slds-form-element__control"><span class=""> <lightning:input type="Text" variant="label-hidden" tabindex="18" class="field" value="{!v.oppObj.Name_of_Lender__c}"/></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Payout Statements on File</span>
+                                    <div class="slds-form-element__control">
+                                        <span class="slds-form-element__static" tabindex="19" >
+                                            <!-- <lightning:combobox name="PayoutStatements" value="{!v.oppObj.Payout_Statements_on_File__c}" placeholder="None" options="{! v.payoutStatementOptions }" />  -->
+                                            <ui:inputCheckbox value="{!v.oppObj.Payout_Statements_on_File__c}" /> 
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class=""> 
+                                            <lightning:input label="Date Payout Valid Until" tabindex="20" type="date" value="{!v.oppObj.Date_Payout_Valid_Until__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class=""> 
+                                            <lightning:input label="Date Loan Paid Out" tabindex="21" type="date" value="{!v.oppObj.Date_Loan_Paid_Out__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col">
+                            	<div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
+                                    <div class="slds-form-element__control"><span class=""> </span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </lightning:layoutItem> 
+                    
                 </lightning:layout>
-                <lightning:layout class="slds-m-left_xx-large">
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control"><span class=""> </span></div>
-                        </div>
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                            <div class="slds-form-element__control">
-                                <span class=""> 
-                                    <lightning:input label="Date Loan Paid Out" tabindex="21" type="date" value="{!v.oppObj.Date_Loan_Paid_Out__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" />
-                                </span>
-                            </div>
-                        </div>
-                    </lightning:layoutItem>                     
-                </lightning:layout>
-                <lightning:layout class="slds-m-left_xx-large">
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                            <span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control">
-                                <span class=""></span>
-                            </div>
-                        </div>
-                    </lightning:layoutItem>  
-                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                            <span class="slds-form-element__label"></span>
-                            <div class="slds-form-element__control">
-                                <span class=""></span>
-                            </div>
-                        </div>
-                    </lightning:layoutItem>                     
-                </lightning:layout>                
+                             
             </div>
         </lightning:card>    
         <div class="slds-grid slds-wrap " style="height: 100%;">
@@ -466,8 +489,8 @@
                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                     <span class="slds-form-element__label">Principle Sum</span>
                                     <div class="slds-form-element__control">
-                                        <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="22" value="{!v.oppObj.Amount}"/>
+                                        <span class="">                                            
+                                            <lightning:input type="Number" formatter="currency" tabindex="22" value="{!v.oppObj.Amount}" step="0.01" />
                                         </span>
                                     </div>
                                 </div>
@@ -479,7 +502,7 @@
                                     <span class="slds-form-element__label">Admin Fee</span>
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="23" value="{!v.oppObj.Admin_Fee__c}"/>
+                                            <lightning:input type="Number" formatter="currency" tabindex="23" value="{!v.oppObj.Admin_Fee__c}" step="0.01" />
                                         </span>
                                     </div>
                                 </div>
@@ -494,7 +517,7 @@
                                     </span>
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="24" value="{!v.oppObj.First_Drawdown_Amount__c}" />
+                                            <lightning:input type="Number" formatter="currency" tabindex="24" value="{!v.oppObj.First_Drawdown_Amount__c}" step="0.01" />
                                         </span>
                                     </div>
                                 </div>
@@ -509,7 +532,7 @@
                                     </span>
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="24" value="{!v.oppObj.Amount_Paid_to_Borrower__c}"/>
+                                            <lightning:input type="Number" formatter="currency" tabindex="24" value="{!v.oppObj.Amount_Paid_to_Borrower__c}" step="0.01" />
                                         </span>
                                     </div>
                                 </div>
@@ -765,14 +788,14 @@
                                     
                                     <aura:set attribute="else">
                                         <aura:if isTrue="{!v.oppObj.Fee_Calculation_Method__c =='Amount calculated as % of loan amount'}" >
-                                            <lightning:input tabindex="45" label="% Amount" type="Number" formatter="percent-fixed" step="1" value="{!v.oppObj.Percent_Amount__c}" min="0" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}"/>
+                                            <lightning:input tabindex="45" label="% Amount" type="Number" formatter="percent-fixed" step="0.01" value="{!v.oppObj.Percent_Amount__c}" min="0" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}"/>
                                             
                                             <aura:set attribute="else">
                                                 <aura:if isTrue="{!v.oppObj.Fee_Calculation_Method__c == '' || v.oppObj.Fee_Calculation_Method__c == null}" >
                                                     <lightning:input tabindex="46" label="Amount" type="Number" value="" disabled="true" />
                                                     
                                                     <aura:set attribute="else">
-                                                        <lightning:input tabindex="47" label="Custom Amount" type="Number" value="{!v.oppObj.Custommized_Amount__c}" formatter="currency" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}"/>
+                                                        <lightning:input tabindex="47" label="Custom Amount" type="Number" value="{!v.oppObj.Custommized_Amount__c}" formatter="currency" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}" step="0.01" />
                                                     </aura:set>
                                                 </aura:if>
                                             </aura:set>
@@ -1118,7 +1141,7 @@
                                     </tr>                           
                                     <aura:if isTrue="{!p.Drawdowns__r != null}">
                                         <tr>
-                                            <td colspan="8" style="padding-left: 6rem">
+                                            <td colspan="10" style="padding-left: 6rem">
                                                 <div>
                                                     <table class="slds-table slds-table_bordered">
                                                         <thead>
