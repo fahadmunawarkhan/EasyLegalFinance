@@ -36,10 +36,6 @@
                 <behavior>Readonly</behavior>
                 <field>Total_Shortfall__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>Total_Shortfall__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

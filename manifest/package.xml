@@ -43,7 +43,6 @@
     <members>dlrs_ContactTest</members>
     <members>dlrs_Drawdown_Payment_AllocationTest</members>
     <members>dlrs_DrawdownTest</members>
-    <members>dlrs_dsfs_DocuSign_StatusTest</members>
     <members>dlrs_Opportunity_Service_ProviderTest</members>
     <members>dlrs_OpportunityTest</members>
     <members>dlrs_Scheduled_PaymentTest</members>
@@ -245,10 +244,6 @@
     <name>AppMenu</name>
   </types>
   <types>
-    <members>Lead.Assign Leads to Dominik</members>
-    <name>AssignmentRule</name>
-  </types>
-  <types>
     <members>Case</members>
     <members>Lead</members>
     <name>AssignmentRules</name>
@@ -301,10 +296,6 @@
     <name>AuraDefinitionBundle</name>
   </types>
   <types>
-    <members>Lead.Thank You - Lead Response</members>
-    <name>AutoResponseRule</name>
-  </types>
-  <types>
     <members>Case</members>
     <members>Lead</members>
     <name>AutoResponseRules</name>
@@ -324,12 +315,6 @@
   <types>
     <members>SelfSignedCert_03Jul2018_191519</members>
     <name>Certificate</name>
-  </types>
-  <types>
-    <members>DataCloudCompanyMatch</members>
-    <members>DataCloudGeoLocation</members>
-    <members>DataCloudLeadAppend</members>
-    <name>CleanDataService</name>
   </types>
   <types>
     <members>Internal Community</members>
@@ -693,7 +678,6 @@
     <members>Drawdown_Payment_Allocation__c.Principal_Repaid__c</members>
     <members>Drawdown_Payment_Allocation__c.Temp_Payout_Date__c</members>
     <members>Drawdown_Payment_Allocation__c.Transaction_Date__c</members>
-    <members>dsfs__DocuSign_Status__c.Opportunity_Service_Provider__c</members>
     <members>EFT_File__c.File_Number__c</members>
     <members>EFT_File__c.Total_Amount__c</members>
     <members>EFT_File__c.Transaction_Count__c</members>
@@ -1232,25 +1216,6 @@
     <name>CustomField</name>
   </types>
   <types>
-    <members>AutoSaveTime</members>
-    <members>ELFI_Replacement_Counsel_Document</members>
-    <members>Interest_Compounding_Frequency_is_Blank</members>
-    <members>Interest_Compounding_Period_is_Blank</members>
-    <members>Interest_Defferal_Period_is_Blank</members>
-    <members>Interest_Rate_is_Blank</members>
-    <members>Invalid_Drawdowns</members>
-    <members>Law_Count_Firm_Template_Id</members>
-    <members>Law_Firm_Count_Query_Id</members>
-    <members>Lawyer_Count_Query_Id</members>
-    <members>Lawyer_Count_Template_Id</members>
-    <members>Loan_Amount_is_Blank</members>
-    <members>Minimum_Interest_Period_is_Blank</members>
-    <members>Partner_API_Server_Url</members>
-    <members>Payout_Date_is_Blank</members>
-    <members>Rhino_Replacement_Counsel_Document</members>
-    <name>CustomLabel</name>
-  </types>
-  <types>
     <members>CustomLabels</members>
     <name>CustomLabels</name>
   </types>
@@ -1313,10 +1278,7 @@
     <members>Campaign</members>
     <members>CampaignMember</members>
     <members>Case</members>
-    <members>CaseContactRole</members>
     <members>ChatterActivity</members>
-    <members>CollaborationGroup</members>
-    <members>CollaborationGroupMember</members>
     <members>Conga_batch_setting__c</members>
     <members>Conga_Custom_Settings__c</members>
     <members>Contact</members>
@@ -1325,15 +1287,12 @@
     <members>ContactRequest</members>
     <members>ContentVersion</members>
     <members>Contract</members>
-    <members>ContractContactRole</members>
     <members>Critical_Date__c</members>
     <members>Critical_Dates_Report__c</members>
     <members>DataUseLegalBasis</members>
     <members>DataUsePurpose</members>
     <members>Drawdown__c</members>
     <members>Drawdown_Payment_Allocation__c</members>
-    <members>DuplicateRecordItem</members>
-    <members>DuplicateRecordSet</members>
     <members>EFT_File__c</members>
     <members>EFT_File_Setting__c</members>
     <members>EmailMessage</members>
@@ -1341,7 +1300,6 @@
     <members>ExchangeUserMapping</members>
     <members>ExpressionFilter</members>
     <members>ExpressionFilterCriteria</members>
-    <members>FeedItem</members>
     <members>Financial_Summary_Report__c</members>
     <members>Firm__c</members>
     <members>FObjectFour__c</members>
@@ -1362,8 +1320,6 @@
     <members>MacroAction</members>
     <members>MacroInstruction</members>
     <members>Opportunity</members>
-    <members>OpportunityCompetitor</members>
-    <members>OpportunityContactRole</members>
     <members>OpportunityLineItem</members>
     <members>Opportunity_Service_Provider__c</members>
     <members>Opportunity_Service_Provider_Invoice__c</members>
@@ -1377,7 +1333,6 @@
     <members>Product2</members>
     <members>PromptAction</members>
     <members>QuickText</members>
-    <members>Recommendation</members>
     <members>RecordAction</members>
     <members>Report_Settings__c</members>
     <members>RequestsForAccessSIQ</members>
@@ -1393,277 +1348,12 @@
     <members>SocialPost</members>
     <members>Solution</members>
     <members>StreamActivityAccess</members>
-    <members>StreamingChannel</members>
     <members>System_Monitoring__c</members>
     <members>Task</members>
-    <members>Topic</members>
     <members>TopicAssignment</members>
     <members>User</members>
     <members>UserProvisioningRequest</members>
     <name>CustomObject</name>
-  </types>
-  <types>
-    <members>abc__c-en_US</members>
-    <members>Account-de</members>
-    <members>Account-en_US</members>
-    <members>Account-es</members>
-    <members>Account-fr</members>
-    <members>Account-it</members>
-    <members>Account-ja</members>
-    <members>Account-ko</members>
-    <members>Account-nl_NL</members>
-    <members>Account-pt_BR</members>
-    <members>Account-ru</members>
-    <members>Account-zh_CN</members>
-    <members>Account-zh_TW</members>
-    <members>Actual_Sales_by_Month_Report__c-en_US</members>
-    <members>Amendment__c-en_US</members>
-    <members>APXT_BPM__Conductor__c-en_US</members>
-    <members>APXT_BPM__Conductor_Region__mdt-en_US</members>
-    <members>APXT_BPM__Conductor_Setting__mdt-en_US</members>
-    <members>APXT_BPM__Scheduled_Conductor_History__c-en_US</members>
-    <members>APXTConga4__Composer_QuickMerge__c-en_US</members>
-    <members>APXTConga4__Composer_Setting__mdt-en_US</members>
-    <members>APXTConga4__Conga_Collection__c-en_US</members>
-    <members>APXTConga4__Conga_Collection_Solution__c-en_US</members>
-    <members>APXTConga4__Conga_Composer_Settings__c-en_US</members>
-    <members>APXTConga4__Conga_Email_Staging__c-en_US</members>
-    <members>APXTConga4__Conga_Email_Template__c-en_US</members>
-    <members>APXTConga4__Conga_Merge_Query__c-en_US</members>
-    <members>APXTConga4__Conga_Solution__c-en_US</members>
-    <members>APXTConga4__Conga_Solution_Email_Template__c-en_US</members>
-    <members>APXTConga4__Conga_Solution_Export_Environment__mdt-en_US</members>
-    <members>APXTConga4__Conga_Solution_Export_Setting__mdt-en_US</members>
-    <members>APXTConga4__Conga_Solution_Parameter__c-en_US</members>
-    <members>APXTConga4__Conga_Solution_Query__c-en_US</members>
-    <members>APXTConga4__Conga_Solution_Report__c-en_US</members>
-    <members>APXTConga4__Conga_Solutions_Settings__c-en_US</members>
-    <members>APXTConga4__Conga_Solution_Template__c-en_US</members>
-    <members>APXTConga4__Conga_Template__c-en_US</members>
-    <members>APXTConga4__Connected_App_Setting__mdt-en_US</members>
-    <members>Bad_Debt_Summary_Report__c-en_US</members>
-    <members>Bank_Account__c-en_US</members>
-    <members>Bird_Eye_Settings__mdt-en_US</members>
-    <members>Case-de</members>
-    <members>Case-en_US</members>
-    <members>Case-es</members>
-    <members>Case-fr</members>
-    <members>Case-it</members>
-    <members>Case-ja</members>
-    <members>Case-ko</members>
-    <members>Case-nl_NL</members>
-    <members>Case-pt_BR</members>
-    <members>Case-ru</members>
-    <members>Case-zh_CN</members>
-    <members>Case-zh_TW</members>
-    <members>Conga_batch_setting__c-en_US</members>
-    <members>Conga_Custom_Settings__c-en_US</members>
-    <members>Contact-de</members>
-    <members>Contact-en_US</members>
-    <members>Contact-es</members>
-    <members>Contact-fr</members>
-    <members>Contact_History__c-en_US</members>
-    <members>Contact-it</members>
-    <members>Contact-ja</members>
-    <members>Contact-ko</members>
-    <members>Contact-nl_NL</members>
-    <members>Contact-pt_BR</members>
-    <members>Contact-ru</members>
-    <members>Contact-zh_CN</members>
-    <members>Contact-zh_TW</members>
-    <members>Contract-de</members>
-    <members>Contract-en_US</members>
-    <members>Contract-es</members>
-    <members>Contract-fr</members>
-    <members>Contract-it</members>
-    <members>Contract-ja</members>
-    <members>Contract-ko</members>
-    <members>Contract-nl_NL</members>
-    <members>Contract-pt_BR</members>
-    <members>Contract-ru</members>
-    <members>Contract-zh_CN</members>
-    <members>Contract-zh_TW</members>
-    <members>Critical_Date__c-en_US</members>
-    <members>Critical_Dates_Report__c-en_US</members>
-    <members>dlrs__DeclarativeLookupRollupSummaries__c-en_US</members>
-    <members>dlrs__LookupChildAReallyReallyReallyBigBigName__c-en_US</members>
-    <members>dlrs__LookupChild__c-en_US</members>
-    <members>dlrs__LookupParent__c-en_US</members>
-    <members>dlrs__LookupRollupCalculateJob__c-en_US</members>
-    <members>dlrs__LookupRollupSummary2__mdt-en_US</members>
-    <members>dlrs__LookupRollupSummary__c-en_US</members>
-    <members>dlrs__LookupRollupSummaryLog__c-en_US</members>
-    <members>dlrs__LookupRollupSummaryScheduleItems__c-en_US</members>
-    <members>Drawdown__c-en_US</members>
-    <members>Drawdown_Payment_Allocation__c-en_US</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-de</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-en_US</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-es</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-fr</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-it</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-ja</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-ko</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-nl_NL</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-pt_BR</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-ru</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-zh_CN</members>
-    <members>dsfs__DocuSignAccountConfiguration__c-zh_TW</members>
-    <members>dsfs__DocuSign_Envelope__c-de</members>
-    <members>dsfs__DocuSign_Envelope__c-en_US</members>
-    <members>dsfs__DocuSign_Envelope__c-es</members>
-    <members>dsfs__DocuSign_Envelope__c-fr</members>
-    <members>dsfs__DocuSign_Envelope__c-it</members>
-    <members>dsfs__DocuSign_Envelope__c-ja</members>
-    <members>dsfs__DocuSign_Envelope__c-ko</members>
-    <members>dsfs__DocuSign_Envelope__c-nl_NL</members>
-    <members>dsfs__DocuSign_Envelope__c-pt_BR</members>
-    <members>dsfs__DocuSign_Envelope__c-ru</members>
-    <members>dsfs__DocuSign_Envelope__c-zh_CN</members>
-    <members>dsfs__DocuSign_Envelope__c-zh_TW</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-de</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-en_US</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-es</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-fr</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-it</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-ja</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-ko</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-nl_NL</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-pt_BR</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-ru</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-zh_CN</members>
-    <members>dsfs__DocuSign_Envelope_Document__c-zh_TW</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-de</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-en_US</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-es</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-fr</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-it</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-ja</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-ko</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-nl_NL</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-pt_BR</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-ru</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-zh_CN</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c-zh_TW</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-de</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-en_US</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-es</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-fr</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-it</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-ja</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-ko</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-nl_NL</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-pt_BR</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-ru</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-zh_CN</members>
-    <members>dsfs__DocuSign_Recipient_Status__c-zh_TW</members>
-    <members>dsfs__DocuSign_Status__c-de</members>
-    <members>dsfs__DocuSign_Status__c-en_US</members>
-    <members>dsfs__DocuSign_Status__c-es</members>
-    <members>dsfs__DocuSign_Status__c-fr</members>
-    <members>dsfs__DocuSign_Status__c-it</members>
-    <members>dsfs__DocuSign_Status__c-ja</members>
-    <members>dsfs__DocuSign_Status__c-ko</members>
-    <members>dsfs__DocuSign_Status__c-nl_NL</members>
-    <members>dsfs__DocuSign_Status__c-pt_BR</members>
-    <members>dsfs__DocuSign_Status__c-ru</members>
-    <members>dsfs__DocuSign_Status__c-zh_CN</members>
-    <members>dsfs__DocuSign_Status__c-zh_TW</members>
-    <members>EFT_File__c-en_US</members>
-    <members>EFT_File_Setting__c-en_US</members>
-    <members>ESL__Anchor__c-en_US</members>
-    <members>ESL__Cached_Mapping__c-en_US</members>
-    <members>ESL__Convention__c-en_US</members>
-    <members>ESL__e_SignLive_Configuration__c-en_US</members>
-    <members>ESL__eSL_Status__c-en_US</members>
-    <members>ESL__Field_Mapping__c-en_US</members>
-    <members>ESL__HistoryEntry__c-en_US</members>
-    <members>ESL__MappingPath__c-en_US</members>
-    <members>ESL__Package__c-en_US</members>
-    <members>ESL__Package_Document__c-en_US</members>
-    <members>ESL__Package_Signer__c-en_US</members>
-    <members>ESL__Package_Template__c-en_US</members>
-    <members>ESL__Package_Template_Document__c-en_US</members>
-    <members>ESL__Package_Template_Signer__c-en_US</members>
-    <members>ESL__QuestionAnswer__c-en_US</members>
-    <members>ESL__ReminderConfiguration__c-en_US</members>
-    <members>ESL__Signer_Label__c-en_US</members>
-    <members>Financial_Summary_Report__c-en_US</members>
-    <members>Firm__c-en_US</members>
-    <members>FObjectFour__c-en_US</members>
-    <members>FObjectOne__c-en_US</members>
-    <members>FObjectThree__c-en_US</members>
-    <members>FObjectTwo__c-en_US</members>
-    <members>ForceeaSetting__mdt-en_US</members>
-    <members>FundingDashboard__c-en_US</members>
-    <members>Funding_Summary__c-en_US</members>
-    <members>IGD__Cirrus_Files_Object__c-en_US</members>
-    <members>IGD__Folder__c-en_US</members>
-    <members>IGD__Stripe_Webhook__c-en_US</members>
-    <members>IGD__Sync_Job__c-en_US</members>
-    <members>Law_Firm_Sales_Summary_Report__c-en_US</members>
-    <members>Lawyer_Sales_Summary_Report__c-en_US</members>
-    <members>Lead-de</members>
-    <members>Lead-en_US</members>
-    <members>Lead-es</members>
-    <members>Lead-fr</members>
-    <members>Lead-it</members>
-    <members>Lead-ja</members>
-    <members>Lead-ko</members>
-    <members>Lead-nl_NL</members>
-    <members>Lead-pt_BR</members>
-    <members>Lead-ru</members>
-    <members>Lead-zh_CN</members>
-    <members>Lead-zh_TW</members>
-    <members>MC4SF__MC_Campaign__c-en_US</members>
-    <members>MC4SF__MC_Campaign_Hourly_Stats__c-en_US</members>
-    <members>MC4SF__MC_Interest_Group__c-en_US</members>
-    <members>MC4SF__MC_Interest_Grouping__c-en_US</members>
-    <members>MC4SF__MC_List__c-en_US</members>
-    <members>MC4SF__MC_Merge_Variable__c-en_US</members>
-    <members>MC4SF__MC_Query__c-en_US</members>
-    <members>MC4SF__MC_Query_Filter__c-en_US</members>
-    <members>MC4SF__MC_Static_Segment__c-en_US</members>
-    <members>MC4SF__MC_Subscriber_Activity__c-en_US</members>
-    <members>MC4SF__MC_Subscriber__c-en_US</members>
-    <members>Opportunity-de</members>
-    <members>Opportunity-en_US</members>
-    <members>Opportunity-es</members>
-    <members>Opportunity-fr</members>
-    <members>Opportunity-it</members>
-    <members>Opportunity-ja</members>
-    <members>Opportunity-ko</members>
-    <members>Opportunity-nl_NL</members>
-    <members>Opportunity-pt_BR</members>
-    <members>Opportunity-ru</members>
-    <members>Opportunity_Service_Provider__c-en_US</members>
-    <members>Opportunity_Service_Provider_Invoice__c-en_US</members>
-    <members>Opportunity-zh_CN</members>
-    <members>Opportunity-zh_TW</members>
-    <members>Payment_Rejection__c-en_US</members>
-    <members>Payment_Summary_Report__c-en_US</members>
-    <members>Portfolio_Report__c-en_US</members>
-    <members>Previous_Loan__c-en_US</members>
-    <members>Report_Settings__c-en_US</members>
-    <members>RingCentral__AdminSetting__c-en_US</members>
-    <members>RingCentral__KeyStorage__c-en_US</members>
-    <members>Scenario__c-en_US</members>
-    <members>Scenario_Region__c-en_US</members>
-    <members>Scheduled_Payment__c-en_US</members>
-    <members>Service_Provider_Drawdown__c-en_US</members>
-    <members>System_Monitoring__c-en_US</members>
-    <members>User-en_US</members>
-    <members>User-fr</members>
-    <members>User-ja</members>
-    <members>User-ko</members>
-    <members>User-zh_CN</members>
-    <members>wtn__ChatterPostPolicy__c-en_US</members>
-    <members>wtn__ChatterPostPolicy__c-fr</members>
-    <members>wtn__ContactEvent__c-en_US</members>
-    <members>wtn__ContactEvent__c-fr</members>
-    <members>wtn__EvercontactLog__c-fr</members>
-    <members>wtn__Writethatname_settings__c-en_US</members>
-    <members>wtn__Writethatname_settings__c-fr</members>
-    <name>CustomObjectTranslation</name>
   </types>
   <types>
     <members>Can_Process_Scheduled_Payments</members>
@@ -1676,7 +1366,6 @@
     <members>Critical_Date__c</members>
     <members>Custom_Reports</members>
     <members>Drawdown__c</members>
-    <members>dsfs__DocuSignAccountConfiguration__c</members>
     <members>FObjectFour__c</members>
     <members>FObjectOne__c</members>
     <members>FObjectThree__c</members>
@@ -1699,26 +1388,14 @@
     <members>CompanyDashboards/AdoptionDashboard</members>
     <members>CompanyDashboards/CompanyPerformanceDashboard</members>
     <members>CompanyDashboards/ELFI_Company_Dashboard</members>
-    <members>CompanyDashboards/jwjDYdrvrtcEDlswfJCFAgDRIQXhVS</members>
     <members>CompanyDashboards/QZHSWsRNXcUpDTwnATDsBOkHEzPzNs</members>
     <members>CompanyDashboards/Test_Dashboard</members>
     <members>Dashboard_for_Report</members>
-    <members>Dashboard_for_Report/Dashboard_show_all_the_Report</members>
     <members>Dashboard_for_Report/kFGrpEdRdWdccPIcAtsWEdOwnDWsCB</members>
     <members>ELFI_Sales_Dashboards</members>
-    <members>ELFI_Sales_Dashboards/X00_My_Performance</members>
     <members>ELFI_Sales_Dashboards/X10_Sales_Team_Overview</members>
     <members>ELFI_Sales_Dashboards/X20_ELFI_Company_Overview</members>
     <name>Dashboard</name>
-  </types>
-  <types>
-    <members>James_Test</members>
-    <members>Logos</members>
-    <members>Logos/Easy_Legal_Finance_logo_jpg.jpg</members>
-    <members>Logos/Easy_Legal_Finance_logo_jpgv2.jpg</members>
-    <members>Logos/Easy_Legal_Finance_logo.png</members>
-    <members>SharedDocuments</members>
-    <name>Document</name>
   </types>
   <types>
     <members>Account.Account_Matching_Rule_Law_Firm</members>
@@ -1729,29 +1406,9 @@
     <name>DuplicateRule</name>
   </types>
   <types>
-    <members>EmailToSalesforce</members>
-    <name>EmailServicesFunction</name>
-  </types>
-  <types>
     <members>ELFI_Email_Templates</members>
     <members>ELFI_Email_Templates/ELFIWebtoLeademailresponse</members>
     <members>ELFI_Email_Templates/eSignature_Project</members>
-    <members>unfiled$public</members>
-    <members>unfiled$public/ContactFollowUpSAMPLE</members>
-    <members>unfiled$public/DS_Completed_Notification</members>
-    <members>unfiled$public/LeadsNewassignmentnotificationSAMPLE</members>
-    <members>unfiled$public/LeadsWebtoLeademailresponseSAMPLE</members>
-    <members>unfiled$public/Part_I_to_Lead</members>
-    <members>unfiled$public/SUPPORTCaseescalationnotificationSAMPLE</members>
-    <members>unfiled$public/SUPPORTCaseResponsewithSolutionSAMPLE</members>
-    <members>unfiled$public/SUPPORTnew</members>
-    <members>unfiled$public/SUPPORTNewassignmentnotificationSAMPLE</members>
-    <members>unfiled$public/SUPPORTSelfServiceNewCommentNotificationSAMPLE</members>
-    <members>unfiled$public/SUPPORTSelfServiceNewUserLoginInformationSAMPLE</members>
-    <members>unfiled$public/SUPPORTSelfServiceResetPasswordSAMPLE</members>
-    <members>unfiled$public/SUPPORTWebtoCaseemailresponseSAMPLE</members>
-    <members>unfiled$public/Test_template</members>
-    <members>unfiled$public/X1st_Email_to_Counsel_Firm</members>
     <name>EmailTemplate</name>
   </types>
   <types>
@@ -1842,127 +1499,6 @@
     <name>HomePageLayout</name>
   </types>
   <types>
-    <members>APXT_BPM</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>APXTConga4</members>
-    <members>dlrs</members>
-    <members>dsfs</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>ESL</members>
-    <members>IGD</members>
-    <members>MC4SF</members>
-    <members>rightsig</members>
-    <members>RingCentral</members>
-    <members>sfadminapps</members>
-    <members>sfadminapps</members>
-    <members>sfadminapps</members>
-    <members>sfadminapps</members>
-    <members>sfadminapps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_chttr_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>sf_com_apps</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>spanning</members>
-    <members>wtn</members>
-    <name>InstalledPackage</name>
-  </types>
-  <types>
     <members>abc__c-abc Layout</members>
     <members>Account-Account Layout</members>
     <members>Account-Account Layout - Client</members>
@@ -1976,7 +1512,6 @@
     <members>CampaignMember-Campaign Member Page Layout</members>
     <members>Case-Case Layout</members>
     <members>CaseClose-Close Case Layout</members>
-    <members>CollaborationGroup-Group Layout</members>
     <members>CommunityMemberLayout-Community Member Layout</members>
     <members>Contact-Contact Layout</members>
     <members>Contact-General Contact Layout</members>
@@ -1987,8 +1522,6 @@
     <members>Critical_Date__c-Critical Date Layout</members>
     <members>Drawdown__c-Drawdown Layout</members>
     <members>Drawdown_Payment_Allocation__c-Drawdown Transaction Layout</members>
-    <members>DuplicateRecordItem-Duplicate Record Item Layout</members>
-    <members>DuplicateRecordSet-Duplicate Record Set Layout</members>
     <members>EFT_File__c-EFT File Layout</members>
     <members>Event-Event Layout</members>
     <members>FeedItem-Feed Item Layout</members>
@@ -2118,7 +1651,6 @@
     <members>Case.AllOpenCases</members>
     <members>Case.MyCases</members>
     <members>Case.MyOpenCases</members>
-    <members>CollaborationGroup.All_ChatterGroups</members>
     <members>Contact.AllContacts_NoAccountType</members>
     <members>Contact.AllContacts_wo_Account</members>
     <members>Contact.BirthdaysThisMonth</members>
@@ -2135,7 +1667,6 @@
     <members>Contract.MyInApprovalContracts</members>
     <members>Critical_Date__c.All</members>
     <members>Drawdown__c.All</members>
-    <members>DuplicateRecordSet.All_Records_Dupe_1</members>
     <members>Event.MyRecentEvents</members>
     <members>Event.MyTeamsRecentEvents</members>
     <members>Event.MyTeamsUpcomingEvents</members>
@@ -2198,14 +1729,6 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Account.Custom_Account_Matching_Rule</members>
-    <members>Account.Standard_Account_Match_Rule_v1_0</members>
-    <members>Contact.Custom_Contact_Matching_Rule</members>
-    <members>Contact.Standard_Contact_Match_Rule_v1_1</members>
-    <members>Lead.Standard_Lead_Match_Rule_v1_0</members>
-    <name>MatchingRule</name>
-  </types>
-  <types>
     <members>Account</members>
     <members>Contact</members>
     <members>Individual</members>
@@ -2258,8 +1781,6 @@
   </types>
   <types>
     <members>Case.NewChildCase</members>
-    <members>CollaborationGroup.NewGroupMember</members>
-    <members>CollaborationGroup.NewGroupRecord</members>
     <members>FeedItem.NewTaskFromFeedItem</members>
     <members>LogACall</members>
     <members>NewAccount</members>
@@ -2416,7 +1937,6 @@
     <members>ELFI_Sales_Team_Reports/Rhino_Drawdown_Report_YTD</members>
     <members>ELFI_Sales_Team_Reports/RHINO_Sales_Team_Closed_Won_Cases_Q</members>
     <members>ELFI_Sales_Team_Reports/WIP_List_Sales_Opportunities</members>
-    <members>Performance_Dashboard_Reports</members>
     <members>Portfolio_Reports</members>
     <members>Portfolio_Reports/ELFI_1_Active_Loans_Since_Inception_lBR</members>
     <members>Portfolio_Reports/ELFI_2_Draft_0qM</members>
@@ -2438,58 +1958,6 @@
     <members>TroubleshootingReportsByFahad</members>
     <members>TroubleshootingReportsByFahad/Financial_Summary_Vxl</members>
     <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members>
-    <members>unfiled$public</members>
-    <members>unfiled$public/Accounts_No_Record_Types</members>
-    <members>unfiled$public/Activities_Last_90_Days</members>
-    <members>unfiled$public/Closed_Won_Opportunities_Raw</members>
-    <members>unfiled$public/Dom_Version_of_Report</members>
-    <members>unfiled$public/ELFI_2_Draft_0qM1</members>
-    <members>unfiled$public/ELFI_Expiry_Date_Data_Cleanup</members>
-    <members>unfiled$public/ELFI_SF_Contacts</members>
-    <members>unfiled$public/Ernies_Leads_by_State</members>
-    <members>unfiled$public/Law_Firms_Contacts_ALL</members>
-    <members>unfiled$public/Law_Firms_Contacts_created_post_15_9</members>
-    <members>unfiled$public/Lawyer_Contacts_Search_Kings</members>
-    <members>unfiled$public/Lawyer_Leads_Search_Kings</members>
-    <members>unfiled$public/Lawyers_List</members>
-    <members>unfiled$public/LEADS_ALL</members>
-    <members>unfiled$public/LumpSum_to_Backfill</members>
-    <members>unfiled$public/Monthly_Opportunities_Performance_Report_lwh</members>
-    <members>unfiled$public/Opportunities_by_File_Draft_Appc</members>
-    <members>unfiled$public/Opportunities_by_Loan_Sta_Draft_Appc</members>
-    <members>unfiled$public/Opportunities_by_Loan_Sta_Draft_Appc_II</members>
-    <members>unfiled$public/Opportunities_by_Status_Draft_Appc</members>
-    <members>unfiled$public/SampleReportActiveUsers</members>
-    <members>unfiled$public/SampleReportCasesStatusbyRep</members>
-    <members>unfiled$public/SampleReportClosedSales</members>
-    <members>unfiled$public/SampleReportCompletedActivities</members>
-    <members>unfiled$public/SampleReportCustomReportsbyUser</members>
-    <members>unfiled$public/SampleReportDocumentLibrary</members>
-    <members>unfiled$public/SampleReportLastModifiedBy</members>
-    <members>unfiled$public/SampleReportLeadsbyLeadSource</members>
-    <members>unfiled$public/SampleReportLoginLeaderboard</members>
-    <members>unfiled$public/SampleReportLoginWallofShame</members>
-    <members>unfiled$public/SampleReportMonthtoDateTrending</members>
-    <members>unfiled$public/SampleReportofAccounts</members>
-    <members>unfiled$public/SampleReportofCases</members>
-    <members>unfiled$public/SampleReportofContacts</members>
-    <members>unfiled$public/SampleReportofDocuments</members>
-    <members>unfiled$public/SampleReportofLeads</members>
-    <members>unfiled$public/SampleReportofOpenTasks</members>
-    <members>unfiled$public/SampleReportofOpportunities</members>
-    <members>unfiled$public/SampleReportofReports</members>
-    <members>unfiled$public/SampleReportofSolutions</members>
-    <members>unfiled$public/SampleReportofTasksandActivities</members>
-    <members>unfiled$public/SampleReportOpenCasesByPriority</members>
-    <members>unfiled$public/SampleReportOpenDeals</members>
-    <members>unfiled$public/SampleReportPipelineByCloseMonth</members>
-    <members>unfiled$public/SampleReportPipelineHistory</members>
-    <members>unfiled$public/SampleReportSalesLeaderboard</members>
-    <members>unfiled$public/SampleReportSalesPipelinebyStage</members>
-    <members>unfiled$public/SampleReportsLeadsbyStatus</members>
-    <members>unfiled$public/SampleReportSolutionsAdded</members>
-    <members>unfiled$public/SampleReportTopAccounts</members>
-    <members>unfiled$public/SampleReportUsersLoggedIn</members>
     <name>Report</name>
   </types>
   <types>
@@ -2520,10 +1988,6 @@
     <name>SamlSsoConfig</name>
   </types>
   <types>
-    <members>About_Mass_Update_And_Mass_Edit</members>
-    <name>Scontrol</name>
-  </types>
-  <types>
     <members>Account</members>
     <members>Activities</members>
     <members>Address</members>
@@ -2550,7 +2014,6 @@
     <members>Quote</members>
     <members>Search</members>
     <members>Security</members>
-    <members>SocialCustomerService</members>
     <name>Settings</name>
   </types>
   <types>
@@ -2660,12 +2123,6 @@
     <members>dlrs__LookupRollupSummaryScheduleItems__c</members>
     <members>Drawdown__c</members>
     <members>Drawdown_Payment_Allocation__c</members>
-    <members>dsfs__DocuSignAccountConfiguration__c</members>
-    <members>dsfs__DocuSign_Envelope__c</members>
-    <members>dsfs__DocuSign_Envelope_Document__c</members>
-    <members>dsfs__DocuSign_Envelope_Recipient__c</members>
-    <members>dsfs__DocuSign_Recipient_Status__c</members>
-    <members>dsfs__DocuSign_Status__c</members>
     <members>EFT_File__c</members>
     <members>ESL__Anchor__c</members>
     <members>ESL__Cached_Mapping__c</members>
@@ -2831,24 +2288,6 @@
     <members>Lead</members>
     <members>Opportunity</members>
     <name>Workflow</name>
-  </types>
-  <types>
-    <members>Lead.Auto_Response_on_Lead_Creation</members>
-    <members>Lead.Internal_Email_for_New_Lead_Creation</members>
-    <members>Opportunity.Opportunity_Docusign_Completed</members>
-    <name>WorkflowAlert</name>
-  </types>
-  <types>
-    <members>Lead.Set_Company_Name_First_Last_Name</members>
-    <members>Lead.Set_Lead_Source_to_Web_Form</members>
-    <name>WorkflowFieldUpdate</name>
-  </types>
-  <types>
-    <members>Lead.Lead auto response</members>
-    <members>Lead.Set Company Name %3D First %26 Last Name %26 Account %23</members>
-    <members>Lead.Set Lead Source to Web Form</members>
-    <members>Opportunity.Send Email to Client Funds Transferred</members>
-    <name>WorkflowRule</name>
   </types>
   <version>45.0</version>
 </Package>
