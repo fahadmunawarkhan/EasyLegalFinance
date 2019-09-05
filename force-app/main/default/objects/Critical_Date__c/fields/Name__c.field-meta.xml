@@ -11,34 +11,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>A/B status</fullName>
-                <default>false</default>
-                <label>A/B status</label>
-            </value>
-            <value>
-                <fullName>Assessment Funding</fullName>
-                <default>false</default>
-                <label>Assessment Funding</label>
-            </value>
-            <value>
-                <fullName>Collection</fullName>
-                <default>false</default>
-                <label>Collection</label>
-            </value>
-            <value>
-                <fullName>Default</fullName>
-                <default>false</default>
-                <label>Default</label>
-            </value>
-            <value>
                 <fullName>Examination</fullName>
                 <default>false</default>
                 <label>Examination</label>
             </value>
             <value>
-                <fullName>Litigation</fullName>
+                <fullName>A/B status</fullName>
                 <default>false</default>
-                <label>Litigation</label>
+                <label>A/B status</label>
             </value>
             <value>
                 <fullName>Mediation</fullName>
@@ -54,11 +34,6 @@
                 <fullName>Trial date</fullName>
                 <default>false</default>
                 <label>Trial date</label>
-            </value>
-            <value>
-                <fullName>Settled Claim</fullName>
-                <default>false</default>
-                <label>Settled Claim</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -2,8 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>APR_2__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(AND(NOT(ISBLANK(Amount)),NOT(ISBLANK(Admin_Fee__c))),((Amount*0.24/2+(Amount+(Amount*0.24/2))*0.24/2+Admin_Fee__c)/Amount),0.00)</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <formula>IF(AND(NOT(ISBLANK(Amount)),NOT(ISBLANK(APR_Interest_Rate__c)),NOT(ISBLANK(Admin_Fee__c))),((Amount*APR_Interest_Rate__c/2+(Amount+(Amount*APR_Interest_Rate__c/2))*APR_Interest_Rate__c/2+Admin_Fee__c)/Amount),0.00)</formula>
     <label>APR #2</label>
     <precision>18</precision>
     <required>false</required>

@@ -20,10 +20,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Treatment_Providers__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Financial_Summary__c</field>
             </layoutItems>
             <layoutItems>
@@ -53,6 +49,14 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>EFT_Originator_Id__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Treatment_Providers__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Bad_Debt_Summary_Report__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -95,7 +99,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Bad_Debt_Summary_Report__c</field>
+                <field>Funding_Dashboard__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -105,7 +109,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Financial_Summary_Report__c</field>
+                <field>Payment_Summary_Report__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -113,11 +117,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Payment_Summary_Report__c</field>
+                <field>Financial_Summary_Report__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Finance_Loan_Progression_Report__c</field>
+                <field>Funding_Summary__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>

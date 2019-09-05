@@ -3,5 +3,5 @@
     <description>SOAP API Remote Site Setting for DocuSign package. Create by DocuSign for Salesforce package.</description>
     <disableProtocolSecurity>false</disableProtocolSecurity>
     <isActive>true</isActive>
-    <url>https://na39.salesforce.com</url>
+    <url>https://cs24.salesforce.com</url>
 </RemoteSiteSetting>

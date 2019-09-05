@@ -110,5 +110,47 @@
                 helper.errorsHandler(errors);
             }
         );         
+    },
+    handleViewAllButtonMenu : function(component, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+        
+        let newWin;
+        let url = '';
+        
+        
+        if(selectedMenuItemValue == "ViewAll"){
+            url = component.get('v.ViewAllUrl');
+        }else if(selectedMenuItemValue == "PayoutViewAll"){
+            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate='+component.get('v.startDate')+'&EndDate='+component.get('v.endDate')+'&BusinessUnit='+component.get('v.selectedBusinessUnitFilter')+ '&ContentType=Excel';
+        }
+        
+        try{                       
+            newWin = window.open(url);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
+    },
+    handleViewAllPDFButtonMenu : function(component, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+        
+        let newWin;
+        let url = '';
+        
+        
+        if(selectedMenuItemValue == "ViewAll"){
+            url = component.get('v.ViewAllUrl') +'%26'+'DefaultPDF=1';
+        }else if(selectedMenuItemValue == "PayoutViewAll"){
+            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate='+component.get('v.startDate')+'&EndDate='+component.get('v.endDate')+'&BusinessUnit='+component.get('v.selectedBusinessUnitFilter')+ '&ContentType=PDF';
+        }
+        
+        try{                       
+            newWin = window.open(url);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
     }
 })

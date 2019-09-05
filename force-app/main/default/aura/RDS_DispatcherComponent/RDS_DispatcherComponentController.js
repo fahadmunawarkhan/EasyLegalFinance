@@ -26,8 +26,13 @@
                         */
                         
                         var eUrl= $A.get("e.force:navigateToURL");
+                        var url = '/lightning/r/Account/'+accountRec.Id+'/view';
+                        if (recId.startsWith('006')) {
+                            // Opportunity
+                            url += `#/OPPORTUNITY/${recId}`;
+                        }
                         eUrl.setParams({
-                            "url": '/lightning/r/Account/'+accountRec.Id+'/view' 
+                            "url": url
                         });
                         eUrl.fire();                       
                     }

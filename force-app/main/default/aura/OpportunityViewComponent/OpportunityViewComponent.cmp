@@ -55,6 +55,7 @@
     
     <aura:attribute name="listBankruptcyValues" type="String[]" default="Yes,No" description="" />
     
+    
     <aura:attribute name="referenceNotesDepPicklistMap" type="map" description="map to store dependent values with controlling value"/>
     <aura:attribute name="providerReferenceNotesDepPicklistMap" type="map" description="map to store dependent values with controlling value"/>
     <aura:attribute name="referenceNotesDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
@@ -327,16 +328,15 @@
                             </div>
                         </div>
                     </lightning:layoutItem>  
-                     <!--lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Do not send goggle review</span>
+                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Do not send google review</span>
                             <div class="slds-form-element__control">
                                 <span class=""> 
                                     <lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />
                                 </span>
                             </div>
                         </div>
-                    </lightning:layoutItem-->
-     
+                    </lightning:layoutItem>
                 </lightning:layout> 
                 <lightning:layout class="slds-m-left_xx-large">
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
@@ -1053,7 +1053,14 @@
                                                                             <td class="slds-cell-buffer_left slds-cell-buffer_right">                                                                        
                                                                                 <lightning:input type="date" value="{!d.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, false, true)}"/>
                                                                             </td>
-                                                                            <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputCurrency value="{!d.Total_Accrued_Interest__c}"/></td>
+                                                                            <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                                                <aura:if isTrue="{!d.Reference_Notes__c == 'Payment Surplus'}" >
+                                                                                    <lightning:formattedNumber value="{!d.Interest_Repaid__c}" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                                                    <aura:set attribute="else">
+                                                                                        <lightning:formattedNumber value="0.00" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                                                    </aura:set>
+                                                                                </aura:if>
+                                                                            </td>
                                                                             <td class="slds-cell-buffer_left slds-cell-buffer_right">                                                                   
                                                                                 <div style="margin-top:-20px;">
                                                                                     <lightning:select aura:Id="Treatment_Payment_Method__c"
@@ -1303,7 +1310,14 @@
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Lump_Sum_drawdowns__c, False, True)}" /></td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Lump_Sum_drawdowns__c, False, True)}" /></td>
-                                                <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputCurrency value="{!item.Total_Accrued_Interest__c}"/></td>
+                                                <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <aura:if isTrue="{!item.Reference_Notes__c == 'Payment Surplus'}" >
+                                                        <lightning:formattedNumber value="{!item.Interest_Repaid__c}" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                        <aura:set attribute="else">
+                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                                     <!--<lightning:combobox data-index="{!i}" Id="{!item.Id}" name="PaymentMethod" value="{!item.Payment_Method__c}" placeholder="-None-" options="{! v.paymentMethod }" style="margin-top:-20px;" onchange="{!c.onpaymentMethodChange}"/>
                                                     <span data-index="{!i}"></span-->
@@ -1396,7 +1410,14 @@
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
-                                                <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputCurrency value="{!item.Total_Accrued_Interest__c}"/></td>
+                                                <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <aura:if isTrue="{!item.Reference_Notes__c == 'Payment Surplus'}" >
+                                                        <lightning:formattedNumber value="{!item.Interest_Repaid__c}" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                        <aura:set attribute="else">
+                                                            <lightning:formattedNumber value="0.00" style="currency" currencyCode="USD" currencyDisplayAs="symbol"/>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                </td>
                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                                     <!--<lightning:combobox data-index="{!i}" Id="{!item.Id}" name="PaymentMethod" value="{!item.Payment_Method__c}" placeholder="-None-" options="{! v.paymentMethod }" style="margin-top:-20px;" onchange="{!c.onpaymentMethodChange}"/>
                                                     <span data-index="{!i}"></span-->

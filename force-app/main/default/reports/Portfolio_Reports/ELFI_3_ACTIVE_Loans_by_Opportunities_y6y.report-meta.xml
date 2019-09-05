@@ -95,10 +95,16 @@
     <description>ELFI 3 - Active Loans by Opportunity bucketed by the size of Loans - (Date range dependent on Portfolio dates selected)</description>
     <filter>
         <criteriaItems>
-            <column>Opportunity$Stage_Status__c</column>
+            <column>Opportunity$Outstanding_Balance_as_of_To_Date__c</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Active_Loan__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active</value>
+            <value>1</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

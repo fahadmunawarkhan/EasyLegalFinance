@@ -5,15 +5,16 @@
     <externalId>false</externalId>
     <formula>&quot;&amp;solmgr=1&quot; + 
 &quot;&amp;id=&quot; + Id +
-&quot;&amp;queryid=&quot; + IF($Setup.Conga_batch_setting__c.Query_Selector_Lawyer_Summary_Report__c  = &quot;Active&quot;,  IF( $Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;ELFI&quot;, &quot;[LawyerActiveClient]a0p0L00000JZyFw&quot;,  IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot;, &quot;[LawyerActiveClient]a0p0L00000JZyG1&quot;, &quot;[LawyerActiveClient]a0p0L00000JSOko&quot;) ) , IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;ELFI&quot;, &quot;[LawyerClient]a0p0L00000JZyFm&quot;,  IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot;, &quot;[LawyerClient]a0p0L00000JZyFr&quot;, &quot;[LawyerClient]a0p0L00000JSOkt&quot;) ) )  + &quot;?pv0=&quot; + Id +
-&quot;&amp;templateid=&quot; + IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot; , &quot;a0x0L00000PH6QI&quot;, &quot;a0x0L00000PVUFQ&quot;) +
+&quot;&amp;queryid=&quot; + IF($Setup.Conga_batch_setting__c.Query_Selector_Lawyer_Summary_Report__c  = &quot;Active&quot;,  IF( $Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;ELFI&quot;, &quot;[LawyerActiveClient]a0p19000002Dkqq&quot;,  IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot;, &quot;[LawyerActiveClient]a0p19000002Dkr5&quot;, &quot;[LawyerActiveClient]a0p19000002CGaO&quot;) ) , IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;ELFI&quot;, &quot;[LawyerClient]a0p19000002Dkia&quot;,  IF($Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot;, &quot;[LawyerClient]a0p19000002Dkjj&quot;, &quot;[LawyerClient]a0p19000002CGaF&quot;) ) )  + &quot;?pv0=&quot; + Id +
+&quot;&amp;templateid=&quot; +  IF( $Setup.Conga_batch_setting__c.Business_Unit_Lawyer_Summary__c = &quot;Rhino&quot;, &quot;a0x19000000zfz0&quot;, &quot;a0x19000000zfyv&quot;) + 
 &quot;&amp;defaultpdf=1&quot; + 
 &quot;&amp;attachmentparentid=&quot; + Id +
 &quot;&amp;ac0=1&quot; + 
 &quot;&amp;sc0=1&quot; + 
 &quot;&amp;sc1=SalesforceFile&quot; + 
 &quot;&amp;DS7=5&quot; + 
-&quot;&amp;qmode=Attachments&quot;</formula>
+&quot;&amp;qmode=Attachments&quot; + 
+&quot;&amp;returnpath=/lightning/n/Custom_Reports?0.source=alohaHeader&quot;</formula>
     <label>Conga Batch Lawyer Summary</label>
     <required>false</required>
     <type>Text</type>

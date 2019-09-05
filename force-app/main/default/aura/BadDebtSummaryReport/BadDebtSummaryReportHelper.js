@@ -181,15 +181,19 @@
         console.log('paymentData');
         console.log(paymentData);
         // calculate financial summary total for file and amount
-        var RhinofileTotal = 0;
+        var RhinoAccountTotal = 0;
+        var RhinoOpptyTotal = 0;
         var RhinoamountTotal = 0;
-        var ElfifileTotal = 0;
+        var ElfiAccountTotal = 0;
+        var ElfiOpptyTotal = 0;
         var ElfiamountTotal = 0;
         
         for(var i = 0; i < paymentData.length; i++){
-            RhinofileTotal += paymentData[i].rhinoCount;
+            RhinoAccountTotal += paymentData[i].rhinoAccountCount;
+            RhinoOpptyTotal += paymentData[i].rhinoOpptyCount;
             RhinoamountTotal += paymentData[i].rhinoAmount;
-            ElfifileTotal += paymentData[i].elfiCount;
+            ElfiAccountTotal += paymentData[i].elfiAccountCount;
+            ElfiOpptyTotal += paymentData[i].elfiOpptyCount;
             ElfiamountTotal += paymentData[i].elfiAmount;
             
             /*if(paymentData[i].businessunit == "Rhino"){
@@ -200,9 +204,11 @@
                 ElfiamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
             }*/
         }
-        component.set("v.RhinofileTotal", RhinofileTotal); 
+        component.set("v.RhinoAccountTotal", RhinoAccountTotal); 
+        component.set("v.RhinoOpptyTotal", RhinoOpptyTotal); 
         component.set("v.RhinoamtTotal", RhinoamountTotal);
-        component.set("v.ElfifileTotal", ElfifileTotal); 
+        component.set("v.ElfiAccountTotal", ElfiAccountTotal); 
+        component.set("v.ElfiOpptyTotal", ElfiOpptyTotal); 
         component.set("v.ElfiamtTotal", ElfiamountTotal); 
     },
     

@@ -8,5 +8,6 @@
         <plural>true</plural>
         <value>Previous Loans</value>
     </caseValues>
+    <nameFieldLabel>Previous Lender Name</nameFieldLabel>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

@@ -178,7 +178,7 @@
         <object>Drawdown__c</object>
     </recordCreates>
     <startElementReference>Amount_Paid_to_Borrower</startElementReference>
-    <status>Active</status>
+    <status>Draft</status>
     <variables>
         <name>OppAdminFee</name>
         <dataType>Currency</dataType>

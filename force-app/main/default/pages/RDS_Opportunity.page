@@ -899,7 +899,7 @@
                             <div class="slds-form-element">
                               <label class="site-text-heading--label slds-form-element__label">Loan Status</label>
                               <div class="slds-form-element__control">
-                                <apex:inputField value="{!currentOppSObj.Loan_Status__c}" styleClass="slds-input" taborderhint="1003"/>
+                                <!-- <apex:inputField value="{!currentOppSObj.Loan_Status__c}" styleClass="slds-input" taborderhint="1003"/> -->
                               </div>
                             </div>                    
                           </div>

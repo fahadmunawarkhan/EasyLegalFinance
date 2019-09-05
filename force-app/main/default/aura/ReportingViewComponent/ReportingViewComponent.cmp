@@ -20,11 +20,21 @@
             </div>
         </div>     
         
-        <lightning:tabset variant="default" selectedTabId="">
+        <lightning:tabset variant="default" selectedTabId="FundingDashboard">
             
             <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
                 <lightning:tab id="LawyerSummary" label="Lawyer Summary ">
                     <c:LawyerSummary />
+                </lightning:tab>
+            </aura:if>
+             <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
+                <lightning:tab id="LawyerSummaryWithDateRange" label="Lawyer Count">
+                    <c:LawyerSummaryWithDateRange />
+                </lightning:tab>
+            </aura:if>
+            <aura:if isTrue="{!v.currentUser.Law_Firm_Summary__c}">
+                <lightning:tab id="LawFirmCount" label="Law Firm Count">
+                    <c:LawFirmCount />
                 </lightning:tab>
             </aura:if>
             <aura:if isTrue="{!v.currentUser.Law_Firm_Summary__c}">
@@ -70,26 +80,16 @@
                     <c:BadDebtSummaryReport />
                 </lightning:tab> 
             </aura:if>
-            <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
-                <lightning:tab id="LawyerSummaryWithDateRange" label="Lawyer Count">
-                    <c:LawyerSummaryWithDateRange />
-                </lightning:tab>
-            </aura:if>
-            <aura:if isTrue="{!v.currentUser.Law_Firm_Summary__c}">
-                <lightning:tab id="lawFirmCount" label="Law Firm Count">
-                    <c:LawFirmCount />
-                </lightning:tab>
+            <aura:if isTrue="{!v.currentUser.Funding_Dashboard__c}">  
+            <lightning:tab id="FundingDashboard" label="Funding Dashboard">
+                <c:FundingDashboardComponent />
+            </lightning:tab> 
             </aura:if>
             <!--<aura:if isTrue="{!v.currentUser.Funding_Summary__c}">  
             <lightning:tab id="FundingSummary" label="Funding Summary">
                 <c:FundingSummary />
             </lightning:tab> 
             </aura:if>-->
-            <aura:if isTrue="{!v.currentUser.Funding_Dashboard__c}">  
-            <lightning:tab id="FundingDashboard" label="Funding Dashboard">
-                <c:FundingDashboardComponent />
-            </lightning:tab> 
-            </aura:if>
         </lightning:tabset>
     </body>
 </aura:component>

@@ -32,8 +32,6 @@
     searchButton: function(component, event, helper) {
         component.set("v.recordSelected", false);
         helper.getLawfirmList(component,event);
-        helper.setBusinessUnitFilter(component);
-        helper.getViewUrl(component);
     },
     sort: function(component, event, helper) {  
         

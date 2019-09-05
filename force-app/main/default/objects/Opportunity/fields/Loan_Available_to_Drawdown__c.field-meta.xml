@@ -4,10 +4,10 @@
     <externalId>false</externalId>
     <formula>CASE(
 TEXT(Type_of_Loan__c), 
-&quot;Facility Loan&quot;, Amount - Drawdown_Total__c,
+&quot;Facility Loan&quot;, IF(ISPICKVAL(Stage_Status__c,&#39;Paid Off&#39;),0,Amount - Drawdown_Total__c),
 &quot;Lum-Sum&quot;, 0,
-&quot;Treatment Loan&quot;, Amount - Total_Paid_Service_Provider__c,
-&quot;Treatment Loan 2&quot;, Amount - Total_Paid_Service_Provider__c,
+&quot;Treatment Loan&quot;, IF(ISPICKVAL(Stage_Status__c,&#39;Paid Off&#39;),0,Amount - Total_Paid_Service_Provider__c),
+&quot;Treatment Loan 2&quot;, IF(ISPICKVAL(Stage_Status__c,&#39;Paid Off&#39;),0,Amount - Total_Paid_Service_Provider__c),
 0)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Loan Available to Drawdown</label>

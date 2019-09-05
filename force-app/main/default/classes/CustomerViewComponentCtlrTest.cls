@@ -133,6 +133,7 @@ public class CustomerViewComponentCtlrTest {
         Opp.Interest_Compounding_Period__c = 'Simple Interest';
         Opp.Interest_Deferral_Period__c = '0';
         Opp.Re_Assessed_Loan__c = null;
+        Opp.Amount = 5.0;
         insert Opp; 
         
         // Opportunity 
@@ -307,7 +308,7 @@ public class CustomerViewComponentCtlrTest {
         CustomerViewComponentCtlr.getSingleOpportunity(oppId);
         
         CustomerViewComponentCtlr.changeToShortfallStage(OppId, acct, '2018-01-01');
-        CustomerViewComponentCtlr.applyPartialPayments(OppId, acct, '2018-01-01');
+        CustomerViewComponentCtlr.applyPartialPayments(OppId, acct, '2018-01-01', 'eft', 'chq');
         
         CustomerViewComponentCtlr.delContentNote(cnoteId);
         test.stopTest();
@@ -425,5 +426,182 @@ public class CustomerViewComponentCtlrTest {
         
         test.stopTest();
         
+    }
+    
+    public static void insertAccount(){
+        Id RecordTypeIdAccount = 
+            Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();
+        Account testAccount = new Account();
+        testAccount.Name='Test Account';
+        testAccount.BillingStreet = 'Testtest';
+        testAccount.BillingState = 'CA';
+        testAccount.BillingCity = 'City';
+        testAccount.BillingPostalCode = '10001';
+        testAccount.Billingcountry='Canada';
+        testAccount.ShippingStreet = 'Test';
+        testAccount.ShippingState = 'New York';
+        testAccount.ShippingCountry = 'UNITED STATES';
+        testAccount.ShippingPostalCode = '10001';
+        testAccount.ShippingCity = 'Lake Trees';
+        testAccount.Account_Type__c = 'Client';
+        testAccount.RecordTypeId = RecordTypeIdAccount;
+        insert testAccount;
+
+
+	}
+    
+    public static void insertOpps(Integer oppsCount){        
+        Account account = [select Id from Account where Name='Test Account'];
+        Account acct2 = [select Id from Account where Name='sample account'];
+        Contact contct = [select Id from Contact where lastname='test'];
+        Contact testContact = [select Id from Contact where name='testtest'];
+        List<Opportunity> opps = new List<Opportunity>();
+        for ( Integer i = 0; i < oppsCount; i++) {
+            Opportunity testOpp = new Opportunity();
+            testOpp.Name = 'Test Opportunity_' + i;
+            testOpp.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId();
+            testOpp.AccountId = account.Id;
+            testOpp.Lawyer__c = contct.Id;
+            testOpp.CloseDate = Date.today().addDays(14);
+            testOpp.StageName = 'Closed With Loan';
+            testOpp.Law_Firm__c = acct2.Id;        
+            testOpp.Stage_Status__c = 'Approved';
+            testOpp.Type_of_Loan__c = 'Facility Loan';
+            testOpp.Primary_Contact__c = testContact.Id;
+            testOpp.Interest_Rate__c = 24.0;
+            testOpp.Minimum_Interest_Period__c = '6 months';
+            testOpp.Compounding_Interest__c = 'Semi-Annual';
+            testOpp.Interest_Deferral_Period__c = '0';
+            testOpp.Interest_Compounding_Period__c = 'Compounding Interest';
+            testOpp.Re_Assessed_Loan__c = null;
+            opps.add(testOpp);            
+        }
+        
+        insert opps;
+    }
+    
+    public static void insertDrawdowns(){
+        Account account = [select Id from Account where Name='Test Account'];
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];
+        List<Drawdown__c> drawdowns = new List<Drawdown__c>();
+        for (Opportunity opp : opps){
+            Drawdown__c d = new Drawdown__c();
+        
+            d.Opportunity__c = opp.id;
+            d.Amount__c = 1000;
+            d.Date__c = Date.today().addDays(-30);
+            d.Payment_Method__c = 'e-Transfer';
+            d.Reference_Notes__c = 'Payment to Client';
+            
+            drawdowns.add(d);            
+        }
+        insert drawdowns;
+    }
+    
+    public static testMethod void testCalculatePayments(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(2);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];  
+        List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        System.assertEquals(oppsAfterCalculation[0].Total_Payout__c, oppsAfterCalculation[0].Temp_Payment_Received__c);
+        System.assertEquals(oppsAfterCalculation[1].Temp_Payment_Received__c, 1500.0-oppsAfterCalculation[0].Total_Payout__c);        
+        Task task = [select Id, Subject, Description from Task LIMIT 1];
+        System.assertEquals('Complete posting payment of $1,500.00 for Test Account', task.Subject);
+        System.assertEquals('Payment of $1,500.00 with EFT # of eft and CHQ # of chq was calculated but not applied to Test Account', task.Description);
+        Test.stopTest();
+    }
+    
+    public static testMethod void testApplyPayments1(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(2);
+       // insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
+        Map<String, String> actions = new Map<String, String>();
+        actions.put(opps[0].Id, 'Bad Debt');
+        actions.put(opps[1].Id, 'Shortfall');        
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayments(account.Id, payoutDateStr, 'Payout', actions, 'eft', 'chq');
+        System.assertEquals('Closed - Shortfall', oppsAfterApplying[0].Stage_Status__c);
+        System.assertEquals('Closed - Bad Debt', oppsAfterApplying[1].Stage_Status__c); 
+        Test.stopTest();
+    }
+    
+    
+    public static testMethod void testApplyPayments(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(2);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
+        Map<String, String> actions = new Map<String, String>();
+        actions.put(opps[0].Id, 'Closed Paid');
+        actions.put(opps[1].Id, 'Partial Payment');        
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayments(account.Id, payoutDateStr, 'Payout', actions, 'eft', 'chq');
+        System.assertEquals('Active - Partial Payment', oppsAfterApplying[0].Stage_Status__c);
+        System.assertEquals('Closed - Paid', oppsAfterApplying[1].Stage_Status__c); 
+        List<Task> tasks = [select Id from Task];
+        System.assertEquals(true, tasks.isEmpty());
+        Test.stopTest();
+    }
+	public static testMethod void testApplyPayments2(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(1);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
+        Map<String, String> actions = new Map<String, String>();
+        actions.put(opps[0].Id, 'Surplus');        
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayments(account.Id, payoutDateStr, 'Payout', actions, 'eft', 'chq');
+        System.assertEquals('Closed - Surplus', oppsAfterApplying[0].Stage_Status__c);        
+        Test.stopTest();
+    }
+    
+    public static testMethod void testTaskDeletion(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(1);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        List<Task> tasks = [select Id from Task];
+        System.assertEquals(false, tasks.isEmpty());        
+        Map<String, String> actions = new Map<String, String>();
+        actions.put(opps[0].Id, 'Closed Paid');        
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayments(account.Id, payoutDateStr, 'Payout', actions, 'eft', 'chq');
+        tasks = [select Id from Task];
+        System.assertEquals(true, tasks.isEmpty());
+        Test.stopTest();
+    }
+    
+    public static testMethod void testTaskDeletionAmount0(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(1);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
+        List<Task> tasks = [select Id from Task];
+        System.assertEquals(false, tasks.isEmpty());        
+        CustomerViewComponentCtlr.calculatePayments(account.Id, 0.0, 'eft', 'chq');
+        tasks = [select Id from Task];
+        System.assertEquals(true, tasks.isEmpty());
+        Test.stopTest();
     }
 }
