@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Law Firm Opportunity Layout</layout>
+        <sections>
+            <label><!-- Stage Management --></label>
+            <section>Stage Management</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Loan Re-Assessment Opportunity Layout</layout>
+        <sections>
+            <label><!-- Law Firm, Attorney &amp; Court Details --></label>
+            <section>Law Firm, Attorney &amp; Court Details</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Information --></label>
+            <section>Opportunity Contact Information</section>
+        </sections>
+        <sections>
+            <label><!-- Sale Process --></label>
+            <section>Sale Process</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Opportunity Layout</layout>
+        <sections>
+            <label><!-- W2L Information --></label>
+            <section>W2L Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Opportunity Layout - v2 10/2015</layout>
+        <sections>
+            <label><!-- Application Status Details --></label>
+            <section>Application Status Details</section>
+        </sections>
+        <sections>
+            <label><!-- Descriptions from W2L (from Lead) --></label>
+            <section>Descriptions from W2L (from Lead)</section>
+        </sections>
+        <sections>
+            <label><!-- Funded Loan Details --></label>
+            <section>Funded Loan Details</section>
+        </sections>
+        <sections>
+            <label><!-- Law Firm, Attorney &amp; Court Details --></label>
+            <section>Law Firm, Attorney &amp; Court Details</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Information --></label>
+            <section>Opportunity Contact Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payout --></label>
+            <section>Payout</section>
+        </sections>
+        <sections>
+            <label><!-- Reporting --></label>
+            <section>Reporting</section>
+        </sections>
+        <sections>
+            <label><!-- Sales Process --></label>
+            <section>Sales Process</section>
+        </sections>
+        <sections>
+            <label><!-- W2LForm Details (from Lead) --></label>
+            <section>W2LForm Details (from Lead)</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <description><!-- Use this record type to track the client loan process --></description>
+        <label><!-- Client Opportunity Record Type --></label>
+        <name>Client_Opportunity_Record_Type</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this record type to track the law firm engagement process --></description>
+        <label><!-- Law Firm Engagement Opportunity --></label>
+        <name>Law_Firm_Engagement_Opportunity</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this record type to track the loan re-assessment process --></description>
+        <label><!-- Loan Re-Assessment Opportunity --></label>
+        <name>Loan_Re_Assessment_Opportunity</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage><!-- Cannot change loan setup information after Payments created. --></errorMessage>
+        <name>Cannot_Change_Key_Fields_after_Paid_Out</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Cannot have both minimum interest and deferred interest. --></errorMessage>
+        <name>Cannot_Have_Min_interest_and_Defferred</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- As Compounding Interest is selected please provide a value for Compounding Frequency. --></errorMessage>
+        <name>Compounding_Interest_Requires_Frequency</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Can&apos;t go to a later funding status until loan registration is complete. --></errorMessage>
+        <name>Loan_Registration_Incomplete</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Can&apos;t go to a later funding status until loan setup is complete. --></errorMessage>
+        <name>Loan_Setup_Check_Incomplete</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The Re-Assessment Stage is not available for Opportunities that are not Either Facility Loans or Treatment/2 Loans --></errorMessage>
+        <name>OPP_VR_01_Assessment</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- The Payment Schedule is missing information. Please review the form and ensure that each field is filled out. --></errorMessage>
+        <name>Payment_Schedule_Required_Fields</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Conga_Composer_OAuth --></label>
+        <name>APXTConga4__Conga_Composer_OAuth</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Mail_Merge --></label>
+        <name>APXTConga4__Conga_Mail_Merge</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Oppty --></label>
+        <name>Conga_Composer_Oppty</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Generate_Loan_Documents --></label>
+        <name>Generate_Loan_Documents</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Edit --></label>
+        <name>Mass_Edit</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Update --></label>
+        <name>Mass_Update</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_SMS --></label>
+        <name>RingCentral__Send_SMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_SMS_Opp --></label>
+        <name>RingCentral__Send_SMS_Opp</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_Loan_Documents --></label>
+        <name>Send_Loan_Documents</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_with_DocuSign --></label>
+        <name>dsfs__Send_with_DocuSign</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Verify_with_DNB --></label>
+        <name>dsfs__Verify_with_DNB</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Related_RightSignature_Documents --></label>
+        <name>rightsig__Related_RightSignature_Documents</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_RightSignature_Document --></label>
+        <name>rightsig__Send_RightSignature_Document</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SpanningOpportunityRestore --></label>
+        <name>spanning__SpanningOpportunityRestore</name>
+    </webLinks>
+</CustomObjectTranslation>

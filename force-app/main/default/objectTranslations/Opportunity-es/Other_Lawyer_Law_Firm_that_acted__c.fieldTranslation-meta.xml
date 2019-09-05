@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Other Lawyer / Law Firm that acted --></label>
+    <name>Other_Lawyer_Law_Firm_that_acted__c</name>
+</CustomFieldTranslation>

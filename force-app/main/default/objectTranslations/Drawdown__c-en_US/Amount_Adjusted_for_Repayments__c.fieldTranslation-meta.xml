@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Calculated Balance after last repayment.  This field will be used for calculating outstanding balance. --></help>
+    <label><!-- Amount Adjusted for Repayments --></label>
+    <name>Amount_Adjusted_for_Repayments__c</name>
+</CustomFieldTranslation>

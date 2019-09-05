@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Re-Assessed Loan --></label>
+    <name>Re_Assessed_Loan__c</name>
+    <relationshipLabel><!-- Re-Assessments --></relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Status --></label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Inactive</masterLabel>
+        <translation><!-- Inactive --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Schedule Sent</masterLabel>
+        <translation><!-- Schedule Sent --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Schedule Signed</masterLabel>
+        <translation><!-- Schedule Signed --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Waiting to Send Schedule</masterLabel>
+        <translation><!-- Waiting to Send Schedule --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

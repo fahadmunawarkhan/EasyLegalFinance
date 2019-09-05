@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- Lead Filter Fields --></label>
+        <name>MC4SF__Lead_Filter_Fields</name>
+    </fieldSets>
+    <layouts>
+        <layout>Lead Lawyer Layout</layout>
+        <sections>
+            <label><!-- Law Firm Information --></label>
+            <section>Law Firm Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Lead Layout - v2 10/2015</layout>
+        <sections>
+            <label><!-- Application Details --></label>
+            <section>Application Details</section>
+        </sections>
+        <sections>
+            <label><!-- Application Form Incident &amp; Injury Descriptions --></label>
+            <section>Application Form Incident &amp; Injury Descriptions</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <description><!-- Use this record type to track customer leads --></description>
+        <label><!-- Customer Record Type --></label>
+        <name>Customer_Record_Type</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this record type to track lawyer leads --></description>
+        <label><!-- Lawyer Record Type --></label>
+        <name>Lawyer_Record_Type</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- Conga_Composer_OAuth --></label>
+        <name>APXTConga4__Conga_Composer_OAuth</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Mail_Merge --></label>
+        <name>APXTConga4__Conga_Mail_Merge</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- AltavistaNews --></label>
+        <name>AltavistaNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleNews --></label>
+        <name>GoogleNews</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- HooversProfile --></label>
+        <name>HooversProfile</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MailChimp_Subscriptions_detail --></label>
+        <name>MC4SF__MailChimp_Subscriptions_detail</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MailChimp_Subscriptions_list --></label>
+        <name>MC4SF__MailChimp_Subscriptions_list</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Edit --></label>
+        <name>Mass_Edit</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Update --></label>
+        <name>Mass_Update</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SendSMS --></label>
+        <name>RingCentral__SendSMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SendGmail --></label>
+        <name>SendGmail</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- YahooMaps --></label>
+        <name>YahooMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_with_DocuSign --></label>
+        <name>dsfs__Send_with_DocuSign</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SendSMS --></label>
+        <name>rcsfl__SendSMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SpanningLeadRestore --></label>
+        <name>spanning__SpanningLeadRestore</name>
+    </webLinks>
+</CustomObjectTranslation>

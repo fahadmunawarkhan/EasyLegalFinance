@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- This field doesn&apos;t have a controlling field and its values aren&apos;t restricted. --></help>
+    <label><!-- TestPicklistEUnrestricted --></label>
+    <name>TestPicklistEUnrestricted__c</name>
+    <picklistValues>
+        <masterLabel>e0</masterLabel>
+        <translation><!-- e0 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e1</masterLabel>
+        <translation><!-- e1 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e10</masterLabel>
+        <translation><!-- e10 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e100</masterLabel>
+        <translation><!-- e100 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e11</masterLabel>
+        <translation><!-- e11 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e12</masterLabel>
+        <translation><!-- e12 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e13</masterLabel>
+        <translation><!-- e13 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e14</masterLabel>
+        <translation><!-- e14 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e15</masterLabel>
+        <translation><!-- e15 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e16</masterLabel>
+        <translation><!-- e16 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e17</masterLabel>
+        <translation><!-- e17 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e18</masterLabel>
+        <translation><!-- e18 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e19</masterLabel>
+        <translation><!-- e19 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e2</masterLabel>
+        <translation><!-- e2 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e20</masterLabel>
+        <translation><!-- e20 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e21</masterLabel>
+        <translation><!-- e21 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e22</masterLabel>
+        <translation><!-- e22 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e23</masterLabel>
+        <translation><!-- e23 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e24</masterLabel>
+        <translation><!-- e24 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e25</masterLabel>
+        <translation><!-- e25 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e26</masterLabel>
+        <translation><!-- e26 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e27</masterLabel>
+        <translation><!-- e27 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e28</masterLabel>
+        <translation><!-- e28 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e29</masterLabel>
+        <translation><!-- e29 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e3</masterLabel>
+        <translation><!-- e3 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e30</masterLabel>
+        <translation><!-- e30 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e31</masterLabel>
+        <translation><!-- e31 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e32</masterLabel>
+        <translation><!-- e32 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e33</masterLabel>
+        <translation><!-- e33 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e34</masterLabel>
+        <translation><!-- e34 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e35</masterLabel>
+        <translation><!-- e35 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e36</masterLabel>
+        <translation><!-- e36 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e37</masterLabel>
+        <translation><!-- e37 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e38</masterLabel>
+        <translation><!-- e38 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e39</masterLabel>
+        <translation><!-- e39 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e4</masterLabel>
+        <translation><!-- e4 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e40</masterLabel>
+        <translation><!-- e40 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e41</masterLabel>
+        <translation><!-- e41 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e42</masterLabel>
+        <translation><!-- e42 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e43</masterLabel>
+        <translation><!-- e43 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e44</masterLabel>
+        <translation><!-- e44 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e45</masterLabel>
+        <translation><!-- e45 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e46</masterLabel>
+        <translation><!-- e46 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e47</masterLabel>
+        <translation><!-- e47 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e48</masterLabel>
+        <translation><!-- e48 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e49</masterLabel>
+        <translation><!-- e49 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e5</masterLabel>
+        <translation><!-- e5 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e50</masterLabel>
+        <translation><!-- e50 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e51</masterLabel>
+        <translation><!-- e51 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e52</masterLabel>
+        <translation><!-- e52 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e53</masterLabel>
+        <translation><!-- e53 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e54</masterLabel>
+        <translation><!-- e54 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e55</masterLabel>
+        <translation><!-- e55 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e56</masterLabel>
+        <translation><!-- e56 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e57</masterLabel>
+        <translation><!-- e57 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e58</masterLabel>
+        <translation><!-- e58 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e59</masterLabel>
+        <translation><!-- e59 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e6</masterLabel>
+        <translation><!-- e6 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e60</masterLabel>
+        <translation><!-- e60 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e61</masterLabel>
+        <translation><!-- e61 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e62</masterLabel>
+        <translation><!-- e62 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e63</masterLabel>
+        <translation><!-- e63 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e64</masterLabel>
+        <translation><!-- e64 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e65</masterLabel>
+        <translation><!-- e65 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e66</masterLabel>
+        <translation><!-- e66 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e67</masterLabel>
+        <translation><!-- e67 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e68</masterLabel>
+        <translation><!-- e68 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e69</masterLabel>
+        <translation><!-- e69 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e7</masterLabel>
+        <translation><!-- e7 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e70</masterLabel>
+        <translation><!-- e70 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e71</masterLabel>
+        <translation><!-- e71 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e72</masterLabel>
+        <translation><!-- e72 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e73</masterLabel>
+        <translation><!-- e73 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e74</masterLabel>
+        <translation><!-- e74 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e75</masterLabel>
+        <translation><!-- e75 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e76</masterLabel>
+        <translation><!-- e76 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e77</masterLabel>
+        <translation><!-- e77 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e78</masterLabel>
+        <translation><!-- e78 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e79</masterLabel>
+        <translation><!-- e79 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e8</masterLabel>
+        <translation><!-- e8 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e80</masterLabel>
+        <translation><!-- e80 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e81</masterLabel>
+        <translation><!-- e81 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e82</masterLabel>
+        <translation><!-- e82 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e83</masterLabel>
+        <translation><!-- e83 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e84</masterLabel>
+        <translation><!-- e84 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e85</masterLabel>
+        <translation><!-- e85 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e86</masterLabel>
+        <translation><!-- e86 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e87</masterLabel>
+        <translation><!-- e87 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e88</masterLabel>
+        <translation><!-- e88 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e89</masterLabel>
+        <translation><!-- e89 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e9</masterLabel>
+        <translation><!-- e9 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e90</masterLabel>
+        <translation><!-- e90 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e91</masterLabel>
+        <translation><!-- e91 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e92</masterLabel>
+        <translation><!-- e92 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e93</masterLabel>
+        <translation><!-- e93 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e94</masterLabel>
+        <translation><!-- e94 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e95</masterLabel>
+        <translation><!-- e95 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e96</masterLabel>
+        <translation><!-- e96 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e97</masterLabel>
+        <translation><!-- e97 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e98</masterLabel>
+        <translation><!-- e98 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>e99</masterLabel>
+        <translation><!-- e99 --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

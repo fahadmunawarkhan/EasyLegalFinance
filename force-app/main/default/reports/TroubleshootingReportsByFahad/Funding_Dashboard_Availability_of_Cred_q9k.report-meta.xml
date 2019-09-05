@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>IF( (AMOUNT:SUM - Opportunity.Admin_Fee__c:SUM - Opportunity.Amount_Paid_to_Client__c:SUM) &lt; 0 , 0 , AMOUNT:SUM - Opportunity.Admin_Fee__c:SUM - Opportunity.Amount_Paid_to_Client__c:SUM)</calculatedFormula>
+        <datatype>number</datatype>
+        <developerName>FORMULA1</developerName>
+        <isActive>false</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Availability of Credits</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>AMOUNT</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.Admin_Fee__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.Amount_Paid_to_Client__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity.Available_Credit__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>,Active,Active - Partial Payment</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ELFI</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>ACCOUNT_NUMBER</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Funding Dashboard - Availability of Cred</name>
+    <params>
+        <name>open</name>
+        <value>all</value>
+    </params>
+    <params>
+        <name>probability</name>
+        <value>&gt;0</value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>Opportunity</reportType>
+    <scope>organization</scope>
+    <showDetails>false</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>Opportunity.Date_Applied__c</dateColumn>
+        <endDate>2019-08-09</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2018-10-01</startDate>
+    </timeFrameFilter>
+</Report>

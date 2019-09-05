@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Fee Calculation Method --></label>
+    <name>Fee_Calculation_Method__c</name>
+    <picklistValues>
+        <masterLabel>Amount calculated as % of loan amount</masterLabel>
+        <translation><!-- Amount calculated as % of loan amount --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Customized Amount</masterLabel>
+        <translation><!-- Customized Amount --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Fixed Amount</masterLabel>
+        <translation><!-- Fixed Amount --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

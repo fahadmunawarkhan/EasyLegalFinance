@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Amount borrowed as it was on the Reporting To Date. Excludes anything which was already paid off before the reporting period as well borrowed afterwards and things which do not accrue interest(Payments, Referral Fees, Payments Re-Proc/Rejected) --></help>
+    <label><!-- Principal Borrowed as of To Date --></label>
+    <name>Principal_Borrowed_as_of_To_Date__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Number of months between date of advance and reporting to date.   Will go to end of loan if loan was closed in reporting period. --></help>
+    <label><!-- Months Outstanding as of To Date --></label>
+    <name>Months_Outstanding_as_of_To_Date__c</name>
+</CustomFieldTranslation>

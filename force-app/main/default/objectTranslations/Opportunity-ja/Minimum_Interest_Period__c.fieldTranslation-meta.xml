@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Minimum Interest Period --></label>
+    <name>Minimum_Interest_Period__c</name>
+    <picklistValues>
+        <masterLabel>0 months</masterLabel>
+        <translation><!-- 0 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>1 month</masterLabel>
+        <translation><!-- 1 month --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>10 months</masterLabel>
+        <translation><!-- 10 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>11 months</masterLabel>
+        <translation><!-- 11 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>12 months</masterLabel>
+        <translation><!-- 12 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>2 months</masterLabel>
+        <translation><!-- 2 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>3 months</masterLabel>
+        <translation><!-- 3 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>4 months</masterLabel>
+        <translation><!-- 4 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>5 months</masterLabel>
+        <translation><!-- 5 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>6 months</masterLabel>
+        <translation><!-- 6 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>7 months</masterLabel>
+        <translation><!-- 7 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>8 months</masterLabel>
+        <translation><!-- 8 months --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>9 months</masterLabel>
+        <translation><!-- 9 months --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

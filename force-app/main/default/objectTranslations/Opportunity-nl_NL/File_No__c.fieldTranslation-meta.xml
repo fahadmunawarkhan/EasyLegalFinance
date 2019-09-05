@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Account File No --></help>
+    <label><!-- File No --></label>
+    <name>File_No__c</name>
+</CustomFieldTranslation>

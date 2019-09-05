@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- This checkbox defines if the running user is associated to the lawyer of the opportunity based on its line of business and the customer line of business --></help>
+    <label><!-- My Lawyer Contact --></label>
+    <name>My_Lawyer_Contact__c</name>
+</CustomFieldTranslation>

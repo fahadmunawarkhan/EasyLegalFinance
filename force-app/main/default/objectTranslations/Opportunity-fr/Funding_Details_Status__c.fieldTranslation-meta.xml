@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Funding Details Status --></label>
+    <name>Funding_Details_Status__c</name>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation><!-- Closed --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Final Review</masterLabel>
+        <translation><!-- Final Review --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Loan Setup Check</masterLabel>
+        <translation><!-- Loan Setup Check --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Populate PPSA</masterLabel>
+        <translation><!-- Populate PPSA --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Process Drawdowns</masterLabel>
+        <translation><!-- Process Drawdowns --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

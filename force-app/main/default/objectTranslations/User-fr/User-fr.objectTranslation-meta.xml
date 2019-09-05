@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Community Member Layout</layout>
+        <layoutType>CommunityMemberLayout</layoutType>
+        <sections>
+            <label><!-- Basic Information --></label>
+            <section>Basic Information</section>
+        </sections>
+        <sections>
+            <label><!-- Chatter Settings --></label>
+            <section>Chatter Settings</section>
+        </sections>
+        <sections>
+            <label><!-- Language And Locale Settings --></label>
+            <section>Language And Locale Settings</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>User Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Reports Access --></label>
+            <section>Custom Reports Access</section>
+        </sections>
+    </layouts>
+    <validationRules>
+        <errorMessage><!-- You are not allowed to change this field. Please contact Larry or Nicole to update --></errorMessage>
+        <name>EFT_Originator_Validation</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Conga_Composer_OAuth --></label>
+        <name>APXTConga4__Conga_Composer_OAuth</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Mail_Merge --></label>
+        <name>APXTConga4__Conga_Mail_Merge</name>
+    </webLinks>
+</CustomObjectTranslation>

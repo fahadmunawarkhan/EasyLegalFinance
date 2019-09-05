@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The maximum number of error records to display. --></help>
+    <label><!-- Max error records to display --></label>
+    <name>MaxErrorRecordsToDisplay__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Accrued interest on the From Date --></help>
+    <label><!-- Accrued Interest as of From Date --></label>
+    <name>Accrued_Interest_as_of_From_Date__c</name>
+</CustomFieldTranslation>

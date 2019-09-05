@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Interest Accrued up to Temp Payout Date --></help>
+    <label><!-- Accrued Interest as of Temp Date --></label>
+    <name>Accrued_Interest_as_of_Temp_Date__c</name>
+</CustomFieldTranslation>

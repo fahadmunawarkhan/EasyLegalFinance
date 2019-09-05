@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Type --></label>
+    <name>Type__c</name>
+    <picklistValues>
+        <masterLabel>Facility Drawdown</masterLabel>
+        <translation><!-- Facility Drawdown --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lump-Sum Admin Fee</masterLabel>
+        <translation><!-- Lump-Sum Admin Fee --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lump-Sum Amount Paid to Borrower</masterLabel>
+        <translation><!-- Lump-Sum Amount Paid to Borrower --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Treatment Loan</masterLabel>
+        <translation><!-- Treatment Loan --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

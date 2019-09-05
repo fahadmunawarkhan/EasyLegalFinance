@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The date the interest had accrued to when last payment was recorded (last payment before Temp date).    As this is a DLRS roll up summary, do no update directly.  Instead, update Payments. --></help>
+    <label><!-- Interest End Date at Last Rpymnt b4 Temp --></label>
+    <name>Interest_End_Date_at_Last_Rpymnt_b4_Temp__c</name>
+</CustomFieldTranslation>

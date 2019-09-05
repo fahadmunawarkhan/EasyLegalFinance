@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Incident Type --></label>
+    <name>Loan_Type__c</name>
+    <picklistValues>
+        <masterLabel>1 - MVA</masterLabel>
+        <translation><!-- 1 - MVA --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>10 - Class Action</masterLabel>
+        <translation><!-- 10 - Class Action --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>11 - U.S. Cases</masterLabel>
+        <translation><!-- 11 - U.S. Cases --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>12 - Uncategorized</masterLabel>
+        <translation><!-- 12 - Uncategorized --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>2 - Slip &amp; Fall</masterLabel>
+        <translation><!-- 2 - Slip &amp; Fall --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>3 - STD/LTD</masterLabel>
+        <translation><!-- 3 - STD/LTD --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>4 - Product Liability</masterLabel>
+        <translation><!-- 4 - Product Liability --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>5 - Medical Malpractice</masterLabel>
+        <translation><!-- 5 - Medical Malpractice --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>6 - Employment</masterLabel>
+        <translation><!-- 6 - Employment --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>7 - Sexual Assault</masterLabel>
+        <translation><!-- 7 - Sexual Assault --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>8 - Settled Cases</masterLabel>
+        <translation><!-- 8 - Settled Cases --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>9 - Other</masterLabel>
+        <translation><!-- 9 - Other --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

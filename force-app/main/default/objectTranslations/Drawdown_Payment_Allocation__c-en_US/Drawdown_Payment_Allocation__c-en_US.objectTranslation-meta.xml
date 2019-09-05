@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Drawdown Payment Allocation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Drawdown Payment Allocations</value>
+    </caseValues>
+    <layouts>
+        <layout>Drawdown Transaction Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Payment Allocation cannot be moved to a different Payment. --></errorMessage>
+        <name>Cannot_Change_Payment</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Transaction Date is required --></errorMessage>
+        <name>Transaction_Date_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

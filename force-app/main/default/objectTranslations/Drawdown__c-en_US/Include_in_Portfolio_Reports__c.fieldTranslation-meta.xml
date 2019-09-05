@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Used for Portfolio Reports - If anything interest is Accrued in the reporting period or there&apos;s a balance outstanding, include the Drawdown in the report. --></help>
+    <label><!-- Include in Portfolio Reports --></label>
+    <name>Include_in_Portfolio_Reports__c</name>
+</CustomFieldTranslation>

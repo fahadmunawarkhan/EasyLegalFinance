@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>FIRST_NAME</field>
+    </columns>
+    <columns>
+        <field>Lead.Business_Unit__c</field>
+    </columns>
+    <filter>
+        <criteriaItems>
+            <column>Lead.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ELFI,Rhino</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CONVERTED</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>Lead.Created_Month__c</field>
+        <sortOrder>Desc</sortOrder>
+    </groupingsDown>
+    <name>Actual Sales by Month # of Leads</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>LeadList</reportType>
+    <scope>org</scope>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <endDate>2019-07-31</endDate>
+        <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2019-07-01</startDate>
+    </timeFrameFilter>
+</Report>

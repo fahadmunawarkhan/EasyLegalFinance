@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Payment Type --></label>
+    <name>Payment_Type__c</name>
+    <picklistValues>
+        <masterLabel>Ad-Hoc</masterLabel>
+        <translation><!-- Ad-Hoc --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lump-Sum</masterLabel>
+        <translation><!-- Lump-Sum --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Payment to Other Lender</masterLabel>
+        <translation><!-- Payment to Other Lender --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Scheduled Facility</masterLabel>
+        <translation><!-- Scheduled Facility --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Treatment</masterLabel>
+        <translation><!-- Treatment --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

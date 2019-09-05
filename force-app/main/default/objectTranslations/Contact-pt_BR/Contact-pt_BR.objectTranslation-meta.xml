@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- Contact Filter Fields --></label>
+        <name>MC4SF__Contact_Filter_Fields</name>
+    </fieldSets>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label><!-- Other Details --></label>
+            <section>Other Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>General Contact Layout</layout>
+        <sections>
+            <label><!-- Other Details --></label>
+            <section>Other Details</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Lawyer Contact Layout</layout>
+        <sections>
+            <label><!-- Contact KPIs - Current Year --></label>
+            <section>Contact KPIs - Current Year</section>
+        </sections>
+        <sections>
+            <label><!-- Other Details --></label>
+            <section>Other Details</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <description><!-- Use this record type to track client countacts --></description>
+        <label><!-- Client Contact --></label>
+        <name>Client_Contact</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this record type to create a general contact --></description>
+        <label><!-- General Contact --></label>
+        <name>General_Contact</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this record type to track lawyers --></description>
+        <label><!-- Lawyers --></label>
+        <name>Lawyers</name>
+    </recordTypes>
+    <validationRules>
+        <errorMessage><!-- The Contact Owner and the Secondary Contact owner must be from different business units. The business unit is defined in the user profile. Validation: CVR_01 --></errorMessage>
+        <name>CVR_01_Sales_Ownership</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Conga_Composer_OAuth --></label>
+        <name>APXTConga4__Conga_Composer_OAuth</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Mail_Merge --></label>
+        <name>APXTConga4__Conga_Mail_Merge</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Lawyer_Summaries --></label>
+        <name>Conga_Composer_Lawyer_Summaries</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Lawyer_Summary --></label>
+        <name>Conga_Composer_Lawyer_Summary</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleMaps --></label>
+        <name>GoogleMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- GoogleSearch --></label>
+        <name>GoogleSearch</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MailChimp_Subscriptions_detail --></label>
+        <name>MC4SF__MailChimp_Subscriptions_detail</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- MailChimp_Subscriptions_list --></label>
+        <name>MC4SF__MailChimp_Subscriptions_list</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Edit --></label>
+        <name>Mass_Edit</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Mass_Update --></label>
+        <name>Mass_Update</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SendSMS --></label>
+        <name>RingCentral__SendSMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SendGmail --></label>
+        <name>SendGmail</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- YahooMaps --></label>
+        <name>YahooMaps</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- YahooWeather --></label>
+        <name>YahooWeather</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_with_DocuSign --></label>
+        <name>dsfs__Send_with_DocuSign</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_SMS --></label>
+        <name>rcsfl__Send_SMS</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Related_RightSignature_Documents --></label>
+        <name>rightsig__Related_RightSignature_Documents</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Send_RightSignature_Document --></label>
+        <name>rightsig__Send_RightSignature_Document</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- SpanningContactRestore --></label>
+        <name>spanning__SpanningContactRestore</name>
+    </webLinks>
+</CustomObjectTranslation>

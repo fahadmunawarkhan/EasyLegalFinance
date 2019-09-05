@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Primarily used to force in-process payments to be included in the amount calculations on the opportunity as rollups aren&apos;t flexible enough to handle this themselves. --></help>
+    <label><!-- ForceCountAgainstTotal --></label>
+    <name>ForceCountAgainstTotal__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Stores the id of the oldest payment not fully allocated.  This will be used to kick off payment allocation when a new drawdown is inserted/updated.    This field will be maintained by DLRS and should not be updated manually. --></help>
+    <label><!-- Oldest Unallocated Payment --></label>
+    <name>Oldest_Unallocated_Payment__c</name>
+    <relationshipLabel><!-- Opportunities --></relationshipLabel>
+</CustomFieldTranslation>

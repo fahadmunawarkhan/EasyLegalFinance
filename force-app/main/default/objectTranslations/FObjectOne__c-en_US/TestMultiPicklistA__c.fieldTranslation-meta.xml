@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- TestMultiPicklistA --></label>
+    <name>TestMultiPicklistA__c</name>
+    <picklistValues>
+        <masterLabel>d1</masterLabel>
+        <translation><!-- d1 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>d2</masterLabel>
+        <translation><!-- d2 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>d3</masterLabel>
+        <translation><!-- d3 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>d4</masterLabel>
+        <translation><!-- d4 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>d5</masterLabel>
+        <translation><!-- d5 --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

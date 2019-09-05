@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Only applies to Payments. Sum of payment allocations which allocate the funds on this payment. --></help>
+    <label><!-- Sum of Payment Allocations --></label>
+    <name>Sum_of_Payment_Allocations__c</name>
+</CustomFieldTranslation>

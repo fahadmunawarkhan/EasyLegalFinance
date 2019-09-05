@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Days Outstanding  at the end of the reporting period.    On ELFI 2 just shortened to &quot;Days Outstanding&quot; --></help>
+    <label><!-- Reporting Days Outstanding --></label>
+    <name>Reporting_Days_Outstanding__c</name>
+</CustomFieldTranslation>

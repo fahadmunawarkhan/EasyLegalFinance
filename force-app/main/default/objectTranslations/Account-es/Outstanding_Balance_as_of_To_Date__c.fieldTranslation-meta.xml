@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Outstanding Balance on the Reporting To date. Used for ELFI 1 report. Note that this field is just labeled &quot;Outstanding Balance&quot; on the report (label changed via report type). --></help>
+    <label><!-- Outstanding Balance as of To Date --></label>
+    <name>Outstanding_Balance_as_of_To_Date__c</name>
+</CustomFieldTranslation>

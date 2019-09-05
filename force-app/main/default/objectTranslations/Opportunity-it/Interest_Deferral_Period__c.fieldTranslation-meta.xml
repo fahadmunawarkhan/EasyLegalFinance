@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label><!-- Interest Deferral Period --></label>
+    <name>Interest_Deferral_Period__c</name>
+    <picklistValues>
+        <masterLabel>0</masterLabel>
+        <translation><!-- 0 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>18</masterLabel>
+        <translation><!-- 18 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>24</masterLabel>
+        <translation><!-- 24 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>48</masterLabel>
+        <translation><!-- 48 --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The Temp Payout Date replicated down from the Opportunity.  It&apos;s required here to allow the DLRS to aggregate up to Drawdown. --></help>
+    <label><!-- Temp Payout Date --></label>
+    <name>Temp_Payout_Date__c</name>
+</CustomFieldTranslation>

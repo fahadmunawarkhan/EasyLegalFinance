@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Prior Injury --></help>
+    <label><!-- Prior Injury --></label>
+    <name>Prior_Injury__c</name>
+</CustomFieldTranslation>

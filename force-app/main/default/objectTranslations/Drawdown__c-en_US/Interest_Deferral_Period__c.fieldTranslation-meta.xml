@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The months to defer interest on this Drawdown. --></help>
+    <label><!-- Interest Deferral Period --></label>
+    <name>Interest_Deferral_Period__c</name>
+</CustomFieldTranslation>

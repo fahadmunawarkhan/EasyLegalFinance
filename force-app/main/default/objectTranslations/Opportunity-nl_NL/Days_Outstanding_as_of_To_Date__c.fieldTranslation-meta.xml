@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Days between first advance and reporting TO date --></help>
+    <label><!-- Days Outstanding as of To Date --></label>
+    <name>Days_Outstanding_as_of_To_Date__c</name>
+</CustomFieldTranslation>
