@@ -449,6 +449,10 @@
         }
     },
     calculatePayment: function(component, event, helper){
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
         component.set("v.spinner", true);
 		helper.calculatePayment(component);
     },
@@ -626,6 +630,10 @@ handlePaymentActionSelected : function(component, event, helper) {
         helper.validatePaymentAction(component);
     },
     submitPayments : function(component, event, helper) {
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
         var paymentActionsMap = component.get("v.paymentActionsMap");
         component.set("v.spinner", true);
         var calculatedPaymentAmount = component.get("v.calculatedPaymentAmount");
@@ -641,6 +649,10 @@ handlePaymentActionSelected : function(component, event, helper) {
                 
     },                        
     cancel : function(component, event, helper) {
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
         component.set("v.paymentAmount", 0.0);
         component.set("v.spinner", true);
         helper.calculatePayment(component, event, helper);
