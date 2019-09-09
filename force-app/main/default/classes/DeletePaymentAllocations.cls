@@ -19,7 +19,7 @@ History
 
         List<Drawdown_Payment_Allocation__c> Payment_Allocations =[select id from Drawdown_Payment_Allocation__c
                           where payment__c in :paymentIds];
-        delete Payment_Allocations;		
+        delete Payment_Allocations;	
 		//system.debug('xxxxxxxxxxxxxxxxxx Payment Allocations Deleted => '+Payment_Allocations.size());
 		//system.debug('xxxxxxxxxxxxxxxxxx END Delete Payment Allocations From Payment xxxxxxxxxxxxxxxxxx');
 		return;

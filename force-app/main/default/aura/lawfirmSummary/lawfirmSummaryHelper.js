@@ -3,7 +3,7 @@
         var year = new Date().getFullYear() - 1;
         //var min = year+'-01-01';
         var min = '2010-01-01';
-        component.set("v.calendarMin", min);                  
+        component.set("v.calendarMin", min);                 
     },
     
     getCalendarMax : function(component){

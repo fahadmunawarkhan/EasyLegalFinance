@@ -2,14 +2,12 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>APR_1__c</fullName>
     <externalId>false</externalId>
-    <formula>25.44</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <formula>IF(AND(NOT(ISBLANK(Amount)),NOT(ISBLANK(APR_Interest_Rate__c))),((Amount*APR_Interest_Rate__c/2+(Amount+(Amount*APR_Interest_Rate__c/2))*APR_Interest_Rate__c/2)/Amount),0.00)</formula>
     <label>APR #1</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Number</type>
-    <unique>false</unique>
+    <type>Percent</type>
 </CustomField>

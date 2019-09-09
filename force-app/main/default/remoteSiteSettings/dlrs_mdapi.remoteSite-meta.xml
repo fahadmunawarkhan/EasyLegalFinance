@@ -3,5 +3,5 @@
     <description>Metadata API Remote Site Setting for Declarative Rollup Tool (DLRS)</description>
     <disableProtocolSecurity>false</disableProtocolSecurity>
     <isActive>true</isActive>
-    <url>https://easylegalfinance--dlrs.na39.visual.force.com</url>
+    <url>https://easylegalfinance--qa--dlrs.cs24.visual.force.com</url>
 </RemoteSiteSetting>

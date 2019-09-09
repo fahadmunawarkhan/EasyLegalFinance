@@ -117,16 +117,24 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <a href="{!v.ViewAllUrl}" target="_BLANK">
+                <lightning:buttonMenu aura:id="menu" onselect="{! c.handleViewAllButtonMenu }" label="View All (Excel)" alternativeText="View All">
+                    <lightning:menuItem value="ViewAll" label="View All" />
+                    <lightning:menuItem value="PayoutViewAll" label="View All (Payout)" />
+                </lightning:buttonMenu>
+                <!--<a href="{!v.ViewAllUrl}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (Excel)" />
-                </a>
+                </a>-->
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.ViewAllUrl +'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <lightning:buttonMenu aura:id="menu" onselect="{! c.handleViewAllPDFButtonMenu }" label="View All (PDF)" alternativeText="View All (PDF)">
+                    <lightning:menuItem value="ViewAll" label="View All" />
+                    <lightning:menuItem value="PayoutViewAll" label="View All (Payout)" />
+                </lightning:buttonMenu>
+                <!--<a href="{!v.ViewAllUrl +'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (PDF)" />
-                </a>
+                </a>-->
             </lightning:layoutItem>
             <lightning:layoutItem >
                 <a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">

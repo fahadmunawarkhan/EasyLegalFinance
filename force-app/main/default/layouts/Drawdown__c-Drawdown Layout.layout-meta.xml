@@ -67,6 +67,14 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>Quarter_Target__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Month_Target__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>Created_Month__c</field>
             </layoutItems>
             <layoutItems>
@@ -199,11 +207,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Year_Target__c</field>
+                <field>Admin_Fee_Formula__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Include_in_Portfolio_Reports__c</field>
+                <field>Non_Allocated_Payment__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

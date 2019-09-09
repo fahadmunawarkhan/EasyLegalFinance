@@ -3,8 +3,16 @@
     <label><!-- Type of Loan --></label>
     <name>Type_of_Loan__c</name>
     <picklistValues>
+        <masterLabel>Assessment Loans</masterLabel>
+        <translation><!-- Assessment Loans --></translation>
+    </picklistValues>
+    <picklistValues>
         <masterLabel>Facility Loan</masterLabel>
         <translation><!-- Facility Loan --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lawyer Loans</masterLabel>
+        <translation><!-- Lawyer Loans --></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Lump-Sum</masterLabel>

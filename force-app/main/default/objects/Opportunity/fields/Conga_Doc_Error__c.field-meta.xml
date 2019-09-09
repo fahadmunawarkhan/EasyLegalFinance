@@ -8,7 +8,7 @@
 &amp;IF(ISBLANK(Name),&quot;\\nOpportunity Name&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(Amount),&quot;\\nLoan Amount&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(APR_1__c),&quot;\\nAPR 1&quot;,&quot;&quot;)
-&amp;IF(ISBLANK(APR_2__c),&quot;\\nAPR 2&quot;,&quot;&quot;)
+&amp;IF(ISBLANK(APR_1__c),&quot;\\nAPR 1&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(Style_of_Cause_Description__c),&quot;\\nStyle of Cause Description&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(Name_of_Court__c),&quot;\\nName of Court&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(Court_File_No__c),&quot;\\nCourt File No&quot;,&quot;&quot;)

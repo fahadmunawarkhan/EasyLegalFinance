@@ -37,11 +37,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Principal_Repaid__c</field>
+                <field>Interest_Repaid__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Interest_Repaid__c</field>
+                <field>Principal_Repaid__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -95,7 +95,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h0L00000Vn5Qr</masterLabel>
+        <masterLabel>00h21000000O1mf</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

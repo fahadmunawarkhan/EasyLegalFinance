@@ -10,10 +10,5 @@
     <columns>CORE.USERS.ALIAS</columns>
     <columns>ACCOUNT.CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
-    <filters>
-        <field>ACCOUNT.ACCOUNT_NUMBER</field>
-        <operation>greaterThan</operation>
-        <value>1000</value>
-    </filters>
     <label>All Accounts</label>
 </ListView>

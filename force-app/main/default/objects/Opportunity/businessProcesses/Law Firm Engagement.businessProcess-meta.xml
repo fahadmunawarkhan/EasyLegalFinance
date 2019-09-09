@@ -19,8 +19,4 @@
         <fullName>Prospecting</fullName>
         <default>false</default>
     </values>
-    <values>
-        <fullName>TESTING</fullName>
-        <default>false</default>
-    </values>
 </BusinessProcess>

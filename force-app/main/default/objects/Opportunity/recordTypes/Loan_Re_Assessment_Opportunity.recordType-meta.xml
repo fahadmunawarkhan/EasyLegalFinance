@@ -185,7 +185,7 @@
         </values>
         <values>
             <fullName>Loan Setup Check</fullName>
-            <default>false</default>
+            <default>true</default>
         </values>
         <values>
             <fullName>Populate PPSA</fullName>
@@ -422,18 +422,6 @@
         <picklist>Loan_Status__c</picklist>
         <values>
             <fullName>Active</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Active - Partial Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Closed - Bad Debt</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Closed - Paid</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -752,6 +740,14 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Active - Partial Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ad-hoc Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Add%27l Docs Required</fullName>
             <default>false</default>
         </values>
@@ -772,11 +768,7 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Closed - Shortfall</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Closed - Surplus</fullName>
+            <fullName>Closed - Bad Debt</fullName>
             <default>false</default>
         </values>
         <values>
@@ -858,7 +850,15 @@
     <picklistValues>
         <picklist>Type_of_Loan__c</picklist>
         <values>
+            <fullName>Assessment Loans</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Facility Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lawyer Loans</fullName>
             <default>false</default>
         </values>
         <values>

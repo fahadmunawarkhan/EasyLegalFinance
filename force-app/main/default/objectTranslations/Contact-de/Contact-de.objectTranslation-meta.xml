@@ -7,15 +7,8 @@
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
-            <label><!-- Other Details --></label>
-            <section>Other Details</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>General Contact Layout</layout>
-        <sections>
-            <label><!-- Other Details --></label>
-            <section>Other Details</section>
+            <label><!-- Fields For Merge --></label>
+            <section>Fields For Merge</section>
         </sections>
     </layouts>
     <layouts>
@@ -25,8 +18,8 @@
             <section>Contact KPIs - Current Year</section>
         </sections>
         <sections>
-            <label><!-- Other Details --></label>
-            <section>Other Details</section>
+            <label><!-- Contacts Merge Fields --></label>
+            <section>Contacts Merge Fields</section>
         </sections>
     </layouts>
     <recordTypes>
@@ -107,10 +100,6 @@
     <webLinks>
         <label><!-- Send_with_DocuSign --></label>
         <name>dsfs__Send_with_DocuSign</name>
-    </webLinks>
-    <webLinks>
-        <label><!-- Send_SMS --></label>
-        <name>rcsfl__Send_SMS</name>
     </webLinks>
     <webLinks>
         <label><!-- Related_RightSignature_Documents --></label>

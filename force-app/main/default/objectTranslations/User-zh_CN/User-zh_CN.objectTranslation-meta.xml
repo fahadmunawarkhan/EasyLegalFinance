@@ -27,6 +27,22 @@
             <section>Custom Reports Access</section>
         </sections>
     </layouts>
+    <layouts>
+        <layout>User Profile Layout</layout>
+        <layoutType>UserAlt</layoutType>
+        <sections>
+            <label><!-- About --></label>
+            <section>About</section>
+        </sections>
+        <sections>
+            <label><!-- Contact --></label>
+            <section>Contact</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
     <validationRules>
         <errorMessage><!-- You are not allowed to change this field. Please contact Larry or Nicole to update --></errorMessage>
         <name>EFT_Originator_Validation</name>

@@ -5,9 +5,9 @@
     <inlineHelpText>A count of all Active Loans under the Account.   Used for filtering the ELFI Portfolio reports to only Accounts with Active Loans.</inlineHelpText>
     <label>Active Loan Count</label>
     <summaryFilterItems>
-        <field>Opportunity.Stage_Status__c</field>
+        <field>Opportunity.Active_Loan__c</field>
         <operation>equals</operation>
-        <value>Active, Partial Payment</value>
+        <value>True</value>
     </summaryFilterItems>
     <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
     <summaryOperation>count</summaryOperation>

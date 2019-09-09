@@ -173,8 +173,8 @@
                         
                         <tr class="slds-hint-parent">
                             <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox value="{!con.checked}" change="{!c.check}"/></div></td>
-                            <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.contact.Name}</td>
-                            <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.contact.Account.Name}</td>
+                            <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/'+con.contact.Id}" >{!con.contact.Name}</a></td>
+                            <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/'+con.contact.AccountId}" >{!con.contact.Account.Name}</a></td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.noOfFiles}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                 <lightning:layout pullToBoundary="small" >

@@ -60,10 +60,12 @@
         },3000);
     },
     reInitSomeData:function(component, event, helper) {
+        
         /*console.log('tab switch');
         var oldVal = component.get('v.oppObj.Have_you_ever_declared_bankruptcy__c');
         component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c','');
         component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c',oldVal);*/
+        
     },
     
     onControllerFieldChange: function(component, event, helper) { 

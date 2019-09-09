@@ -23,15 +23,17 @@ public with sharing class LoanSimulatorController {
 			}	
 
 			// Create account 
-			Account clientAccount = createAccount(Schema.SObjectType.Account.getRecordTypeInfosByName().get('Client').getRecordTypeId(),'Test Company- Raj###1');
+			Account clientAccount = createAccount(Schema.SObjectType.Account.getRecordTypeInfosByName().get('Client').getRecordTypeId(),'Test Company');
+			Account lawFirmAccount = createAccount(Schema.SObjectType.Account.getRecordTypeInfosByName().get('Law Firm').getRecordTypeId(),'Test Company Lawyer');
 
 			// Create Opporutunity
-			opportunity.Name = 'Test Opportunity - Raj###1';
+			opportunity.Name = 'Test Opportunity';
 			opportunity.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId();
 			opportunity.StageName = 'Loan Approved';
 			opportunity.CloseDate = Date.today().addDays(14);
 			opportunity.AccountId = clientAccount.Id;
-			opportunity.Amount = principal; 
+			opportunity.Amount = principal;
+			//opportunity.Law_Firm__c = lawFirmAccount.Id;  
 			opportunity.Type_of_Loan__c = 'Facility Loan';
 			insert opportunity; 
 
@@ -46,18 +48,18 @@ public with sharing class LoanSimulatorController {
 
 			// fetch account 
 			List<Account> accountList = [SELECT Id, All_Payout_Balance__c FROM Account WHERE Id =: clientAccount.Id LIMIT 1];
-			objectMap = new Map<String, Object>{	'principal' => principal,
+			return new Map<String, Object>{	'principal' => principal,
 											'interest' => accountList[0].All_Payout_Balance__c - principal,
 											'balance'	=> accountList[0].All_Payout_Balance__c,
 											'drawdowns' => drawdownsList
 										};
 		}catch(Exception ex){
-			
+
 		}finally{
 			Database.rollback(savePointInstance);
 		}
 
-		return objectMap;
+		return null;
 	}
 
 	/**
