@@ -247,7 +247,7 @@
     
 	runAllOptsPayout : function(component) {
         component.set("v.displayPaymentValidationErrors", false);
-        component.set('v.calculatedPaymentAmount', null);        
+        component.set('v.calculatedPaymentAmount', null);         
         var recordId = component.get("v.recordId");
         var paymentDate = component.get("v.paymentDate");
         var action = component.get('c.runPayoutForAllOpps');             
@@ -266,7 +266,8 @@
                         oppsList.push(resultsList[i]);
                     }
                 }
-                component.set("v.oppList", oppsList);           
+                component.set("v.oppList", oppsList);   
+                this.getLoanSummaryInfo(component);
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -282,7 +283,7 @@
         $A.enqueueAction(action);		        
     },
     calculatePayment : function(component) {
-        component.set("v.displayPaymentValidationErrors", false);
+        component.set("v.displayPaymentValidationErrors", false);        
         var recordId = component.get("v.recordId");
         var paymentAmount = component.get("v.paymentAmount");
         var eft = component.get("v.EFT");
@@ -316,6 +317,7 @@
                         }
                     }
                 }
+                this.getLoanSummaryInfo(component);
                 this.showToast('SUCCESS','Payment was successfully calculated!','SUCCESS');                
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
@@ -673,6 +675,7 @@
                     component.set("v.payoutDateSet", true);
                 }
                 component.set("v.spinner", false);
+                component.set("v.estimatedTotalBalance", null);
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -1168,7 +1171,7 @@
                 component.set("v.oppList", response.getReturnValue()); 
 				this.postSubmitPayments(component);                
                 this.showToast('SUCCESS','Success!','SUCCESS');                        
-                this.getLoanSummaryInfo(component);
+                //this.getLoanSummaryInfo(component);
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -1183,8 +1186,32 @@
             }
         });
         $A.enqueueAction(action);        
-    },     
-   	postSubmitPayments : function(component){
+    },
+    estimateTotalBalance : function(component)    {
+        var opps = component.get("v.oppList");
+        console.log(opps);
+        var estTotalBalance = 0.0;
+        for (var oppIndex in opps){
+            var opp = opps[oppIndex];
+            console.log(opp);
+            if ( (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') )
+            	estTotalBalance += opp.Total_Payout__c;
+        }
+                        
+        component.set("v.estimatedTotalBalance", estTotalBalance);
+        /*var calculatedPaymentAmount = component.get('v.calculatedPaymentAmount');
+        if (!calculatedPaymentAmount)
+            return;
+        console.log('calculated ' +calculatedPaymentAmount);
+    	var loanSummary = component.get("v.LoanSummary");        
+        var totalBalance = loanSummary.balance;
+        totalBalance -= calculatedPaymentAmount;
+        if (totalBalance < 0.0)
+            totalBalance = 0.0;
+        component.set("v.estimatedTotalBalance", totalBalance);*/
+    },
+    postSubmitPayments : function(component){
+        this.estimateTotalBalance(component);
         var paymentAmount = component.get('v.paymentAmount');
         component.set('v.calculatedPaymentAmount', null);    	
         component.set('v.paymentAmount', null);
