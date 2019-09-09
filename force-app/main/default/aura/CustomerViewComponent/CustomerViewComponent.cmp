@@ -45,6 +45,7 @@
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
     <aura:attribute name="calculatedPaymentAmount" type="decimal" />     
+    <aura:attribute name="estimatedTotalBalance" type="decimal" />    
     <aura:attribute name="EFT" type="decimal" /> 
     <aura:attribute name="CHQ" type="decimal" /> 
     <aura:attribute name="paymentsError" type="String" /> 
@@ -1450,7 +1451,12 @@
                                         <div class="slds-form-element__control">
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                    Total Balance amount <ui:outputCurrency value="{!v.LoanSummary.balance}"/>
+                                                     <aura:if isTrue="{!v.estimatedTotalBalance != null}">
+                                                         Estimated balance after payment: <ui:outputCurrency value="{!v.estimatedTotalBalance}"/>
+                                                         <aura:set attribute="else">
+                                                         	Total Balance amount <ui:outputCurrency value="{!v.LoanSummary.balance}"/>                                                                    
+                                                         </aura:set>
+                                                     </aura:if>                                                     
                                                 </div>
                                             </span>
                                         </div>
