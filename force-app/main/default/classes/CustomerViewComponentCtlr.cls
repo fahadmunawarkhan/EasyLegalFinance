@@ -299,8 +299,8 @@ public class CustomerViewComponentCtlr {
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
-        dd.Amount__c = 0.00;
-        dd.Interest_Repaid__c = opp.Surplus__c;
+        dd.Amount__c = opp.Surplus__c;
+        //dd.Interest_Repaid__c = opp.Surplus__c;
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Payment Surplus';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
@@ -562,14 +562,9 @@ t.adminFee =  d.Amount__c;
                     t.accruedInterest = d.Total_Accrued_Interest__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
-                } else { 
-                    if(t.referenceNotes == 'Payment Surplus'){
-                        t.paymentAmount = d.Formula_Amount__c;    
-                        t.accruedInterest = d.Interest_Repaid__c;
-                    } else {
-                        t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
-                        t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
-                    }
+                } else {                    
+                    t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                    t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
                     t.outstandingBalance = 0;
                     t.perDiem = 0;
                 }
