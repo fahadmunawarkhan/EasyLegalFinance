@@ -606,10 +606,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Ad-hoc Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Add%27l Docs Required</fullName>
             <default>false</default>
         </values>
@@ -691,10 +687,6 @@
         </values>
         <values>
             <fullName>See Notes</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>TESTING</fullName>
             <default>false</default>
         </values>
         <values>
