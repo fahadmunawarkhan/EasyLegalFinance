@@ -519,4 +519,5 @@
     <tabs>Critical_Date__c</tabs>
     <tabs>Loan_Simulator</tabs>
     <uiType>Lightning</uiType>
+    <utilityBar>ELFI_Case_Management_UtilityBar</utilityBar>
 </CustomApplication>

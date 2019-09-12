@@ -56,6 +56,14 @@
     <objectMapping>
         <inputObject>Lead</inputObject>
         <mappingFields>
+            <inputField>Current_Income_Details__c</inputField>
+            <outputField>Current_Income_Details__c</outputField>
+        </mappingFields>
+        <mappingFields>
+            <inputField>Date_Last_worked_attempts_to_RTW__c</inputField>
+            <outputField>Date_Last_worked_attempts_to_RTW__c</outputField>
+        </mappingFields>
+        <mappingFields>
             <inputField>Additional_Income__c</inputField>
             <outputField>Additional_Income__c</outputField>
         </mappingFields>
@@ -78,14 +86,6 @@
         <mappingFields>
             <inputField>wtn__HtmlContent__c</inputField>
             <outputField>wtn__HtmlContent__c</outputField>
-        </mappingFields>
-        <mappingFields>
-            <inputField>Current_Income_Details__c</inputField>
-            <outputField>Current_Income_Details__c</outputField>
-        </mappingFields>
-        <mappingFields>
-            <inputField>Date_Last_worked_attempts_to_RTW__c</inputField>
-            <outputField>Date_Last_worked_attempts_to_RTW__c</outputField>
         </mappingFields>
         <mappingFields>
             <inputField>Date_of_Application__c</inputField>
@@ -140,6 +140,10 @@
             <outputField>If_yes_please_provide_previous_name__c</outputField>
         </mappingFields>
         <mappingFields>
+            <inputField>Secondary_Contact_Information__c</inputField>
+            <outputField>Secondary_Contact_Information__c</outputField>
+        </mappingFields>
+        <mappingFields>
             <inputField>Job_description__c</inputField>
             <outputField>Job_description__c</outputField>
         </mappingFields>
@@ -170,10 +174,6 @@
         <mappingFields>
             <inputField>Salutation__c</inputField>
             <outputField>Salutation__c</outputField>
-        </mappingFields>
-        <mappingFields>
-            <inputField>Secondary_Contact_Information__c</inputField>
-            <outputField>Secondary_Contact_Information__c</outputField>
         </mappingFields>
         <mappingFields>
             <inputField>wtn__Skype__c</inputField>

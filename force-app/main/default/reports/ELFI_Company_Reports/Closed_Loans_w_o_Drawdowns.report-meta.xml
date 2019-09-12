@@ -55,7 +55,7 @@
             <column>Opportunity.Loan_Status__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Closed - Paid,Closed - Bad Debt,Closed - Bad Debt - Making Payments</value>
+            <value>Closed - Paid,Closed - Bad Debt</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

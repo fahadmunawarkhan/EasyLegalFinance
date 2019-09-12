@@ -344,6 +344,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -1162,6 +1166,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -1619,6 +1624,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -2436,6 +2445,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -2893,6 +2903,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -3710,6 +3724,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -4167,6 +4182,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -4984,6 +5003,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -5445,6 +5465,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -6263,6 +6287,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -6720,6 +6745,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -7537,6 +7566,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -7994,6 +8024,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -8811,6 +8845,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -9268,6 +9303,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -10085,6 +10124,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -10542,6 +10582,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -11359,6 +11403,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -11816,6 +11861,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -12633,6 +12682,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -13094,6 +13144,10 @@
             <label>Assigned To</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
             <label>Bankruptcy Details</label>
         </opportunityListFieldsLabelMappings>
@@ -13912,6 +13966,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
@@ -14367,6 +14422,10 @@
         <opportunityListFieldsLabelMappings>
             <field>00NE0000005wE1g</field>
             <label>Assigned To</label>
+        </opportunityListFieldsLabelMappings>
+        <opportunityListFieldsLabelMappings>
+            <field>00N19000004AWIY</field>
+            <label>Available Credit</label>
         </opportunityListFieldsLabelMappings>
         <opportunityListFieldsLabelMappings>
             <field>00NE0000005weOn</field>
@@ -15186,6 +15245,7 @@
             <field>00N19000003oYuo</field>
             <field>00N190000042ZfD</field>
             <field>00NE0000005wE1g</field>
+            <field>00N19000004AWIY</field>
             <field>00NE0000005weOn</field>
             <field>00NE0000005weOi</field>
             <field>00NE0000006P0zX</field>
