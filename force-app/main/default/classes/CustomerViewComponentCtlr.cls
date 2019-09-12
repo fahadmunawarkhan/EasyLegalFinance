@@ -299,8 +299,8 @@ public class CustomerViewComponentCtlr {
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
-        dd.Amount__c = 0.00;
-        dd.Interest_Repaid__c = opp.Surplus__c;
+        dd.Amount__c = opp.Surplus__c;
+        //dd.Interest_Repaid__c = opp.Surplus__c;
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Payment Surplus';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
@@ -562,14 +562,9 @@ t.adminFee =  d.Amount__c;
                     t.accruedInterest = d.Total_Accrued_Interest__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
-                } else { 
-                    if(t.referenceNotes == 'Payment Surplus'){
-                        t.paymentAmount = d.Formula_Amount__c;    
-                        t.accruedInterest = d.Interest_Repaid__c;
-                    } else {
-                        t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
-                        t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
-                    }
+                } else {                    
+                    t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                    t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
                     t.outstandingBalance = 0;
                     t.perDiem = 0;
                 }
@@ -1260,25 +1255,9 @@ t.adminFee =  d.Amount__c;
         }
     }    
     
-    private static void checkActionsMap(Map<String, String> paymentActions){
-        Boolean containsActions = false;
-        if (paymentActions != null){
-            for (String oppId : paymentActions.keySet()) {
-                String action = paymentActions.get(oppId);
-                if (action != null && action != ''){
-                    containsActions = true;
-                    break;
-                }
-            }
-        }
-        if (!containsActions)
-            throw new AuraHandledException('Payment allocation failed. Only Active loans can receive payments');  
-    }
-    
     @AuraEnabled
     public static List<Opportunity> applyPayments(String accountId, String payoutDate, String searchType, Map<String, String> paymentActions,
                                                     String eft, String chq){   
-        checkActionsMap(paymentActions);                                                
         Savepoint sp = null;
         try{
             System.debug('applyPayments' + paymentActions.keySet());    
@@ -1342,16 +1321,26 @@ t.adminFee =  d.Amount__c;
     }    
     @AuraEnabled
     public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String eft, String chq){
-        List<Opportunity>  opps = calculatePayments(accountId, amount);
-        if (amount == 0.0)
-            deletePaymentTasks(accountId);
-        else
-            createPaymentTask(accountId, amount, eft, chq);
-        return opps;
+        try{
+            List<Opportunity>  opps = calculatePayments(accountId, amount);
+            if (amount == 0.0)
+                deletePaymentTasks(accountId);
+            else
+                createPaymentTask(accountId, amount, eft, chq);
+            return opps;
+        }  
+        catch (DMLException e){
+            System.debug('DML Exception ' +e.getMessage());
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }        
+        catch (Exception e){
+            System.debug('Exception ' + e.getMessage());
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }   
     }
     @AuraEnabled
     public static void deletePaymentTasks(String accountId){
-    System.debug('deletePaymentTasks ' + accountId);
+        System.debug('deletePaymentTasks ' + accountId);
         Task[] tasks = [select Id from Task where accountId=:accountId and Subject Like 'Complete posting payment of%'];
         delete tasks;
     }

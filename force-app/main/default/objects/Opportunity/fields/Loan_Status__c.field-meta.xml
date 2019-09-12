@@ -16,6 +16,26 @@
                 <default>false</default>
                 <label>Active</label>
             </value>
+            <value>
+                <fullName>Active - Partial Payment</fullName>
+                <default>false</default>
+                <label>Active - Partial Payment</label>
+            </value>
+            <value>
+                <fullName>Closed - Paid</fullName>
+                <default>false</default>
+                <label>Closed - Paid</label>
+            </value>
+            <value>
+                <fullName>Closed - Bad Debt</fullName>
+                <default>false</default>
+                <label>Closed - Bad Debt</label>
+            </value>
+            <value>
+                <fullName>Closed - Bad Debt - Making Payments</fullName>
+                <default>false</default>
+                <label>Closed - Bad Debt - Making Payments</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

@@ -3,6 +3,6 @@
     <description>Created by Lightning App Builder</description>
     <flexiPage>Funding_Details</flexiPage>
     <label>Funding Details</label>
-
+    <mobileReady>true</mobileReady>
     <motif>Custom16: Bank</motif>
 </CustomTab>

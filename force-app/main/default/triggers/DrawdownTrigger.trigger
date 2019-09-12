@@ -13,12 +13,14 @@
 **/
 trigger DrawdownTrigger on Drawdown__c (before insert , before update, after insert , after update, before delete, after delete) {
 
-    if (trigger.isBefore && trigger.isInsert) {
+    if (trigger.isBefore && trigger.isInsert && !TriggerHelper.runOnce('DrawdownTrigger')) {
+        TriggerHelper.add('DrawdownTrigger');
         // send with empty "old map" as this isn't available in insert trigger
         Map <Id,Drawdown__c> dummyMap = new Map<Id,Drawdown__c> ();
         DrawdownTriggerHandler.validatePaymentChange( dummyMap,trigger.new);            
     }  
-    if (trigger.isBefore && trigger.isUpdate) {
+    if (trigger.isBefore && trigger.isUpdate && !TriggerHelper.runOnce('DrawdownTrigger')) {
+        TriggerHelper.add('DrawdownTrigger');
         DrawdownTriggerHandler.validatePaymentChange(trigger.oldMap,trigger.new);           
     }
     if(trigger.isBefore && trigger.isDelete){
@@ -33,7 +35,8 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         toDel.addAll(trigger.oldMap.keySet());
         DeletePaymentAllocations.DeletePaymentAllocationsFromPayment(toDel);
     }
-    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete)){
+    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) && !TriggerHelper.runOnce('DrawdownTrigger')){
+        TriggerHelper.add('DrawdownTrigger');
         ///*
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,
