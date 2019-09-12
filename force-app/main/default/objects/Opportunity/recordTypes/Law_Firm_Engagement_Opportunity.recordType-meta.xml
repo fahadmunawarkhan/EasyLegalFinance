@@ -578,10 +578,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Ad-hoc Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Closed - Bad Debt</fullName>
             <default>false</default>
         </values>

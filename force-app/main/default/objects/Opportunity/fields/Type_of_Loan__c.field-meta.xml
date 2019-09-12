@@ -18,11 +18,6 @@
                 <label>Facility Loan</label>
             </value>
             <value>
-                <fullName>Lawyer Loans</fullName>
-                <default>false</default>
-                <label>Lawyer Loans</label>
-            </value>
-            <value>
                 <fullName>Lump-Sum</fullName>
                 <default>true</default>
                 <label>Lump-Sum</label>
