@@ -23,14 +23,9 @@
                 <label>2nd Week</label>
             </value>
             <value>
-                <fullName>Active</fullName>
+                <fullName>File for Review</fullName>
                 <default>false</default>
-                <label>Active</label>
-            </value>
-            <value>
-                <fullName>Active - Partial Payment</fullName>
-                <default>false</default>
-                <label>Active - Partial Payment</label>
+                <label>File for Review</label>
             </value>
             <value>
                 <fullName>Add&#39;l Docs Required</fullName>
@@ -38,9 +33,14 @@
                 <label>Add&#39;l Docs Required</label>
             </value>
             <value>
-                <fullName>Ad-hoc Payment</fullName>
+                <fullName>In Progress</fullName>
                 <default>false</default>
-                <label>Ad-hoc Payment</label>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>F/U with PC/Facility</fullName>
+                <default>false</default>
+                <label>F/U with PC/Facility</label>
             </value>
             <value>
                 <fullName>Approved</fullName>
@@ -53,14 +53,89 @@
                 <label>Assessor Declined</label>
             </value>
             <value>
+                <fullName>Legal Representative Declined</fullName>
+                <default>false</default>
+                <label>Legal Representative Declined</label>
+            </value>
+            <value>
+                <fullName>Non-Responsive (Legal Representative/Plaintiff)</fullName>
+                <default>false</default>
+                <label>Non-Responsive (Legal Representative/Plaintiff)</label>
+            </value>
+            <value>
+                <fullName>Competitor</fullName>
+                <default>false</default>
+                <label>Competitor</label>
+            </value>
+            <value>
+                <fullName>Contact Sheet Completed; Part I of App Sent to Lead for Signature</fullName>
+                <default>false</default>
+                <label>Contact Sheet Completed; Part I of App Sent to Lead for Signature</label>
+            </value>
+            <value>
+                <fullName>Part II of App Sent to Firm w/ Request for Supporting Docs</fullName>
+                <default>false</default>
+                <label>Part II of App Sent to Firm w/ Request for Supporting Docs</label>
+            </value>
+            <value>
+                <fullName>Waiting for Additional Supporting Documents</fullName>
+                <default>false</default>
+                <label>Waiting for Additional Supporting Documents</label>
+            </value>
+            <value>
+                <fullName>Waiting for Payout From Other Lender</fullName>
+                <default>false</default>
+                <label>Waiting for Payout From Other Lender</label>
+            </value>
+            <value>
+                <fullName>File Sent to Assessors Review</fullName>
+                <default>false</default>
+                <label>File Sent to Assessors Review</label>
+            </value>
+            <value>
                 <fullName>Awaiting Final Client Signature</fullName>
                 <default>false</default>
                 <label>Awaiting Final Client Signature</label>
             </value>
             <value>
+                <fullName>Funds Advanced/Awaiting Signed Loan Documents</fullName>
+                <default>false</default>
+                <label>Funds Advanced/Awaiting Signed Loan Documents</label>
+            </value>
+            <value>
                 <fullName>Awaiting Final Lawyer Signature</fullName>
                 <default>false</default>
                 <label>Awaiting Final Lawyer Signature</label>
+            </value>
+            <value>
+                <fullName>File Sent for EFT</fullName>
+                <default>false</default>
+                <label>File Sent for EFT</label>
+            </value>
+            <value>
+                <fullName>See Notes</fullName>
+                <default>false</default>
+                <label>See Notes</label>
+            </value>
+            <value>
+                <fullName>Completed</fullName>
+                <default>false</default>
+                <label>Completed</label>
+            </value>
+            <value>
+                <fullName>Declined</fullName>
+                <default>false</default>
+                <label>Declined</label>
+            </value>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Active - Partial Payment</fullName>
+                <default>false</default>
+                <label>Active - Partial Payment</label>
             </value>
             <value>
                 <fullName>Closed - Bad Debt</fullName>
@@ -73,104 +148,19 @@
                 <label>Closed - Paid</label>
             </value>
             <value>
-                <fullName>Closed - Shortfall</fullName>
-                <default>false</default>
-                <label>Closed - Shortfall</label>
-            </value>
-            <value>
                 <fullName>Closed - Surplus</fullName>
                 <default>false</default>
                 <label>Closed - Surplus</label>
             </value>
             <value>
-                <fullName>Competitor</fullName>
+                <fullName>Closed - Shortfall</fullName>
                 <default>false</default>
-                <label>Competitor</label>
-            </value>
-            <value>
-                <fullName>Completed</fullName>
-                <default>false</default>
-                <label>Completed</label>
-            </value>
-            <value>
-                <fullName>Contact Sheet Completed; Part I of App Sent to Lead for Signature</fullName>
-                <default>false</default>
-                <label>Contact Sheet Completed; Part I of App Sent to Lead for Signature</label>
-            </value>
-            <value>
-                <fullName>Declined</fullName>
-                <default>false</default>
-                <label>Declined</label>
-            </value>
-            <value>
-                <fullName>F/U with PC/Facility</fullName>
-                <default>false</default>
-                <label>F/U with PC/Facility</label>
-            </value>
-            <value>
-                <fullName>File for Review</fullName>
-                <default>false</default>
-                <label>File for Review</label>
-            </value>
-            <value>
-                <fullName>File Sent for EFT</fullName>
-                <default>false</default>
-                <label>File Sent for EFT</label>
-            </value>
-            <value>
-                <fullName>File Sent to Assessors Review</fullName>
-                <default>false</default>
-                <label>File Sent to Assessors Review</label>
-            </value>
-            <value>
-                <fullName>Funds Advanced/Awaiting Signed Loan Documents</fullName>
-                <default>false</default>
-                <label>Funds Advanced/Awaiting Signed Loan Documents</label>
-            </value>
-            <value>
-                <fullName>In Progress</fullName>
-                <default>false</default>
-                <label>In Progress</label>
-            </value>
-            <value>
-                <fullName>Legal Representative Declined</fullName>
-                <default>false</default>
-                <label>Legal Representative Declined</label>
-            </value>
-            <value>
-                <fullName>Non-Responsive (Legal Representative/Plaintiff)</fullName>
-                <default>false</default>
-                <label>Non-Responsive (Legal Representative/Plaintiff)</label>
-            </value>
-            <value>
-                <fullName>Part II of App Sent to Firm w/ Request for Supporting Docs</fullName>
-                <default>false</default>
-                <label>Part II of App Sent to Firm w/ Request for Supporting Docs</label>
+                <label>Closed - Shortfall</label>
             </value>
             <value>
                 <fullName>Payments Halted</fullName>
                 <default>false</default>
                 <label>Payments Halted</label>
-            </value>
-            <value>
-                <fullName>See Notes</fullName>
-                <default>false</default>
-                <label>See Notes</label>
-            </value>
-            <value>
-                <fullName>TESTING</fullName>
-                <default>false</default>
-                <label>TESTING</label>
-            </value>
-            <value>
-                <fullName>Waiting for Additional Supporting Documents</fullName>
-                <default>false</default>
-                <label>Waiting for Additional Supporting Documents</label>
-            </value>
-            <value>
-                <fullName>Waiting for Payout From Other Lender</fullName>
-                <default>false</default>
-                <label>Waiting for Payout From Other Lender</label>
             </value>
         </valueSetDefinition>
         <valueSettings>
@@ -179,29 +169,7 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Intake</controllingFieldValue>
-            <valueName>File Sent to Assessors Review</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Intake</controllingFieldValue>
             <valueName>Part II of App Sent to Firm w/ Request for Supporting Docs</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Intake</controllingFieldValue>
-            <controllingFieldValue>Loan Approved</controllingFieldValue>
-            <controllingFieldValue>Closed No Loan</controllingFieldValue>
-            <controllingFieldValue>Prospecting</controllingFieldValue>
-            <controllingFieldValue>Assessor</controllingFieldValue>
-            <valueName>See Notes</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Intake</controllingFieldValue>
-            <controllingFieldValue>Loan Approved</controllingFieldValue>
-            <controllingFieldValue>Closed With Loan</controllingFieldValue>
-            <controllingFieldValue>Closed No Loan</controllingFieldValue>
-            <controllingFieldValue>Prospecting</controllingFieldValue>
-            <controllingFieldValue>Assessor</controllingFieldValue>
-            <controllingFieldValue>Re-Assessment</controllingFieldValue>
-            <valueName>TESTING</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Intake</controllingFieldValue>
@@ -212,12 +180,24 @@
             <valueName>Waiting for Payout From Other Lender</valueName>
         </valueSettings>
         <valueSettings>
+            <controllingFieldValue>Intake</controllingFieldValue>
+            <valueName>File Sent to Assessors Review</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Intake</controllingFieldValue>
             <controllingFieldValue>Loan Approved</controllingFieldValue>
-            <valueName>Ad-hoc Payment</valueName>
+            <controllingFieldValue>Closed No Loan</controllingFieldValue>
+            <controllingFieldValue>Prospecting</controllingFieldValue>
+            <controllingFieldValue>Assessor</controllingFieldValue>
+            <valueName>See Notes</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Loan Approved</controllingFieldValue>
             <valueName>Awaiting Final Client Signature</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Loan Approved</controllingFieldValue>
+            <valueName>Funds Advanced/Awaiting Signed Loan Documents</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Loan Approved</controllingFieldValue>
@@ -229,15 +209,12 @@
             <valueName>File Sent for EFT</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>Loan Approved</controllingFieldValue>
-            <valueName>Funds Advanced/Awaiting Signed Loan Documents</valueName>
-        </valueSettings>
-        <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
             <valueName>Active</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <controllingFieldValue>TESTING</controllingFieldValue>
             <valueName>Active - Partial Payment</valueName>
         </valueSettings>
         <valueSettings>
@@ -246,11 +223,8 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <controllingFieldValue>TESTING</controllingFieldValue>
             <valueName>Closed - Paid</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Closed With Loan</controllingFieldValue>
-            <valueName>Closed - Shortfall</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
@@ -258,6 +232,11 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <valueName>Closed - Shortfall</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <controllingFieldValue>TESTING</controllingFieldValue>
             <valueName>Payments Halted</valueName>
         </valueSettings>
         <valueSettings>
@@ -266,15 +245,15 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed No Loan</controllingFieldValue>
-            <valueName>Competitor</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Closed No Loan</controllingFieldValue>
             <valueName>Legal Representative Declined</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed No Loan</controllingFieldValue>
             <valueName>Non-Responsive (Legal Representative/Plaintiff)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed No Loan</controllingFieldValue>
+            <valueName>Competitor</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Prospecting</controllingFieldValue>
@@ -286,6 +265,10 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Assessor</controllingFieldValue>
+            <valueName>File for Review</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Assessor</controllingFieldValue>
             <valueName>Add&#39;l Docs Required</valueName>
         </valueSettings>
         <valueSettings>
@@ -294,8 +277,8 @@
             <valueName>F/U with PC/Facility</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>Assessor</controllingFieldValue>
-            <valueName>File for Review</valueName>
+            <controllingFieldValue>Re-Assessment</controllingFieldValue>
+            <valueName>In Progress</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Re-Assessment</controllingFieldValue>
@@ -308,10 +291,6 @@
         <valueSettings>
             <controllingFieldValue>Re-Assessment</controllingFieldValue>
             <valueName>Declined</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Re-Assessment</controllingFieldValue>
-            <valueName>In Progress</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

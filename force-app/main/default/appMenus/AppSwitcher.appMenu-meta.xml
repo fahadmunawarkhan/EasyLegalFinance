@@ -260,4 +260,8 @@
         <name>Conga_Composer_Lightning</name>
         <type>ConnectedApp</type>
     </appMenuItems>
+    <appMenuItems>
+        <name>rcsfl__RingCentral</name>
+        <type>CustomApplication</type>
+    </appMenuItems>
 </AppMenu>

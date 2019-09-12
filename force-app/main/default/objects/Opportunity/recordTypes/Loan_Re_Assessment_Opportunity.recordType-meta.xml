@@ -744,10 +744,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Ad-hoc Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Add%27l Docs Required</fullName>
             <default>false</default>
         </values>
@@ -849,10 +845,6 @@
     </picklistValues>
     <picklistValues>
         <picklist>Type_of_Loan__c</picklist>
-        <values>
-            <fullName>Assessment Loans</fullName>
-            <default>false</default>
-        </values>
         <values>
             <fullName>Facility Loan</fullName>
             <default>false</default>
