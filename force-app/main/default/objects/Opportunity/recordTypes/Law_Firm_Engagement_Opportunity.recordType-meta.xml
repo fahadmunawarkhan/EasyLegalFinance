@@ -604,10 +604,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Lawyer Loans</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Lump-Sum</fullName>
             <default>true</default>
         </values>

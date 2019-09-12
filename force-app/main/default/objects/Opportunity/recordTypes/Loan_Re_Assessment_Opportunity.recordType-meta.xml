@@ -768,7 +768,23 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Closed - Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed - Shortfall</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed - Surplus</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Competitor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Completed</fullName>
             <default>false</default>
         </values>
         <values>
@@ -847,10 +863,6 @@
         <picklist>Type_of_Loan__c</picklist>
         <values>
             <fullName>Facility Loan</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Lawyer Loans</fullName>
             <default>false</default>
         </values>
         <values>
