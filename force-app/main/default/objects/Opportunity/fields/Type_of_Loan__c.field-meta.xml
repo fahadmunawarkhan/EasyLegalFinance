@@ -13,19 +13,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Assessment Loans</fullName>
-                <default>false</default>
-                <label>Assessment Loans</label>
-            </value>
-            <value>
                 <fullName>Facility Loan</fullName>
                 <default>false</default>
                 <label>Facility Loan</label>
-            </value>
-            <value>
-                <fullName>Lawyer Loans</fullName>
-                <default>false</default>
-                <label>Lawyer Loans</label>
             </value>
             <value>
                 <fullName>Lump-Sum</fullName>

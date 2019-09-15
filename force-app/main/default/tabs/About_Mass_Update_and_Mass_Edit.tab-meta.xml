@@ -3,7 +3,7 @@
     <frameHeight>600</frameHeight>
     <hasSidebar>true</hasSidebar>
     <label>About Mass Update and Mass Edit</label>
-
+    <mobileReady>false</mobileReady>
     <motif>Custom19: Wrench</motif>
     <scontrol>About_Mass_Update_And_Mass_Edit</scontrol>
 </CustomTab>

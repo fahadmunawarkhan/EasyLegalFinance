@@ -744,10 +744,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Ad-hoc Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Add%27l Docs Required</fullName>
             <default>false</default>
         </values>
@@ -772,7 +768,23 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Closed - Paid</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed - Shortfall</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed - Surplus</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Competitor</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Completed</fullName>
             <default>false</default>
         </values>
         <values>
@@ -850,15 +862,7 @@
     <picklistValues>
         <picklist>Type_of_Loan__c</picklist>
         <values>
-            <fullName>Assessment Loans</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Facility Loan</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Lawyer Loans</fullName>
             <default>false</default>
         </values>
         <values>

@@ -578,10 +578,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Ad-hoc Payment</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Closed - Bad Debt</fullName>
             <default>false</default>
         </values>
@@ -604,15 +600,7 @@
     <picklistValues>
         <picklist>Type_of_Loan__c</picklist>
         <values>
-            <fullName>Assessment Loans</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Facility Loan</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Lawyer Loans</fullName>
             <default>false</default>
         </values>
         <values>

@@ -183,4 +183,5 @@
     <tabs>standard-report</tabs>
     <tabs>Critical_Date__c</tabs>
     <uiType>Lightning</uiType>
+    <utilityBar>ELFI_Sales_Stream_UtilityBar</utilityBar>
 </CustomApplication>

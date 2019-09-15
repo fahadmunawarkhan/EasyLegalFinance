@@ -44,8 +44,8 @@
     <aura:attribute name="paymentMiscSearch" type="boolean" /> 
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
-    <aura:attribute name="calculatedPaymentAmount" type="decimal" />     
-    <aura:attribute name="estimatedTotalBalance" type="decimal" />    
+    <aura:attribute name="calculatedPaymentAmount" type="decimal" />
+    <aura:attribute name="estimatedTotalBalance" type="decimal" />
     <aura:attribute name="EFT" type="decimal" /> 
     <aura:attribute name="CHQ" type="decimal" /> 
     <aura:attribute name="paymentsError" type="String" /> 
