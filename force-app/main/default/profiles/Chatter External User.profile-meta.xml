@@ -5074,6 +5074,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.Different_Balances__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Surplus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Total_Payment_Surplus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.What_Happened_from_W2L__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -5345,6 +5360,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Portfolio_Report__c.Status__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Portfolio_Report__c.Business_Unit__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>

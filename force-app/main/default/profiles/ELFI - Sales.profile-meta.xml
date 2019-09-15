@@ -2319,6 +2319,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Drawdown__c.Non_Allocated_Payment__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Drawdown__c.Surplus__c</field>
+        <readable>true</readable>
+    </fieldPermissions>    
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Drawdown__c.Accrued_Interest_In_Reporting_Period__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -3944,6 +3954,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.Different_Balances__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Surplus__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Total_Payment_Surplus__c</field>
+        <readable>true</readable>
+    </fieldPermissions>    
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.AC_ContactAnomaly__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -5317,6 +5342,11 @@
         <field>Payment_Rejection__c.Use_Original_Sent_Date_for_Interest__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Portfolio_Report__c.Business_Unit__c</field>
+        <readable>true</readable>
+    </fieldPermissions>    
     <fieldPermissions>
         <editable>false</editable>
         <field>Portfolio_Report__c.Batch_Instance_Id__c</field>

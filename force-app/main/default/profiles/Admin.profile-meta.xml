@@ -5016,6 +5016,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Surplus__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>Opportunity.Temp_Payment_Received__c</field>
         <readable>true</readable>
@@ -5353,6 +5358,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Portfolio_Report__c.Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Portfolio_Report__c.Business_Unit__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

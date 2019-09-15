@@ -447,8 +447,7 @@ public class CustomerViewComponentCtlrTest {
         testAccount.RecordTypeId = RecordTypeIdAccount;
         insert testAccount;
 
-
-	}
+    }
     
     public static void insertOpps(Integer oppsCount){        
         Account account = [select Id from Account where Name='Test Account'];
@@ -554,7 +553,8 @@ public class CustomerViewComponentCtlrTest {
         System.assertEquals(true, tasks.isEmpty());
         Test.stopTest();
     }
-	public static testMethod void testApplyPayments2(){
+
+    public static testMethod void testApplyPayments2(){
         Test.startTest();
         insertAccount();
         insertOpps(1);
