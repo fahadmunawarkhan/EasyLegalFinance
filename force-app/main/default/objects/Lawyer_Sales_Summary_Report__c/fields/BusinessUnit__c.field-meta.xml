@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>BusinessUnit__c</fullName>
     <externalId>false</externalId>
-    <label>BusinessUnit</label>
+    <label>Business Unit</label>
     <length>255</length>
     <required>false</required>
     <trackTrending>false</trackTrending>

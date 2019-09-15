@@ -179,11 +179,7 @@
     <tabs>standard-Case</tabs>
     <tabs>standard-Opportunity</tabs>
     <tabs>standard-Lead</tabs>
-    <tabs>Critical_Date__c</tabs>
     <workspaceConfig>
-        <mappings>
-            <tab>Critical_Date__c</tab>
-        </mappings>
         <mappings>
             <tab>standard-Account</tab>
         </mappings>

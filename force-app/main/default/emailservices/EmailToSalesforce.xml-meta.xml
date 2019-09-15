@@ -4,13 +4,6 @@
     <attachmentOption>All</attachmentOption>
     <authenticationFailureAction>Discard</authenticationFailureAction>
     <authorizationFailureAction>Bounce</authorizationFailureAction>
-    <emailServicesAddresses>
-        <authorizedSenders>easylegal.salesforce@appcentrica.com</authorizedSenders>
-        <developerName>emailtosalesforce1</developerName>
-        <isActive>true</isActive>
-        <localPart>emailtosalesforce</localPart>
-        <runAsUser>seth.elfi@toptal.com</runAsUser>
-    </emailServicesAddresses>
     <functionInactiveAction>Bounce</functionInactiveAction>
     <functionName>EmailToSalesforce</functionName>
     <isActive>true</isActive>

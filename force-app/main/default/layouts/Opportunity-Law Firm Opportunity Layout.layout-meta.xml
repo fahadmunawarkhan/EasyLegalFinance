@@ -104,6 +104,10 @@
                 <behavior>Readonly</behavior>
                 <field>Opportunity_Closed_Date__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Different_Balances__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

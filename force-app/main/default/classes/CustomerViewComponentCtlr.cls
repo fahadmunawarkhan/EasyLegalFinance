@@ -225,7 +225,7 @@ public class CustomerViewComponentCtlr {
     /******************* Method to receive payments *********************/
     @AuraEnabled
     public static List<Opportunity> calculatePayments(String accountId, Decimal amount){    
-        cleanTempPayments(accountId);
+        cleanTempPayments(accountId);        
         
         List<Opportunity> optsList = getOpportunitiesOrderedByDate(accountId);        
         List<Opportunity> openOpsList = new List<Opportunity>();
@@ -274,7 +274,7 @@ public class CustomerViewComponentCtlr {
 
     /******************* Method to change an opportunity to bad debt *********************/
     @AuraEnabled
-    public static List<Opportunity> changeToBadDebtStage(String oppId, String accountId, String payoutDate){                
+    public static void changeToBadDebtStage(String oppId, String accountId, String payoutDate){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -290,34 +290,37 @@ public class CustomerViewComponentCtlr {
         opp.Loan_Status__c = 'Closed - Bad Debt';
         update opp;
         
-        return  getOpportunities(accountId);
+
     }
     
     /******************* Method to change an opportunity to surplus stage *********************/
     @AuraEnabled
-    public static List<Opportunity> changeToSurplusStage(String oppId, String accountId, String payoutDate){                
+    public static void changeToSurplusStage(String oppId, String accountId, String payoutDate){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
-        dd.Amount__c = 0.00;
-        dd.Interest_Repaid__c = opp.Temp_Payment_Received__c - opp.Total_Payout__c;
+        dd.Amount__c = opp.Surplus__c;
+        //dd.Interest_Repaid__c = opp.Surplus__c;
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Payment Surplus';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         insert dd;
+        List<Drawdown__c> drawdownList = [Select id, Surplus__c from Drawdown__c where Opportunity__c = :oppId and Payment_Method__c = 'Payment'];
+        for (Drawdown__c d : drawdownList ){
+            d.Surplus__c = 0;
+        }
+        update drawdownList;
         
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Surplus';
         opp.Loan_Status__c = 'Closed - Surplus';
-        update opp;
-        
-        return  getOpportunities(accountId);
+        update opp;        
     }
 
     /******************* Method to change an opportunity to shortfall stage *********************/
     @AuraEnabled
-    public static List<Opportunity> changeToShortfallStage(String oppId, String accountId, String payoutDate){                
+    public static void changeToShortfallStage(String oppId, String accountId, String payoutDate){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -333,41 +336,38 @@ public class CustomerViewComponentCtlr {
         opp.Loan_Status__c = 'Closed - Shortfall';
         update opp;
         
-        return  getOpportunities(accountId);
     }    
     
     /******************* Method to save a partial payment *********************/
     @AuraEnabled
-    public static List<Opportunity> applyPartialPayments(String oppId, String accountId, String payoutDate){            
+    public static void applyPartialPayments(String oppId, String accountId, String payoutDate, String eft, String chq){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
         if(opp.Temp_Payment_Received__c > opp.Total_Payout__c){
-	        dd.Amount__c = opp.Total_Payout__c;
+            dd.Amount__c = opp.Total_Payout__c;
+            dd.Surplus__c = opp.Temp_Payment_Received__c - opp.Total_Payout__c;
         } else {
-    		dd.Amount__c = opp.Temp_Payment_Received__c;        
+            dd.Amount__c = opp.Temp_Payment_Received__c;        
         }
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Partial Payment';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
+        dd.EFT__c = eft;
+        dd.CHQ__c = chq;
         insert dd;
         
-        if(opp.Temp_Payment_Received__c > opp.Total_Payout__c){
-	        opp.Temp_Payment_Received__c = opp.Temp_Payment_Received__c - opp.Total_Payout__c;
-        } else {
-    		opp.Temp_Payment_Received__c = 0;   
-        }        
+            opp.Temp_Payment_Received__c = 0;   
         opp.Stage_Status__c = 'Active - Partial Payment';
         opp.Loan_Status__c = 'Active - Partial Payment';
         update opp;
      
-        return getOpportunities(accountId);
     }
     
     /******************* Method to save a full payment *********************/
     @AuraEnabled
-    public static List<Opportunity> applyFullPayments(String oppId, String accountId, String searchType, String payoutDate){            
+    public static void applyFullPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -376,6 +376,8 @@ public class CustomerViewComponentCtlr {
         dd.Reference_Notes__c = searchType == 'Payout' ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
+        dd.EFT__c = eft;
+        dd.CHQ__c = chq;        
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
@@ -384,7 +386,6 @@ public class CustomerViewComponentCtlr {
         opp.Loan_Status__c = 'Closed - Paid';
         update opp;
      
-        return  getOpportunities(accountId);
     }    
 
     @AuraEnabled
@@ -561,14 +562,9 @@ t.adminFee =  d.Amount__c;
                     t.accruedInterest = d.Total_Accrued_Interest__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
-                } else { 
-                    if(t.referenceNotes == 'Payment Surplus'){
-                    	t.paymentAmount = d.Formula_Amount__c;    
-                        t.accruedInterest = d.Interest_Repaid__c;
-                    } else {
-                        t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
-                        t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
-                    }
+                } else {                    
+                    t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                    t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
                     t.outstandingBalance = 0;
                     t.perDiem = 0;
                 }
@@ -1258,4 +1254,108 @@ t.adminFee =  d.Amount__c;
             throw new AuraHandledException('Error:'+e.getMessage());
         }
     }    
+    
+    @AuraEnabled
+    public static List<Opportunity> applyPayments(String accountId, String payoutDate, String searchType, Map<String, String> paymentActions,
+                                                    String eft, String chq){   
+        Savepoint sp = null;
+        try{
+            System.debug('applyPayments' + paymentActions.keySet());    
+            sp = Database.setSavepoint();
+            for (String oppId : paymentActions.keySet()) {
+                String action = paymentActions.get(oppId);
+
+                {
+                    System.debug(oppId + ' ' + action); 
+                    if (action == 'Partial Payment'){
+                        applyPartialPayments(oppId, accountId, payoutDate, eft, chq);
+                    }
+                    else if (action == 'Bad Debt'){
+                        changeToBadDebtStage(oppId, accountId, payoutDate);
+                    }
+                    else if (action == 'Closed Paid'){
+                        applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq);
+                    }
+                    else if (action == 'Surplus'){
+                        changeToSurplusStage(oppId, accountId, payoutDate);
+                    }
+                    else if (action == 'Shortfall'){
+                        changeToShortfallStage(oppId, accountId, payoutDate);
+                    }
+                    
+                }                
+            }
+            deletePaymentTasks(accountId);
+        }
+        catch (DMLException e){
+            if (sp != null)
+                Database.rollback(sp);
+            System.debug('DML Exception ' +e.getMessage());
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        } catch (Exception e){
+            if (sp != null)
+                Database.rollback(sp);
+            System.debug('Exception ' + e.getMessage());
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+        return getOpportunities(accountId);
+    }
+    @AuraEnabled
+    public static void createPaymentTask(String accountId, Decimal amount, String eft, String chq){
+        Account account = [select Id, Name from Account where Id=:accountId];
+        Task task = new Task();        
+        task.Priority = 'Normal';
+        task.Status = 'Open';
+        task.WhatId = accountId;
+        task.Subject = 'Complete posting payment of $' + formatAsCurrency(amount) + ' for ' + account.Name;
+        String comment = 'Payment of $' + formatAsCurrency(amount);
+        if (eft != null)
+            comment += ' with EFT # of ' + eft;       
+        if (chq != null)
+            comment += ' and CHQ # of ' + chq;
+        comment += ' was calculated but not applied to ' + account.Name;
+        System.debug(task.Subject);
+        System.debug(comment);
+        task.Description = comment;
+        insert task;
+    }    
+    @AuraEnabled
+    public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String eft, String chq){
+        try{
+            List<Opportunity>  opps = calculatePayments(accountId, amount);
+            if (amount == 0.0)
+                deletePaymentTasks(accountId);
+            else
+                createPaymentTask(accountId, amount, eft, chq);
+            return opps;
+        }  
+        catch (DMLException e){
+            System.debug('DML Exception ' +e.getMessage());
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }        
+        catch (Exception e){
+            System.debug('Exception ' + e.getMessage());
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }   
+    }
+    @AuraEnabled
+    public static void deletePaymentTasks(String accountId){
+        System.debug('deletePaymentTasks ' + accountId);
+        Task[] tasks = [select Id from Task where accountId=:accountId and Subject Like 'Complete posting payment of%'];
+        delete tasks;
+    }
+    
+    private static String formatAsCurrency(Decimal x){
+        String y = String.valueOf(x);
+        String delimiter = '.';
+        if (y.contains(',')) delimiter = ',';
+        if (y.contains(delimiter)){
+            y = y.substring(0, y.indexOf(delimiter));
+            if(x - Decimal.valueOf(y) == 0)
+                return String.valueOf(x.format()) + delimiter + '00';
+            else return String.valueOf(x.format());            
+        }
+        return String.valueOf(x.format()) + delimiter + '00';
+        
+    }
 }

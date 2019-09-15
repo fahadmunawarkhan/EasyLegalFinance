@@ -2,7 +2,8 @@
 <WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Conga_Composer_Payment_Summary_Report_View_All</fullName>
     <availability>online</availability>
-    <description>Created by Conga Solution Manager. Record link: https://easylegalfinance--apxtconga4.na39.visual.force.com/a0v0L00000G7wlgQAB.</description>
+    <description>Originally created by Conga Solution Manager. Date of last use of Update Button from Conga Solution record: https://easylegalfinance--qa--apxtconga4.cs24.visual.force.com/a0v190000042sBgAAI
+03-Jul-2019 04:09:53 AM</description>
     <displayType>button</displayType>
     <encodingKey>UTF-8</encodingKey>
     <hasMenubar>false</hasMenubar>
@@ -21,8 +22,8 @@
 &amp;serverUrl={!API.Partner_Server_URL_370}
 &amp;Id={!Drawdown__c.Id}
 
-&amp;QueryId=[PaymentSummaryReport]a0p0L00000J8b0h%3Fpv0%3D{!Drawdown__c.Conga_Payment_Summary_Rpt_Start_Date__c}~pv1%3D{!Drawdown__c.Conga_Payment_Summary_Rpt_End_Date__c}
+&amp;QueryId=[PaymentSummaryReport]a0p19000002KdqP%3Fpv0%3D{!Drawdown__c.Conga_Payment_Summary_Rpt_Start_Date__c}~pv1%3D{!Drawdown__c.Conga_Payment_Summary_Rpt_End_Date__c}~pv2%3D{!$Setup.Payment_Summary_Report__c.Business_Unit__c}
 
-&amp;TemplateId=a0x0L00000PYImm</url>
+&amp;TemplateId=a0x19000000s3Z4</url>
     <width>900</width>
 </WebLink>

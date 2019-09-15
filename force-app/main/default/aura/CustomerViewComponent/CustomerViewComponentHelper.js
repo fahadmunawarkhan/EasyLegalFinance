@@ -246,6 +246,8 @@
     },    
     
 	runAllOptsPayout : function(component) {
+        component.set("v.displayPaymentValidationErrors", false);
+        component.set('v.calculatedPaymentAmount', null);         
         var recordId = component.get("v.recordId");
         var paymentDate = component.get("v.paymentDate");
         var action = component.get('c.runPayoutForAllOpps');             
@@ -264,7 +266,8 @@
                         oppsList.push(resultsList[i]);
                     }
                 }
-                component.set("v.oppList", oppsList);           
+                component.set("v.oppList", oppsList);   
+                this.getLoanSummaryInfo(component);
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -279,19 +282,23 @@
         });
         $A.enqueueAction(action);		        
     },
-    
     calculatePayment : function(component) {
+        component.set("v.displayPaymentValidationErrors", false);        
         var recordId = component.get("v.recordId");
         var paymentAmount = component.get("v.paymentAmount");
+        var eft = component.get("v.EFT");
+        var chq = component.get("v.CHQ");
+
         var action = component.get('c.calculatePayments');     
         component.set("v._enableCloseAllPaid",false);        
-        action.setParams({ accountId : recordId, amount : paymentAmount})
+        action.setParams({ accountId : recordId, amount : paymentAmount, eft : eft, chq : chq})
                         
         action.setCallback(this, function (response) {
             var state = response.getState();
             
             if (state === 'SUCCESS') {
                 component.set("v.spinner", false);
+                component.set('v.calculatedPaymentAmount', paymentAmount);
                 var resultsList = response.getReturnValue();
                 var oppsList = new Array();
                 for(var i=0;i<resultsList.length;i++){
@@ -310,6 +317,7 @@
                         }
                     }
                 }
+                this.getLoanSummaryInfo(component);
                 this.showToast('SUCCESS','Payment was successfully calculated!','SUCCESS');                
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
@@ -667,6 +675,7 @@
                     component.set("v.payoutDateSet", true);
                 }
                 component.set("v.spinner", false);
+                component.set("v.estimatedTotalBalance", null);
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -1105,5 +1114,144 @@
                 }
             }
         }
+    },
+    validatePaymentAction : function(component){
+    	var paymentActionsMap = component.get("v.paymentActionsMap");
+        var paymentActionsValidationMap = component.get("v.paymentActionsValidationMap");
+        var oppList = component.get("v.oppList");
+        var error = "";
+        var i = 0;
+        console.log(oppList);
+        for (var oppIndex in oppList){
+            var opp = oppList[oppIndex];            
+            console.log(opp);
+            console.log(opp.Id + ' ' + paymentActionsMap[opp.Id] + ' ' +opp.Temp_Payment_Received__c);
+            if ((!paymentActionsValidationMap[opp.Id])){
+                error += "Please select action for Loan " + (oppList.length - i) + ".";
+            }
+            i += 1;
+        }
+        if (error != "")
+            error = "Unable to submit payment. " + error;
+        component.set("v.paymentsError", error);
+    },
+	submitPayments : function(component) {
+        this.validatePaymentAction(component);
+        component.set("v.displayPaymentValidationErrors", true);
+        var errorMessage = component.get("v.paymentsError");
+        if (errorMessage != ""){
+            component.set("v.spinner", false); 
+            return;
+        }
+        var accountId = component.get("v.recordId");
+		var action = component.get('c.applyPayments');      
+        var paymentActionsMap = component.get("v.paymentActionsMap");
+        var sType = component.get("v.paymentSearchTypeSelected");
+        var eft = component.get("v.EFT");
+        var chq = component.get("v.CHQ");
+        console.log('Date is '+component.get("v.paymentDate"));       
+        console.log(paymentActionsMap);
+        console.log(paymentActionsMap.size);
+        action.setParams({ 
+                            paymentActions : paymentActionsMap, 
+                            accountId : accountId, 
+                            payoutDate : component.get("v.paymentDate"),
+            				searchType:  sType,
+            				eft: eft,
+            				chq: chq
+                        });
+        
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            
+            if (state === 'SUCCESS') {
+                component.set("v.spinner", false); 
+                component.set("v.displayPaymentValidationErrors", false);                
+                console.log(response.getReturnValue());
+                component.set("v.oppList", response.getReturnValue()); 
+				this.postSubmitPayments(component);                
+                this.showToast('SUCCESS','Success!','SUCCESS');                        
+                //this.getLoanSummaryInfo(component);
+            } else if (state === 'ERROR') {
+                component.set("v.spinner", false);
+                var errors = response.getError();
+                console.log(errors);
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action);        
+    },
+    estimateTotalBalance : function(component)    {
+        var opps = component.get("v.oppList");
+        console.log(opps);
+        var estTotalBalance = 0.0;
+        for (var oppIndex in opps){
+            var opp = opps[oppIndex];
+            console.log(opp);
+            if ( (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') )
+            	estTotalBalance += opp.Total_Payout__c;
+        }
+                        
+        component.set("v.estimatedTotalBalance", estTotalBalance);
+        /*var calculatedPaymentAmount = component.get('v.calculatedPaymentAmount');
+        if (!calculatedPaymentAmount)
+            return;
+        console.log('calculated ' +calculatedPaymentAmount);
+    	var loanSummary = component.get("v.LoanSummary");        
+        var totalBalance = loanSummary.balance;
+        totalBalance -= calculatedPaymentAmount;
+        if (totalBalance < 0.0)
+            totalBalance = 0.0;
+        component.set("v.estimatedTotalBalance", totalBalance);*/
+    },
+    postSubmitPayments : function(component){
+        this.estimateTotalBalance(component);
+        var paymentAmount = component.get('v.paymentAmount');
+        component.set('v.calculatedPaymentAmount', null);    	
+        component.set('v.paymentAmount', null);
+        component.set('v.EFT', null);
+        component.set('v.CHQ', null);
+        component.set("v.paymentSearchDisabled", false); 
+    },
+    formatCurrency : function(amount) {
+        //https://developer.salesforce.com/index.php?title=Format_Number_as_Currency.js&oldid=9020
+        if(isNaN(amount)) { return '0.00'; }
+        var s = new String(amount);
+        if(s.indexOf('.') < 0) { s += '.00'; }
+        if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
+        var delimiter = ",";
+        var a = s.split('.',2);
+        var d = a[1];
+        var n = a[0];
+        var a = [];    
+        while(n.length > 3) {
+            var block = n.substr(n.length-3);
+            a.unshift(block);   
+            n = n.substr(0,n.length-3);
+        }    
+        if(n.length > 0) { a.unshift(n); }   
+        n = a.join(delimiter);
+    
+        return s = n + '.' + d;
+    },
+    activeLoanExists : function(component){
+        var sType = component.get("v.paymentSearchTypeSelected");    
+        var opps = component.get("v.oppList");
+        console.log(opps);
+        for (var oppIndex in opps){
+            var opp = opps[oppIndex];
+            console.log(opp);
+            console.log(sType + ' ' + opp.Stage_Status__c);
+            if ( (sType=='Payout' && (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') ) ||
+               ( sType=='Misc Income Payment' && opp.Stage_Status__c != 'Paid Off' ) )
+                	return true;
+        }
+        return false;
     }
 })

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CallCenter xmlns="http://soap.sforce.com/2006/04/metadata">
-    <adapterUrl>https://easylegalfinance--rcsfl.na39.visual.force.com/apex/OpenCTIIndex999</adapterUrl>
+    <adapterUrl>/apex/RingCentral__OpenCTIIndex#/</adapterUrl>
     <customSettings>{&quot;reqSoftphoneHeight&quot;:&quot;500&quot;,&quot;reqUseApi&quot;:&quot;true&quot;,&quot;reqSoftphoneWidth&quot;:&quot;200&quot;}</customSettings>
     <displayName>RingCentral Cloud Phone App</displayName>
     <displayNameLabel>Display Name</displayNameLabel>
@@ -9,7 +9,7 @@
         <items>
             <label>CTI Adapter URL</label>
             <name>reqAdapterUrl</name>
-            <value>https://easylegalfinance--rcsfl.na39.visual.force.com/apex/OpenCTIIndex999</value>
+            <value>/apex/RingCentral__OpenCTIIndex#/</value>
         </items>
         <items>
             <label>Use CTI API</label>

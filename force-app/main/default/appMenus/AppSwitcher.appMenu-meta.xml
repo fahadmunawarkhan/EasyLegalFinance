@@ -73,10 +73,6 @@
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
-        <name>ELFI_Case_Management</name>
-        <type>CustomApplication</type>
-    </appMenuItems>
-    <appMenuItems>
         <name>Mass_Update_And_Mass_Edit</name>
         <type>CustomApplication</type>
     </appMenuItems>
@@ -201,15 +197,7 @@
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
-        <name>ELFI_Sales_Stream</name>
-        <type>CustomApplication</type>
-    </appMenuItems>
-    <appMenuItems>
         <name>standard__AllTabSet</name>
-        <type>CustomApplication</type>
-    </appMenuItems>
-    <appMenuItems>
-        <name>standard__LightningInstrumentation</name>
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
@@ -225,15 +213,7 @@
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
-        <name>rcsfl__RingCentral</name>
-        <type>CustomApplication</type>
-    </appMenuItems>
-    <appMenuItems>
         <name>standard__LightningSales</name>
-        <type>CustomApplication</type>
-    </appMenuItems>
-    <appMenuItems>
-        <name>ELFI_Sales_Stream_Lightning</name>
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
@@ -241,7 +221,7 @@
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
-        <name>LEXMAGICMOVER__Attachments_and_Notes_migrator</name>
+        <name>ELFI_Sales_Stream_Lightning</name>
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
@@ -265,8 +245,8 @@
         <type>ConnectedApp</type>
     </appMenuItems>
     <appMenuItems>
-        <name>Alert_Communication</name>
-        <type>ConnectedApp</type>
+        <name>Administration_Tools</name>
+        <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
         <name>Forceea</name>
@@ -274,6 +254,14 @@
     </appMenuItems>
     <appMenuItems>
         <name>ForceeaLightning</name>
+        <type>CustomApplication</type>
+    </appMenuItems>
+    <appMenuItems>
+        <name>Conga_Composer_Lightning</name>
+        <type>ConnectedApp</type>
+    </appMenuItems>
+    <appMenuItems>
+        <name>rcsfl__RingCentral</name>
         <type>CustomApplication</type>
     </appMenuItems>
 </AppMenu>

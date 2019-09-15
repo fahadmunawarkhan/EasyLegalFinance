@@ -163,6 +163,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>IGD__Collection_Id__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Conga_Doc_Error__c</field>
             <table>Opportunity</table>
         </columns>

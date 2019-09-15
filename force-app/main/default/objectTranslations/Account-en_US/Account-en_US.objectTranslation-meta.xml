@@ -24,7 +24,7 @@
         <name>Client</name>
     </recordTypes>
     <recordTypes>
-        <description><!-- Service Provider Facility, Contractor, Vendor &amp; Other Account Types --></description>
+        <description><!-- Service Provider Facility, Litigation Lender, Contractor, Vendor &amp; Other Account Types --></description>
         <label><!-- General Business --></label>
         <name>General_Business</name>
     </recordTypes>

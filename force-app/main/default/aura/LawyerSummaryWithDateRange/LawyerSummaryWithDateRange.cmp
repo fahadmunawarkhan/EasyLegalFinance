@@ -111,6 +111,15 @@
     </lightning:card>
     
     <lightning:card class="slds-card slds-card_boundary" title="{!'Showing '+ v.contactsList.length + ' records.'}" variant="base">
+        <aura:set attribute="actions">
+            <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                                      variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for selected" onclick="{!c.generateForSelected}" />
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send to selected" onclick="{!c.sendToSelected}" />
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />
+            
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send to all" onclick="{!c.sendAll}" />                                
+        </aura:set>
         <div style="overflow: auto; ">
             <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                 <thead>
@@ -141,6 +150,8 @@
                         <th>
                             <div class="slds-truncate" title="Column 1"># of Files</div>
                         </th>        
+                        <th width="5px;">
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,6 +162,23 @@
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.contact.Name}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.contact.Account.Name}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!con.noOfFiles}</td>
+                            <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                <lightning:layout pullToBoundary="small" >
+            						<lightning:layoutItem size="4" padding="horizontal-small">
+                                        <a Title="{! 'Email document to ' + con.contact.Name}" onclick="{!c.sendToIndividual}" data-selected="{!con.contact.Id}"><lightning:icon iconName="utility:email" size="xx-small" alternativeText="email"/></a>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="4" padding="horizontal-small">
+                                        <aura:if isTrue="{!con.contact.Attachments[0].Id}">
+                                            <span Title= "Preview" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!con.contact.Attachments[0].Id}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="4" padding="horizontal-small">
+                                        <aura:if isTrue="{!con.contact.Tasks[0].Id}">
+                                            <span  Title= "{! 'Email sent to ' + con.contact.Name + ' at ' + con.contact.Tasks[0].CreatedDate}" ><lightning:icon class="check-icn" iconName="utility:check" size="xx-small" alternativeText="email sent"/></span>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </td>
                         </tr>
                         
                     </aura:iteration>

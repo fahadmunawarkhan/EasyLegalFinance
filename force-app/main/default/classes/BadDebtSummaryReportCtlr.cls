@@ -27,8 +27,8 @@ public with sharing class BadDebtSummaryReportCtlr {
                 filterByBusinessUnit = 'Consolidated';
             }
             
-            strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c province,Opportunity__r.Account.Business_Unit__c businessunit, COUNT(Opportunity__r.AccountId) file,'; 
-            strQuery += ' SUM(Amount__c) amt';
+            strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c province,Opportunity__r.Account.Business_Unit__c businessunit, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
+            strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Amount__c) amt';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             //strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
@@ -48,16 +48,18 @@ public with sharing class BadDebtSummaryReportCtlr {
                 for(AggregateResult agr : aggResult){
                     
                     if(agrMap.containsKey(String.ValueOf(agr.get('province')))){
-                       // if province exists 
-                       wrapper w = agrMap.get(String.ValueOf(agr.get('province')));
+                        // if province exists 
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('province')));
                         
                         if(String.valueof(agr.get('businessunit')) == 'Rhino'){
                             
-                            w.rhinoCount = Integer.valueof(agr.get('file'));
+                            w.rhinoAccountCount = Integer.valueof(agr.get('file'));
+                            w.rhinoOpptyCount = Integer.valueof(agr.get('opptyCount'));
                             w.rhinoAmount = Double.valueof(agr.get('amt'));
                         }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
                             
-                            w.elfiCount = Integer.valueof(agr.get('file'));
+                            w.elfiAccountCount = Integer.valueof(agr.get('file'));
+                            w.elfiOpptyCount = Integer.valueof(agr.get('opptyCount'));
                             w.elfiAmount = Double.valueof(agr.get('amt'));
                         }
                         
@@ -68,20 +70,24 @@ public with sharing class BadDebtSummaryReportCtlr {
                         wrapper w;
                         if(String.valueof(agr.get('businessunit')) == 'Rhino'){
                             
-                            w = new wrapper(String.ValueOf(agr.get('province')),Integer.valueof(agr.get('file')),
-                                                   Double.valueof(agr.get('amt')),0,0.00);
+                            w = new wrapper(String.ValueOf(agr.get('province')),
+                                            Integer.valueof(agr.get('file')),
+                                            Integer.valueof(agr.get('opptyCount')),
+                                            Double.valueof(agr.get('amt')),0,0,0.00);
                             
                         }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
                             
-                            w = new wrapper(String.ValueOf(agr.get('province')),0,0.00,Integer.valueof(agr.get('file')),
-                                                   Double.valueof(agr.get('amt')));
+                            w = new wrapper(String.ValueOf(agr.get('province')),0,0,0.00,
+                                            Integer.valueof(agr.get('file')),
+                                            Integer.valueof(agr.get('opptyCount')),
+                                            Double.valueof(agr.get('amt')));
                         }
                         agrMap.put(String.ValueOf(agr.get('province')), w);
                     }
                 }
                 
                 
-				list<Wrapper> finalWrapper = new list<Wrapper>(); 
+                list<Wrapper> finalWrapper = new list<Wrapper>(); 
                 
                 for(string key : agrMap.keyset()){
                     
@@ -89,7 +95,9 @@ public with sharing class BadDebtSummaryReportCtlr {
                     
                     if(w == null) continue;
                     
-                    finalWrapper.add(new Wrapper(w.province, w.rhinoCount, w.rhinoAmount, w.elfiCount, w.elfiAmount));
+                    finalWrapper.add(new Wrapper(w.province, 
+                                                 w.rhinoAccountCount, w.rhinoOpptyCount, w.rhinoAmount, 
+                                                 w.elfiAccountCount, w.elfiOpptyCount, w.elfiAmount));
                     
                     
                 }
@@ -113,7 +121,7 @@ public with sharing class BadDebtSummaryReportCtlr {
                                             from Drawdown__c limit 1];
         return congaUrlHolder[0];
     }
-
+    
     @AuraEnabled
     public static List < String > getPickListValues(String objectType, String field)
     {
@@ -146,7 +154,7 @@ public with sharing class BadDebtSummaryReportCtlr {
     public static void saveBusinessUnitCustomSettings(String BusinessUnit){
         try{
             
-           // Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
+            // Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
             Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getOrgDefaults();
             
             bdr.BusinessUnit__C = BusinessUnit;
@@ -173,22 +181,28 @@ public with sharing class BadDebtSummaryReportCtlr {
         @AuraEnabled
         string province {get; set;}
         @AuraEnabled
-        integer rhinoCount {get; set;}
+        integer rhinoAccountCount {get; set;}
+        @AuraEnabled
+        integer rhinoOpptyCount {get; set;}
         @AuraEnabled
         decimal rhinoAmount {get; set;}
         @AuraEnabled
-        integer elfiCount {get; set;}
+        integer elfiAccountCount {get; set;}
+        @AuraEnabled
+        integer elfiOpptyCount {get; set;}
         @AuraEnabled
         decimal elfiAmount {get; set;}
         
-        wrapper(string p, integer rc, decimal ra, integer ec, decimal ea){
+        wrapper(string p, integer rc, integer roc, decimal ra, integer ec, integer eoc, decimal ea){
             
             province = p;
             
-            rhinoCount = rc;
+            rhinoAccountCount = rc;
+            rhinoOpptyCount = roc;
             rhinoAmount = ra;
             
-            elfiCount = ec;
+            elfiAccountCount = ec;
+            elfiOpptyCount = eoc;
             elfiAmount = ea;
         }
         

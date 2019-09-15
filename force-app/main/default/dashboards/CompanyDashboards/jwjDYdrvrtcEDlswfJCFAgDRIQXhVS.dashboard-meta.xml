@@ -14,6 +14,15 @@
             <dashboardComponent>
                 <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
                 <chartAxisRange>Auto</chartAxisRange>
+                <chartSummary>
+                    <aggregate>Sum</aggregate>
+                    <axisBinding>y</axisBinding>
+                    <column>Drawdown__c.Amount__c</column>
+                </chartSummary>
+                <chartSummary>
+                    <axisBinding>y</axisBinding>
+                    <column>FORMULA1</column>
+                </chartSummary>
                 <componentType>Bar</componentType>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>
@@ -61,6 +70,16 @@
             <dashboardComponent>
                 <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
                 <chartAxisRange>Auto</chartAxisRange>
+                <chartSummary>
+                    <aggregate>Sum</aggregate>
+                    <axisBinding>y</axisBinding>
+                    <column>Drawdown__c.Amount__c</column>
+                </chartSummary>
+                <chartSummary>
+                    <aggregate>Average</aggregate>
+                    <axisBinding>y</axisBinding>
+                    <column>Drawdown__c.Year_Target__c</column>
+                </chartSummary>
                 <componentType>Bar</componentType>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>

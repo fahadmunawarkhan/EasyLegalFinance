@@ -7,24 +7,8 @@
         <translation><!-- A/B status --></translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Assessment Funding</masterLabel>
-        <translation><!-- Assessment Funding --></translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Collection</masterLabel>
-        <translation><!-- Collection --></translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Default</masterLabel>
-        <translation><!-- Default --></translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>Examination</masterLabel>
         <translation><!-- Examination --></translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Litigation</masterLabel>
-        <translation><!-- Litigation --></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Mediation</masterLabel>
@@ -33,10 +17,6 @@
     <picklistValues>
         <masterLabel>Pre-trial</masterLabel>
         <translation><!-- Pre-trial --></translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Settled Claim</masterLabel>
-        <translation><!-- Settled Claim --></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Trial date</masterLabel>

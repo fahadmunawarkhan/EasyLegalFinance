@@ -1,50 +1,57 @@
 ({
     getOpportunityInfo : function(component) {
-        var recordId = component.get("v.recordId");
-        var accountId = component.get("v.accountId");
-        var action = component.get('c.getOpportunityDetails');             
-        action.setParams(
-            {
-                oppId : recordId,
-                accId: accountId
-            });
-        
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-
-            if (state === 'SUCCESS') {
-                component.set("v.oppObj", response.getReturnValue()); 
+        let self = this;
+        return new Promise($A.getCallback( function(resolve, reject){
+            var recordId = component.get("v.recordId");
+            var accountId = component.get("v.accountId");
+            var action = component.get('c.getOpportunityDetails');             
+            action.setParams(
+                {
+                    oppId : recordId,
+                    accId: accountId
+                });
+            
+            action.setCallback(this, function (response) {
+                var state = response.getState();
                 
-                //setting lookups
-                component.set("v.selectedLookUpAssignedTo.Id", component.get("v.oppObj").Assigned_To__c);
-                component.set("v.selectedLookUpAssignedTo.Name",(component.get("v.oppObj").Assigned_To__c ? 
-                                                                 component.get("v.oppObj").Assigned_To__r.Name : ''));
-                
-                //setting lookups
-                component.set("v.selectedLookUpPrimaryContact.Id", component.get("v.oppObj").Primary_Contact__c);
-                component.set("v.selectedLookUpPrimaryContact.Name",(component.get("v.oppObj").Primary_Contact__c ? 
-                                                                     component.get("v.oppObj").Primary_Contact__r.Name : '')); 
-                
-                //setting lookups
-                component.set("v.selectedLookUpOwner.Id", component.get("v.oppObj").OwnerId);
-                component.set("v.selectedLookUpOwner.Name",(component.get("v.oppObj").OwnerId ? 
-                                                                     component.get("v.oppObj").Owner.Name : ''));
-
-                
-                this.firePaymentsChangedEvent(component);
-                
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
+                if (state === 'SUCCESS') {
+                    component.set("v.oppObj", response.getReturnValue()); 
+                    
+                    //setting lookups
+                    component.set("v.selectedLookUpAssignedTo.Id", component.get("v.oppObj").Assigned_To__c);
+                    component.set("v.selectedLookUpAssignedTo.Name",(component.get("v.oppObj").Assigned_To__c ? 
+                                                                     component.get("v.oppObj").Assigned_To__r.Name : ''));
+                    
+                    //setting lookups
+                    component.set("v.selectedLookUpPrimaryContact.Id", component.get("v.oppObj").Primary_Contact__c);
+                    component.set("v.selectedLookUpPrimaryContact.Name",(component.get("v.oppObj").Primary_Contact__c ? 
+                                                                         component.get("v.oppObj").Primary_Contact__r.Name : '')); 
+                    
+                    //setting lookups
+                    component.set("v.selectedLookUpOwner.Id", component.get("v.oppObj").OwnerId);
+                    component.set("v.selectedLookUpOwner.Name",(component.get("v.oppObj").OwnerId ? 
+                                                                component.get("v.oppObj").Owner.Name : ''));
+                    
+                    
+                    self.firePaymentsChangedEvent(component);
+                    resolve(true);
+                    
+                } else if (state === 'ERROR') {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            self.errorsHandler(errors)
+                        }
+                    } else {
+                        self.unknownErrorsHandler();
                     }
-                } else {
-                    this.unknownErrorsHandler();
+                    reject(response.getError());
                 }
-            }
-        });
-        $A.enqueueAction(action);        
+            });
+            $A.enqueueAction(action);
+            
+        }));
+                
     },
     validateRequired : function(component, Id) {
         var inputCmp = component.find(Id);

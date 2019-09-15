@@ -27,7 +27,12 @@
     <aura:attribute name="criticalDateList" type="Critical_Date__c[]" />
     <aura:attribute name="criticalDateName" type="List" default="[]"/>
     
+    
     <aura:attribute name="notes" type="Object[]" />
+    <aura:attribute name="paymentActionsMap" type="Map" default="{}"/>
+    <aura:attribute name="paymentActionsValidationMap" type="Map" default="{}"/>
+    <aura:attribute name="displayPaymentValidationErrors" type="Boolean" default="false" />
+    
     <aura:handler name="change" value="{!v.conObj.Phone}" action="{!c.formatPhone}" />
     <aura:handler name="change" value="{!v.conObj.OtherPhone}" action="{!c.formatOtherPhone}" />
     <aura:handler name="change" value="{!v.oppObj.Lawyer__r.Phone}" action="{!c.formatLawPhone}" />
@@ -39,6 +44,12 @@
     <aura:attribute name="paymentMiscSearch" type="boolean" /> 
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
+    <aura:attribute name="calculatedPaymentAmount" type="decimal" />
+    <aura:attribute name="estimatedTotalBalance" type="decimal" />
+    <aura:attribute name="EFT" type="decimal" /> 
+    <aura:attribute name="CHQ" type="decimal" /> 
+    <aura:attribute name="paymentsError" type="String" /> 
+    <aura:attribute name="paymentSearchDisabled" type="Boolean" /> 
     
     <aura:attribute name="fieldLabels" type="Map" />
     <aura:attribute name="pickListMap" type="Map" />  
@@ -581,11 +592,11 @@
                 
                 <!-- <<<<<<<<<< Funding Details >>>>>>>>>> -->
                 <div class="slds-grid slds-wrap " style="height: 100%;">
-                    <div class="slds-col slds-size_1-of-2 ">
+                    <div class="slds-col">
                         <lightning:card title="Funding Details" iconName="standard:case" variant="base">                    
                             <div class="slds-card__body_inner">     
                                 <lightning:layout class="slds-m-left_xx-large">
-                                    <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                    <lightning:layoutItem size="6" class="slds-m-left_xx-large">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Total Amount Loaned</span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
@@ -594,7 +605,8 @@
                                             </div>
                                         </div>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                    <lightning:layoutItem size="5" class="slds-m-left_xx-large">
+                                        <lightning:input type="number" name="input7" label="Projected Loan Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01"/>
                                     </lightning:layoutItem>
                                 </lightning:layout>
                                 <!--<lightning:layout class="slds-m-left_xx-large">
@@ -655,7 +667,7 @@
                         </div>
 -->
                                 <lightning:layout class="slds-m-left_xx-large">
-                                    <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                    <lightning:layoutItem size="6" class="slds-m-left_xx-large">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Date of Accident / Incident</span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
@@ -664,12 +676,19 @@
                                             </div>
                                         </div>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                    <lightning:layoutItem size="6" class="slds-m-left_xx-large">
+                                        <div class="slds-form-element slds-m-bottom_small"><span class="slds-form-element__label">Loan To Value</span>
+                                            <div class="slds-form-element__control">
+                                                <span class="">
+                                                    <lightning:formattedNumber value="{!v.accountObj.Loan_To_Value__c}" style="percent-fixed" maximumFractionDigits="2" />
+                                                </span>
+                                            </div>
+                                        </div>
                                     </lightning:layoutItem>
                                 </lightning:layout>
                                 <div style="margin-top:-20px;">
                                     <lightning:layout class="slds-m-left_xx-large">
-                                        <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                        <lightning:layoutItem size="6" class="slds-m-left_xx-large">
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
                                                 <div class="slds-form-element__control">
                                                     <span class="">
@@ -679,7 +698,7 @@
                                                 </div>
                                             </div>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="8" class="slds-m-left_xx-large">
+                                        <lightning:layoutItem size="6" class="slds-m-left_xx-large">
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
@@ -1388,7 +1407,7 @@
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
                                                     <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                        <lightning:input label="Date of payment" type="date" value="{!v.paymentDate}" 
+                                                        <lightning:input label="Date of payment" type="date" disabled="{!v.paymentSearchDisabled}" value="{!v.paymentDate}" 
                                                                          min="2010-01-01" max="{! v.calendarMax}" />
                                                     </div>
                                                 </span>
@@ -1400,7 +1419,7 @@
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
                                                     <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                        <lightning:combobox label="Search Type" name="SearchType" value="{!v.paymentSearchTypeSelected}" 
+                                                        <lightning:combobox label="Search Type" disabled="{!v.paymentSearchDisabled}" name="SearchType" value="{!v.paymentSearchTypeSelected}" 
                                                                             placeholder="--None--" options="{!v.paymentsSearchTypes}" /> 
                                                     </div>                                                    
                                                 </span>
@@ -1412,7 +1431,7 @@
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
                                                     <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                        <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                                        <lightning:button class="slds-theme_neutral" disabled="{!v.paymentSearchDisabled}" iconPosition="left" 
                                                                           variant="neutral" type="button" label="Search" onclick="{!c.runAllOptsPayout}" />                    
                                                     </div>                                                    
                                                 </span>
@@ -1432,7 +1451,12 @@
                                         <div class="slds-form-element__control">
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                    Total Balance amount <ui:outputCurrency value="{!v.LoanSummary.balance}"/>
+                                                     <aura:if isTrue="{!v.estimatedTotalBalance != null}">
+                                                         Estimated balance after payment: <ui:outputCurrency value="{!v.estimatedTotalBalance}"/>
+                                                         <aura:set attribute="else">
+                                                         	Total Balance amount <ui:outputCurrency value="{!v.LoanSummary.balance}"/>                                                                    
+                                                         </aura:set>
+                                                     </aura:if>                                                     
                                                 </div>
                                             </span>
                                         </div>
@@ -1443,7 +1467,20 @@
                                         <div class="slds-form-element__control">
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                    <ui:inputCurrency label="Payment Amount" value="{!v.paymentAmount}" />
+                                                    <ui:inputCurrency label="Payment Amount" value="{!v.paymentAmount}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                    <div class="slds-grid slds-gutters">                                                        
+                                                            <div class="slds-col">
+                                                                <div class="slds-form_horizontal">
+                                                                	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="slds-col">
+                                                                <div class="slds-form_horizontal">
+                                                                	<ui:inputText label="CHQ#" value="{!v.CHQ}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                                </div>
+                                                            </div>
+                                                        
+                                                    </div>                                                    
                                                 </div>                                                    
                                             </span>
                                         </div>
@@ -1455,9 +1492,9 @@
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
                                                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                                      variant="neutral" type="button" label="Apply" onclick="{!c.calculatePayment}"  /> 
-                                                    
-                                                    <!--<aura:if isTrue="{!v._enableCloseAllPaid}" >    
+                                                                      variant="neutral" type="button" label="Calculate" onclick="{!c.calculatePayment}"  /> 
+                                                    <!--
+                                                    <aura:if isTrue="{!v._enableCloseAllPaid}" >    
                                                         <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                                                           variant="brand" type="button" label="Close All Paid" onclick="{!c.closeAllPaidLoans}" />      
                                                     </aura:if>            -->
@@ -1478,109 +1515,37 @@
                                     </div>
                                 </lightning:layoutItem>
                             </lightning:layout>     
+                            <hr/>
+                            <div class="slds-m-top_xxx-small slds-align_absolute-center">                 
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />                    
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                            </div>
+
+                            <aura:if isTrue="{!v.displayPaymentValidationErrors}">                                    
+                                <aura:if isTrue="{!v.paymentsError}">
+                                    <lightning:layout multipleRows="false">
+                                        <lightning:layoutItem class="slds-m-left_medium slds-m-top_medium">
+                                            <div style="width:100%;margin-left:2%;">
+                                            <div class="slds-notify slds-notify_toast slds-theme_error">                                     
+                                                <span class="slds-assistive-text">error</span>
+                                                <div class="slds-notify__content">
+                                                    <h5 class="slds-text-heading_small slds-align_absolute-center">{!v.paymentsError} </h5>
                             
+                                                </div>
+                                             </div>
+                                            </div>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </aura:if>
+                            </aura:if>
                             <lightning:layout multipleRows="true">
-                                <aura:iteration items="{!v.oppList}" var="opp">
+                                <aura:iteration items="{!v.oppList}" var="opp" indexVar="index">
                                     <lightning:layoutItem class="slds-m-left_medium slds-m-top_medium">
                                         <div style="width:500px;margin-left:5%;">
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + ((opp.Stage_Status__c != '' &amp;&amp; opp.Stage_Status__c != '--- None ---') ? ' (' + opp.Stage_Status__c + ')' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <aura:if isTrue="{!opp.Temp_Payment_Received__c != 0 &amp;&amp; 
-                                                                       opp.Temp_Payment_Received__c != opp.Total_Payout__c &amp;&amp; 
-                                                                       (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
-                                                                       opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Bad Debt' }"> 
-                                                        
-                                                        <form class="payments-partial-form" onsubmit="{!c.applyPartialPayment}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-partial-id" />    
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{!c.applyPartialPayment}" 
-                                                                              type="button" 
-                                                                              label="Partial Payment"
-                                                                              iconPosition="left"
-                                                                              /> 
-                                                        </form>
-                                                    </aura:if>
-                                                    
-                                                    <aura:if isTrue="{!opp.Total_Payout__c > 0  &amp;&amp; 
-                                                                       opp.Temp_Payment_Received__c != opp.Total_Payout__c &amp;&amp;
-                                                                       (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
-                                                                       opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Bad Debt' }">                                                                     
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Surplus__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}"/>
                                                          
-                                                        <form class="payments-debt-form" onsubmit="{!c.changeToBadDebt}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-debt-id" />
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{!c.changeToBadDebt}" 
-                                                                              type="button" 
-                                                                              label="Bad Debt"
-                                                                              iconPosition="left"
-                                                                              />                               
-                                                        </form>
-                                                    </aura:if>
-                                                    
-                                                    <aura:if isTrue="{!opp.Temp_Payment_Received__c == opp.Total_Payout__c &amp;&amp; 
-                                                                       (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
-                                                                       opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Bad Debt' }">
-                                                        
-                                                        <form class="payments-close-form" onsubmit="{!c.applyFullPayment}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-close-id"/>
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{! c.applyFullPayment}" 
-                                                                              type="button" 
-                                                                              label="Closed Paid"
-                                                                              iconPosition="left"
-                                                                              disabled="{!opp.Stage_Status__c == 'Paid Off'}" />
-                                                        </form>                
-                                                    </aura:if>
-                                                    
-                                                    <aura:if isTrue="{!((opp.Temp_Payment_Received__c - opp.Total_Payout__c) > 0) &amp;&amp;
-                                                                       (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
-                                                                       opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Bad Debt' }"> 
-                                                        
-                                                        <form class="payments-surplus-form" onsubmit="{!c.changeToSurplus}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-surplus-id" />
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{!c.changeToSurplus}" 
-                                                                              type="button" 
-                                                                              label="Surplus"
-                                                                              iconPosition="left"
-                                                                              />                               
-                                                        </form> 
-                                                    </aura:if>
-                                                    
-                                                    <aura:if isTrue="{! ((opp.Temp_Payment_Received__c - opp.Total_Payout__c) &#60; 0) &amp;&amp; 
-                                                                       (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
-                                                                       opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
-                                                                       opp.Stage_Status__c != 'Closed - Bad Debt' }"> 
-                                                        
-                                                        <form class="payments-shortfall-form" onsubmit="{!c.changeToShortfall}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-shortfall-id" />
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{!c.changeToShortfall}" 
-                                                                              type="button" 
-                                                                              label="Shortfall"
-                                                                              iconPosition="left"
-                                                                              />                               
-                                                        </form>  
-                                                    </aura:if>
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                                                     <thead>
@@ -1742,7 +1707,7 @@
                                                                                opp.Stage_Status__c != 'Closed - Bad Debt' }">
                                                                 <td class="slds-border_top slds-border_bottom">
                                                                     <!-- <ui:outputCurrency value="{!opp.Shortfall_Surplus__c}" /> -->
-                                                                    <ui:outputCurrency value="{!opp.Temp_Payment_Received__c - opp.Total_Payout__c}" />
+                                                                    <ui:outputCurrency value="{!opp.Surplus__c}" />                                                                    
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr>                                                          
@@ -1768,6 +1733,11 @@
                                     </lightning:layoutItem>
                                 </aura:iteration> 
                             </lightning:layout>
+                            <div class="slds-m-top_xx-large slds-align_absolute-center">                 
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />                    
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                            </div>
+
                         </aura:if>
                         
                         
@@ -1787,7 +1757,19 @@
                                         <div class="slds-form-element__control slds-m-left_xx-large">
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                    <ui:inputCurrency label="Payment Amount" value="{!v.paymentAmount}" />
+                                                    <ui:inputCurrency label="Payment Amount" value="{!v.paymentAmount}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                    <div class="slds-grid slds-gutters">                                                        
+                                                            <div class="slds-col">
+                                                                <div class="slds-form_horizontal">
+                                                                	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="slds-col">
+                                                                <div class="slds-form_horizontal">
+                                                                	<ui:inputText label="CHQ#" value="{!v.CHQ}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
+                                                                </div>
+                                                            </div>                                                        
+                                                    </div>                                                    
                                                 </div>
                                             </span>
                                         </div>
@@ -1799,13 +1781,36 @@
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-small slds-m-bottom_medium">
                                                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                                      variant="neutral" type="button" label="Apply" onclick="{!c.calculatePayment}"  /> 
+                                                                      variant="neutral" type="button" label="Calculate" onclick="{!c.calculatePayment}"  /> 
                                                 </div>                                                    
                                             </span>
                                         </div>
                                     </div>
                                 </lightning:layoutItem>    
                             </lightning:layout> 
+                            <hr/>
+                            <div class="slds-m-top_xxx-small slds-align_absolute-center">                 
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />                    
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                            </div>
+
+                            <aura:if isTrue="{!v.displayPaymentValidationErrors}">                                    
+                                <aura:if isTrue="{!v.paymentsError}">
+                                    <lightning:layout multipleRows="false">
+                                        <lightning:layoutItem class="slds-m-left_medium slds-m-top_medium">
+                                            <div style="width:100%;margin-left:2%;">
+                                            <div class="slds-notify slds-notify_toast slds-theme_error">                                     
+                                                <span class="slds-assistive-text">error</span>
+                                                <div class="slds-notify__content">
+                                                    <h5 class="slds-text-heading_small slds-align_absolute-center">{!v.paymentsError} </h5>
+                                                    
+                                                </div>
+                                             </div>
+                                            </div>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </aura:if>
+                            </aura:if>
                             <lightning:layout multipleRows="true">
                                 <aura:iteration items="{!v.oppList}" var="opp">
                                     <lightning:layoutItem class="slds-m-left_medium slds-m-top_medium">                           
@@ -1813,30 +1818,7 @@
                                             
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + (opp.Stage_Status__c == 'Bad Debt' ? ' (Bad Debt) ' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <aura:if isTrue="{!opp.Temp_Payment_Received__c == opp.Total_Payout__c &amp;&amp; opp.Stage_Status__c != 'Paid Off' }">
-                                                        <form class="payments-close-form" onsubmit="{!c.applyFullPayment}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-close-id"/>
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{! c.applyFullPayment}" 
-                                                                              type="button" 
-                                                                              label="Closed Paid"
-                                                                              iconPosition="left"
-                                                                              disabled="{!opp.Stage_Status__c == 'Paid Off'}" />
-                                                        </form>                                                           
-                                                    </aura:if>    
-                                                    <aura:if isTrue="{!opp.Temp_Payment_Received__c != 0 &amp;&amp; opp.Temp_Payment_Received__c != opp.Total_Payout__c &amp;&amp; opp.Stage_Status__c != 'Paid Off' }">
-                                                        <form class="payments-partial-form" onsubmit="{!c.applyPartialPayment}">
-                                                            <input type="hidden" value="{!opp.Id}" class="opportunity-partial-id" />    
-                                                            <lightning:button class="slds-theme_neutral"
-                                                                              variant="neutral" 
-                                                                              onclick="{!c.applyPartialPayment}" 
-                                                                              type="button" 
-                                                                              label="Partial Payment"
-                                                                              iconPosition="left"
-                                                                              /> 
-                                                        </form>
-                                                    </aura:if>                                                   
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Surplus__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}"/>
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                                                     <thead>
@@ -1902,6 +1884,11 @@
                                     </lightning:layoutItem>
                                 </aura:iteration>
                             </lightning:layout>
+                            <div class="slds-m-top_xx-large slds-align_absolute-center">                 
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />                    
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                            </div>
+
                         </aura:if>
                     </div>
                     

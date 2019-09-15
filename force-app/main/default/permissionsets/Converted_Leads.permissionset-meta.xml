@@ -137,6 +137,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Account.Docusign_Parameters__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Account.Drawdown_Total_w_o_Payment__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -187,7 +192,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Account.Lawyer__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Account.Lawyer_s_Assistant_Paralegal_LC_Info__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Account.Loan_To_Value__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -252,6 +267,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Account.Projected_Loan_Value__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Account.ProvinceResidency__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -263,6 +283,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Account.Related_Law_Firm__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Account.Replacement_Counsel_Document_Generate__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Account.Replacement_Counsel_Document_Send__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -847,6 +877,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Contact.Account_Name__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Contact.Account_Type__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -908,6 +943,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Contact.Conga_Batch_Lawyer_Summary__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Contact.Conga_Workflow__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1173,6 +1213,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Contact.ReportsToId</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Contact.Review_Last_Sent__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1547,6 +1592,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Drawdown__c.Admin_Fee_Formula__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Drawdown__c.Admin_Fee__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1912,6 +1962,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Drawdown__c.Month_Target__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Drawdown__c.Name_Formula__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Drawdown__c.Non_Allocated_Payment__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Drawdown__c.Opportunity_Display_Name__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -1977,6 +2042,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Drawdown__c.Quarter_Target__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Drawdown__c.Quarter_Year__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -2028,6 +2098,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Drawdown__c.Sum_of_Repayments_b4_Temp_Date__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Drawdown__c.Surplus__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -2852,12 +2927,47 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Lead.Lawyer_City__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_Email__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_Fax__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Lead.Lawyer_Name__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Lead.Lawyer_Name_new__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_Phone__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_Postal_Code__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_State__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Lead.Lawyer_Street__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -3087,6 +3197,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.APR_Interest_Rate__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.Accident_Location_from_W2L__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -3103,6 +3218,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.Active_Loan__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Ad_hoc_Payment__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -3402,12 +3522,22 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.Different_Balances__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.Docusign_Parameters_Loan_App__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.Docusign_Parameters__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Docusign_Params_for_Counsel_Doc__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -3488,6 +3618,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.File_No__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.File_Sent_For_EFT_Date__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -4012,12 +4147,27 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.Replacement_Counsel_Document_Generate__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Replacement_Counsel_Document_Send__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.Reporting_From_Date__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.Reporting_To_Date__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Restrict_Communication__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -4087,6 +4237,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Opportunity.Surplus__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Opportunity.Temp_Payment_Received__c</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -4103,6 +4258,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.Total_Paid_Service_Provider__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Total_Payment_Surplus__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -4148,6 +4308,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Opportunity.What_Happened_from_W2L__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Year_Quarter_Formula__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Opportunity.Year_Quarter__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -4383,6 +4553,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Portfolio_Report__c.Batch_Instance_Id__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Portfolio_Report__c.Business_Unit__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -5162,6 +5337,21 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>System_Monitoring__c.Monitoring_Type__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>System_Monitoring__c.Report_Result_Summary__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>System_Monitoring__c.Status__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Task.ActivityDate</field>
         <readable>false</readable>
     </fieldPermissions>
@@ -5393,11 +5583,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>User.wtn__KwagaPairingStatus__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>dsfs__DocuSign_Status__c.Opportunity_Service_Provider__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>

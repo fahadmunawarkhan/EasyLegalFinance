@@ -45,6 +45,10 @@
         <name>AltavistaNews</name>
     </webLinks>
     <webLinks>
+        <label><!-- Conga_Composer_Actual_Sales_By_Month_View_All --></label>
+        <name>Conga_Composer_Actual_Sales_By_Month_View_All</name>
+    </webLinks>
+    <webLinks>
         <label><!-- GoogleMaps --></label>
         <name>GoogleMaps</name>
     </webLinks>
@@ -91,10 +95,6 @@
     <webLinks>
         <label><!-- Send_with_DocuSign --></label>
         <name>dsfs__Send_with_DocuSign</name>
-    </webLinks>
-    <webLinks>
-        <label><!-- SendSMS --></label>
-        <name>rcsfl__SendSMS</name>
     </webLinks>
     <webLinks>
         <label><!-- SpanningLeadRestore --></label>

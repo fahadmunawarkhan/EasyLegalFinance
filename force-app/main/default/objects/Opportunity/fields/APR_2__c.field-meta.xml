@@ -3,7 +3,6 @@
     <fullName>APR_2__c</fullName>
     <externalId>false</externalId>
     <formula>IF(AND(NOT(ISBLANK(Amount)),NOT(ISBLANK(Admin_Fee__c))),((Amount*0.24/2+(Amount+(Amount*0.24/2))*0.24/2+Admin_Fee__c)/Amount),0.00)</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>APR #2</label>
     <precision>18</precision>
     <required>false</required>

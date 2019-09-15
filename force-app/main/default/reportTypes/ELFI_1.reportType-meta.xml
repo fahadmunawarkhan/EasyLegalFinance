@@ -145,6 +145,11 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>IGD__Collection_Id__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Conga_Account_Notes_URL__c</field>
             <table>Account</table>
         </columns>

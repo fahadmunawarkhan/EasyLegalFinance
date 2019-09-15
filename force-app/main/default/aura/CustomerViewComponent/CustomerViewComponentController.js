@@ -449,6 +449,10 @@
         }
     },
     calculatePayment: function(component, event, helper){
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
         component.set("v.spinner", true);
 		helper.calculatePayment(component);
     },
@@ -606,4 +610,63 @@
     sendReplacementCounselDocuments: function(component, event, helper){
        window.open(component.get('v.oppObj').Replacement_Counsel_Document_Send__c, "_parent","width=650,height=250,menubar=0");
     },
+handlePaymentActionSelected : function(component, event, helper) {
+        var oppId = event.getParam("oppId");
+        var action = event.getParam("action");
+        var paymentActionsMap = component.get("v.paymentActionsMap");
+        console.log('Action ' + action);
+        /*var actions = new Array();
+        actions.push(action);*/
+       	paymentActionsMap[oppId]=action;        
+        console.log(paymentActionsMap);
+        //alert(event.getParam("oppId"));
+        //component.set("v.appContacts", event.getParam("contacts"));
+    },
+    handlePaymentActionValidated : function(component, event, helper) {
+        var oppId = event.getParam("oppId");
+        var result = event.getParam("result");
+        var paymentActionsValidationMap = component.get("v.paymentActionsValidationMap");
+       	paymentActionsValidationMap[oppId]=result;  
+        helper.validatePaymentAction(component);
+    },
+    submitPayments : function(component, event, helper) {
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
+        var paymentActionsMap = component.get("v.paymentActionsMap");
+        component.set("v.spinner", true);
+        var calculatedPaymentAmount = component.get("v.calculatedPaymentAmount");
+        var message = 'Proceed with updating loan(s)?';
+        if (calculatedPaymentAmount)
+            message = 'Ready to proceed applying the payment of $' + helper.formatCurrency(calculatedPaymentAmount) + '?';
+        if(confirm(message)) { 
+            helper.submitPayments(component);
+        } else {
+            component.set("v.spinner", false);
+        	return false;
+        }
+                
+    },                        
+    cancel : function(component, event, helper) {
+        if (!helper.activeLoanExists(component)){
+            helper.showToast('Error', 'Payment allocation failed. Only Active loans can receive payments');
+            return;
+        }
+        component.set("v.paymentAmount", 0.0);
+        component.set("v.spinner", true);
+        helper.calculatePayment(component, event, helper);
+    },
+    handlePaymentFieldsChange : function(component, event, helper){
+       var paymentAmount = component.get("v.paymentAmount");                 
+       var eft = component.get("v.EFT");                 
+       var chq = component.get("v.CHQ");                 
+       if (paymentAmount != null || eft != null || chq != null){
+       		component.set("v.paymentSearchDisabled", true);     
+       }
+       /*else{
+            component.set("v.paymentSearchDisabled", false);     
+       }*/
+    }
+
 })

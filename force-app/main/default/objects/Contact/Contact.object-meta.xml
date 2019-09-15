@@ -78,6 +78,12 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
+        <content>RDS_ContactDispatcher</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
         <content>RDS_DispatcherComponent</content>
         <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
@@ -85,9 +91,10 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <content>RDS_ContactDispatcher</content>
+        <content>RDS_DispatcherComponent</content>
+        <formFactor>Small</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>LightningComponent</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>ViewCustomerPortal</actionName>

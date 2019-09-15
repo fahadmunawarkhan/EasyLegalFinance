@@ -61,15 +61,59 @@
         <name>SPD_Total_Balance_Check</name>
     </validationRules>
     <webLinks>
-        <label><!-- Conga_Composer_Lawyer_Sales_Summary_View_All --></label>
-        <name>Conga_Composer_Lawyer_Sales_Summary_View_All</name>
+        <label><!-- Conga_Composer_Bad_Debt_Summary_Report_Print_All --></label>
+        <name>Conga_Composer_Bad_Debt_Summary_Report_Print_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Bad_Debt_Summary_Report_View_All --></label>
+        <name>Conga_Composer_Bad_Debt_Summary_Report_View_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Bad_Debt_View_All_Rhino --></label>
+        <name>Conga_Composer_Bad_Debt_View_All_Rhino</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Finance_Loan_Progression_Print_All --></label>
+        <name>Conga_Composer_Finance_Loan_Progression_Print_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Finance_Loan_Progression_View_All --></label>
+        <name>Conga_Composer_Finance_Loan_Progression_View_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Financial_Summary_Report_Print --></label>
+        <name>Conga_Composer_Financial_Summary_Report_Print</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Financial_Summary_Report_View_All --></label>
+        <name>Conga_Composer_Financial_Summary_Report_View_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Law_Firm_Sales_Summary_Print_All --></label>
+        <name>Conga_Composer_Law_Firm_Sales_Summary_Print_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Law_Firm_Sales_Summary_View_All --></label>
+        <name>Conga_Composer_Law_Firm_Sales_Summary_View_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Lawyer_Sales_Summary_Print_All --></label>
+        <name>Conga_Composer_Lawyer_Sales_Summary_Print_All</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Payment_Summary_Report_Print_All --></label>
+        <name>Conga_Composer_Payment_Summary_Report_Print_All</name>
     </webLinks>
     <webLinks>
         <label><!-- Conga_Composer_Payment_Summary_Report_View_All --></label>
         <name>Conga_Composer_Payment_Summary_Report_View_All</name>
     </webLinks>
     <webLinks>
-        <label><!-- Conga_Composer_Report_Law_Firm_Sales_All --></label>
-        <name>Conga_Composer_Report_Law_Firm_Sales_All</name>
+        <label><!-- Conga_Composer_Payment_Summary_Report_View_All1 --></label>
+        <name>Conga_Composer_Payment_Summary_Report_View_All1</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Conga_Composer_Report_Lawyer_Sales_Summary_View_All --></label>
+        <name>Conga_Composer_Report_Lawyer_Sales_Summary_View_All</name>
     </webLinks>
 </CustomObjectTranslation>

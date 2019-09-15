@@ -56,10 +56,6 @@
             <section>Payout</section>
         </sections>
         <sections>
-            <label><!-- Reporting --></label>
-            <section>Reporting</section>
-        </sections>
-        <sections>
             <label><!-- Sales Process --></label>
             <section>Sales Process</section>
         </sections>
@@ -96,6 +92,10 @@
         <name>Compounding_Interest_Requires_Frequency</name>
     </validationRules>
     <validationRules>
+        <errorMessage><!-- Drawdown is in excess of overall loan amount --></errorMessage>
+        <name>Drawdown_In_Excess_of_Loan_Amount</name>
+    </validationRules>
+    <validationRules>
         <errorMessage><!-- Can&apos;t go to a later funding status until loan registration is complete. --></errorMessage>
         <name>Loan_Registration_Incomplete</name>
     </validationRules>
@@ -104,7 +104,7 @@
         <name>Loan_Setup_Check_Incomplete</name>
     </validationRules>
     <validationRules>
-        <errorMessage><!-- The Re-Assessment Stage is not available for Opportunities that are not Either Facility Loans or Treatment/2 Loans --></errorMessage>
+        <errorMessage><!-- The Re-Assessment Stage is not available for Opportunities that are not Either Facility Loans or Treatment Loan --></errorMessage>
         <name>OPP_VR_01_Assessment</name>
     </validationRules>
     <validationRules>
