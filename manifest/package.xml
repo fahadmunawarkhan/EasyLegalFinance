@@ -162,6 +162,7 @@
     <members>TestDataFactory</members>
     <members>TriggerHandler</members>
     <members>TriggerHandler_Test</members>
+    <members>TriggerHelper</members>
     <name>ApexClass</name>
   </types>
   <types>
@@ -238,11 +239,11 @@
     <members>ScheduledPaymentTrigger</members>
     <name>ApexTrigger</name>
   </types>
-  <types>
+  <!-- types> Having problems with Chatter deploying
     <members>AppSwitcher</members>
     <members>Salesforce1</members>
     <name>AppMenu</name>
-  </types>
+  </types -->
   <types>
     <members>Case</members>
     <members>Lead</members>
@@ -1384,7 +1385,7 @@
     <name>CustomTab</name>
   </types>
   <types>
-    <members>CompanyDashboards</members>
+    <!--members>CompanyDashboards</members>
     <members>CompanyDashboards/AdoptionDashboard</members>
     <members>CompanyDashboards/CompanyPerformanceDashboard</members>
     <members>CompanyDashboards/ELFI_Company_Dashboard</members>
@@ -1394,7 +1395,8 @@
     <members>Dashboard_for_Report/kFGrpEdRdWdccPIcAtsWEdOwnDWsCB</members>
     <members>ELFI_Sales_Dashboards</members>
     <members>ELFI_Sales_Dashboards/X10_Sales_Team_Overview</members>
-    <members>ELFI_Sales_Dashboards/X20_ELFI_Company_Overview</members>
+    <members>ELFI_Sales_Dashboards/X20_ELFI_Company_Overview</members-->
+    <members>*</members>
     <name>Dashboard</name>
   </types>
   <types>
@@ -1406,9 +1408,10 @@
     <name>DuplicateRule</name>
   </types>
   <types>
-    <members>ELFI_Email_Templates</members>
+    <members>*</members>
+    <!-- members>ELFI_Email_Templates</members>
     <members>ELFI_Email_Templates/ELFIWebtoLeademailresponse</members>
-    <members>ELFI_Email_Templates/eSignature_Project</members>
+    <members>ELFI_Email_Templates/eSignature_Project</members -->
     <name>EmailTemplate</name>
   </types>
   <types>
@@ -1729,10 +1732,10 @@
     <name>ListView</name>
   </types>
   <types>
-    <members>Account</members>
+    <!-- members>Account</members -->
     <members>Contact</members>
-    <members>Individual</members>
-    <members>Lead</members>
+    <!-- members>Individual</members -->
+    <!-- members>Lead</members -->
     <name>MatchingRules</name>
   </types>
   <types>
@@ -1767,18 +1770,18 @@
     <members>System Admin - Legacy Layouts</members>
     <name>Profile</name>
   </types>
-  <types>
+  <!-- types>
     <members>ELFI_Case_Management_profilePasswordPolicy1563895141935</members>
     <members>ELFI_Sales_Profile_profilePasswordPolicy1493173179154</members>
     <members>PT1_profilePasswordPolicy1566499326763</members>
     <name>ProfilePasswordPolicy</name>
-  </types>
-  <types>
+  </types-->
+  <!-- types>
     <members>ELFI_Case_Management_profileSessionSetting1563895142027</members>
     <members>ELFI_Sales_Profile_profileSessionSetting1493173179069</members>
     <members>PT1_profileSessionSetting1566499326873</members>
     <name>ProfileSessionSetting</name>
-  </types>
+  </types-->
   <types>
     <members>Case.NewChildCase</members>
     <members>FeedItem.NewTaskFromFeedItem</members>
@@ -1793,7 +1796,7 @@
     <members>NewOpportunity</members>
     <members>NewTask</members>
     <members>Portfolio_Report__c.Submit_Report</members>
-    <members>SendEmail</members>
+    <!-- members>SendEmail</members -->
     <members>Task.Defer</members>
     <members>Task.EditDescription</members>
     <members>Task.UpdatePriority</members>
@@ -1834,7 +1837,7 @@
     <name>RemoteSiteSetting</name>
   </types>
   <types>
-    <members>ELFI_Company_Reports</members>
+    <!-- members>ELFI_Company_Reports</members>
     <members>ELFI_Company_Reports/Active_Loans_w_o_Drawdowns</members>
     <members>ELFI_Company_Reports/Activities_with_Opportunities_Report</members>
     <members>ELFI_Company_Reports/Alberta_Sales_Campgain</members>
@@ -1957,7 +1960,9 @@
     <members>Supporting_Reports/Funding_Summary_Paid_Off_Opportunities_sEz</members>
     <members>TroubleshootingReportsByFahad</members>
     <members>TroubleshootingReportsByFahad/Financial_Summary_Vxl</members>
-    <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members>
+    <members>TroubleshootingReportsByFahad/Financial_Summary_Vxl</members>
+    <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members-->
+    <members>*</members>
     <name>Report</name>
   </types>
   <types>
@@ -1983,10 +1988,10 @@
     <members>Sales_Team</members>
     <name>Role</name>
   </types>
-  <types>
+  <!-- types>
     <members>Okta</members>
     <name>SamlSsoConfig</name>
-  </types>
+  </types -->
   <types>
     <members>Account</members>
     <members>Activities</members>
@@ -2289,5 +2294,5 @@
     <members>Opportunity</members>
     <name>Workflow</name>
   </types>
-  <version>45.0</version>
+  <version>46.0</version>
 </Package>

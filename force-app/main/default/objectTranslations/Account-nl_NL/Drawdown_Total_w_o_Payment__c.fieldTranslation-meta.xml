@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Drawdown Total w/o Payment --></label>
-    <name>Drawdown_Total_w_o_Payment__c</name>
-</CustomFieldTranslation>

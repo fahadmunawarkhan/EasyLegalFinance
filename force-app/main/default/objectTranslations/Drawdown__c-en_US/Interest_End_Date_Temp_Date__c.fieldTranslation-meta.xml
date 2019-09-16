@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Date Interest will be calculated TO. Date is adjusted for minimum interest period. --></help>
-    <label><!-- Interest End Date - Temp Date --></label>
-    <name>Interest_End_Date_Temp_Date__c</name>
-</CustomFieldTranslation>

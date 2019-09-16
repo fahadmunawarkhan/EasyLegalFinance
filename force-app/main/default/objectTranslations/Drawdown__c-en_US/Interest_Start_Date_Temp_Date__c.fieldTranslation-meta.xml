@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Start date of interest accrual adjusted for the minimum interest period and for interest already accounted for in prior periods. --></help>
-    <label><!-- Interest Start Date - Temp Date --></label>
-    <name>Interest_Start_Date_Temp_Date__c</name>
-</CustomFieldTranslation>

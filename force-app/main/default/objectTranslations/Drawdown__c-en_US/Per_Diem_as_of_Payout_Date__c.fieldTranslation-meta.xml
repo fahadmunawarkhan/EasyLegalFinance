@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- The daily interest rate on the total outstanding balance at the payout date. The Per Diem will be adjusted to zero when the payout date is less than the minimum interest date and when payout date is within the interest deferral period. --></help>
-    <label><!-- Per Diem --></label>
-    <name>Per_Diem_as_of_Payout_Date__c</name>
-</CustomFieldTranslation>

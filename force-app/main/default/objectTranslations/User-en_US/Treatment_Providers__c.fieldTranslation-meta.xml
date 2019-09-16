@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Treatment Providers --></label>
-    <name>Treatment_Providers__c</name>
-</CustomFieldTranslation>

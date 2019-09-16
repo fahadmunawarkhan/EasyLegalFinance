@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Days between Interest Start and End on which interest accrues.  This has been adjusted for prior payments, minimum interest duration, and deferred interest. --></help>
-    <label><!-- Interest Accrual (Days) --></label>
-    <name>Interest_Accrual_Days__c</name>
-</CustomFieldTranslation>
