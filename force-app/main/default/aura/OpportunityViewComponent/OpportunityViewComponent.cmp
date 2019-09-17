@@ -589,6 +589,7 @@
                                             </div>
                                         </lightning:layoutItem>
                                     </lightning:layout> 
+                                    
                                     <lightning:layout class="slds-m-left_xx-large">
                                         <lightning:layoutItem size="8" class="slds-m-left_xx-large">
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -625,7 +626,9 @@
                                                 </div>
                                             </div>
                                         </lightning:layoutItem>
+                                        
                                     </lightning:layout>
+                                    
                                     <lightning:layout class="slds-m-left_xx-large">
                                         <lightning:layoutItem size="8" class="slds-m-left_xx-large">
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">

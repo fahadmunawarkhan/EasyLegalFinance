@@ -20,7 +20,7 @@
             <componentInstanceProperties>
                 <name>label</name>
                 <type>decorator</type>
-                <value>Ring Central</value>
+                <value>RingCentral</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>scrollable</name>
