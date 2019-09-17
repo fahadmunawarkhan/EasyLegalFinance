@@ -350,9 +350,9 @@ system.debug('lstDraw - 34'+lstDraw[0]);
         system.assertEquals(2, lstDraw2.size(), 'Drawdowns not found on query.');
         for (drawdown__c d : lstDraw2){
             if(d.id == lstDraw[0].id){
-                system.assertEquals(7867.60, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
-                system.assertEquals(2867.60, d.ACCRUED_INTEREST_AS_OF_PAYOUT_DATE__C);
-                system.assertEquals(5.17, d.Per_Diem_as_of_Payout_Date__c);
+                system.assertEquals(1595.60, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
+                system.assertEquals(1595.60, d.ACCRUED_INTEREST_AS_OF_PAYOUT_DATE__C);
+                system.assertEquals(1.05, d.Per_Diem_as_of_Payout_Date__c);
             }else if(d.id == lstDraw[1].id){
                 system.assertEquals(7035.55, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
                 system.assertEquals(2035.55, d.ACCRUED_INTEREST_AS_OF_PAYOUT_DATE__C);
@@ -371,9 +371,9 @@ system.debug('lstDraw - 34'+lstDraw[0]);
 
         for (drawdown__c d : lstDraw2){
             if(d.id == lstDraw[0].id){
-                system.assertEquals(6272.00, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
+                system.assertEquals(1272.00, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
                 system.assertEquals(1272.00, d.ACCRUED_INTEREST_AS_OF_PAYOUT_DATE__C);
-                system.assertEquals(4.12, d.Per_Diem_as_of_Payout_Date__c);
+                system.assertEquals(0.84, d.Per_Diem_as_of_Payout_Date__c);
             }
             if(d.id == lstDraw[1].id){
                 system.assertEquals(5608.70, d.OUTSTANDING_BALANCE_AS_OF_PAYOUT_DATE__C);
