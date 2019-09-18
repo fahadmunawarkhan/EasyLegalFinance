@@ -5318,7 +5318,7 @@
     <recordTypeVisibilities>
         <default>false</default>
         <recordType>Contact.Lawyers</recordType>
-        <visible>false</visible>
+        <visible>true</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
