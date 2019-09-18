@@ -182,6 +182,9 @@ public class FundingDetailsComponentCtlrTest {
         EFT_File_Setting__c eftSettings = TestDataFactory.getEFTFileSettings();
 
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(1)[0];
+        Account acc = new Account(Id=bankRec.Client__c);
+        acc.Primary_Bank_Account__c = bankRec.Id;
+        update acc;
 
         FObject opp = new FObject('Opportunity', 1);
         opp.setDefinition('Amount', 'static value(5000)');

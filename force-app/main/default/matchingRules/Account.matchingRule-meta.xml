@@ -13,6 +13,6 @@
             <fieldName>Phone</fieldName>
             <matchingMethod>Phone</matchingMethod>
         </matchingRuleItems>
-        <ruleStatus>Active</ruleStatus>
+        <ruleStatus>Inactive</ruleStatus>
     </matchingRules>
 </MatchingRules>

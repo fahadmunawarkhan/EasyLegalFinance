@@ -479,10 +479,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>QueueablePaymentAllocator</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>RDS_AccountPrintableViewCtlr</apexClass>
         <enabled>false</enabled>
     </classAccesses>
