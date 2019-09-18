@@ -37,11 +37,14 @@ public class EFTFileTest {
 
         FObject baConfig = TestDataFactory.getBankAccountConfig(1);
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(baConfig, false)[0];
+        bankRec.Client__c = acc.Id;
         bankRec.Account__c = '466313001';
         bankRec.Bank__c = '0016';
         bankRec.Transit__c = '10329';
         //bankRec.Mark_as_Primary__c = true;
         bankRec = TestDataFactory.getBankAccountObjects(baConfig, true)[0];
+        acc.Primary_Bank_Account__c = bankRec.Id;
+        update acc;
 
         Opportunity oppRec = TestDataFactory.getOpportunityObjects(1)[0];
 
@@ -83,6 +86,9 @@ public class EFTFileTest {
         EFT_File_Setting__c eftSettings = TestDataFactory.getEFTFileSettings();
 
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(1)[0];
+        Account acc = new Account(Id=bankRec.Client__c);
+        acc.Primary_Bank_Account__c = bankRec.Id;
+        update acc;
 
         Opportunity oppRec = TestDataFactory.getOpportunityObjects(1)[0];
 
@@ -98,7 +104,7 @@ public class EFTFileTest {
         fileText = eft.generateFileText();
         test.stopTest();
 
-        Account acc = [Select Id, Name From Account Where Id = :bankRec.Client__c];
+        acc = [Select Id, Name From Account Where Id = :bankRec.Client__c];
 
         validateFileFormat(fileText, u, eftSettings);
 
@@ -125,6 +131,9 @@ public class EFTFileTest {
         bankRecs[0].Client__c = accRecs[0].Id;
         bankRecs[1].Client__c = accRecs[1].Id;
         TestDataFactory.getBankAccountObjects(baConfig, true);
+        accRecs[0].Primary_Bank_Account__c = bankRecs[0].Id;
+        accRecs[1].Primary_Bank_Account__c = bankRecs[1].Id;
+        update accRecs;
 
         FObject oppConfig = TestDataFactory.getOpportunityConfig(1);
         Opportunity[] oppRecs = TestDataFactory.getOpportunityObjects(oppConfig, false);
@@ -226,6 +235,9 @@ public class EFTFileTest {
         EFT_File_Setting__c eftSettings = TestDataFactory.getEFTFileSettings();
 
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(1)[0];
+        Account acc = new Account(Id=bankRec.Client__c);
+        acc.Primary_Bank_Account__c = bankRec.Id;
+        update acc;
 
         Opportunity oppRec = TestDataFactory.getOpportunityObjects(1)[0];
 
@@ -241,7 +253,7 @@ public class EFTFileTest {
         fileText = eft.generateFileText();
         test.stopTest();
 
-        Account acc = [Select Id, Name From Account Where Id = :bankRec.Client__c];
+        acc = [Select Id, Name From Account Where Id = :bankRec.Client__c];
 
         validateFileFormat(fileText, u, eftSettings);
 

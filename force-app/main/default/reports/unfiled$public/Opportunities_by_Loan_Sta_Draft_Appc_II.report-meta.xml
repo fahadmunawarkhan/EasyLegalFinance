@@ -1,38 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <buckets>
-        <bucketType>picklist</bucketType>
-        <developerName>BucketField_56431347</developerName>
-        <masterLabel>Loan Status (*)</masterLabel>
-        <nullTreatment>n</nullTreatment>
-        <otherBucketLabel>Other</otherBucketLabel>
-        <sourceColumnName>Opportunity$Loan_Status__c</sourceColumnName>
-        <useOther>true</useOther>
-        <values>
-            <sourceValues>
-                <sourceValue>Active</sourceValue>
-            </sourceValues>
-            <sourceValues>
-                <sourceValue>Active - Partial Payment</sourceValue>
-            </sourceValues>
-            <value>Open</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Paid</sourceValue>
-            </sourceValues>
-            <value>Closed</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Bad Debt</sourceValue>
-            </sourceValues>
-            <value>Bad Debt</value>
-        </values>
-    </buckets>
-    <columns>
-        <field>Opportunity$Loan_Status__c</field>
-    </columns>
     <columns>
         <field>Opportunity$Primary_Contact__c.ELF_File_No__c</field>
     </columns>
@@ -85,11 +52,6 @@
         </criteriaItems>
     </filter>
     <format>Summary</format>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>BucketField_56431347</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
     <name>Opportunities by Loan Sta -Draft Appc II</name>
     <params>
         <name>co</name>
@@ -101,8 +63,6 @@
     <showDetails>false</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
-    <sortColumn>Opportunity$Loan_Status__c</sortColumn>
-    <sortOrder>Asc</sortOrder>
     <timeFrameFilter>
         <dateColumn>Opportunity$CloseDate</dateColumn>
         <interval>INTERVAL_PREVCURFY</interval>

@@ -26,6 +26,7 @@
             <expandOthers>false</expandOthers>
             <groupingColumn>CREATED_DATE</groupingColumn>
             <groupingColumn>OWNER</groupingColumn>
+            <groupingSortProperties/>
             <header>Leads</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Company_Reports/Lead_Counts_by_Owner_YTD</report>
@@ -50,6 +51,7 @@
             <displayUnits>Auto</displayUnits>
             <drillEnabled>false</drillEnabled>
             <drillToDetailEnabled>false</drillToDetailEnabled>
+            <groupingSortProperties/>
             <header>Contacts</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -75,6 +77,7 @@
             <enableHover>false</enableHover>
             <expandOthers>true</expandOthers>
             <groupingColumn>STAGE_NAME</groupingColumn>
+            <groupingSortProperties/>
             <header>Opportunity Pipeline</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Company_Reports/WIP_List_Case_Management</report>
@@ -102,6 +105,7 @@
             <expandOthers>false</expandOthers>
             <groupingColumn>STAGE_NAME</groupingColumn>
             <groupingColumn>Opportunity.Assigned_To__c</groupingColumn>
+            <groupingSortProperties/>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Company_Reports/WIP_List_Case_Management</report>
             <showPercentage>false</showPercentage>
@@ -129,6 +133,7 @@
             <displayUnits>Auto</displayUnits>
             <drillEnabled>false</drillEnabled>
             <drillToDetailEnabled>false</drillToDetailEnabled>
+            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -152,6 +157,7 @@
             <displayUnits>Auto</displayUnits>
             <drillEnabled>false</drillEnabled>
             <drillToDetailEnabled>false</drillToDetailEnabled>
+            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>

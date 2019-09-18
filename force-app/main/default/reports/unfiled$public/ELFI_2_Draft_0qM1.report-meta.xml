@@ -60,7 +60,7 @@
     </columns>
     <description>ELFI 2 - Accrued Interest on Active Loan Drawdowns - (Date range dependent on Portfolio dates selected)</description>
     <filter>
-        <booleanFilter>(1 OR 2) AND 3</booleanFilter>
+        <booleanFilter>(1 OR 2)</booleanFilter>
         <criteriaItems>
             <column>Drawdown__c$Accrued_Interest_In_Reporting_Period__c</column>
             <isUnlocked>false</isUnlocked>

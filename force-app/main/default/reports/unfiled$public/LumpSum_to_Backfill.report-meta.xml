@@ -34,12 +34,6 @@
             <operator>notEqual</operator>
             <value>Closed No Loan</value>
         </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.Loan_Status__c</column>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Active,Active - Partial Payment</value>
-        </criteriaItems>
     </filter>
     <format>Tabular</format>
     <name>LumpSum to Backfill</name>

@@ -37,7 +37,7 @@
             <column>Opportunity.Stage_Status__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment,Closed - Paid</value>
+            <value>Active,Active - Partial Payment,Closed - Paid,Closed Paid</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

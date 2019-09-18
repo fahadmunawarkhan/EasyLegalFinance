@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <buckets>
-        <bucketType>picklist</bucketType>
-        <developerName>BucketField_25085217</developerName>
-        <masterLabel>Loan Status (*)</masterLabel>
-        <nullTreatment>n</nullTreatment>
-        <otherBucketLabel>Other</otherBucketLabel>
-        <sourceColumnName>Opportunity.Loan_Status__c</sourceColumnName>
-        <useOther>true</useOther>
-        <values>
-            <sourceValues>
-                <sourceValue>Active</sourceValue>
-            </sourceValues>
-            <sourceValues>
-                <sourceValue>Active - Partial Payment</sourceValue>
-            </sourceValues>
-            <value>Open</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Paid</sourceValue>
-            </sourceValues>
-            <value>Closed</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Bad Debt</sourceValue>
-            </sourceValues>
-            <value>Bad Debt</value>
-        </values>
-    </buckets>
     <columns>
         <field>Opportunity.Loan_Requests__c</field>
     </columns>
@@ -67,14 +37,6 @@
         </criteriaItems>
     </filter>
     <format>Summary</format>
-    <groupingsDown>
-        <aggregateType>RowCount</aggregateType>
-        <dateGranularity>Day</dateGranularity>
-        <field>BucketField_25085217</field>
-        <sortByName>RowCount</sortByName>
-        <sortOrder>Asc</sortOrder>
-        <sortType>Aggregate</sortType>
-    </groupingsDown>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
         <field>ACCOUNT_NAME</field>

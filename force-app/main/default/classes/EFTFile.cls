@@ -103,6 +103,7 @@ public with sharing class EFTFile {
             // Generate line text
             try {
                 if (String.isBlank(sp.Current_Bank_Account_Id__c)) {
+                    system.debug(sp.Current_Bank_Account_Id__c);
                     throw new EFTFileException(sp.Id, 'Current_Bank_Account_URL__c', 'Scheduled Payment does not have a Bank Account set');
                 }
                 if (sp.Amount__c <= 0) {
@@ -159,6 +160,7 @@ public with sharing class EFTFile {
         }
 
         if (errorList.isEmpty() == false) {
+            System.debug(errorList);
             throw new EFTFileErrorListException(errorList);
         } else {
             // Generate file header

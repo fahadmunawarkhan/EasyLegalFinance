@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- File Sent For EFT Date --></label>
-    <name>File_Sent_For_EFT_Date__c</name>
-</CustomFieldTranslation>

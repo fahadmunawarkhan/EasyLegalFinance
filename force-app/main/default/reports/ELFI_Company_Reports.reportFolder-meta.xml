@@ -5,10 +5,5 @@
         <sharedTo>AllInternalUsers</sharedTo>
         <sharedToType>Organization</sharedToType>
     </folderShares>
-    <folderShares>
-        <accessLevel>View</accessLevel>
-        <sharedTo>seth.boyd@toptal.com</sharedTo>
-        <sharedToType>User</sharedToType>
-    </folderShares>
     <name>ELFI - Company Reports</name>
 </ReportFolder>

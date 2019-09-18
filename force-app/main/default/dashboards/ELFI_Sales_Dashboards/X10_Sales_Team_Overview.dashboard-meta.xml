@@ -17,6 +17,7 @@
             <enableHover>true</enableHover>
             <expandOthers>false</expandOthers>
             <footer>Closed Tasks by Day by Type where Due Date is Last Week</footer>
+            <groupingSortProperties/>
             <header>Tasks</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Sales_Team_Reports/ELFI_Sales_Team_Closed_Tasks_WE</report>
@@ -36,6 +37,7 @@
             <enableHover>true</enableHover>
             <expandOthers>false</expandOthers>
             <footer>Closed Tasks by Day by Type where Due Date is This Week</footer>
+            <groupingSortProperties/>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Sales_Team_Reports/ELFI_Sales_Team_Closed_Tasks_WE_1</report>
             <showPercentage>false</showPercentage>
@@ -57,6 +59,7 @@
             <enableHover>true</enableHover>
             <expandOthers>true</expandOthers>
             <footer>All Open Leads (Excludes Unqualified Leads)</footer>
+            <groupingSortProperties/>
             <header>Leads</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Sales_Team_Reports/ELFI_Sales_Team_EH_Lead_Funnel</report>
@@ -79,6 +82,7 @@
             <enableHover>true</enableHover>
             <expandOthers>true</expandOthers>
             <footer>All Open Opportunities</footer>
+            <groupingSortProperties/>
             <header>Opportunities</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Sales_Team_Reports/ELFI_Sales_Team_WE_Opp_Funnel</report>
@@ -89,7 +93,6 @@
             <useReportChart>false</useReportChart>
         </components>
     </rightSection>
-    <runningUser>seth.boyd@toptal.com</runningUser>
     <textColor>#000000</textColor>
     <title>10 - Sales Team Overview</title>
     <titleColor>#000000</titleColor>

@@ -36,7 +36,7 @@
             <column>Opportunity.Stage_Status__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
-            <value>Bad Debt</value>
+            <value>Closed - Bad Debt</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

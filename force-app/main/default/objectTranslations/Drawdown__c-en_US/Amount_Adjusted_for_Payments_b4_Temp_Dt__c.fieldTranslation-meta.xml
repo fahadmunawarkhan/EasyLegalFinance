@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Calculated Balance after last repayment made before Temp Date.
-This field will be used for calc of outstanding balance. --></help>
-    <label><!-- Amount Adjusted for Payments b4 Temp Dt --></label>
-    <name>Amount_Adjusted_for_Payments_b4_Temp_Dt__c</name>
-</CustomFieldTranslation>

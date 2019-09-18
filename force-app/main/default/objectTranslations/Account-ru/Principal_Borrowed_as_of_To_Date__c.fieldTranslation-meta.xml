@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Drawdowns with balance outstanding or accrued interest in reporting period. This condition naturally excludes those created and closed before/after reporting period and things which do not accrue interest(Payments, Referral Fees, Payments Re-Proc/Rejectd) --></help>
-    <label><!-- Principal Borrowed as of To Date --></label>
-    <name>Principal_Borrowed_as_of_To_Date__c</name>
-</CustomFieldTranslation>

@@ -26,6 +26,7 @@
                 <enableHover>false</enableHover>
                 <expandOthers>true</expandOthers>
                 <groupingColumn>BucketField_94690964</groupingColumn>
+                <groupingSortProperties/>
                 <header>Size of Loans (by number of loans)</header>
                 <legendPosition>Right</legendPosition>
                 <report>Portfolio_Reports/ELFI_Portfolio_Stats_1_EPR</report>
@@ -57,6 +58,7 @@
                 <enableHover>false</enableHover>
                 <expandOthers>true</expandOthers>
                 <groupingColumn>BucketField_94690964</groupingColumn>
+                <groupingSortProperties/>
                 <header>Size of Loans (by $ allocated)</header>
                 <legendPosition>Right</legendPosition>
                 <maxValuesDisplayed>6</maxValuesDisplayed>

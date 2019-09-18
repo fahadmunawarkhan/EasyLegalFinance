@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Query Selector Lawyer Summary Report --></label>
-    <name>Query_Selector_Lawyer_Summary_Report__c</name>
-</CustomFieldTranslation>

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Generate Loan Doc Check --></label>
-    <name>Generate_Loan_Doc_Check__c</name>
-</CustomFieldTranslation>

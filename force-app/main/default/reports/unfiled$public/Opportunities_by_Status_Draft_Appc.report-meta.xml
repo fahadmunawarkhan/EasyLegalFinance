@@ -1,38 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
-    <buckets>
-        <bucketType>picklist</bucketType>
-        <developerName>BucketField_25085217</developerName>
-        <masterLabel>Loan Status (*)</masterLabel>
-        <nullTreatment>n</nullTreatment>
-        <otherBucketLabel>Other</otherBucketLabel>
-        <sourceColumnName>Opportunity.Loan_Status__c</sourceColumnName>
-        <useOther>false</useOther>
-        <values>
-            <sourceValues>
-                <sourceValue>Active</sourceValue>
-            </sourceValues>
-            <sourceValues>
-                <sourceValue>Active - Partial Payment</sourceValue>
-            </sourceValues>
-            <value>Active</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Paid</sourceValue>
-            </sourceValues>
-            <value>Closed</value>
-        </values>
-        <values>
-            <sourceValues>
-                <sourceValue>Closed - Bad Debt</sourceValue>
-            </sourceValues>
-            <sourceValues>
-                <sourceValue>Closed - Bad Debt - Making Payments</sourceValue>
-            </sourceValues>
-            <value>Bad Debt</value>
-        </values>
-    </buckets>
     <columns>
         <field>ACCOUNT_NUMBER</field>
     </columns>
@@ -94,11 +61,6 @@
         </criteriaItems>
     </filter>
     <format>Summary</format>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>BucketField_25085217</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
     <name>Opportunities by Status -Draft Appc</name>
     <params>
         <name>open</name>

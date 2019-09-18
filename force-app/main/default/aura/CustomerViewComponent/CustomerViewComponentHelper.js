@@ -1210,7 +1210,7 @@
             totalBalance = 0.0;
         component.set("v.estimatedTotalBalance", totalBalance);*/
     },
-    postSubmitPayments : function(component){
+   	postSubmitPayments : function(component){
         this.estimateTotalBalance(component);
         var paymentAmount = component.get('v.paymentAmount');
         component.set('v.calculatedPaymentAmount', null);    	
