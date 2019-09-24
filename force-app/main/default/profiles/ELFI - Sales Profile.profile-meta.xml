@@ -1974,7 +1974,7 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Drawdown__c.Opportunity_Stage_Status__c</field>
-        <readable>false</readable>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
