@@ -4,8 +4,15 @@
         <field>Account$Name</field>
     </columns>
     <columns>
+        <field>Account$Business_Unit__c</field>
+    </columns>    
+    <columns>
         <field>Account$AccountNumber</field>
     </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Active_Loan_Count__c</field>
+    </columns>    
     <columns>
         <field>Account$Date_of_Advance__c</field>
     </columns>
@@ -16,7 +23,7 @@
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Account$Outstanding_Balance_as_of_To_Date__c</field>
-    </columns>
+    </columns>    
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Account$Admin_Fee_as_of_To_Date__c</field>
