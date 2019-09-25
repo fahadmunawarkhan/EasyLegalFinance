@@ -164,6 +164,12 @@
                     This Table Shows Only "eTransfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and opportunities being "Closed With Loan". <br/>
                     <span style="margin-left:40px;"># Of Files are number of opportunities that a specific law firms has given in the selected date range.</span>
                 </span>
+                <br/>
+                <br/>
+                <a href="/lightning/r/Report/00O0L000003mqhhUAA/view" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="brand" type="button" label="Reference Report" />
+                </a>
             </div>
         </div>
         <div class="">
