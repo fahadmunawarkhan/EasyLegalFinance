@@ -766,7 +766,11 @@
                     <div class="slds-grid slds-wrap " style="height: 100%;">
                         <div class="slds-col">
                             <!-- <<<<<<<<<< Existing Litigation Loans >>>>>>>>>> -->
-                            <c:previousLoanManager oppId="{!v.oppObj.Id}" shown="{!true}"></c:previousLoanManager>
+                            <c:previousLoanManager 
+                                oppId="{!v.oppObj.Id}" 
+                                shown="{!true}"
+                                onloanschanged="{!c.updateAmounts}"
+                            ></c:previousLoanManager>
                         </div>
                     </div>
 
