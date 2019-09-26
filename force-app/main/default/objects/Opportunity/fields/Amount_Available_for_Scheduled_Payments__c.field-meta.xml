@@ -6,6 +6,7 @@
     <formula>Amount
     - IF(Admin_Fee_Roll_up__c &gt; 0, 0, Admin_Fee__c)
     - Drawdown_Total_w_o_payments_and_provider__c 
+    - Total_Outstanding_Previous_Loans__c
 				- Scheduled_Non_Facility_Treatment_Total__c
 				- Total_Service_Providers_Allowance__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

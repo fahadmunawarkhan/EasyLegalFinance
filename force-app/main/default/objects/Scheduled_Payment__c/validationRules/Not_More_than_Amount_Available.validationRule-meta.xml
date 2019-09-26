@@ -11,6 +11,7 @@
 			    	- Amount__c 
 				    + IF(ISNEW(), 0, PRIORVALUE(Amount__c))
 								+ ( Opportunity_Service_Provider__r.Allowance_Available__c )
+								+ ( Previous_Loan__r.Amount__c )
 				    &gt;= 0
 				    , False
 				    , True
