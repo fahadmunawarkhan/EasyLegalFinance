@@ -34,7 +34,7 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
             switch on sp.Payment_Type__c {
-                when 'Lump-Sum', 'Ad-Hoc', 'Scheduled Facility' {
+                when 'Lump-Sum', 'Ad-Hoc', 'Scheduled Facility', 'Assessment' {
                     // Check if account is opportunity's account
                     // TODO - Should I check if it is a law firm or have some other advanced way to figure this out?
                     if (sp.Opportunity__r.AccountId == sp.Current_Account_Id__c) {
@@ -70,6 +70,10 @@ public with sharing class ScheduledPaymentHelper {
             {
             System.debug('Creating new Admin Fee Drawdown');
             // Admin Fee Drawdown needs to be created
+            String reference_note = 'Admin Fee';
+            if (sp.Payment_Type__c == 'Assessment') {
+                reference_note = 'Assessment Fee';
+            }
             adminDrawdowns.put(
                 sp.Opportunity__c,
                 new Drawdown__c(
@@ -77,7 +81,7 @@ public with sharing class ScheduledPaymentHelper {
                     Date__c = Date.today(),
                     Opportunity__c = sp.Opportunity__c,
                     Payment_Method__c = 'Admin Fee',
-                    Reference_Notes__c = 'Admin Fee'
+                    Reference_Notes__c = reference_note
                 )
             );
             sp.Triggered_Admin_Fee__c = true;
@@ -231,6 +235,8 @@ public with sharing class ScheduledPaymentHelper {
 
             return generateDrawdowns(spList);
         } catch (Exception e){
+            System.debug(e);
+            System.debug(e.getMessage());
             throw new AuraHandledException('Error: '+e.getMessage());
         }
     }
