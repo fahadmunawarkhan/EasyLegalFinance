@@ -10,8 +10,8 @@
 				    Opportunity__r.Amount_Available_for_Scheduled_Payments__c 
 			    	- Amount__c 
 				    + IF(ISNEW(), 0, PRIORVALUE(Amount__c))
-								+ ( Opportunity_Service_Provider__r.Allowance_Available__c )
-								+ ( Previous_Loan__r.Amount__c )
+                    + IF(ISBLANK(Previous_Loan__c), 0,  Previous_Loan__r.Amount__c)
+                    + ( Opportunity_Service_Provider__r.Allowance_Available__c )
 				    &gt;= 0
 				    , False
 				    , True
