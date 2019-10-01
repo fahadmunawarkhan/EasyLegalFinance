@@ -766,15 +766,17 @@
                     <div class="slds-grid slds-wrap " style="height: 100%;">
                         <div class="slds-col">
                             <!-- <<<<<<<<<< Existing Litigation Loans >>>>>>>>>> -->
-                            <c:previousLoanManager 
-                                oppId="{!v.oppObj.Id}" 
-                                shown="{!true}"
-                                onloanschanged="{!c.updateAmounts}"
-                            ></c:previousLoanManager>
+                            <aura:if isTrue="{!v.oppObj.Id}">
+                                <c:previousLoanManager 
+                                    oppId="{!v.oppObj.Id}" 
+                                    shown="{!true}"
+                                    onloanschanged="{!c.updateAmounts}"
+                                ></c:previousLoanManager>
+                            </aura:if>
                         </div>
                     </div>
 
-                    <aura:if isTrue="{!v.oppObj.StageName == 'Loan Approved' || v.oppObj.StageName == 'Closed With Loan'}">
+                    <aura:if isTrue="{!v.oppObj.StageName == 'Loan Approved' || v.oppObj.StageName == 'Closed With Loan' || v.oppObj.StageName == 'Re-Assessment'}">
 
                     <!-- <<<<<<<<<< Facility Payment Schedule >>>>>>>>>> -->
                     <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
