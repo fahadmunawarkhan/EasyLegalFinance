@@ -330,7 +330,7 @@
             </processMetadataValues>
             <name>OpportunityName</name>
             <value>
-                <elementReference>formula_2_myRule_1_A1_1160151258</elementReference>
+                <elementReference>formula_2_myRule_1_A1_1258892187</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -732,7 +732,7 @@
                 <leftValueReference>myVariable_current.Funding_Details_Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Closed</stringValue>
+                    <stringValue>Populate PPSA</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -901,13 +901,13 @@
                 <leftValueReference>myVariable_current.Funding_Details_Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Closed</stringValue>
+                    <stringValue>Populate PPSA</stringValue>
                 </rightValue>
             </conditions>
             <connector>
                 <targetReference>myRule_27_pmetdec</targetReference>
             </connector>
-            <label>Funding Details Closed</label>
+            <label>Funding Details Drawdowns Created</label>
         </rules>
     </decisions>
     <decisions>
@@ -1249,7 +1249,7 @@
                 <leftValueReference>myVariable_old.Funding_Details_Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Closed</stringValue>
+                    <stringValue>Populate PPSA</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -1534,7 +1534,7 @@
                 <leftValueReference>myVariable_old.Funding_Details_Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Closed</stringValue>
+                    <stringValue>Populate PPSA</stringValue>
                 </rightValue>
             </conditions>
             <label>Previously Met - Prev</label>
@@ -1612,7 +1612,7 @@
                 <stringValue>$User.Id</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_16_A1_8314163576</name>
+        <name>formula_17_myRule_16_A1_1737691059</name>
         <dataType>String</dataType>
         <expression>{!$User.Id}</expression>
     </formulas>
@@ -1623,7 +1623,7 @@
                 <stringValue>NOW() </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_18_myRule_16_A1_3266405214</name>
+        <name>formula_18_myRule_16_A1_0651996614</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1638,7 +1638,7 @@
 )</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_21_myRule_20_A1_8575601628</name>
+        <name>formula_21_myRule_20_A1_3501045100</name>
         <dataType>Number</dataType>
         <expression>IF(
     ISNULL({!myVariable_current.Payment_Schedule_Version_Number__c}),
@@ -1654,7 +1654,7 @@
                 <stringValue>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_1160151258</name>
+        <name>formula_2_myRule_1_A1_1258892187</name>
         <dataType>String</dataType>
         <expression>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</expression>
     </formulas>
@@ -1767,7 +1767,7 @@
     )
 )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Create_Edit_Handler-9_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Create_Edit_Handler-11_InterviewLabel</interviewLabel>
     <label>Opportunity Create &amp; Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2123,7 +2123,7 @@
             </processMetadataValues>
             <field>Verified_By__c</field>
             <value>
-                <elementReference>formula_17_myRule_16_A1_8314163576</elementReference>
+                <elementReference>formula_17_myRule_16_A1_1737691059</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2159,7 +2159,7 @@
             </processMetadataValues>
             <field>Verified_Date__c</field>
             <value>
-                <elementReference>formula_18_myRule_16_A1_3266405214</elementReference>
+                <elementReference>formula_18_myRule_16_A1_0651996614</elementReference>
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>
@@ -2242,7 +2242,7 @@
             </processMetadataValues>
             <field>Payment_Schedule_Version_Number__c</field>
             <value>
-                <elementReference>formula_21_myRule_20_A1_8575601628</elementReference>
+                <elementReference>formula_21_myRule_20_A1_3501045100</elementReference>
             </value>
         </inputAssignments>
         <object>Opportunity</object>
