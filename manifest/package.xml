@@ -107,6 +107,7 @@
         <members>LeadViewComponentCtlr</members>
         <members>LeadViewComponentCtlrTest</members>
         <members>LoanProgressionReportCtlr</members>
+		<members>LoanProgressionReportCtlrTest</members>
         <members>LoanSimulatorController</members>
         <members>LoanSimulatorControllerTest</members>
         <members>MassUpdater</members>
@@ -627,6 +628,7 @@
         <members>Drawdown__c.Principal_Repaid__c</members>
         <members>Drawdown__c.Quarter_Target__c</members>
         <members>Drawdown__c.Quarter_Year__c</members>
+		<members>Drawdown__c.Quarter_of_Year__c</members>
         <members>Drawdown__c.Reference_Notes__c</members>
         <members>Drawdown__c.Reporting_Days_Outstanding__c</members>
         <members>Drawdown__c.Reporting_From_Date__c</members>
@@ -645,6 +647,7 @@
         <members>Drawdown__c.Total_Per_Diem__c</members>
         <members>Drawdown__c.Type__c</members>
         <members>Drawdown__c.Year_Target__c</members>
+		<members>Drawdown__c.Year__c</members>
         <members>Drawdown_Payment_Allocation__c.Amount__c</members>
         <members>Drawdown_Payment_Allocation__c.Before_Temp_Payout_Date__c</members>
         <members>Drawdown_Payment_Allocation__c.Drawdown__c</members>
@@ -669,6 +672,9 @@
         <members>Financial_Summary_Report__c.Report_Date__c</members>
         <members>Financial_Summary_Report__c.Since_Inception__c</members>
         <members>Financial_Summary_Report__c.Start_Date__c</members>
+		<members>FinanceLoanProgression__c.Business_Unit__c</members>
+        <members>FinanceLoanProgression__c.Start_Date__c</members>
+        <members>FinanceLoanProgression__c.End_Date__c</members>
         <members>Firm__c.Date_of_Update__c</members>
         <members>Firm__c.Date_Retained__c</members>
         <members>Firm__c.Email__c</members>
@@ -1259,6 +1265,7 @@
         <members>EFT_File__c</members>
         <members>EFT_File_Setting__c</members>
         <members>Financial_Summary_Report__c</members>
+		<members>FinanceLoanProgression__c</members>		
         <members>Firm__c</members>
         <members>FObjectFour__c</members>
         <members>FObjectOne__c</members>
@@ -1871,6 +1878,8 @@
         <members>TroubleshootingReportsByFahad</members>
         <members>TroubleshootingReportsByFahad/Financial_Summary_Vxl</members>
         <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members>
+		<members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Advances_JHh</members>
+        <members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Losses_sE5</members>
         <name>Report</name>
     </types>
     <types>
