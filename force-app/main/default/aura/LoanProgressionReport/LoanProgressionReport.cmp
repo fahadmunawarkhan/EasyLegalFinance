@@ -6,12 +6,30 @@
     <aura:attribute name="calendarMax" type="date" />
     <aura:attribute name="startDate" type="date" />
     <aura:attribute name="endDate" type="date" />
+    <aura:attribute name="customSetting" type="Object"/>
+    
+    <aura:attribute name="gTotalAdvancesElfi" type="Decimal" />
+    <aura:attribute name="gTotalAdvancesRhino" type="Decimal" />
+    <aura:attribute name="gTotalNumberOfLoansElfi" type="Integer" />
+    <aura:attribute name="gTotalNumberOfLoansRhino" type="Integer" />
+    <aura:attribute name="gTotalLossesAmtElfi" type="Decimal" />
+    <aura:attribute name="gTotalLossesAmtRhino" type="Decimal" />
+    <aura:attribute name="gTotalPercentageElfi" type="Decimal" />
+    <aura:attribute name="gTotalPercentageRhino" type="Decimal" />
+    
+    <aura:attribute name="ViewAllUrl" type="String"/>
+    <aura:attribute name="ViewAllLossesUrl" type="String"/>
+    <aura:attribute name="PrintAllUrl" type="String"/>    
+    
+    <aura:attribute name="progressionReportData" type="List" />
+    <aura:attribute name="design" type="Boolean" default="false" />
+    <aura:attribute name="businessUnitForDesign" type="String" default="{!v.customSetting.Business_Unit__c}" />
     
     <aura:attribute name="spinner" type="Boolean" />
     
-     <!-- Business Unit Picklist -->
+    <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
     
     
     <!--<<<<<<<<<<< DATE RANGE CARD >>>>>>>>>>> -->       
@@ -78,6 +96,469 @@
         </div>
     </lightning:card>
     <!--<<<<<<<<<<< / FILTER CARD >>>>>>>>>>> -->
+    
+    <lightning:card >
+        <lightning:layout horizontalAlign="center" >
+            <lightning:layoutItem >
+                <a href="{!v.ViewAllUrl}" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="neutral" type="button" label="View All (Excel)" />
+                </a>
+            </lightning:layoutItem>
+            <lightning:layoutItem >
+                <a href="{!v.ViewAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="neutral" type="button" label="View All (PDF)" />
+                </a>
+            </lightning:layoutItem>
+            <lightning:layoutItem >
+                <a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="neutral" type="button" label="Print Report (PDF)" />
+                </a>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    
+    <lightning:card class="slds-card slds-card_boundary" title="Reference Reports">
+        <lightning:layout >
+            <lightning:layoutItem padding="around-small">
+                <a href="/lightning/r/Report/00O2D000000QHh0UAG/view" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="brand" type="button" label="Loan Advances $" />
+                </a>
+            </lightning:layoutItem>            
+        </lightning:layout>
+        <lightning:layout >
+            <lightning:layoutItem padding="horizontal-small">
+                <a href="/lightning/r/Report/00O2D000000QIaMUAW/view" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="brand" type="button" label="Loan Losses $" />
+                </a>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    
+    <!--<<<<<<<<<<< REPORT DATA CARD >>>>>>>>>>> -->
+    <div class="">
+        <lightning:card title="Loan Progression Report" iconName="standard:case" variant="base">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-no-row-hover">
+                <thead>                    
+                    <tr class="slds-line-height_reset">
+                        <th class="highlight-orange" scope="col" style="width:10%;">
+                            <div class="slds-truncate boldText" title="Year/Q">Year/Q</div>
+                        </th>
+                        <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Loan advances - $ (ELFI)">Loan advances - $  (ELFI)
+                                    <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Payment Method = \'e-Transfer\' OR \'Cheque\' OR \'Admin Fee\') \nOpportunity stage = \'Closed with Loan\' \nOpportunity Stage Status = (\'Active\' OR \'Active Partial\' OR \'Closed Paid\' OR\n\t\t\t \'Closed Surplus\' OR \'Closed Shortfall\' OR \'Closed - Bad Debt\') \n Business Unit = \'ELFI\' \nfor the selected Date Range.'}">
+                                        <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                        size="xx-small" />
+                                    </span>
+                                </div>
+                            </th>
+                            <th valign="top" class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="# of loans+ (ELFI)"># of loans+ (ELFI)
+                                    
+                                </div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Losses - $ (ELFI)">Losses - $ (ELFI)
+                                <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Reference Notes = \'Bad Debt\') \n Business Unit = \'ELFI\'  \nfor the selected Date Range.'}">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                            size="xx-small" />
+                                        </span>
+                                </div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Losses - # of loans (ELFI)">Losses - # of loans (ELFI)</div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Loan advances - $ (Rhino)">Loan advances - $  (Rhino)
+                                    <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Payment Method = \'e-Transfer\' OR \'Cheque\' OR \'Admin Fee\') \nOpportunity stage = \'Closed with Loan\' \nOpportunity Stage Status = (\'Active\' OR \'Active Partial\' OR \'Closed Paid\' OR\n\t\t\t \'Closed Surplus\' OR \'Closed Shortfall\' OR \'Closed - Bad Debt\') \n Business Unit = \'Rhino\' \nfor the selected Date Range.'}">
+                                        <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                        size="xx-small" />
+                                    </span>
+                                </div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="# of loans+ (Rhino)"># of loans+ (Rhino)</div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Losses - $ (Rhino)">Losses - $ (Rhino)
+                                <div class="slds-truncate boldText" title="Losses - $">Losses - $
+                                        <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Reference Notes = \'Bad Debt\') \n Business Unit = \'Rhino\'  \nfor the selected Date Range.'}">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                            size="xx-small" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="highlight-orange" scope="col">
+                                <div class="slds-truncate boldText" title="Losses - # of loans (Rhino)">Losses - # of loans (Rhino)</div>
+                            </th>
+                            <aura:set attribute="else">
+                                <th class="highlight-orange" scope="col">
+                                    <div class="slds-truncate boldText" title="Loan advances - $">Loan advances - $
+                                    <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Payment Method = \'e-Transfer\' OR \'Cheque\' OR \'Admin Fee\') \nOpportunity stage = \'Closed with Loan\' \nOpportunity Stage Status = (\'Active\' OR \'Active Partial\' OR \'Closed Paid\' OR\n\t\t\t \'Closed Surplus\' OR \'Closed Shortfall\' OR \'Closed - Bad Debt\') \nfor the selected Date Range and Business Unit.'}">
+                                        <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                        size="xx-small" />
+                                    </span></div>
+                                </th>
+                                <th class="highlight-orange" scope="col">
+                                    <div class="slds-truncate boldText" title="# of loans+"># of loans+</div>
+                                </th>
+                                <th class="highlight-orange" scope="col">
+                                    <div class="slds-truncate boldText" title="Losses - $">Losses - $
+                                        <span class="helpText" title="{!'Sum of Amount \nfrom Drawdowns where (Reference Notes = \'Bad Debt\') \nfor the selected Date Range and Business Unit.'}">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" 
+                                                            size="xx-small" />
+                                        </span>
+                                    </div>
+                                </th>
+                                <th class="highlight-orange" scope="col">
+                                    <div class="slds-truncate boldText" title="Losses - # of loans">Losses - # of loans</div>
+                                </th>
+                            </aura:set>
+                        </aura:if>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration  items="{!v.progressionReportData}" var="fYear">
+                        <tr>
+                            <td class="highlight-orange">
+                                <div class="slds-truncate boldText right-align">
+                                    {!fYear.Year}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">
+                                <td>
+                                    <div class="slds-truncate">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                    </div>
+                                </td>
+                            </aura:if>
+                        </tr>
+                        <aura:iteration items="{!fYear.quarters}" var="fQuarter">
+                            <tr>
+                                <td class="highlight-orange">
+                                    <div class="slds-truncate boldText">
+                                        {!fQuarter.Quarter}
+                                    </div>
+                                </td>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.elfiAdvanceLoanAmount}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.elfiNumberOfLoans}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.elfiLoanLosesAmount}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.elfiNumberOfLoanLoses}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.rhinoAdvanceLoanAmount}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.rhinoNumberOfLoans}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.rhinoLoanLosesAmount}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber 
+                                                                       value="{!fQuarter.rhinoNumberOfLoanLoses}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                            </tr>
+                        </aura:iteration>
+                        <tr class="summary-row">
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    Total
+                                </div>
+                            </td>
+                            <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalAdvanceLoanAmountElfi}" style="currency" 
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalNumberOfLoansElfi}" style="decimal" 
+                                                                   maximumFractionDigits="0"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalLoanLosesAmountElfi}" style="currency" 
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.lossesPercentageElfi}" style="percent"
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                            </aura:if>
+                            <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalAdvanceLoanAmountRhino}" style="currency" 
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalNumberOfLoansRhino}" style="decimal" 
+                                                                   maximumFractionDigits="0"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.totalLoanLosesAmountRhino}" style="currency" 
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <lightning:formattedNumber 
+                                                                   value="{!fYear.lossesPercentageRhino}" style="percent"
+                                                                   maximumFractionDigits="2"/>
+                                    </div>
+                                </td>
+                            </aura:if>
+                        </tr>
+                    </aura:iteration >
+                    
+                    <tr style="height:28px;">
+                        <td>
+                            <div class="slds-truncate">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate">
+                            </div>
+                        </td>
+                        <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
+                        </aura:if>
+                    </tr>
+                    
+                    <!-- GRAND TOTAL-->
+                    <tr class="summary-row">
+                        <td>
+                            <div class="slds-truncate boldText">
+                                Grand Total
+                            </div>
+                        </td>
+                        <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalAdvancesElfi == null}">
+                                        $0.00
+                                        <aura:set attribute="else"> 
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.gTotalAdvancesElfi}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalNumberOfLoansElfi == null}">
+                                        0
+                                        <aura:set attribute="else"> 
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.gTotalNumberOfLoansElfi}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalLossesAmtElfi == null}">
+                                        $0.00
+                                        <aura:set attribute="else"> 
+                                    <lightning:formattedNumber 
+                                                               value="{!v.gTotalLossesAmtElfi}" style="currency" 
+                                                               maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalPercentageElfi == null}">
+                                        0%
+                                        <aura:set attribute="else"> 
+                                    <lightning:formattedNumber 
+                                                               value="{!v.gTotalPercentageElfi}" style="percent"
+                                                               maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                        </aura:if>
+                        <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalAdvancesRhino == null}">
+                                        $0.00
+                                        <aura:set attribute="else"> 
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.gTotalAdvancesRhino}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalNumberOfLoansRhino == null}">
+                                        0
+                                        <aura:set attribute="else"> 
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.gTotalNumberOfLoansRhino}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalLossesAmtRhino == null}">
+                                        $0.00
+                                        <aura:set attribute="else"> 
+                                    <lightning:formattedNumber 
+                                                               value="{!v.gTotalLossesAmtRhino}" style="currency" 
+                                                               maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate boldText">
+                                    <aura:if isTrue="{!v.gTotalPercentageRhino == null}">
+                                        0%
+                                        <aura:set attribute="else"> 
+                                    <lightning:formattedNumber 
+                                                               value="{!v.gTotalPercentageRhino}" style="percent"
+                                                               maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                        </aura:if>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </lightning:card>
+    </div>
+    <!--<<<<<<<<<<< / REPORT DATA CARD >>>>>>>>>>> -->
     
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">
