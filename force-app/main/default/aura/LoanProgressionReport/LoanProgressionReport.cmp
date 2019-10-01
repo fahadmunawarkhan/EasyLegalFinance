@@ -123,7 +123,7 @@
     <lightning:card class="slds-card slds-card_boundary" title="Reference Reports">
         <lightning:layout >
             <lightning:layoutItem padding="around-small">
-                <a href="/lightning/r/Report/00O2D000000QHh0UAG/view" target="_BLANK">
+                <a href="/lightning/r/Report/00O1F000000iENhUAM/view" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="brand" type="button" label="Loan Advances $" />
                 </a>
@@ -131,7 +131,7 @@
         </lightning:layout>
         <lightning:layout >
             <lightning:layoutItem padding="horizontal-small">
-                <a href="/lightning/r/Report/00O2D000000QIaMUAW/view" target="_BLANK">
+                <a href="/lightning/r/Report/00O1F000000iENmUAM/view" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="brand" type="button" label="Loan Losses $" />
                 </a>
