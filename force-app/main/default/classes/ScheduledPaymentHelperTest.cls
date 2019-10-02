@@ -315,6 +315,7 @@ public class ScheduledPaymentHelperTest {
     }
 
     public static void clearTestData(String[] fileNos) {
+        /*
         String[] fileNos = new String[]{
             '9865 test',
             '9866 test',
