@@ -313,4 +313,95 @@ public class ScheduledPaymentHelperTest {
         //oppRec = [Select Id, Funding_Details_Status__c from Opportunity Where Id = :oppRec.Id][0];
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
     }
+
+    public static void clearTestData(String[] fileNos) {
+        String[] fileNos = new String[]{
+            '9865 test',
+            '9866 test',
+            '9864 test',
+            'Nicole Popovich-Account #1',
+            'test',
+            '3352 test',
+            '3289 test',
+            '9875 test',
+            '9898 test'
+        };
+
+        Map<Id, Account> accs = new Map<Id, Account>();
+        Map<Id, Contact> contacts = new Map<Id, Contact>();
+        List<Scheduled_Payment__c> sps = new List<Scheduled_Payment__c>();
+        List<Previous_Loan__c> pls = new List<Previous_Loan__c>();
+        List<Drawdown__c> dds = new List<Drawdown__c>();
+        List<Opportunity_Service_Provider__c> osps = new List<Opportunity_Service_Provider__c>();
+        Set<Id> ospIds = new set<Id>();
+        Lead[] leads = [Select Id from Lead Where ELF_File_No__c in :fileNos];
+
+        Opportunity[] opps = [
+            Select 
+                Id,
+                AccountId,
+                Account.Name,
+                ContactId,
+                (Select Id From Scheduled_Payments__r),
+                (Select Id From Drawdowns__r Order By Date__c DESC),
+                (Select Id From Opportunity_Service_Providers__r),
+                (Select Id From Previous_Loans__r)
+            From Opportunity Where File_No__c in :fileNos];
+
+        for (Opportunity opp : opps) {
+            if (opp.AccountId != null)
+                accs.put(opp.AccountId, new Account(Id=opp.AccountId));
+            if (opp.ContactId != null)
+                contacts.put(opp.ContactId, new Contact(Id=opp.ContactId));
+            if (opp.Scheduled_Payments__r != null) {
+                sps.addAll(opp.Scheduled_Payments__r);
+            }
+            if (opp.Drawdowns__r != null) {
+                dds.addAll(opp.Drawdowns__r);
+            }
+            if (opp.Previous_Loans__r != null) {
+                pls.addAll(opp.Previous_Loans__r);
+            }
+            if (opp.Opportunity_Service_Providers__r != null) {
+                osps.addAll(opp.Opportunity_Service_Providers__r);
+            }
+        }
+
+        for (opportunity_service_provider__c osp : osps) {
+            ospids.add(osp.id);
+        }
+        //opportunity_service_provider_invoice__c invoice = new opportunity_service_provider_invoice__c();
+        opportunity_service_provider_invoice__c[] ospis = [select id from opportunity_service_provider_invoice__c where opportunity_service_provider__c in :ospids];
+        delete sps;
+        delete ospis;
+        delete osps;
+        delete pls;
+        for (drawdown__c dd : dds) {
+            delete dd;
+        }
+        //delete dds;
+        delete opps;
+        delete accs.values();
+        //delete contacts.values();
+        delete leads;
+        
+
+        /*
+
+        system.debug(accs);
+        system.debug(contacts);
+        system.debug(leads);
+        system.debug(opps.size());
+        system.debug(sps);
+        system.debug(dds);
+        system.debug(osps);
+
+        Opportunity opp = new Opportunity();
+        opp.File_No__c;
+        opp.Name;
+        opp.Contact.ELF_File_No__c
+        Drawdown__c dd = new Drawdown__c();
+        */
+    }
+
 }
