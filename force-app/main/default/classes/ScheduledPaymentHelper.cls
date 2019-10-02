@@ -155,7 +155,7 @@ public with sharing class ScheduledPaymentHelper {
             manageOpportunityFields(oppMap, adminDrawdownMap, sp);
         }
         */
-        //setOpportunitiesFundingStatus(oppMap, 'Loan Setup Check');
+        setOpportunitiesFundingStatus(oppMap, 'Populate PPSA');
 
         // Combine Scheduled Payment Drawdowns and any created Admin Fee Drawdowns
         drawDownList.addAll(adminDrawdownMap.values());
@@ -244,6 +244,8 @@ public with sharing class ScheduledPaymentHelper {
     private static void setOpportunitiesFundingStatus(Map<Id, Opportunity> oppMap, String status) {
         for (Opportunity opp : oppMap.values()) {
             opp.Funding_Details_Status__c = status;
+            opp.StageName = 'Closed With Loan';
+            opp.Stage_Status__c = 'Active';
         }
     }
 
