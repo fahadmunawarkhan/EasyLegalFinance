@@ -563,8 +563,13 @@ t.adminFee =  d.Amount__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
                 } else {                    
-                    t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
-                    t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
+					if(t.referenceNotes == 'Payment Surplus' || t.referenceNotes == 'Payment Shortfall' || t.referenceNotes == 'Bad Debt'){
+                        t.paymentAmount = 0;    
+                        t.accruedInterest = d.Formula_Amount__c;
+                    } else{                    
+                        t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                        t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
+                    }                    
                     t.outstandingBalance = 0;
                     t.perDiem = 0;
                 }
