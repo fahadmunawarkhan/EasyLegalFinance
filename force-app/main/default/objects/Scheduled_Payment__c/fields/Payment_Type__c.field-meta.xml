@@ -46,11 +46,6 @@
                 <isActive>false</isActive>
                 <label>Loan Payout</label>
             </value>
-            <value>
-                <fullName>Assessment</fullName>
-                <default>false</default>
-                <label>Assessment</label>
-            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
