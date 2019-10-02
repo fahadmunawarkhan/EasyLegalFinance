@@ -766,11 +766,17 @@
                     <div class="slds-grid slds-wrap " style="height: 100%;">
                         <div class="slds-col">
                             <!-- <<<<<<<<<< Existing Litigation Loans >>>>>>>>>> -->
-                            <c:previousLoanManager oppId="{!v.oppObj.Id}" shown="{!true}"></c:previousLoanManager>
+                            <aura:if isTrue="{!v.oppObj.Id}">
+                                <c:previousLoanManager 
+                                    oppId="{!v.oppObj.Id}" 
+                                    shown="{!true}"
+                                    onloanschanged="{!c.updateAmounts}"
+                                ></c:previousLoanManager>
+                            </aura:if>
                         </div>
                     </div>
 
-                    <aura:if isTrue="{!v.oppObj.StageName == 'Loan Approved' || v.oppObj.StageName == 'Closed With Loan'}">
+                    <aura:if isTrue="{!v.oppObj.StageName == 'Loan Approved' || v.oppObj.StageName == 'Closed With Loan' || v.oppObj.StageName == 'Re-Assessment'}">
 
                     <!-- <<<<<<<<<< Facility Payment Schedule >>>>>>>>>> -->
                     <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
@@ -1337,8 +1343,8 @@
                             </lightning:card>
                         </aura:if>
                         <!-- <<<<<<<<<< Facility Loan Drawdowns >>>>>>>>>> -->
-                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
-                            <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Lump-Sum', 'Lump-Sum Loan Drawdowns', 'Facility Loan Drawdowns')}" iconName="standard:case" variant="base" >
+                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan' || v.oppObj.Type_of_Loan__c == 'Assessment'}">
+                            <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Assessment', 'Assessment Loan Drawdowns', 'Facility Loan Drawdowns')}" iconName="standard:case" variant="base" >
                                 <aura:set attribute="actions">
                                     <aura:if isTrue="{!v.currentUser.Drawdowns__c}">
                                         <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
