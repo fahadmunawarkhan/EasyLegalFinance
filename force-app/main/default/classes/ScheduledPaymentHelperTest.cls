@@ -315,6 +315,7 @@ public class ScheduledPaymentHelperTest {
     }
 
     public static void clearTestData(String[] fileNos) {
+        // Method used to clear out test data from orgs
         /*
         String[] fileNos = new String[]{
             '9865 test',
