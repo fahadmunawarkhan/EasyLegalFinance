@@ -126,7 +126,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
             { label: 'Drawdown', fieldName: 'Name', sortable: true },
             { label: 'Amount', fieldName: 'Amount__c', type: 'currency', sortable: true },
             { label: 'Date', fieldName: 'Date__c', type: 'date-local', typeAttributes: {'time-zone': "UTC"}, sortable: true },
-            { label: 'Accrued Interest', fieldName: 'Total_Accrued_Interest__c', type: 'currency', sortable: true },
+            //{ label: 'Accrued Interest', fieldName: 'Total_Accrued_Interest__c', type: 'currency', sortable: true },
             { label: 'Payment Method', fieldName: 'Payment_Method__c', sortable: true },
             { label: 'EFT #', fieldName: 'EFT__c', sortable: true },
             { label: 'Chq #', fieldName: 'CHQ__c', sortable: true },
