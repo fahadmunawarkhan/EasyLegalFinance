@@ -172,6 +172,7 @@ export default class ScheduledPaymentForm extends LightningElement {
             try {
                 // Seems to be a bug when I try to get the field value without cloning the object first
                 const fields = JSON.parse(JSON.stringify(event.detail.records[this.recordId])).fields
+                this.opportunity = fields.Opportunity__c.value;
                 this.account = fields.Account__c.value;
                 this.bankAccount = fields.Bank_Account__c.value;
                 this.usePrimaryBankAccount = fields.Use_Primary_Bank_Account__c.value;
