@@ -113,6 +113,8 @@ History
         Set<Id> oppties = new Set<Id>();
         for(Drawdown__c d : newDrawdowns)
         {
+            System.debug('new amount: '+d.Amount__c);
+            System.debug('old amount: '+oldMap.get(d.Id).Amount__c);
             if(d.Opportunity__c != null &&
                (isInsert || (!isInsert && 
                              (/*(d.Reference_Notes__c == 'Admin Fee' ||
@@ -154,7 +156,7 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
                 Drawdown__c firstDrawdown = null;
                 for(Drawdown__c d : op.Drawdowns__r)
                 {
-                    if(d.Reference_Notes__c == 'Admin Fee')
+                    if(d.Reference_Notes__c == 'Admin Fee' || d.Reference_Notes__c == 'Assessment Fee')
                     {
                         //system.debug('Reference Notes == Admin Fee ' + d.Id);
                         adminFee += d.Amount__c;
