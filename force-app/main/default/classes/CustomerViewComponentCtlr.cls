@@ -521,7 +521,7 @@ public class CustomerViewComponentCtlr {
             String strQuery = 'SELECT EFT__c, CHQ__c, Amount__c, Total_Amount__c, Admin_Fee__c, Reference_Notes__c, Date__c, Opportunity__c, Opportunity__r.Interest_Rate__c, Opportunity__r.Amount, Opportunity__r.Loan_Requests__c,';
             strQuery += ' Total_Outstanding_Balance__c, Total_Accrued_Interest__c, Total_Per_Diem__c, Admin_Outstanding_Balance__c, Admin_Accrued_Interest__c, Admin_Per_Diem__c, Accrued_Interest_as_of_Payout_Date__c,';
             strQuery += ' Outstanding_Balance_as_of_Payout_Date__c, Per_Diem_as_of_Payout_Date__c, Payment_Method__c, Principal_Repaid__c, Payout_Date__c, Formula_Amount__c, Interest_Repaid__c'; 
-            strQuery += ' FROM Drawdown__c where reference_notes__c!=\'Referral Fee\' and reference_notes__c!=\'Admin Fee\' and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc ';
+            strQuery += ' FROM Drawdown__c where reference_notes__c!=\'Referral Fee\' and reference_notes__c!=\'Assessment Fee\' and reference_notes__c!=\'Admin Fee\' and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc ';
             // and reference_notes__c!=\'Admin Fee\'
             // *** Still need to handle exceptions ***
             // Executing the query to retrieve the list
