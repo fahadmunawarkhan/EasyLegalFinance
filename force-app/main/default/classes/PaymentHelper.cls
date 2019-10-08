@@ -8,13 +8,20 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     **/
-    public static List<Scheduled_Payment__c> calculatePaymentsForAmount(Opportunity opportunity){
+    public static List<Scheduled_Payment__c> calculatePaymentsForAmount(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments){
         // Need to refresh opp in case scheduled payments have been modified
         //opportunity = [SELECT Id, Payment_Scheduled_Allotment_Remaining__c, Start_Date__c, End_Date__c FROM Opportunity WHERE Id = :opportunity.Id];
         List<Scheduled_Payment__c> paymentsList = new List<Scheduled_Payment__c>();
+
+        Decimal inProcessAmount = 0;
+        if (inProcessPayments != null) {
+            for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
+                inProcessAmount += inProcessPayment.Amount__c;
+            }
+        }
         
         // calculate payments
-        Decimal amountAvailableToDrawdown = opportunity.Payment_Scheduled_Allotment_Remaining__c;
+        Decimal amountAvailableToDrawdown = opportunity.Payment_Scheduled_Allotment_Remaining__c + inProcessAmount;
         Scheduled_Payment__c sp;
         if (needsImmediatePayment(opportunity) && amountAvailableToDrawdown > 0) {
             sp = new Scheduled_Payment__c(
@@ -54,6 +61,11 @@ public with sharing class PaymentHelper {
 
             counter++;
         } 
+        if (inProcessPayments != null) {
+            for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
+                paymentsList.remove(0);
+            }
+        }
         return paymentsList;
     }
 
@@ -71,6 +83,9 @@ public with sharing class PaymentHelper {
             }
         }
         return false;
+        /*
+        PaymentHelper.recalculatePayments(new Id[]{'0061F000007ryEfQAI'});
+        */
     }
 
     /**
@@ -83,6 +98,7 @@ public with sharing class PaymentHelper {
     public static void recalculatePayments(List<Id> opportunityIds) {
 
         // Query Opportunities with Scheduled Payments
+        
         Map<Id, Opportunity> opportunitiesMap = new Map<Id, Opportunity>([
             SELECT
                 Id,
@@ -97,50 +113,76 @@ public with sharing class PaymentHelper {
                 Payment_Use_Primary_Bank_Account__c,
                 Payment_Default_Bank_Account__c,
                 Payment_Schedule_Send_First_Immediately__c,
-                (SELECT Id, Amount__c, Scheduled_Date__c, Opportunity_Schedule_Version_Number__c
+                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c
                     FROM Scheduled_Payments__r
-                    WHERE Status__c in :Constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES AND Payment_Type__c = 'Scheduled Facility'
+                    WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c != null
+                    ORDER BY Scheduled_Date__c)
+                    FROM Opportunity WHERE Id IN: opportunityIds AND Type_of_Loan__c =: Constants.FACILITY_LOAN LIMIT 45000]);
+
+        Map<Id, Opportunity> inProcessOpportunitiesMap = new Map<Id, Opportunity>([
+            SELECT
+                Id,
+                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c
+                    FROM Scheduled_Payments__r
+                    WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c = null
                     ORDER BY Scheduled_Date__c)
                     FROM Opportunity WHERE Id IN: opportunityIds AND Type_of_Loan__c =: Constants.FACILITY_LOAN LIMIT 45000]);
 
         Scheduled_Payment__c[] calculatedPayments;
         List<Scheduled_Payment__c> paymentsToAddAndUpdate = new List<Scheduled_Payment__c>(); 
         List<Scheduled_Payment__c> paymentsToDelete = new List<Scheduled_Payment__c>(); 
+
+        List<Scheduled_Payment__c> modifiablePayments; 
+        List<Scheduled_Payment__c> inProcessPayments; 
+
         Integer paymentCount;
 
         if(!opportunitiesMap.isEmpty()){
             for(Opportunity opportunity : opportunitiesMap.values()){
+                modifiablePayments = new List<Scheduled_Payment__c>(); 
+                inProcessPayments = new List<Scheduled_Payment__c>(); 
+
+                Opportunity inProcessOpp = inProcessOpportunitiesMap.get(opportunity.Id);
+
+                for (Scheduled_Payment__c sp : inProcessOpp.Scheduled_Payments__r) {
+                    if (constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES.contains(sp.Status__c)) {
+                        modifiablePayments.add(sp);
+                    } else if (constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c)) {
+                        inProcessPayments.add(sp);
+                    }
+                }
+
                 calculatedPayments = null;
 
                 // Calculate payments for opp (returns Scheduled_Payment__c[] sorted by date asc)
                 if (opportunity.Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_DATE) {
-                    calculatedPayments = calculatePaymentsForDate(opportunity);
+                    calculatedPayments = calculatePaymentsForDate(opportunity, inProcessPayments);
                 } else if (opportunity.Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_AMOUNT){
-                    calculatedPayments = calculatePaymentsForAmount(opportunity);
+                    calculatedPayments = calculatePaymentsForAmount(opportunity, inProcessPayments);
                 }
 
-                // How many payments to we need to iterate?
+                // How many payments do we need to iterate?
                 for (integer i = 0; i < calculatedPayments.size(); i++) {
-                    if (opportunity.Scheduled_Payments__r.size() < i + 1) {
+                    if (modifiablePayments.size() < i + 1) {
                         // Add new payment
                         paymentsToAddAndUpdate.add(calculatedPayments[i]);
                     } else {
                         // Modify existing payment in place
-                        opportunity.Scheduled_Payments__r[i].Amount__c = calculatedPayments[i].Amount__c;
-                        if (opportunity.Scheduled_Payments__r[i].Opportunity_Schedule_Version_Number__c != calculatedPayments[i].Opportunity_Schedule_Version_Number__c) {
+                        modifiablePayments[i].Amount__c = calculatedPayments[i].Amount__c;
+                        if (modifiablePayments[i].Opportunity_Schedule_Version_Number__c != calculatedPayments[i].Opportunity_Schedule_Version_Number__c) {
                             // Update other fields since payment configuration has changed
-                            opportunity.Scheduled_Payments__r[i].Scheduled_Date__c = calculatedPayments[i].Scheduled_Date__c;
-                            opportunity.Scheduled_Payments__r[i].Send_Cheque__c = calculatedPayments[i].Send_Cheque__c;
-                            opportunity.Scheduled_Payments__r[i].Bank_Account__c = calculatedPayments[i].Bank_Account__c;
-                            opportunity.Scheduled_Payments__r[i].Opportunity_Schedule_Version_Number__c = calculatedPayments[i].Opportunity_Schedule_Version_Number__c;
+                            modifiablePayments[i].Scheduled_Date__c = calculatedPayments[i].Scheduled_Date__c;
+                            modifiablePayments[i].Send_Cheque__c = calculatedPayments[i].Send_Cheque__c;
+                            modifiablePayments[i].Bank_Account__c = calculatedPayments[i].Bank_Account__c;
+                            modifiablePayments[i].Opportunity_Schedule_Version_Number__c = calculatedPayments[i].Opportunity_Schedule_Version_Number__c;
                         }
-                        paymentsToAddAndUpdate.add(opportunity.Scheduled_Payments__r[i]);
+                        paymentsToAddAndUpdate.add(modifiablePayments[i]);
                     }
                 }
 
                 // if number of payments has reduced delete the extra existing payments
-                for (integer i = calculatedPayments.size(); i < opportunity.Scheduled_Payments__r.size(); i++) {
-                    paymentsToDelete.add(opportunity.Scheduled_Payments__r[i]);
+                for (integer i = calculatedPayments.size(); i < modifiablePayments.size(); i++) {
+                    paymentsToDelete.add(modifiablePayments[i]);
                 }
             }
         }
@@ -175,11 +217,12 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     **/
-    public static List<Scheduled_Payment__c> calculatePaymentsForDate(Opportunity opportunity){
+    public static List<Scheduled_Payment__c> calculatePaymentsForDate(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments){
         // Need to refresh opp in case scheduled payments have been modified
         //opportunity = [SELECT Id, Payment_Scheduled_Allotment_Remaining__c, Start_Date__c, End_Date__c FROM Opportunity WHERE Id = :opportunity.Id];
         List<Scheduled_Payment__c> paymentsList = new List<Scheduled_Payment__c>();
-        
+
+
         // calculate payments
         // Track if a facility payment has been sent on Opportunity
         // If not and Send_First_Payment_Immediately__c is checked
@@ -228,6 +271,12 @@ public with sharing class PaymentHelper {
             monthCounter += 1;
             currentDate = getPaymentDate(opportunity, monthCounter);
         }
+        if (inProcessPayments != null) {
+            for (Scheduled_Payment__c sp : inProcessPayments) {
+                paymentsList.remove(0);
+            }
+        }
+
         Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
         for (Scheduled_Payment__c sp : paymentsList) {
             sp.Amount__c = amount;

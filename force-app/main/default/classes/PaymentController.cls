@@ -31,11 +31,11 @@ public with sharing class PaymentController {
             if(!opportunityList.isEmpty()){
                 if(opportunityList[0].Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_AMOUNT){
                     if (opportunityList[0].Start_Date__c != null){
-                        return PaymentHelper.calculatePaymentsForAmount(opportunityList[0]);
+                        return PaymentHelper.calculatePaymentsForAmount(opportunityList[0], null);
                     }
                 }else if(opportunityList[0].Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_DATE){
                     if (opportunityList[0].Start_Date__c != null & opportunityList[0].End_Date__c != null){
-                        return PaymentHelper.calculatePaymentsForDate(opportunityList[0]);
+                        return PaymentHelper.calculatePaymentsForDate(opportunityList[0], null);
                     }
                 }
             }
