@@ -198,7 +198,7 @@ export default class FundingDetailsStagingArea extends LightningElement {
             updateScheduledPayments({scheduledPayments: updateObjects})
                 .then(result => {
                     showToast(this, 
-                        'Successfully generated banking sheet',
+                        'Successfully Staged Payments',
                         'The payments have been marked as Staged, and can be further processed now.',
                         'success',
                     );
