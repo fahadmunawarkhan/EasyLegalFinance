@@ -203,7 +203,7 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
             }
             let editComp = this.template.querySelector('c-funding-details-opportunity-edit');
             if (editComp) {
-                //editComp.refresh();
+                editComp.refresh();
             }
             //fireEvent(this.pageRef, 'opportunityChanged', this.selectedOpp)
         }

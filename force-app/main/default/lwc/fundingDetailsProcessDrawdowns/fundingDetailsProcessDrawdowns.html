@@ -82,6 +82,20 @@
         ></lightning-datatable>
     </lightning-card>
 
+
+    <lightning-layout horizontal-align="end">
+        <lightning-layout-item>
+            <lightning-button
+                if:true={showAdd}
+                variant="brand"
+                onclick={fireStageComplete}
+                icon-name="utility:check"
+                label="Move to Next Step"
+                title="Move to Next Step"
+            ></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+
     <c-modal header="Create New Drawdown" class="createModal">
         <lightning-record-form
             if:true={showCreateForm}
