@@ -35,8 +35,8 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
         this.calculationMethod = this.opp.Fee_Calculation_Method__c;
     }
 
-    @track buttonText = "I confirm the data is accurate";
-    @track confirmedAccurate = false;
+    @track buttonText = "Save and Move to Next Step"; //"I confirm the data is accurate";
+    @track confirmedAccurate = true;//false;
 
     @track calculationMethod;
 
@@ -83,7 +83,7 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
             this.template.querySelector("lightning-record-edit-form").submit(fields);
         } else {
             this.confirmedAccurate = true;
-            this.buttonText = 'Save and Move to Next Stage';
+            this.buttonText = 'Save and Move to Next Step';
         }
     }
 

@@ -82,7 +82,7 @@
 
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">
-        <lightning-card key={grouping.Id}>
+        <div key={grouping.Id} class="slds-box group-box">
             <div class="slds-box slds-box_small slds-grid slds-wrap">
                 <div class="slds-size_2-of-6 slds-text-align_left">
                     <lightning-formatted-url
@@ -138,7 +138,7 @@
                 sorted-by={sortedBy}
                 sorted-direction={sortedDirection}
             ></c-funding-details-datatable>
-        </lightning-card>
+        </div>
     </template>
 
 

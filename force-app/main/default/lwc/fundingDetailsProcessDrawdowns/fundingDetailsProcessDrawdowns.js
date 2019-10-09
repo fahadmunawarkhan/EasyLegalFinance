@@ -345,4 +345,10 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
         modal.hide();
     }
     /* END EDIT MODAL METHODS */
+
+    fireStageComplete() {
+        const evt = new CustomEvent("markstagecomplete");
+        this.dispatchEvent(evt);
+    }
+
 }
