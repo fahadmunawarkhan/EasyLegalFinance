@@ -30,6 +30,10 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.EFT__c = sp.EFT_Number__c;
         }
 
+        if (sp.Opportunity_Service_Provider__c != null) {
+            drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
+        }
+
         if (sp.Has_Been_Rejected__c) {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
@@ -186,6 +190,7 @@ public with sharing class ScheduledPaymentHelper {
                 Opportunity__r.Admin_Fee__c,
                 Opportunity__r.Admin_Fee_Roll_up__c,
                 Opportunity__r.AccountId,
+                Opportunity_Service_Provider__c,
                 Current_Account_Id__c,
                 Payment_Type__c,
                 Amount__c,
@@ -225,6 +230,7 @@ public with sharing class ScheduledPaymentHelper {
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
+                    Opportunity_Service_Provider__c,
                     EFT_Number__c
                 From
                     Scheduled_Payment__c
