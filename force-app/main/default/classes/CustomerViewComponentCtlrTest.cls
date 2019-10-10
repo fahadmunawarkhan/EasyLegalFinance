@@ -428,6 +428,20 @@ public class CustomerViewComponentCtlrTest {
         
     }
     
+    
+    // ----->>>>> Usama <<<<<------
+    	@isTest
+    	static void Process4(){
+        	test.startTest();
+            	insertAccount();
+            	insertOpps(1);
+            	Account acc = [SELECT id from Account where Name = 'Test Account'];
+            	CustomerViewComponentCtlr.getOpportunitiesToGeneratePayout(acc.Id);
+            test.stopTest();
+    	}
+    // ----------------------------
+    
+    
     public static void insertAccount(){
         Id RecordTypeIdAccount = 
             Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();
@@ -455,6 +469,10 @@ public class CustomerViewComponentCtlrTest {
         Account acct2 = [select Id from Account where Name='sample account'];
         Contact contct = [select Id from Contact where lastname='test'];
         Contact testContact = [select Id from Contact where name='testtest'];
+        system.debug(account);
+        system.debug(acct2);
+        system.debug(contct);
+        system.debug(testContact);
         List<Opportunity> opps = new List<Opportunity>();
         for ( Integer i = 0; i < oppsCount; i++) {
             Opportunity testOpp = new Opportunity();
