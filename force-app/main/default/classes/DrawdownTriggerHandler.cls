@@ -154,7 +154,7 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
                 Drawdown__c firstDrawdown = null;
                 for(Drawdown__c d : op.Drawdowns__r)
                 {
-                    if(d.Reference_Notes__c == 'Admin Fee')
+                    if(d.Reference_Notes__c == 'Admin Fee' || d.Reference_Notes__c == 'Assessment Fee')
                     {
                         //system.debug('Reference Notes == Admin Fee ' + d.Id);
                         adminFee += d.Amount__c;
