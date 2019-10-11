@@ -53,4 +53,7 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         DrawdownHelper.updatePaymentScheduleForFacilityLoan((List<Drawdown__c>)Trigger.new);
     }
     */
+    if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
+        dlrs.RollupService.rollup(Trigger.oldMap, Trigger.newMap, Drawdown__c.SObjectType);
+    }
 }
