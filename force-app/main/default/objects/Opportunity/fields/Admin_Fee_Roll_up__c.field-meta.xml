@@ -5,9 +5,9 @@
     <label>Admin Fee Roll-up</label>
     <summarizedField>Drawdown__c.Amount__c</summarizedField>
     <summaryFilterItems>
-        <field>Drawdown__c.Payment_Method__c</field>
+        <field>Drawdown__c.Reference_Notes__c</field>
         <operation>equals</operation>
-        <value>Admin Fee</value>
+        <value>Admin Fee, Assessment Fee</value>
     </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>

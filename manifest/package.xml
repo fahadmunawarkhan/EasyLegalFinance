@@ -287,6 +287,10 @@
         <members>Test</members>
         <members>threeRegionHomeTemplate</members>
         <members>viewPayments</members>
+        <members>AssessmentSummaryReport</members>
+        <members>LawyerAssessmentOpportunities</members>
+        <members>LawyerApprovedCreditHistory</members>
+        <members>LawyerAvailableCreditComponent</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -400,6 +404,11 @@
         <members>Amendment__c.Opportunity__c</members>
         <members>Amendment__c.Renewal_date__c</members>
         <members>Amendment__c.Renewal_Date_New__c</members>
+        <members>Assessment_Summary_Report__c.Business_Unit__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_View_All_Template_Id__c</members>
         <members>Bad_Debt_Summary_Report__c.BusinessUnit__c</members>
         <members>Bad_Debt_Summary_Report__c.End_Date__c</members>
         <members>Bad_Debt_Summary_Report__c.Start_Date__c</members>
@@ -512,6 +521,12 @@
         <members>Contact.Update_Address__c</members>
         <members>Contact.WebSite__c</members>
         <members>Contact.Web_To_Lead_From__c</members>
+        <members>Contact.Available_Credit__c</members> 
+        <members>Contact.Amount_wo_Payment_Roll_up__c</members>
+        <members>Contact.Approved_Credit_Limit__c</members>
+        <members>Contact.Assessment_Fee_Roll_up__c</members>
+        <members>Contact.Principal_Repaid_Roll_up__c</members>
+        <members>Contact.Utilized_Credit_Limit__c</members> 
         <members>Critical_Date__c.Account__c</members>
         <members>Critical_Date__c.Account_Name__c</members>
         <members>Critical_Date__c.Account_Name_Formula__c</members>
@@ -648,6 +663,8 @@
         <members>Drawdown__c.Type__c</members>
         <members>Drawdown__c.Year_Target__c</members>
 		<members>Drawdown__c.Year__c</members>
+        <members>Drawdown__c.Conga_Assessment_Summary_Report_Print__c</members>  
+        <members>Drawdown__c.Conga_Assessment_Summary_Report_View_All__c</members>
         <members>Drawdown_Payment_Allocation__c.Amount__c</members>
         <members>Drawdown_Payment_Allocation__c.Before_Temp_Payout_Date__c</members>
         <members>Drawdown_Payment_Allocation__c.Drawdown__c</members>
@@ -1085,6 +1102,7 @@
         <members>Opportunity.WIP__c</members>
         <members>Opportunity.Year_Quarter__c</members>
         <members>Opportunity.Year_Quarter_Formula__c</members>
+        <members>Opportunity.Principal_Repaid_Roll_up__c</members> 
         <members>Payment_Rejection__c.Reason__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment_Action__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment__c</members>
@@ -1178,6 +1196,8 @@
         <members>System_Monitoring__c.Report_Result_Summary__c</members>
         <members>System_Monitoring__c.Status__c</members>
         <members>User.Actual_Sales_By_Month_Report__c</members>
+        <members>User.Assessment_Summary_Report__c</members>       
+        <members>User.Can_Edit_Approved_Credit_Limit__c</members>
         <members>User.Bad_Debt_Summary_Report__c</members>
         <members>User.Business_Unit__c</members>
         <members>User.Critical_Items_Dates__c</members>
@@ -1245,6 +1265,10 @@
         <members>dlrs__LookupRollupSummary2.OpportunityTotalSPA</members>
         <members>dlrs__LookupRollupSummary2.OppSPTotalPaid</members>
         <members>dlrs__LookupRollupSummary2.SendLead</members>
+        <members>dlrs__LookupRollupSummary2.ContactAmountWoPayment</members>
+        <members>dlrs__LookupRollupSummary2.AssessmentFeeRollup</members>
+        <members>dlrs__LookupRollupSummary2.ContactPrincipalRepaidRollup</members>
+        <members>dlrs__LookupRollupSummary2.PrincipalRepaidRollUp</members>
         <members>ForceeaSetting.Default</members>
         <name>CustomMetadata</name>
     </types>
@@ -1252,6 +1276,7 @@
         <members>abc__c</members>
         <members>Actual_Sales_by_Month_Report__c</members>
         <members>Amendment__c</members>
+        <members>Assessment_Summary_Report__c</members>
         <members>Bad_Debt_Summary_Report__c</members>
         <members>Bank_Account__c</members>
         <members>Bird_Eye_Settings__mdt</members>
@@ -1741,6 +1766,7 @@
         <members>Opportunity.Client_Opportunity_Record_Type</members>
         <members>Opportunity.Law_Firm_Engagement_Opportunity</members>
         <members>Opportunity.Loan_Re_Assessment_Opportunity</members>
+        <members>Lawyer_with_Opportunities</members>
         <name>RecordType</name>
     </types>
     <types>
@@ -1880,6 +1906,7 @@
         <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members>
 		<members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Advances_JHh</members>
         <members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Losses_sE5</members>
+        <members>TroubleshootingReportsByFahad/Assessment_Summary_Report_HYP</members>
         <name>Report</name>
     </types>
     <types>
