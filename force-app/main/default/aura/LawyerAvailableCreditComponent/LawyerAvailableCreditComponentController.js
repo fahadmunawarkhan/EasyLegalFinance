@@ -34,10 +34,22 @@
     
     updateRecord: function(component, event, helper) {
         component.set('v.spinner',true);
-        helper.updateLawyerRecord(component).then(
+        helper.updateLawyerRecord(component).then($A.getCallback(
             function(result){
+                
+                helper.showToast('SUCCESS', 'Record Updated Successfully.', 'SUCCESS');                
+                return helper.getCurrentUserInfo(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                component.set('v.currentUser',result);
+                return helper.getLawyerRecordData(component);
+            }            
+        )).then($A.getCallback(
+            function(result){
+                
+                component.set('v.Lawyer',result);
                 component.set('v.spinner',false);
-                helper.showToast('SUCCESS', 'Record Updated Successfully.', 'SUCCESS');
                 let historyComponent = component.find("historyComponent");
                 historyComponent.refreshData();
                 
@@ -46,7 +58,7 @@
                 
                 $A.get('e.force:refreshView').fire();
             }
-        ).catch(
+        )).catch(
             function(errors){
                 component.set('v.spinner',false);
                 console.log('Errors ' + JSON.stringify(errors));
