@@ -30,7 +30,7 @@ public with sharing class LawyerAvailableCreditComponentCtlr {
     @auraEnabled
     public static List<Opportunity> OpportunityAssessment(String LawyerRecordId){
         List<Opportunity> LawyerOpportunityAssessmentData = [SELECT Id, Name, Principal_Repaid_Roll_up__c,
-                                                             Admin_Fee_Roll_up__c 
+                                                             Admin_Fee_Roll_up__c, Drawdown_Total_wo_Payment__c 
                                                              FROM Opportunity 
                                                              WHERE Type_of_Loan__c = 'Assessment' 
                                                              AND lawyer__c =:LawyerRecordId];
