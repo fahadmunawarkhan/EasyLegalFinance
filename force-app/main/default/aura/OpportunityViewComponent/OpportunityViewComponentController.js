@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 ({
     doInit : function(component, event, helper) {
         helper.getOpportunityInfo(component);
@@ -55,11 +56,23 @@
         //console.log('listControllingValues' + component.get("v.listControllingValues")); 
         helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
         helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+        /*
         setTimeout(function(){
            // helper.fetchTreatmentRefNotesDepValues(component);
         },3000);
+        */
     },
     reInitSomeData:function(component, event, helper) {
+        helper.getOpportunityInfo(component);
+        helper.getDrawdownList(component);
+        helper.getDrawdownPaymentsList(component);
+        helper.getServiceProvidersList(component);
+        helper.getReAssessmentOpportunitiesList(component);
+        helper.getCalendarMin(component);
+        helper.getCalendarMax(component); 
+        helper.getSingleContactHistory(component);
+        helper.getBankAccountOptions(component);
+        //component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
         
         /*console.log('tab switch');
         var oldVal = component.get('v.oppObj.Have_you_ever_declared_bankruptcy__c');

@@ -395,16 +395,21 @@
     refreshOptTab: function(component, event, helper){
         
         var tab = event.getSource();
-        var tabIndex = parseInt(tab.get('v.id').split("-")[1]);
         var allComponents = component.find("oppIdx");
 
-        console.log("Tab index is: " + tabIndex);
-        console.log(tabIndex);
         console.log("--------------All components--------------");
-        console.log(component.find("oppIdx"));
-        
-        if(allComponents[tabIndex] != null && allComponents[tabIndex] != undefined){
-            allComponents[tabIndex].OnTabActive();
+        console.log(allComponents);
+
+        if (allComponents) {
+            if (allComponents.length) {
+                allComponents.forEach(function(oppViewComp) {
+                    if (oppViewComp.get('v.recordId') == tab.get('v.id')) {
+                        oppViewComp.OnTabActive();
+                    }
+                });
+            } else {
+                allComponents.OnTabActive();
+            }
         }
     },
     SaveApplicantInfo: function(component, event, helper){
