@@ -84,7 +84,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             strQuery += ' FROM Opportunity';
             strQuery += ' WHERE Type_of_Loan__c =:assessment';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-                ' AND (Account.Business_Unit__c =:Elfi OR Account.Business_Unit__c =:Rhino))':
+                ' AND (Account.Business_Unit__c =:Elfi OR Account.Business_Unit__c =:Rhino)':
             ' AND Account.Business_Unit__c =:filterByBusinessUnit';            
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Lawyer__r.Name LIKE \'%' + searchByName + '%\''  : '';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Law_Firm__r.Name LIKE \'%' + searchByName + '%\')'  : '';
