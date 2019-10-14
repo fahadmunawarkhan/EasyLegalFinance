@@ -7,7 +7,7 @@ export default class LightningPath extends LightningElement {
         return this._pathOptions;
     }
     set pathOptions(value) {
-        this._pathOptions = [...value];
+        this._pathOptions = JSON.parse(JSON.stringify(value));
         this.initOptions();
     }
     /*
