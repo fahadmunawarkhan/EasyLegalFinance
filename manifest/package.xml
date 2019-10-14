@@ -1382,6 +1382,7 @@
         <members>Lead</members>
         <members>LightningSalesConsole_UtilityBar</members>
         <members>LightningService_UtilityBar</members>
+        <members>Lawyer_Contact_Record_Page</members>
         <members>System_Monitoring_Record_Page</members>
         <members>System_Monitoring_UtilityBar</members>
         <name>FlexiPage</name>
