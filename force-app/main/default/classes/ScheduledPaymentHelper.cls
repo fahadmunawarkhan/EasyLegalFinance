@@ -10,9 +10,11 @@
  * Ver         Date                     Author      		      Modification
  *==============================================================================
  * 1.0    4/25/2019, 10:05:30 AM   Seth Boyd     Initial Version
+
 **/
 public with sharing class ScheduledPaymentHelper {
     private static Drawdown__c generateDrawdown(Scheduled_Payment__c sp) {
+        system.debug([Select Id, Has_Been_Rejected__c From Scheduled_Payment__c Where Name = 'PS-1200']);
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
@@ -28,6 +30,10 @@ public with sharing class ScheduledPaymentHelper {
         } else {
             drawdown.Payment_Method__c = 'e-Transfer';
             drawdown.EFT__c = sp.EFT_Number__c;
+        }
+
+        if (sp.Opportunity_Service_Provider__c != null) {
+            drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
         }
 
         if (sp.Has_Been_Rejected__c) {
@@ -186,6 +192,7 @@ public with sharing class ScheduledPaymentHelper {
                 Opportunity__r.Admin_Fee__c,
                 Opportunity__r.Admin_Fee_Roll_up__c,
                 Opportunity__r.AccountId,
+                Opportunity_Service_Provider__c,
                 Current_Account_Id__c,
                 Payment_Type__c,
                 Amount__c,
@@ -225,6 +232,7 @@ public with sharing class ScheduledPaymentHelper {
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
+                    Opportunity_Service_Provider__c,
                     EFT_Number__c
                 From
                     Scheduled_Payment__c

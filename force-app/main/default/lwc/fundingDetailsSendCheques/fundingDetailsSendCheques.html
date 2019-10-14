@@ -51,11 +51,10 @@
 
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">
-        <div key={grouping.Id}>
+        <div key={grouping.Id} class="slds-box group-box">
             <lightning-card>
                 <c-funding-details-cheque-group grouping={grouping}></c-funding-details-cheque-group>
             </lightning-card>
-            <hr class="slds-m-vertical_large"></hr>
         </div>
     </template>
 

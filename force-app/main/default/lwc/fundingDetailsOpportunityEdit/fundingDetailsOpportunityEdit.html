@@ -28,7 +28,7 @@
     <lightning-layout>
         <lightning-layout-item padding="around-small" flexibility="auto, grow">
             <c-funding-details-loan-setup-check if:true={isLoanSetupCheck} opp={opp}></c-funding-details-loan-setup-check>
-            <c-funding-details-process-drawdowns if:true={isProcessDrawdowns} opp={opp}></c-funding-details-process-drawdowns>
+            <c-funding-details-process-drawdowns if:true={isProcessDrawdowns} opp={opp} onmarkstagecomplete={handleStageComplete}></c-funding-details-process-drawdowns>
             <c-funding-details-loan-registration if:true={isPopulatePPSA} opp={opp}></c-funding-details-loan-registration>
             <div if:true={isCloseTransaction}>
                 <lightning-card>
@@ -43,6 +43,17 @@
                     <h3 slot="title">Loan Registration</h3>
                     <c-funding-details-loan-registration opp={opp} read-only="true"></c-funding-details-loan-registration>
                 </lightning-card>
+                <lightning-layout horizontal-align="end">
+                    <lightning-layout-item>
+                        <lightning-button
+                            variant="brand"
+                            icon-name="utility:check"
+                            onclick={handleStageComplete}
+                            label="Mark as Closed"
+                            title="Mark as Closed"
+                        ></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
             </div>
         </lightning-layout-item>
     </lightning-layout>

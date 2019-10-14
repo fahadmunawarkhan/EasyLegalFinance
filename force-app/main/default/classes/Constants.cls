@@ -10,6 +10,8 @@ public class Constants {
     
     // Used in PaymentHelper, DrawdownHelper
     public static final String[] PAYMENT_SCHEDULE_MODIFIABLE_STATUSES = New String[]{'Scheduled', 'Rejected'};
+    public static final String[] PAYMENT_SCHEDULE_IN_PROCESS_STATUSES = New String[]{'Pre Send Validation', 'Approved to Send', 'Sent to Bank', 'Processed by Bank'};
+    public static final String[] PAYMENT_SCHEDULE_PROCESSED_STATUSES = New String[]{'Drawdown Created', 'Closed'};
     public static final String PAYMENT_SCHEDULED_STATUS = 'Scheduled';
     public static final String PAYMENT_SCHEDULED_TYPE = 'Scheduled Facility';
     public static final String PAYMENT_PAID_STATUS = 'Paid'; 

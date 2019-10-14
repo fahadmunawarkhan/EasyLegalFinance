@@ -64,7 +64,7 @@
 
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">
-        <div key={grouping.Id}>
+        <div key={grouping.Id} class="slds-box group-box">
             <lightning-card>
                 <c-funding-details-eft-group grouping={grouping}></c-funding-details-eft-group>
             </lightning-card>

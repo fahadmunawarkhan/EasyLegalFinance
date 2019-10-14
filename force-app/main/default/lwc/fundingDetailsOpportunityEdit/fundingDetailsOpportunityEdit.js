@@ -32,9 +32,11 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
 
     @track pathOptions = []
 
-    @api refresh = () => {
+    @api refresh() {
+        console.log('OppEdit.refresh()');
         this.loading = true;
         this.buildPathOptions();
+        //this.template.querySelector("c-lightning-path").initOptions();
         this.loading = false;
     }
 
@@ -94,7 +96,7 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
                     this.fireRemoveOpportunity(result);
                 } else {
                     this.fireOpportunityChanged(result);
-                    this.buildPathOptions();
+                    //this.buildPathOptions();
                 }
             })
             .catch(error => {
@@ -130,6 +132,7 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     }
 
     connectedCallback() {
+        console.log('connected');
         // registerListener('opportunityChanged', this.refresh, this);
     }
 
