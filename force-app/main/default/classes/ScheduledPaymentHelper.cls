@@ -10,9 +10,11 @@
  * Ver         Date                     Author      		      Modification
  *==============================================================================
  * 1.0    4/25/2019, 10:05:30 AM   Seth Boyd     Initial Version
+
 **/
 public with sharing class ScheduledPaymentHelper {
     private static Drawdown__c generateDrawdown(Scheduled_Payment__c sp) {
+        system.debug([Select Id, Has_Been_Rejected__c From Scheduled_Payment__c Where Name = 'PS-1200']);
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;

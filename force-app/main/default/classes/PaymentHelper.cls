@@ -8,7 +8,7 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     **/
-    public static List<Scheduled_Payment__c> calculatePaymentsForAmount(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments){
+    public static List<Scheduled_Payment__c> calculatePaymentsForAmount(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments, Scheduled_Payment__c[] processedPayments){
         // Need to refresh opp in case scheduled payments have been modified
         //opportunity = [SELECT Id, Payment_Scheduled_Allotment_Remaining__c, Start_Date__c, End_Date__c FROM Opportunity WHERE Id = :opportunity.Id];
         List<Scheduled_Payment__c> paymentsList = new List<Scheduled_Payment__c>();
@@ -18,6 +18,12 @@ public with sharing class PaymentHelper {
             for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
                 inProcessAmount += inProcessPayment.Amount__c;
             }
+        }
+
+        Integer skipPaymentCount = 0;
+        Integer numPayments = 0;
+        if (processedPayments != null) {
+            skipPaymentCount = processedPayments.size();
         }
         
         // calculate payments
@@ -35,8 +41,11 @@ public with sharing class PaymentHelper {
                     Account__c=opportunity.AccountId,
                     Bank_Account__c=opportunity.Payment_Default_Bank_Account__c
                 );
-            paymentsList.add(sp);
-            amountAvailableToDrawdown -= sp.Amount__c;
+            if (skipPaymentCount == 0) {
+                paymentsList.add(sp);
+                amountAvailableToDrawdown -= sp.Amount__c;
+            }
+            numPayments = 1;
         }
 
         Integer counter = 0;
@@ -44,6 +53,7 @@ public with sharing class PaymentHelper {
         while(amountAvailableToDrawdown > 0) {
             currentDate = getPaymentDate(opportunity, counter);
             if (currentDate != null) {
+                numPayments += 1;
                 sp = new Scheduled_Payment__c(
                         Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
                         Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
@@ -55,8 +65,10 @@ public with sharing class PaymentHelper {
                         Account__c=opportunity.AccountId,
                         Bank_Account__c=opportunity.Payment_Default_Bank_Account__c
                     );
-                paymentsList.add(sp);
-                amountAvailableToDrawdown -= sp.Amount__c;
+                if (numPayments > skipPaymentCount) {
+                    paymentsList.add(sp);
+                    amountAvailableToDrawdown -= sp.Amount__c;
+                }
             }
 
             counter++;
@@ -113,7 +125,7 @@ public with sharing class PaymentHelper {
                 Payment_Use_Primary_Bank_Account__c,
                 Payment_Default_Bank_Account__c,
                 Payment_Schedule_Send_First_Immediately__c,
-                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c
+                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c, Current_Opportunity_Schedule_Version__c
                     FROM Scheduled_Payments__r
                     WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c != null
                     ORDER BY Scheduled_Date__c)
@@ -122,9 +134,9 @@ public with sharing class PaymentHelper {
         Map<Id, Opportunity> inProcessOpportunitiesMap = new Map<Id, Opportunity>([
             SELECT
                 Id,
-                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c
+                (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c, Current_Opportunity_Schedule_Version__c
                     FROM Scheduled_Payments__r
-                    WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c = null
+                    WHERE Payment_Type__c = 'Scheduled Facility'
                     ORDER BY Scheduled_Date__c)
                     FROM Opportunity WHERE Id IN: opportunityIds AND Type_of_Loan__c =: Constants.FACILITY_LOAN LIMIT 45000]);
 
@@ -134,6 +146,7 @@ public with sharing class PaymentHelper {
 
         List<Scheduled_Payment__c> modifiablePayments; 
         List<Scheduled_Payment__c> inProcessPayments; 
+        List<Scheduled_Payment__c> processedPayments; 
 
         Integer paymentCount;
 
@@ -141,14 +154,17 @@ public with sharing class PaymentHelper {
             for(Opportunity opportunity : opportunitiesMap.values()){
                 modifiablePayments = new List<Scheduled_Payment__c>(); 
                 inProcessPayments = new List<Scheduled_Payment__c>(); 
+                processedPayments = new List<Scheduled_Payment__c>();
 
                 Opportunity inProcessOpp = inProcessOpportunitiesMap.get(opportunity.Id);
 
                 for (Scheduled_Payment__c sp : inProcessOpp.Scheduled_Payments__r) {
                     if (constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES.contains(sp.Status__c)) {
                         modifiablePayments.add(sp);
-                    } else if (constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c)) {
+                    } else if (constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c) && sp.Current_Opportunity_Schedule_Version__c) {
                         inProcessPayments.add(sp);
+                    } else if (constants.PAYMENT_SCHEDULE_PROCESSED_STATUSES.contains(sp.Status__c) && sp.Current_Opportunity_Schedule_Version__c) {
+                        processedPayments.add(sp);
                     }
                 }
 
@@ -156,9 +172,9 @@ public with sharing class PaymentHelper {
 
                 // Calculate payments for opp (returns Scheduled_Payment__c[] sorted by date asc)
                 if (opportunity.Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_DATE) {
-                    calculatedPayments = calculatePaymentsForDate(opportunity, inProcessPayments);
+                    calculatedPayments = calculatePaymentsForDate(opportunity, inProcessPayments, processedPayments);
                 } else if (opportunity.Payment_Schedule_Mode__c == Constants.PAYMENT_MODE_AMOUNT){
-                    calculatedPayments = calculatePaymentsForAmount(opportunity, inProcessPayments);
+                    calculatedPayments = calculatePaymentsForAmount(opportunity, inProcessPayments, processedPayments);
                 }
 
                 // How many payments do we need to iterate?
@@ -217,7 +233,7 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     **/
-    public static List<Scheduled_Payment__c> calculatePaymentsForDate(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments){
+    public static List<Scheduled_Payment__c> calculatePaymentsForDate(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments, Scheduled_Payment__c[] processedPayments){
         // Need to refresh opp in case scheduled payments have been modified
         //opportunity = [SELECT Id, Payment_Scheduled_Allotment_Remaining__c, Start_Date__c, End_Date__c FROM Opportunity WHERE Id = :opportunity.Id];
         List<Scheduled_Payment__c> paymentsList = new List<Scheduled_Payment__c>();
@@ -273,6 +289,11 @@ public with sharing class PaymentHelper {
         }
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c sp : inProcessPayments) {
+                paymentsList.remove(0);
+            }
+        }
+        if (processedPayments != null) {
+            for (Scheduled_Payment__c sp : processedPayments) {
                 paymentsList.remove(0);
             }
         }
