@@ -19,7 +19,7 @@
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){ 
                 component.set('v.customSetting', result);
-                component.set("v.spinner", false);
+                component.set("v.businessUnitForDesign", result.Business_Unit__c);
                 return helper.getAssessments(component);
             }
         )).then(
