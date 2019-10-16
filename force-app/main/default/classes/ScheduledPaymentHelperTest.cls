@@ -97,7 +97,7 @@ public class ScheduledPaymentHelperTest {
         system.assertEquals(oppRec.Admin_Fee__c, adminDD[0].Amount__c, 'Amount should have been set');
         system.assertEquals(oppRec.Id, adminDD[0].Opportunity__c, 'Opporunity should have been set');
         system.assertEquals('Admin Fee', adminDD[0].Reference_Notes__c, 'Reference notes should have been set');
-        system.assertEquals(Date.today(), adminDD[0].Date__c, 'Date should have been set');
+        system.assertEquals(DateUtil.today(), adminDD[0].Date__c, 'Date should have been set');
 
         //oppRec = [Select Id, Funding_Details_Status__c from Opportunity Where Id = :oppRec.Id][0];
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
@@ -218,7 +218,7 @@ public class ScheduledPaymentHelperTest {
         system.assertEquals(oppRec.Admin_Fee__c, adminDD[0].Amount__c, 'Amount should have been set');
         system.assertEquals(oppRec.Id, adminDD[0].Opportunity__c, 'Opporunity should have been set');
         system.assertEquals('Admin Fee', adminDD[0].Reference_Notes__c, 'Reference notes should have been set');
-        system.assertEquals(Date.today(), adminDD[0].Date__c, 'Date should have been set');
+        system.assertEquals(DateUtil.today(), adminDD[0].Date__c, 'Date should have been set');
 
         //oppRec = [Select Id, Funding_Details_Status__c from Opportunity Where Id = :oppRec.Id][0];
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
@@ -308,7 +308,7 @@ public class ScheduledPaymentHelperTest {
         system.assertEquals(oppRec.Admin_Fee__c, adminDD[0].Amount__c, 'Amount should have been set');
         system.assertEquals(oppRec.Id, adminDD[0].Opportunity__c, 'Opporunity should have been set');
         system.assertEquals('Assessment Fee', adminDD[0].Reference_Notes__c, 'Reference notes should have been set');
-        system.assertEquals(Date.today(), adminDD[0].Date__c, 'Date should have been set');
+        system.assertEquals(DateUtil.today(), adminDD[0].Date__c, 'Date should have been set');
 
         //oppRec = [Select Id, Funding_Details_Status__c from Opportunity Where Id = :oppRec.Id][0];
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
