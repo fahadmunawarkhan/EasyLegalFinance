@@ -33,7 +33,7 @@ public with sharing class PaymentHelper {
             sp = new Scheduled_Payment__c(
                     Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
                     Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
-                    Scheduled_Date__c = Date.today(),
+                    Scheduled_Date__c = DateUtil.today(),
                     Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
                     Payment_Type__c = Constants.PAYMENT_SCHEDULED_TYPE,
                     Opportunity__c=opportunity.Id,
@@ -91,7 +91,7 @@ public with sharing class PaymentHelper {
         if (opportunity.Payment_Schedule_Send_First_Immediately__c) {
             if (opportunity.Scheduled_Payments__r == null || opportunity.Scheduled_Payments__r.isEmpty()) {
                 Date proposedDate = getPaymentDate(opportunity, 0);
-                return proposedDate == null || !proposedDate.isSameDay(Date.today());
+                return proposedDate == null || !proposedDate.isSameDay(DateUtil.today());
             }
         }
         return false;
@@ -249,7 +249,7 @@ public with sharing class PaymentHelper {
                 new Scheduled_Payment__c(
                     Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
                     //Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
-                    Scheduled_Date__c = Date.today(),
+                    Scheduled_Date__c = DateUtil.today(),
                     Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
                     Payment_Type__c = Constants.PAYMENT_SCHEDULED_TYPE,
                     Opportunity__c=opportunity.Id,
@@ -261,7 +261,7 @@ public with sharing class PaymentHelper {
         }
 
         Integer monthCounter = 0;
-        if (opportunity.End_Date__c != null && opportunity.End_Date__c < Date.today()) {
+        if (opportunity.End_Date__c != null && opportunity.End_Date__c < DateUtil.today()) {
             // End Date is less than today, so there will be no payments calculated
             return paymentsList;
         }
@@ -325,7 +325,7 @@ public with sharing class PaymentHelper {
                 proposedDate = Date.newInstance(paymentDate.year(),paymentDate.month(),Date.daysInMonth(paymentDate.year(),paymentDate.month()));
             }
         }
-        if (proposedDate < Date.today() || proposedDate < opportunity.Start_Date__c) {
+        if (proposedDate < DateUtil.today() || proposedDate < opportunity.Start_Date__c) {
             return null;
         }
         return proposedDate;

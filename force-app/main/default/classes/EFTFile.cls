@@ -20,7 +20,7 @@ public with sharing class EFTFile {
     private Date dueDate;
 
     public EFTFile(Id[] spIds) {
-        this.dueDate = Date.today();
+        this.dueDate = DateUtil.today();
         this.spIds = spIds;
     }
 
@@ -68,7 +68,7 @@ public with sharing class EFTFile {
             Blob blobKey = crypto.generateAesKey(128);
             String key = EncodingUtil.base64encode(blobKey).remove('/');
             //String key = crypto.generateDigest('MD5', Blob.valueOf(bankAccount.Id)).toString();
-            this.referenceNumber = DateTime.now().format('ddMMyy') + '-' + key.substring(0, 11);
+            this.referenceNumber = DateUtil.now().format('ddMMyy') + '-' + key.substring(0, 11);
         }
 
         public void addPayment(Scheduled_Payment__c sp) {
@@ -90,7 +90,7 @@ public with sharing class EFTFile {
 
         // Loop over Scheduled Payments and create detail lines
         EFTFileDetail eftFileDetail;
-        Datetime now = Datetime.now();
+        Datetime now = DateUtil.now();
         for (Scheduled_Payment__c sp : this.spList) {
             // Validate that Status is correctly set
             /*
@@ -200,7 +200,7 @@ public with sharing class EFTFile {
     private void attachFile(String fileText, EFT_File__c eftFileObj) {
         Attachment att = new Attachment();
         att.Body = Blob.valueOf(fileText);
-        att.Name = 'Banking_Sheet_' + eftFileObj.File_Number__c + '_' + System.now().format('yyyy_MM_dd_hh_mm_ss') + '.txt';
+        att.Name = 'Banking_Sheet_' + eftFileObj.File_Number__c + '_' + DateUtil.now().format('yyyy_MM_dd_hh_mm_ss') + '.txt';
         att.parentId = eftFileObj.Id;
         insert att;
         String fileURL = URL.getFileFieldURL(att.Id, 'Attachment');

@@ -34,17 +34,17 @@ private with sharing class PaymentControllerTest {
         Opp.Payment_Use_Primary_Bank_Account__c = true;
         Opp.Payment_Schedule_Allotted_Amount__c = 5000.00;
         Opp.Day_of_Month__c = 'Last';
-        Opp.Start_Date__c = System.today();
+        Opp.Start_Date__c = DateUtil.today();
         Opp.Payment_Schedule_Send_First_Immediately__c = false;
         Opp.Drawdown_Amount__c = 1000.00;
         Opp.Lawyer__c = contactList[1].Id;
-        Opp.CloseDate = Date.today().addDays(14);
+        Opp.CloseDate = DateUtil.today().addDays(14);
         Opp.StageName = 'Closed With Loan';
         Opp.Law_Firm__c = accountList[1].Id;        
         Opp.Stage_Status__c = 'Approved';
         Opp.Amount = 5375.00;
         Opp.Admin_Fee__c = 375.00;
-        Opp.Payout_Date__c = Date.today();
+        Opp.Payout_Date__c = DateUtil.today();
         Opp.Type_of_Loan__c = 'Facility Loan';
         Opp.Primary_Contact__c = contactList[0].Id;
         Opp.Minimum_Interest_Period__c = '0 months';
@@ -60,8 +60,8 @@ private with sharing class PaymentControllerTest {
     public static void insertDrawdown(String OppId, Integer noOfPayments){
         List<Drawdown__c> drawdownList = new List<Drawdown__c>();
         for(Integer i=0; i < noOfPayments; i++){
-            drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = OppId,
-                                            Amount__c = 1500, Payment_Method__c ='Payment', Payout_Date__c = Date.today(),
+            drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = DateUtil.today(), Opportunity__c = OppId,
+                                            Amount__c = 1500, Payment_Method__c ='Payment', Payout_Date__c = DateUtil.today(),
                                             Reference_Notes__c = 'Partial Payment'));
         }
         if(drawdownList.size() > 0){
@@ -85,7 +85,7 @@ private with sharing class PaymentControllerTest {
            opportunityList[0].Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
            opportunityList[0].Day_of_Month__c = 'Last';
            opportunityList[0].Drawdown_Amount__c = 1000.00;
-           opportunityList[0].Start_Date__c = System.today();
+           opportunityList[0].Start_Date__c = DateUtil.today();
            update opportunityList;
            System.assertEquals(5,PaymentController.calculatePayments(opportunityList[0].Id).size());
         Test.stopTest();
@@ -106,8 +106,8 @@ private with sharing class PaymentControllerTest {
            // create schedule 
            opportunityList[0].Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_DATE;
            opportunityList[0].Day_of_Month__c = 'Last';
-           opportunityList[0].Start_Date__c = System.today();
-           opportunityList[0].End_Date__c = System.today().addMonths(5);
+           opportunityList[0].Start_Date__c = DateUtil.today();
+           opportunityList[0].End_Date__c = DateUtil.today().addMonths(5);
            update opportunityList;
            System.assertEquals(5,PaymentController.calculatePayments(opportunityList[0].Id).size());
         Test.stopTest();
@@ -127,7 +127,7 @@ private with sharing class PaymentControllerTest {
            opportunityList[0].Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
            opportunityList[0].Day_of_Month__c = 'Last';
            opportunityList[0].Drawdown_Amount__c = 1000.00;
-           opportunityList[0].Start_Date__c = System.today();
+           opportunityList[0].Start_Date__c = DateUtil.today();
            update opportunityList;
            List<Scheduled_Payment__c> paymentsList = PaymentController.calculatePayments(opportunityList[0].Id);
            insert paymentsList;
@@ -151,7 +151,7 @@ private with sharing class PaymentControllerTest {
            opportunityList[0].Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
            opportunityList[0].Day_of_Month__c = 'Last';
            opportunityList[0].Drawdown_Amount__c = 1000.00;
-           opportunityList[0].Start_Date__c = System.today();
+           opportunityList[0].Start_Date__c = DateUtil.today();
            update opportunityList;
            List<Scheduled_Payment__c> paymentsList = PaymentController.calculatePayments(opportunityList[0].Id);
            System.assertEquals(0,[SELECT count() FROM Scheduled_Payment__c]);
@@ -173,7 +173,7 @@ private with sharing class PaymentControllerTest {
            opportunityList[0].Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
            opportunityList[0].Day_of_Month__c = 'Last';
            opportunityList[0].Drawdown_Amount__c = 1000.00;
-           opportunityList[0].Start_Date__c = System.today();
+           opportunityList[0].Start_Date__c = DateUtil.today();
            update opportunityList;
            List<Scheduled_Payment__c> paymentsList = PaymentController.calculatePayments(opportunityList[0].Id);
            insert paymentsList;
