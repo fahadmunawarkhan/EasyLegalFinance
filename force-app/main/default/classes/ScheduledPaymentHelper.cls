@@ -19,7 +19,7 @@ public with sharing class ScheduledPaymentHelper {
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
         if (sp.First_Sent_to_Bank_Date__c == null) {
-            drawdown.Date__c = Date.today();
+            drawdown.Date__c = DateUtil.today();
         } else {
             drawdown.Date__c = sp.First_Sent_to_Bank_Date__c.date();
         }
@@ -84,7 +84,7 @@ public with sharing class ScheduledPaymentHelper {
                 sp.Opportunity__c,
                 new Drawdown__c(
                     Amount__c = sp.Opportunity__r.Admin_Fee__c,
-                    Date__c = Date.today(),
+                    Date__c = DateUtil.today(),
                     Opportunity__c = sp.Opportunity__c,
                     Payment_Method__c = 'Admin Fee',
                     Reference_Notes__c = reference_note
@@ -142,7 +142,7 @@ public with sharing class ScheduledPaymentHelper {
             sp.Status__c = 'Drawdown Created';
             sp.Drawdown_Created__c = true;
             if (sp.Sent_to_Bank_Date__c == null) {
-                sp.Sent_to_Bank_Date__c = Datetime.now();
+                sp.Sent_to_Bank_Date__c = DateUtil.now();
                 sp.Sent_to_Bank_By__c = UserInfo.getUserId();
             }
             if (sp.First_Sent_to_Bank_Date__c == null) {
@@ -268,7 +268,7 @@ public with sharing class ScheduledPaymentHelper {
             Id=spId,
             Status__c='Approved to Send',
             Verified_By__c = UserInfo.getUserId(),
-            Verified_Date__c = Datetime.now()
+            Verified_Date__c = DateUtil.now()
         );
         update sp;
     }
@@ -280,7 +280,7 @@ public with sharing class ScheduledPaymentHelper {
             Id=spId,
             Status__c='Rejected',
             Verified_By__c = UserInfo.getUserId(),
-            Verified_Date__c = Datetime.now(),
+            Verified_Date__c = DateUtil.now(),
             Hold__c = true,
             Notes__c = notes
         );

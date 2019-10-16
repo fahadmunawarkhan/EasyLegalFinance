@@ -72,6 +72,8 @@
         helper.getCalendarMax(component); 
         helper.getSingleContactHistory(component);
         helper.getBankAccountOptions(component);
+        helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
+        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
         //component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
         
         /*console.log('tab switch');
