@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 ({
     getOpportunityInfo : function(component) {
         let self = this;
