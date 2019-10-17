@@ -288,6 +288,7 @@
         <members>threeRegionHomeTemplate</members>
         <members>viewPayments</members>
         <members>AssessmentSummaryReport</members>
+        <members>AssessmentLoans</members>
         <members>LawyerAssessmentOpportunities</members>
         <members>LawyerApprovedCreditHistory</members>
         <members>LawyerAvailableCreditComponent</members>
@@ -409,6 +410,7 @@
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Search_by_Name__c</members>        
         <members>Bad_Debt_Summary_Report__c.BusinessUnit__c</members>
         <members>Bad_Debt_Summary_Report__c.End_Date__c</members>
         <members>Bad_Debt_Summary_Report__c.Start_Date__c</members>
@@ -1323,6 +1325,7 @@
     </types>
     <types>
         <members>About_Mass_Update_and_Mass_Edit</members>
+        <members>Assessment_Loans</members>
         <members>Critical_Date__c</members>
         <members>Custom_Reports</members>
         <members>Drawdown__c</members>
