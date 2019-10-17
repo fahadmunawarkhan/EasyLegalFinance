@@ -2042,6 +2042,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
+        <field>Drawdown__c.Replicated_Payout_Date__c</field>
+        <readable>false</readable>
+    </fieldPermissions>        
+    <fieldPermissions>
+        <editable>false</editable>
         <field>Drawdown__c.Reporting_Days_Outstanding__c</field>
         <readable>false</readable>
     </fieldPermissions>
