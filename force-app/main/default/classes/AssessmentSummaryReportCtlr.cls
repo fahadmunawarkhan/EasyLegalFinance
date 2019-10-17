@@ -52,9 +52,10 @@ public with sharing class AssessmentSummaryReportCtlr {
     }
 
     @AuraEnabled
-    public static void setCustomSetting(String BusinessUnit){
+    public static void setCustomSetting(String BusinessUnit, String searchByName){
         Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getOrgDefaults();
         aSR.Business_Unit__c = !String.isEmpty(BusinessUnit) && BusinessUnit != null? BusinessUnit : 'ELFI';
+        aSR.Search_by_Name__c = !String.isEmpty(searchByName) && searchByName != null? searchByName : '';        
         upsert aSR;
     }
     
@@ -118,12 +119,12 @@ public with sharing class AssessmentSummaryReportCtlr {
                     //Drawdown_Total_wo_Payment__c
                     
                     wrapper.utilizedCreditElfi += opp.Account.Business_Unit__c == 'ELFI'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0  : 0;
-                    wrapper.utilizedCreditElfi += opp.Account.Business_Unit__c == 'ELFI'? opp.Admin_Fee_Roll_up__c !=null? opp.Admin_Fee_Roll_up__c :0 : 0;
+                    //wrapper.utilizedCreditElfi += opp.Account.Business_Unit__c == 'ELFI'? opp.Admin_Fee_Roll_up__c !=null? opp.Admin_Fee_Roll_up__c :0 : 0;
                     
                     wrapper.utilizedCreditElfi -= opp.Account.Business_Unit__c == 'ELFI'? principalRepaidAmnt != null? principalRepaidAmnt : 0  : 0;
                     
                     wrapper.utilizedCreditRhino += opp.Account.Business_Unit__c == 'Rhino'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0 : 0;
-                    wrapper.utilizedCreditRhino += opp.Account.Business_Unit__c == 'Rhino'? opp.Admin_Fee_Roll_up__c !=null? opp.Admin_Fee_Roll_up__c :0 : 0;
+                    //wrapper.utilizedCreditRhino += opp.Account.Business_Unit__c == 'Rhino'? opp.Admin_Fee_Roll_up__c !=null? opp.Admin_Fee_Roll_up__c :0 : 0;
                     
                     wrapper.utilizedCreditRhino -= opp.Account.Business_Unit__c == 'Rhino'? principalRepaidAmnt != null? principalRepaidAmnt : 0  : 0;
                     
@@ -146,7 +147,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             throw new AuraHandledException(e.getMessage() + ' ' + e.getLineNumber());
         }
 
-        setCustomSetting(BusinessUnit);
+        setCustomSetting(BusinessUnit, searchByName);
         return lawyerAssessmentMap.values();
     }
 }
