@@ -186,9 +186,10 @@ public with sharing class FundingDetailsComponentCtlr {
             'SELECT ' +
                 'Id, Current_Bank_Account_Name__c, Current_Bank_Account_Display__c, Current_Bank_Account_URL__c, Triggered_Admin_Fee_Amount__c, Expected_Admin_Fee_Amount__c' +
                 ', Notes__c, Hold__c' +
-                ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c' +
+                ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+                ', Can_Send_to_Bank__c' +
                 ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
-                ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+                ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
                 ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c' +
             ' FROM Scheduled_Payment__c';
         if(statuses != null) {

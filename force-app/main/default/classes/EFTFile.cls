@@ -33,7 +33,7 @@ public with sharing class EFTFile {
         // First grab Scheduled Payments with Bank Account Info
         this.spList = [
             Select
-                Id, Name, Amount__c, Status__c, Current_Bank_Account_Id__c, // Scheduled Payment Fields
+                Id, Name, Amount__c, Status__c, Current_Bank_Account_Id__c, Can_Send_to_Bank__c, // Scheduled Payment Fields
                 Opportunity__r.AccountId // Opportunity Fields
             FROM Scheduled_Payment__c
             WHERE Id in :this.spIds
@@ -92,6 +92,12 @@ public with sharing class EFTFile {
         EFTFileDetail eftFileDetail;
         Datetime now = DateUtil.now();
         for (Scheduled_Payment__c sp : this.spList) {
+            // Validate User is able to send current payment (has EFT_Permission or was not the validator)
+            if (!sp.Can_Send_to_Bank__c) {
+                errorList.add(new EFTFileException(sp.Id, 'Can_Send_to_Bank__c', 'You are not able to send payments that you verified.'));
+            }
+
+
             // Validate that Status is correctly set
             /*
             if (sp.Status__c != 'Scheduled') {

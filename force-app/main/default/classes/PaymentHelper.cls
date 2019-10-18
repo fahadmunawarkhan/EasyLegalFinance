@@ -75,7 +75,9 @@ public with sharing class PaymentHelper {
         } 
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
-                paymentsList.remove(0);
+                if (paymentsList.size() > 0) {
+                    paymentsList.remove(0);
+                }
             }
         }
         return paymentsList;
@@ -289,7 +291,9 @@ public with sharing class PaymentHelper {
         }
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c sp : inProcessPayments) {
-                paymentsList.remove(0);
+                if (paymentsList.size() > 0) {
+                    paymentsList.remove(0);
+                }
             }
         }
         if (processedPayments != null) {

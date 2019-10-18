@@ -19,7 +19,20 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     @track selectedScheduledPaymentId;
     @track showReverseForm = false;
 
-    @track queryTerm = '';
+    _queryTerm = '';
+
+    _queryTerm = '';
+    @api 
+    get queryTerm() {
+        return this._queryTerm;
+    }
+    set queryTerm(value) {
+        if (this.queryTerm != value && this.filterInitilized && this.resourcesInitialized) {
+            this._queryTerm = value;
+            this.performSearch();
+        }
+    }
+
     _filters = {
         preset: 'today'
     }
@@ -29,6 +42,9 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
 
@@ -87,7 +103,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         ]
     };
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
 
     constructor() {
@@ -121,7 +137,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     handleFilterInitialized(event) {
         this._filters = {...event.detail};
         this.filterInitilized = true;
-        if (this.resourcesInitialized) {
+        if (this.filterInitilized && this.resourcesInitialized) {
             this.refresh();
         }
     }
@@ -192,6 +208,9 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
 
     initFuse() {
         this.fuse = new Fuse(this.spList, this.fuseOptions);
+        if (this.queryTerm) {
+            this.performSearch();
+        }
     }
 
     async performSearch() {

@@ -33,7 +33,18 @@ export default class FundingDetailsStagingArea extends LightningElement {
     @track sortedBy = 'Scheduled_Date__c';
     @track sortedDirection = 'asc';
 
-    @track queryTerm = '';
+    _queryTerm = '';
+    @api 
+    get queryTerm() {
+        return this._queryTerm;
+    }
+    set queryTerm(value) {
+        if (this.queryTerm != value && this.filterInitilized && this.resourcesInitialized) {
+            this._queryTerm = value;
+            this.performSearch();
+        }
+    }
+
     @track flattenedList;
     @track loading = true;
 
@@ -67,7 +78,7 @@ export default class FundingDetailsStagingArea extends LightningElement {
         ]
     };
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
 
     constructor() {
@@ -183,6 +194,9 @@ export default class FundingDetailsStagingArea extends LightningElement {
 
     initFuse() {
         this.fuse = new Fuse(this.spList, this.fuseOptions);
+        if (this.queryTerm) {
+            this.performSearch();
+        }
     }
 
     stageSelected() {
