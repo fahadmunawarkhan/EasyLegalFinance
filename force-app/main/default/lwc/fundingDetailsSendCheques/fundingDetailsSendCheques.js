@@ -29,6 +29,9 @@ export default class FundingDetailsSendCheques extends LightningElement {
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
     @track groupedPayments;
@@ -77,7 +80,7 @@ export default class FundingDetailsSendCheques extends LightningElement {
 
     @track chqNum = '';
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
     dt; // dataTable reference
 

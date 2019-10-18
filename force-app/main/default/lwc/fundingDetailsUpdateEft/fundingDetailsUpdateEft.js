@@ -29,6 +29,9 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
     @track groupedPayments;
@@ -55,7 +58,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @track sortedBy = 'Sent_to_Bank_Date__c';
     @track sortedDirection = 'asc';
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
     dt; // dataTable reference
 
