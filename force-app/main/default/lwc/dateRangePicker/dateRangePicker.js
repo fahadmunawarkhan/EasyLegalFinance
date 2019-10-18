@@ -5,7 +5,7 @@ import momentUrl from '@salesforce/resourceUrl/moment';
 
 export default class DateRangePicker extends LightningElement {
     // emits change event with an object {start: <startDate>, end: <endDate>}
-    //initCompleted = false;
+    initCompleted = false;
     @api timezone = 'UTC';
 
     @track presetOptions; 
@@ -74,6 +74,16 @@ export default class DateRangePicker extends LightningElement {
             this._filterNeedsInit = false;
             if (this.initCompleted) {
                 this.setPresetValues().then(this.sendInitEvent());
+            }
+        } else {
+            if (this.initCompleted) {
+                let newStartDate = this.formatDate(this.filters.startDate);
+                let newEndDate = this.formatDate(this.filters.endDate);
+                if (this.formattedStartDate != newStartDate || this.formattedEndDate != newEndDate) {
+                    this.formattedStartDate = newStartDate;
+                    this.formattedEndDate = newEndDate;
+                    this.sendInitEvent();
+                }
             }
         }
     }

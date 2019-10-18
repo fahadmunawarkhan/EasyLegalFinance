@@ -28,6 +28,9 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
     @track groupedPayments;
@@ -72,7 +75,7 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
     @track sortedBy = 'Scheduled_Date__c';
     @track sortedDirection = 'asc';
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
     dt; // dataTable reference
 
