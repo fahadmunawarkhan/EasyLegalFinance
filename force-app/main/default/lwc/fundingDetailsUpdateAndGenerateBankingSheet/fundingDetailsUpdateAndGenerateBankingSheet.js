@@ -54,6 +54,8 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
     @track bankingSheetText = 'Generate Banking Sheet';
 
     @track columns = [
+        { label: 'Verified', fieldName: 'Verified_By__r.Name', sortable: true },
+        { label: 'Can Send', fieldName: 'Can_Send_to_Bank__c', type:'boolean', sortable: true },
         { label: 'Notes', fieldName: 'Notes__c', type: 'helptext' },
         { label: 'Client Account', fieldName: 'opportunity.Account.Id', type: 'linkToId', typeAttributes: {target: '_blank', label: {fieldName: 'opportunity.Account.Name'}}, sortable: true },
         { label: 'File #', fieldName: 'opportunity.Account.Id', type: 'linkToId', typeAttributes: {target: '_blank', label: {fieldName: 'opportunity.Account.AccountNumber'}}, sortable: true },
