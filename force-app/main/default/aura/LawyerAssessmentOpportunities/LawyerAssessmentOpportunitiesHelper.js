@@ -12,7 +12,7 @@
                         var records =response.getReturnValue();
                         records.forEach(function(record){
                             record.linkName = '/'+record.Id;
-                            record.Outstanding = (record.Drawdown_Total_wo_Payment__c + record.Admin_Fee_Roll_up__c) - record.Principal_Repaid_Roll_up__c;
+                            record.Outstanding = (record.Drawdown_Total_wo_Payment__c) - record.Principal_Repaid_Roll_up__c;
                         });
                         resolve(records);
                     }else if(state === 'ERROR'){
