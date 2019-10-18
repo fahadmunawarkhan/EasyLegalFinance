@@ -1,20 +1,13 @@
 ({
 	doinit : function(component, event, helper) {
         component.set('v.OpportunityAssessmentColumns', [
-            {label: 'Opportunity Name', fieldName: 'Name', type: 'text', sortable: true},
-            {label: 'Principal Repaid', fieldName: 'Principal_Repaid_Roll_up__c', type: 'currency', sortable: true},
-            {label: 'Assessment Fee', fieldName: 'Admin_Fee_Roll_up__c', type: 'currency', sortable: true},
-            {label: 'Paid to Client', fieldName: 'Drawdown_Total_wo_Payment__c', type: 'currency', sortable: true},            
-            {label: 'Total', fieldName: 'Total', type: 'currency', sortable: true}
+            {label: 'Opportunity Name', fieldName: 'linkName', type: 'url', typeAttributes: {label: { fieldName: 'Name' }, target: '_blank'}, sortable: true},
+            {label: 'Paid', fieldName: 'Principal_Repaid_Roll_up__c', type: 'currency', sortable: true},
+            {label: 'Invoice Total', fieldName: 'Drawdown_Total_wo_Payment__c', type: 'currency', sortable: true},            
+            {label: 'Outstanding', fieldName: 'Outstanding', type: 'currency', sortable: true}
         ]);
         helper.OppoAssessHelper(component).then($A.getCallback(
             function(result){
-                
-                for (var i = 0; i < result.length; i++) {
-                    var row = result[i];
-                    row.Total = (row.Drawdown_Total_wo_Payment__c + row.Admin_Fee_Roll_up__c) - row.Principal_Repaid_Roll_up__c;
-                }
-                console.log(result);
                 component.set("v.OpportunityAssessmentdata", result);
                 component.set("v.spinner", false);
                 component.set("v.setdatatable", true);

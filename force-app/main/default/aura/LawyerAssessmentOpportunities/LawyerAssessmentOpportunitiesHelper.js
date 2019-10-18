@@ -9,7 +9,12 @@
                 action.setCallback(this,function(response){
                     let state = response.getState();
                     if(state === 'SUCCESS'){
-                        resolve(response.getReturnValue());
+                        var records =response.getReturnValue();
+                        records.forEach(function(record){
+                            record.linkName = '/'+record.Id;
+                            record.Outstanding = (record.Drawdown_Total_wo_Payment__c + record.Admin_Fee_Roll_up__c) - record.Principal_Repaid_Roll_up__c;
+                        });
+                        resolve(records);
                     }else if(state === 'ERROR'){
                         reject(response.getError());
                     }
@@ -24,7 +29,7 @@
         var reverse = sortDirection == 'asc' ? 1: -1;
 		console.log('sortAssessmentData'+fieldName);
         
-        if(fieldName == "Total" || fieldName == "Admin_Fee_Roll_up__c" || fieldName == "Principal_Repaid_Roll_up__c"){
+        if(fieldName == "Outstanding" || fieldName == "Drawdown_Total_wo_Payment__c" || fieldName == "Principal_Repaid_Roll_up__c"){
             
             data.sort(function(a,b){ 
                 var a = key(a);
