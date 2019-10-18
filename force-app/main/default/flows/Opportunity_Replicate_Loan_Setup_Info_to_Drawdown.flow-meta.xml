@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <assignments>
-        <name>myVariable_waitStartTimeAssignment</name>
-        <label>myVariable_waitStartTimeAssignment</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>myVariable_waitStartTimeVariable</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>$Flow.CurrentDateTime</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>myDecision</targetReference>
-        </connector>
-    </assignments>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -89,7 +73,7 @@
 0) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_1566880011</name>
+        <name>formula_2_myRule_1_A1_7241840871</name>
         <dataType>Number</dataType>
         <expression>CASE(Text({!myVariable_current.Compounding_Interest__c}), 
 &quot;Annual&quot;,1,
@@ -107,7 +91,7 @@
                 <stringValue>IF(Ispickval([Opportunity].Interest_Compounding_Period__c ,&quot;Compounding Interest&quot;),TRUE,FALSE)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_8907220945</name>
+        <name>formula_3_myRule_1_A1_9146093742</name>
         <dataType>Boolean</dataType>
         <expression>IF(Ispickval({!myVariable_current.Interest_Compounding_Period__c} ,&quot;Compounding Interest&quot;),TRUE,FALSE)</expression>
     </formulas>
@@ -118,7 +102,7 @@
                 <stringValue>Value(Text([Opportunity].Interest_Deferral_Period__c ))</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_4_myRule_1_A1_6488586991</name>
+        <name>formula_4_myRule_1_A1_6060406400</name>
         <dataType>Number</dataType>
         <expression>Value(Text({!myVariable_current.Interest_Deferral_Period__c} ))</expression>
         <scale>18</scale>
@@ -144,7 +128,7 @@
 </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_1_A1_4715462265</name>
+        <name>formula_5_myRule_1_A1_4100426026</name>
         <dataType>Number</dataType>
         <expression>Case(Text({!myVariable_current.Minimum_Interest_Period__c} ),
 &quot;1 month&quot;,1,
@@ -196,7 +180,7 @@
         <dataType>Boolean</dataType>
         <expression>  ISCHANGED({!myVariable_current.Payout_Date__c} )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Replicate_Loan_Setup_Info_to_Drawdown-5_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Replicate_Loan_Setup_Info_to_Drawdown-4_InterviewLabel</interviewLabel>
     <label>Opportunity - Replicate Loan Setup Info to Drawdown</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -231,6 +215,9 @@
             </value>
         </processMetadataValues>
         <processMetadataValues>
+            <name>extraTypeInfo</name>
+        </processMetadataValues>
+        <processMetadataValues>
             <name>isChildRelationship</name>
             <value>
                 <booleanValue>true</booleanValue>
@@ -241,6 +228,9 @@
             <value>
                 <stringValue>[Opportunity].Drawdowns__r</stringValue>
             </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
         </processMetadataValues>
         <name>myRule_1_A1</name>
         <label>Update Drawdown</label>
@@ -344,7 +334,7 @@
             </processMetadataValues>
             <field>Compounding_Frequency__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_1566880011</elementReference>
+                <elementReference>formula_2_myRule_1_A1_7241840871</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -380,7 +370,7 @@
             </processMetadataValues>
             <field>Compounding_Interest__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_8907220945</elementReference>
+                <elementReference>formula_3_myRule_1_A1_9146093742</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -416,7 +406,7 @@
             </processMetadataValues>
             <field>Interest_Deferral_Period__c</field>
             <value>
-                <elementReference>formula_4_myRule_1_A1_6488586991</elementReference>
+                <elementReference>formula_4_myRule_1_A1_6060406400</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -488,7 +478,7 @@
             </processMetadataValues>
             <field>Minimum_Interest_Period__c</field>
             <value>
-                <elementReference>formula_5_myRule_1_A1_4715462265</elementReference>
+                <elementReference>formula_5_myRule_1_A1_4100426026</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -527,6 +517,42 @@
                 <elementReference>myVariable_current.Payout_Date__c</elementReference>
             </value>
         </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Replicated Payout Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Replicated_Payout_Date__c</field>
+            <value>
+                <elementReference>myVariable_current.Payout_Date__c</elementReference>
+            </value>
+        </inputAssignments>
         <object>Drawdown__c</object>
     </recordUpdates>
     <recordUpdates>
@@ -535,6 +561,9 @@
             <value>
                 <stringValue>criteria</stringValue>
             </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>extraTypeInfo</name>
         </processMetadataValues>
         <processMetadataValues>
             <name>isChildRelationship</name>
@@ -547,6 +576,9 @@
             <value>
                 <stringValue>[Opportunity].Drawdown_Payment_Allocations__r</stringValue>
             </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
         </processMetadataValues>
         <name>myRule_7_A1</name>
         <label>Update Payment Allocation</label>
@@ -652,7 +684,7 @@
         </inputAssignments>
         <object>Drawdown_Payment_Allocation__c</object>
     </recordUpdates>
-    <startElementReference>myVariable_waitStartTimeAssignment</startElementReference>
+    <startElementReference>myDecision</startElementReference>
     <status>Active</status>
     <variables>
         <name>myVariable_current</name>
@@ -669,15 +701,5 @@
         <isInput>true</isInput>
         <isOutput>false</isOutput>
         <objectType>Opportunity</objectType>
-    </variables>
-    <variables>
-        <name>myVariable_waitStartTimeVariable</name>
-        <dataType>DateTime</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-        <value>
-            <elementReference>$Flow.CurrentDateTime</elementReference>
-        </value>
     </variables>
 </Flow>
