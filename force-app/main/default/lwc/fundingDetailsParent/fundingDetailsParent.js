@@ -126,7 +126,7 @@ export default class FundingDetails_Parent extends LightningElement {
         this.tabQuerySelector = this.tabConfiguration[this.currentStage].tabQuerySelector;
         let newFilterName = this.tabConfiguration[this.currentStage].filterName;
         if (this.activeFilterName != newFilterName) {
-            this.filterInitilized = false;
+            //this.filterInitilized = false;
             this.activeFilterName = newFilterName;
             this.activeFilter = this.filters[this.activeFilterName];
         }
