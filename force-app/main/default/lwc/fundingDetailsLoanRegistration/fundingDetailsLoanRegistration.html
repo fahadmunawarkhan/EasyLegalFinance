@@ -17,7 +17,9 @@
         record-id={opp.Id}
         object-api-name="Opportunity"
         onsubmit={saveOpportunity}
-        onsuccess={handleSuccess}>
+        onsuccess={handleSuccess}
+        onerror={handleError}>
+
 
         <lightning-messages>
         </lightning-messages>
