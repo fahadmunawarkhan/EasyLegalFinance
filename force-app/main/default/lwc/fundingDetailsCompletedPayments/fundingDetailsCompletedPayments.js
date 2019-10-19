@@ -57,7 +57,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         { label: 'Client', fieldName: '_client_account', type: 'linkWithLabel', typeAttributes: {target: '_blank'}, sortable: true },
         //{ label: 'Payment Account', fieldName: 'Account__c', type: 'linkWithLabel', typeAttributes: {target: '_blank'}, sortable: true },
         { label: 'Bank Account', fieldName: 'Current_Bank_Account_URL__c', type: 'url', typeAttributes: {target: '_blank', label: {fieldName: 'Current_Bank_Account_Name__c'}}, sortable: true },
-        { label: 'Opportunity #', fieldName: 'opportunity.Loan_Requests__c', type: 'text' },
+        { label: 'Opportunity #', fieldName: 'opportunity.Loan_Requests__c', type: 'text', sortable: true },
         { label: 'Payment Type', fieldName: 'Payment_Type__c', sortable: true },
         //{ label: 'Send Cheque', fieldName: 'Send_Cheque__c', type: 'boolean', sortable: true },
         //{ label: 'Admin Fee', fieldName: 'Triggered_Admin_Fee_Amount__c', type: 'currency', sortable: true },
