@@ -29,6 +29,7 @@
     <aura:attribute name="reAssessmentOppList" type="Opportunity[]"/>
     <aura:attribute name="spinner" type="boolean" default="false" />
     <aura:attribute name="AsyncSpinner" type="boolean" default="false" />
+    <aura:attribute name="initialized" type="boolean" default="false" />
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" />
     <aura:attribute name="selectedLookUpAssignedTo" type="sObject" default="{}"/>
@@ -1442,6 +1443,7 @@
                                     opp='{!v.oppObj}'
                                     customConditions="{! 'Opportunity__c = \'' + v.oppObj.Id + '\' AND Opportunity_Service_Provider__c = null'}"
                                     hideExtra="{! true}"
+                                    ondrawdownschanged="{!c.updateAmounts}"
                                 ></c:fundingDetailsProcessDrawdowns>
                             </aura:if>
                         </div>

@@ -131,6 +131,7 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
     connectedCallback() {
         this.syncMaxAmount();
         registerListener(`scheduledpaymentschanged-${this.oppId}`, this.refresh, this);
+        registerListener(`amountschanged-${this.oppId}`, this.syncMaxAmount, this);
     }
 
     disconnectedCallback() {

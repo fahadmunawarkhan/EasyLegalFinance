@@ -63,17 +63,26 @@
         */
     },
     reInitSomeData:function(component, event, helper) {
-        helper.getOpportunityInfo(component);
-        helper.getDrawdownList(component);
-        helper.getDrawdownPaymentsList(component);
-        helper.getServiceProvidersList(component);
-        helper.getReAssessmentOpportunitiesList(component);
-        helper.getCalendarMin(component);
-        helper.getCalendarMax(component); 
-        helper.getSingleContactHistory(component);
-        helper.getBankAccountOptions(component);
-        helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+        let initialized = component.get('v.initialized');
+        if (initialized === true) {
+            helper.getOpportunityInfo(component);
+            helper.getDrawdownList(component);
+            helper.getDrawdownPaymentsList(component);
+            helper.getServiceProvidersList(component);
+            helper.getReAssessmentOpportunitiesList(component);
+            helper.getCalendarMin(component);
+            helper.getCalendarMax(component); 
+            helper.getSingleContactHistory(component);
+            helper.getBankAccountOptions(component);
+            helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
+            helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+            let pubsub = component.find('pubsub');
+            if (pubsub) {
+                pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
+            }
+        } else {
+            component.set('v.initialized', true);
+        }
         //component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
         
         /*console.log('tab switch');
