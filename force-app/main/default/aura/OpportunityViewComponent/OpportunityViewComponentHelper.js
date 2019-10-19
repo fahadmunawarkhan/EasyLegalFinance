@@ -1352,7 +1352,17 @@
     },
 
 	firePaymentsChangedEvent: function (component) {
-        component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
+        let pubsub = component.find('pubsub');
+        if (pubsub) {
+            pubsub.fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
+        }
+	},
+
+	fireAmountsChangedEvent: function (component) {
+        let pubsub = component.find('pubsub');
+        if (pubsub) {
+            pubsub.fireEvent(`amountschanged-${component.get('v.recordId')}`);
+        }
 	},
 
     /**
@@ -1431,6 +1441,7 @@
 		action.setParams({
 			oppId: component.get("v.recordId")
 		});
+        let _this = this;
 		this.promiseServerSideCall(action).then(
 				$A.getCallback(function(result){
                     var oppObj = component.get("v.oppObj"); 
@@ -1438,6 +1449,7 @@
                         oppObj[field] = result[field];
                     }
                     component.set("v.oppObj", oppObj);
+                    _this.fireAmountsChangedEvent(component);
 				})
 			).catch( (error) => {
 				$A.getCallback(function(error){

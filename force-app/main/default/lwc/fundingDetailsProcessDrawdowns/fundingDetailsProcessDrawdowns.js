@@ -1,4 +1,5 @@
 import { LightningElement, track, api, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 import { showToast } from 'c/showToast';
 import { deleteRecord } from 'lightning/uiRecordApi';
 //import { refreshApex } from '@salesforce/apex';
@@ -7,6 +8,7 @@ import { reduceErrors } from 'c/ldsUtils';
 import getDrawdowns from '@salesforce/apex/DrawdownHelper.getDrawdowns';
 import generateDrawdowns from '@salesforce/apex/ScheduledPaymentHelper.generateDrawdowns';
 import getScheduledPaymentsByOpp from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsByOpp';
+import { registerListener, unregisterAllListeners } from 'c/pubsub';
 
 const FIELDS = [
     'Amount__c',
@@ -18,6 +20,8 @@ const FIELDS = [
 ]
 
 export default class FundingDetailsProcessDrawdowns extends LightningElement {
+    @wire(CurrentPageReference) pageRef;
+
     @track fields = FIELDS;
     @api opp; // = "00619000007G46eAAC";
     @api oppId; // = "00619000007G46eAAC";
@@ -138,6 +142,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
     connectedCallback() {
         if (this.opp) {
             this.oppId = this.opp.Id;
+            registerListener(`drawdownschanged-${this.oppId}`, this.refreshDrawdowns, this);
         }
         if ( this.readOnly ) {
             this.showAdd = false;
@@ -147,6 +152,11 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
             this.refreshPayments();
         }
     }
+
+    disconnectedCallback() {
+        unregisterAllListeners(this);
+    }
+
 
     generateDrawdowns() {
         this.spLoading = true;
@@ -242,6 +252,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
                 if (!this.hideExtra) {
                     this.refreshPayments();
                 }
+                this.fireDrawdownsChanged();
                 return this.refreshDrawdowns();
             })
             .catch(error => {
@@ -306,6 +317,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
             'Successfully created drawdown',
             'success'
         );
+        this.fireDrawdownsChanged();
     }
 
     showCreateModal() {
@@ -331,6 +343,12 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
             'Successfully updated the drawdown',
             'success'
         );
+        this.fireDrawdownsChanged();
+    }
+
+    fireDrawdownsChanged() {
+        const filterChangeEvent = new CustomEvent('drawdownschanged', {});
+        this.dispatchEvent(filterChangeEvent);
     }
 
     showEditModal() {
