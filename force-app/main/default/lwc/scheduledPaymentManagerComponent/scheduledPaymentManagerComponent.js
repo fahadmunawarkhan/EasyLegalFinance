@@ -97,10 +97,13 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
 
     @api
     refresh() {
-        this.loading = true;
-        this.syncMaxAmount();
-        return refreshApex(this.wiredResults)
-            .finally(() => { this.loading = false; }); 
+        if (this.oppId) {
+            this.loading = true;
+            this.syncMaxAmount();
+            return refreshApex(this.wiredResults)
+                .finally(() => { this.loading = false; }); 
+        }
+        return undefined
     }
 
     get shouldShowTable() {
