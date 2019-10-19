@@ -178,6 +178,12 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
                 }
 
                 // names must be equal
+                if (a.file < b.file) {
+                    return -1;
+                }
+                if (a.file > b.file) {
+                    return 1;
+                }
                 return 0;
             });
             resolve(this.data);
