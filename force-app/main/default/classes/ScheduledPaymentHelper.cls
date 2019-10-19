@@ -40,7 +40,7 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
             switch on sp.Payment_Type__c {
-                when 'Lump-Sum', 'Ad-Hoc', 'Scheduled Facility', 'Assessment' {
+                when 'Lump-Sum', 'Ad-Hoc', 'Scheduled Facility' {
                     // Check if account is opportunity's account
                     // TODO - Should I check if it is a law firm or have some other advanced way to figure this out?
                     if (sp.Opportunity__r.AccountId == sp.Current_Account_Id__c) {
@@ -48,6 +48,9 @@ public with sharing class ScheduledPaymentHelper {
                     } else {
                         drawdown.Reference_Notes__c = 'Payment to Third-Party';
                     }
+                }
+                when 'Assessment' {
+                    drawdown.Reference_Notes__c = 'Payment to Assessment Provider';
                 }
                 when 'Treatment' {
                     drawdown.Reference_Notes__c = 'Payment to Treatment - Service Provider';
