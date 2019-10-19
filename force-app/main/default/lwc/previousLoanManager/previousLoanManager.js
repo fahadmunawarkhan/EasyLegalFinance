@@ -234,6 +234,7 @@ export default class PreviousLoanManager extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.fireLoansChanged();
                 return this.refresh();
             })
             .catch(error => {

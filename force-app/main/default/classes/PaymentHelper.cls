@@ -296,18 +296,20 @@ public with sharing class PaymentHelper {
                 }
             }
         }
-        if (processedPayments != null) {
-            for (Scheduled_Payment__c sp : processedPayments) {
-                paymentsList.remove(0);
+
+        if (!paymentsList.isEmpty()) {
+            Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
+            if (amount == 0) {
+                paymentsList.clear();
+            } else {
+                for (Scheduled_Payment__c sp : paymentsList) {
+                    sp.Amount__c = amount;
+                }
             }
         }
 
-        Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
-        for (Scheduled_Payment__c sp : paymentsList) {
-            sp.Amount__c = amount;
-        }
-
         return paymentsList;
+
     }
     
     /**

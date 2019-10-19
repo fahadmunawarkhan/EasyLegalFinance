@@ -2063,7 +2063,7 @@ AND(
             <field>Status__c</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Processed by Bank</stringValue>
+                <stringValue>Drawdown Created</stringValue>
             </value>
         </filters>
         <inputAssignments>

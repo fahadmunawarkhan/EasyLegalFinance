@@ -95,7 +95,7 @@ public with sharing class FundingDetailsComponentCtlr {
                 /* Child Scheduled Payments */
             FROM Opportunity
             WHERE Funding_Details_Status__c In :allowedStatuses // Filter by Id until I can clear out bad data
-            ORDER BY Account.AccountNumber ASC
+            ORDER BY Name ASC, Loan_Requests__c ASC
         ];
 
         return oppList;

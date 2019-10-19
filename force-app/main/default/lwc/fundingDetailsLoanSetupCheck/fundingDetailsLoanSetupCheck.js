@@ -1,4 +1,6 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
+import { fireEvent } from 'c/pubsub';
+import { CurrentPageReference } from 'lightning/navigation';
 
 const FIELDS = [
     'Interest_Rate__c',
@@ -13,6 +15,8 @@ const FIELDS = [
 ]
 
 export default class FundingDetailsLoanSetupCheck extends LightningElement {
+    @wire(CurrentPageReference) pageRef;
+
     _readOnly = false;
     @api 
     get readOnly() {
@@ -42,6 +46,11 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
 
     @track fields = FIELDS;
     @track disabled = {};
+
+
+    connectedCallback() {
+        this.fireStopLoadingEvent();
+    }
 
     handleCalculationMethodChange(event) {
         this.calculationMethod = event.target.value;
@@ -80,6 +89,7 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
         if (this.confirmedAccurate) {
             const fields = event.detail.fields;
             fields.Funding_Details_Status__c = 'Process Drawdowns';
+            this.fireStartLoadingEvent();
             this.template.querySelector("lightning-record-edit-form").submit(fields);
         } else {
             this.confirmedAccurate = true;
@@ -87,8 +97,22 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
         }
     }
 
+    fireStartLoadingEvent() {
+        fireEvent(this.pageRef, 'startloading');
+    }
+
+    fireStopLoadingEvent() {
+        fireEvent(this.pageRef, 'stoploading');
+    }
+
+    handleError(event) {
+        // send event to update the opp
+        this.fireStopLoadingEvent();
+    }
+
     handleSuccess(event) {
         // send event to update the opp
+        this.fireStopLoadingEvent();
         const evt = new CustomEvent("opportunitychanged", {
             detail: {Id: this.opp.Id, Funding_Details_Status__c: event.detail.fields.Funding_Details_Status__c.value},
             bubbles: true,

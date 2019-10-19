@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import updateOpportunity from '@salesforce/apex/FundingDetailsComponentCtlr.updateOpportunity';
 import { showToast } from 'c/showToast';
-//import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
 import { CurrentPageReference } from 'lightning/navigation';
 //import { updateRecord } from 'lightning/uiRecordApi';
 
@@ -56,6 +56,7 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     handleStageComplete(event) {
         // Move opp to next Funding_Details_Status__c
         const currIndex = STAGE_CHOICES.findIndex(option => {return option === this.opp.Funding_Details_Status__c});
+        this.startLoading();
         if (currIndex < 0) {
             this.updateOpp({Id: this.opp.Id, Funding_Details_Status__c: STAGE_CHOICES[0]});
         } else if (currIndex < STAGE_CHOICES.length - 1) {
@@ -88,19 +89,19 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
         // Ensure Id in payload
         payload.Id = this.opp.Id;
         payload.sobjectType = 'Opportunity';
-        this.loading = true;
+        this.startLoading();
         updateOpportunity({opp: payload})
             .then(result => {
-                this.loading = false;
                 if (result.Funding_Details_Status__c === 'Closed') {
                     this.fireRemoveOpportunity(result);
                 } else {
                     this.fireOpportunityChanged(result);
                     //this.buildPathOptions();
                 }
+                this.stopLoading();
             })
             .catch(error => {
-                this.loading = false;
+                this.stopLoading();
                 let message;
                 try {
                     message = error.body.message;
@@ -133,11 +134,20 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
 
     connectedCallback() {
         console.log('connected');
-        // registerListener('opportunityChanged', this.refresh, this);
+        registerListener('startloading', this.startLoading, this);
+        registerListener('stoploading', this.stopLoading, this);
     }
 
     disconnectedCallback() {
-        // unregisterAllListeners(this);
+        unregisterAllListeners(this);
+    }
+
+    startLoading() {
+        this.loading = true;
+    }
+
+    stopLoading() {
+        this.loading = false;
     }
 
 }

@@ -133,7 +133,7 @@
         return promise;
     },*/
     
-    getDrawdownList : function(component) {
+    getDrawdownList : function(component, fetchRefNotes) {
         var recordId = component.get("v.recordId");
         var action = component.get('c.getDrawdownList');             
         action.setParams({ oppId : recordId});
@@ -143,6 +143,14 @@
             
             if (state === 'SUCCESS') {
                 component.set("v.drawDownList", response.getReturnValue());                
+                if (fetchRefNotes === true) {
+                    let drawDownList = component.get('v.drawDownList');
+                    for(let i = 0 ; i < drawDownList.length ; i++)
+                    {
+                        let newPaymentMethod = drawDownList[i].Payment_Method__c;
+                        this.fetchRefNotesDepValues(component, newPaymentMethod, i);
+                    }
+                }
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -1352,7 +1360,17 @@
     },
 
 	firePaymentsChangedEvent: function (component) {
-        component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
+        let pubsub = component.find('pubsub');
+        if (pubsub) {
+            pubsub.fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
+        }
+	},
+
+	fireAmountsChangedEvent: function (component) {
+        let pubsub = component.find('pubsub');
+        if (pubsub) {
+            pubsub.fireEvent(`amountschanged-${component.get('v.recordId')}`);
+        }
 	},
 
     /**
@@ -1431,6 +1449,7 @@
 		action.setParams({
 			oppId: component.get("v.recordId")
 		});
+        let _this = this;
 		this.promiseServerSideCall(action).then(
 				$A.getCallback(function(result){
                     var oppObj = component.get("v.oppObj"); 
@@ -1438,6 +1457,7 @@
                         oppObj[field] = result[field];
                     }
                     component.set("v.oppObj", oppObj);
+                    _this.fireAmountsChangedEvent(component);
 				})
 			).catch( (error) => {
 				$A.getCallback(function(error){
