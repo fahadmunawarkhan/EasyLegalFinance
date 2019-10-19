@@ -39,7 +39,8 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             }
             if (String.isNotBlank(sp.Opportunity_Service_Provider__c)){
                 if (!this.ospMap.containsKey(sp.Opportunity_Service_Provider__c)) {
-                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c));
+                    // Set to Roll up to 0 because it won't get reset if this was the only payment included
+                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c, Total_Scheduled_Payments__c=0, Opportunity__c=(Id)sp.Opportunity__c));
                 }
             }
             if (String.isNotBlank(sp.Previous_Loan__c)){
@@ -68,7 +69,8 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             }
             if (String.isNotBlank(sp.Opportunity_Service_Provider__c)){
                 if (!this.ospMap.containsKey(sp.Opportunity_Service_Provider__c)) {
-                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c));
+                    // Set to Roll up to 0 because it won't get reset if this was the only payment included
+                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c, Total_Scheduled_Payments__c=0, Opportunity__c=(Id)sp.Opportunity__c));
                 }
             }
             if (String.isNotBlank(sp.Previous_Loan__c)){
