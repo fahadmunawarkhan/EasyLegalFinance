@@ -17,6 +17,11 @@
                 <label>Admin Fee</label>
             </value>
             <value>
+                <fullName>Assessment Fee</fullName>
+                <default>false</default>
+                <label>Assessment Fee</label>
+            </value>
+            <value>
                 <fullName>Admin Fee charged up front</fullName>
                 <default>false</default>
                 <label>Admin Fee charged up front</label>
@@ -80,6 +85,11 @@
                 <fullName>Payment Surplus</fullName>
                 <default>false</default>
                 <label>Payment Surplus</label>
+            </value>
+            <value>
+                <fullName>Payment to Assessment Provider</fullName>
+                <default>false</default>
+                <label>Payment to Assessment Provider</label>
             </value>
             <value>
                 <fullName>Payment to Client</fullName>
@@ -161,6 +171,12 @@
             <controllingFieldValue>Cheque</controllingFieldValue>
             <controllingFieldValue>e-Transfer</controllingFieldValue>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
+            <valueName>Payment to Assessment Provider</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cheque</controllingFieldValue>
+            <controllingFieldValue>e-Transfer</controllingFieldValue>
+            <controllingFieldValue>Admin Fee</controllingFieldValue>
             <valueName>Payment to Client</valueName>
         </valueSettings>
         <valueSettings>
@@ -204,6 +220,10 @@
         <valueSettings>
             <controllingFieldValue>Other</controllingFieldValue>
             <valueName>Refund</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Admin Fee</controllingFieldValue>
+            <valueName>Assessment Fee</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
