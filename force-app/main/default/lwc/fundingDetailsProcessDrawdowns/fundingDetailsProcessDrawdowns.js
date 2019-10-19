@@ -8,7 +8,7 @@ import { reduceErrors } from 'c/ldsUtils';
 import getDrawdowns from '@salesforce/apex/DrawdownHelper.getDrawdowns';
 import generateDrawdowns from '@salesforce/apex/ScheduledPaymentHelper.generateDrawdowns';
 import getScheduledPaymentsByOpp from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsByOpp';
-import { registerListener, unregisterAllListeners } from 'c/pubsub';
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
 
 const FIELDS = [
     'Amount__c',
@@ -140,6 +140,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
     }
 
     connectedCallback() {
+        this.fireStopLoadingEvent();
         if (this.opp) {
             this.oppId = this.opp.Id;
             registerListener(`drawdownschanged-${this.oppId}`, this.refreshDrawdowns, this);
@@ -155,6 +156,14 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
 
     disconnectedCallback() {
         unregisterAllListeners(this);
+    }
+
+    fireStartLoadingEvent() {
+        fireEvent(this.pageRef, 'startloading');
+    }
+
+    fireStopLoadingEvent() {
+        fireEvent(this.pageRef, 'stoploading');
     }
 
 
@@ -365,6 +374,7 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
     /* END EDIT MODAL METHODS */
 
     fireStageComplete() {
+        this.fireStartLoadingEvent();
         const evt = new CustomEvent("markstagecomplete");
         this.dispatchEvent(evt);
     }
