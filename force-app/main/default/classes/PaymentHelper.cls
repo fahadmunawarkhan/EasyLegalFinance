@@ -299,8 +299,12 @@ public with sharing class PaymentHelper {
 
         if (!paymentsList.isEmpty()) {
             Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
-            for (Scheduled_Payment__c sp : paymentsList) {
-                sp.Amount__c = amount;
+            if (amount == 0) {
+                paymentsList.clear();
+            } else {
+                for (Scheduled_Payment__c sp : paymentsList) {
+                    sp.Amount__c = amount;
+                }
             }
         }
 
