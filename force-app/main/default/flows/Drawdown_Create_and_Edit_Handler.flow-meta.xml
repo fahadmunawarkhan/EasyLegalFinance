@@ -16,75 +16,8 @@
             <name>myRule_1</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>Boolean</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideReferenceTo</name>
-                    <value>
-                        <stringValue>Scheduled_Payment__c</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>ID</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>Boolean</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.Scheduled_Payment__c</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>Boolean</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideReferenceTo</name>
-                    <value>
-                        <stringValue>Drawdown__c</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>ID</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>Boolean</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.Scheduled_Payment__r.Drawdown__c</leftValueReference>
-                <operator>IsNull</operator>
+                <leftValueReference>formula_myRule_1</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>true</booleanValue>
                 </rightValue>
@@ -102,7 +35,7 @@
                 <stringValue>IF(ISBLANK([Drawdown__c].Scheduled_Payment__c.First_Sent_to_Bank_Date__c), DATETIMEVALUE([Drawdown__c].Date__c) , [Drawdown__c].Scheduled_Payment__c.First_Sent_to_Bank_Date__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_9372504751</name>
+        <name>formula_2_myRule_1_A1_4156185143</name>
         <dataType>DateTime</dataType>
         <expression>IF(ISBLANK({!myVariable_current.Scheduled_Payment__r.First_Sent_to_Bank_Date__c}), DATETIMEVALUE({!myVariable_current.Date__c}) , {!myVariable_current.Scheduled_Payment__r.First_Sent_to_Bank_Date__c})</expression>
     </formulas>
@@ -113,11 +46,32 @@
                 <stringValue>IF(ISBLANK([Drawdown__c].Scheduled_Payment__c.Sent_to_Bank_Date__c), DATETIMEVALUE([Drawdown__c].Date__c), [Drawdown__c].Scheduled_Payment__c.Sent_to_Bank_Date__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_7769777244</name>
+        <name>formula_3_myRule_1_A1_6411981272</name>
         <dataType>DateTime</dataType>
         <expression>IF(ISBLANK({!myVariable_current.Scheduled_Payment__r.Sent_to_Bank_Date__c}), DATETIMEVALUE({!myVariable_current.Date__c}), {!myVariable_current.Scheduled_Payment__r.Sent_to_Bank_Date__c})</expression>
     </formulas>
-    <interviewLabel>Drawdown_Create_and_Edit_Handler-2_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>AND(
+ISNEW(),
+NOT(ISPICKVAL([Drawdown__c].Reference_Notes__c, &quot;Payment Rejected&quot;)),
+NOT(ISBLANK([Drawdown__c].Scheduled_Payment__c)),
+NOT([Drawdown__c].Scheduled_Payment__c.Drawdown__c = [Drawdown__c].Id)
+)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_1</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(
+ISNEW(),
+NOT(ISPICKVAL({!myVariable_current.Reference_Notes__c}, &quot;Payment Rejected&quot;)),
+NOT(ISBLANK({!myVariable_current.Scheduled_Payment__c})),
+NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_current.Id})
+)</expression>
+    </formulas>
+    <interviewLabel>Drawdown_Create_and_Edit_Handler-5_InterviewLabel</interviewLabel>
     <label>Drawdown Create and Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -291,7 +245,7 @@
             </processMetadataValues>
             <field>First_Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_9372504751</elementReference>
+                <elementReference>formula_2_myRule_1_A1_4156185143</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -363,7 +317,7 @@
             </processMetadataValues>
             <field>Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_7769777244</elementReference>
+                <elementReference>formula_3_myRule_1_A1_6411981272</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
