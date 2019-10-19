@@ -133,7 +133,7 @@
         return promise;
     },*/
     
-    getDrawdownList : function(component) {
+    getDrawdownList : function(component, fetchRefNotes) {
         var recordId = component.get("v.recordId");
         var action = component.get('c.getDrawdownList');             
         action.setParams({ oppId : recordId});
@@ -143,6 +143,14 @@
             
             if (state === 'SUCCESS') {
                 component.set("v.drawDownList", response.getReturnValue());                
+                if (fetchRefNotes === true) {
+                    let drawDownList = component.get('v.drawDownList');
+                    for(let i = 0 ; i < drawDownList.length ; i++)
+                    {
+                        let newPaymentMethod = drawDownList[i].Payment_Method__c;
+                        this.fetchRefNotesDepValues(component, newPaymentMethod, i);
+                    }
+                }
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {

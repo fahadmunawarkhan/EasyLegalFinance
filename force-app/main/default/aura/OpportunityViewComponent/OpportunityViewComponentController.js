@@ -65,17 +65,37 @@
     reInitSomeData:function(component, event, helper) {
         let initialized = component.get('v.initialized');
         if (initialized === true) {
+            component.set('v.drawDownList', undefined);
             helper.getOpportunityInfo(component);
-            helper.getDrawdownList(component);
+            helper.getDrawdownList(component, true);
             helper.getDrawdownPaymentsList(component);
             helper.getServiceProvidersList(component);
-            helper.getReAssessmentOpportunitiesList(component);
-            helper.getCalendarMin(component);
-            helper.getCalendarMax(component); 
-            helper.getSingleContactHistory(component);
+            //helper.getReAssessmentOpportunitiesList(component);
+            //helper.getCalendarMin(component);
+            //helper.getCalendarMax(component); 
+            //helper.getSingleContactHistory(component);
             helper.getBankAccountOptions(component);
-            helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-            helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+            //helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
+            //helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+            /*
+            let loanType = component.get('v.oppObj').Type_of_Loan__c;
+            
+            if(loanType != 'Treatment Loan' && loanType != 'Treatment Loan 2'){
+                let drawDownList = component.get('v.drawDownList');
+                for(let i = 0 ; i < drawDownList.length ; i++)
+                {
+                    let newPaymentMethod = drawDownList[i].Payment_Method__c;
+                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i, true);
+                }
+            } else {
+                let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
+                for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
+                {
+                    let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
+                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i);
+                }                  
+            }
+            */
             let pubsub = component.find('pubsub');
             if (pubsub) {
                 pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
