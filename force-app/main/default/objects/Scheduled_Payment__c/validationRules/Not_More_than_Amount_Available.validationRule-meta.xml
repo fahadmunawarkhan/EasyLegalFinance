@@ -3,19 +3,23 @@
     <fullName>Not_More_than_Amount_Available</fullName>
     <active>true</active>
     <description>Check if trying to payout more than what is available</description>
-    <errorConditionFormula>IF(
-    Drawdown_Created__c,
-				False,
-				IF(
-				    Opportunity__r.Amount_Available_for_Scheduled_Payments__c 
-			    	- Amount__c 
-				    + IF(ISNEW(), 0, PRIORVALUE(Amount__c))
-                    + IF(ISBLANK(Previous_Loan__c), 0,  Previous_Loan__r.Amount__c)
-                    + ( Opportunity_Service_Provider__r.Allowance_Available__c )
-				    &gt;= 0
-				    , False
-				    , True
-				)
+    <errorConditionFormula>
+AND(
+    ISCHANGED(Amount__c),
+    IF(
+        Drawdown_Created__c,
+        False,
+        IF(
+            Opportunity__r.Amount_Available_for_Scheduled_Payments__c 
+                - Amount__c 
+                + IF(ISNEW(), 0, PRIORVALUE(Amount__c))
+                + IF(ISBLANK(Previous_Loan__c), 0,  Previous_Loan__r.Amount__c)
+                + ( Opportunity_Service_Provider__r.Allowance_Available__c )
+                &gt;= 0
+            , False
+            , True
+        )
+    )
 )</errorConditionFormula>
     <errorDisplayField>Amount__c</errorDisplayField>
     <errorMessage>Not enough funds available for that amount</errorMessage>
