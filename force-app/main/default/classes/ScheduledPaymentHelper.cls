@@ -171,6 +171,7 @@ public with sharing class ScheduledPaymentHelper {
         System.debug(drawdownList);
 
         insert drawdownList;
+        /*
         for (Drawdown__c dd : drawdownList) {
             if (dd.Scheduled_Payment__c != null) {
                 if (spMap.containsKey(dd.Scheduled_Payment__c)) {
@@ -178,8 +179,9 @@ public with sharing class ScheduledPaymentHelper {
                 }
             }
         }
-        update spMap.values();
-        update oppMap.values();
+        //update spMap.values();
+        //update oppMap.values();
+        */
 
         DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(oppIds);
 
