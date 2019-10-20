@@ -14,11 +14,13 @@
 <template>
     <center if:false={readOnly}>Please review if the loan setup information is properly populated before proceeding to the next stage. </center>
     <lightning-record-edit-form
+        if:false={loading}
         record-id={opp.Id}
         object-api-name="Opportunity"
         onsubmit={saveOpportunity}
         onsuccess={handleSuccess}
-        onerror={handleError}>
+        onerror={handleError}
+        >
 
         <lightning-messages>
         </lightning-messages>
