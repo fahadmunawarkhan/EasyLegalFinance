@@ -4,16 +4,16 @@
     <active>true</active>
     <description>Check if trying to payout more than what is available</description>
     <errorConditionFormula>AND(
-    ISCHANGED(Amount__c),
+    OR(ISCHANGED(Amount__c), ISNEW()),
     IF(
         Drawdown_Created__c,
         False,
         IF(
-            Opportunity__r.Amount_Available_for_Scheduled_Payments__c 
-                - Amount__c 
+            Opportunity__r.Amount_Available_for_Scheduled_Payments__c
+                - Amount__c
                 + IF(ISNEW(), 0, PRIORVALUE(Amount__c))
                 + IF(ISBLANK(Previous_Loan__c), 0,  Previous_Loan__r.Amount__c)
-                + ( Opportunity_Service_Provider__r.Allowance_Available__c )
+                + IF(ISBLANK(Opportunity_Service_Provider__c), 0, Opportunity_Service_Provider__r.Allowance_Available__c )
                 &gt;= 0
             , False
             , True
