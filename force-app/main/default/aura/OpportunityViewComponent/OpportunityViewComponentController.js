@@ -99,6 +99,7 @@
             let pubsub = component.find('pubsub');
             if (pubsub) {
                 pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
+                pubsub.fireEvent(`previousloanschanged-${component.get('v.recordId')}`);
             }
         } else {
             component.set('v.initialized', true);
