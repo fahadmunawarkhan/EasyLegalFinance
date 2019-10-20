@@ -130,9 +130,6 @@ public with sharing class FundingDetailsComponentCtlr {
 
     @AuraEnabled(cacheable=False)
     public static Map<String, Object> getScheduledPaymentsWithOpportunities(Date startDate, Date endDate, String workflowStage, String dateField) {
-        System.debug(startDate);
-        //startDate = Date.valueOf(startDate);
-        System.debug(startDate);
         //endDate = Date.valueOf(endDate);
         List<Scheduled_Payment__c> spList;
         String[] statuses;
@@ -173,14 +170,28 @@ public with sharing class FundingDetailsComponentCtlr {
                 statuses = new String[]{};//{'Rejected', 'Scheduled', 'Pre Send Validation', 'Approved to Send', 'Sent to Bank', 'Processed by Bank', 'Drawdown Created'};
             }
         }
-        if (dateField == null) {
+        Boolean useDateTime = true;
+        if (dateField == null || dateField == 'Scheduled_Date__c') {
             dateField = 'Scheduled_Date__c';
+            useDateTime = false;
         }
-        if (endDate != null) {
-            extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :endDate';
-        }
+        Datetime compareStart = null;
         if (startDate != null) {
-            extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :startDate';
+            if ( useDateTime ) {
+                compareStart = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day(), 0, 0, 0);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :compareEnd';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :endDate';
+            }
+        }
+        Datetime compareEnd = null;
+        if (endDate != null) {
+            if ( useDateTime ) {
+                compareEnd = Datetime.newInstance(endDate.year(), endDate.month(), endDate.day(), 23, 59, 59);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :compareStart';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :startDate';
+            }
         }
         String query = 
             'SELECT ' +
