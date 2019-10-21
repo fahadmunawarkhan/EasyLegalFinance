@@ -16,7 +16,8 @@ const STAGE_CHOICES = [
 export default class FundingDetailsOpportunityEdit extends LightningElement {
     @wire(CurrentPageReference) pageRef;
 
-    @track loading = true;
+    @track loading = true; // Show spinner
+    @track reinit = true; // reinitilize actual edit components (they are getting stale sometimes)
 
     @track _opp;
     @api
@@ -25,9 +26,16 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     }
     set opp(value){
         this.loading = true;
+        this.reinit = false;
         this._opp = value;
         this.buildPathOptions();
-        this.loading = false;
+        this.reinit = true;
+        (function (_this) {
+            _this.searchTimeout = setTimeout(() => {
+                _this.reinit = false;
+                _this.loading = false;
+            }, 50);
+        })(this);
     }
 
     @track pathOptions = []

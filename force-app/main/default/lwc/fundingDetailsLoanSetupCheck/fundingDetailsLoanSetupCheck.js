@@ -38,13 +38,15 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
         this.setDisabled();
         //this.calculationMethod = this.opp.Fee_Calculation_Method__c;
         // Delay rendering due to a bug in record-edit-form causing the form to render with stale values
-        this.loading = true;
+        //this.loading = true;
+        /*
         (function (_this) {
             _this.searchTimeout = setTimeout(() => {
                 _this.loading = false;
                 _this.fireStopLoadingEvent();
             }, 100);
         })(this);
+        */
     }
 
     @track buttonText = "Save and Move to Next Step"; //"I confirm the data is accurate";
