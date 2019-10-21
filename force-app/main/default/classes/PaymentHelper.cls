@@ -159,8 +159,10 @@ public with sharing class PaymentHelper {
                 processedPayments = new List<Scheduled_Payment__c>();
 
                 Opportunity inProcessOpp = inProcessOpportunitiesMap.get(opportunity.Id);
+                system.debug(inProcessOpp);
 
                 for (Scheduled_Payment__c sp : inProcessOpp.Scheduled_Payments__r) {
+                    system.debug(sp);
                     if (constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES.contains(sp.Status__c)) {
                         modifiablePayments.add(sp);
                     } else if (constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c) && sp.Current_Opportunity_Schedule_Version__c) {
@@ -289,10 +291,27 @@ public with sharing class PaymentHelper {
             monthCounter += 1;
             currentDate = getPaymentDate(opportunity, monthCounter);
         }
+        Boolean removedImmediate = false;
+        if (processedPayments != null) {
+            for (Scheduled_Payment__c sp : processedPayments) {
+                if (paymentsList.size() > 0) {
+                    if (opportunity.Payment_Schedule_Send_First_Immediately__c && !removedImmediate) {
+                        removedImmediate = true;
+                    } else {
+                        paymentsList.remove(0);
+                    }
+                }
+            }
+        }
+
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c sp : inProcessPayments) {
                 if (paymentsList.size() > 0) {
-                    paymentsList.remove(0);
+                    if (opportunity.Payment_Schedule_Send_First_Immediately__c && !removedImmediate) {
+                        removedImmediate = true;
+                    } else {
+                        paymentsList.remove(0);
+                    }
                 }
             }
         }
