@@ -299,11 +299,20 @@ public with sharing class PaymentHelper {
 
         if (!paymentsList.isEmpty()) {
             Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
+            amount = amount * 100;
+            amount = amount.round(System.RoundingMode.FLOOR);
+            amount = amount / 100;
+            // Account for numbers that don't divide into payments nicely. Keep statement split up because of apex not respecting ooo
+            Decimal sumAmount = 0;
             if (amount == 0) {
                 paymentsList.clear();
             } else {
                 for (Scheduled_Payment__c sp : paymentsList) {
                     sp.Amount__c = amount;
+                    sumAmount += amount;
+                }
+                if (sumAmount != opportunity.Payment_Scheduled_Allotment_Remaining__c) {
+                    paymentsList[0].Amount__c += opportunity.Payment_Scheduled_Allotment_Remaining__c - sumAmount;
                 }
             }
         }
