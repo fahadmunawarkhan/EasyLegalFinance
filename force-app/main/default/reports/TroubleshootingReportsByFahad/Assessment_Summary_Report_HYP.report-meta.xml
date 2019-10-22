@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>Contact.Approved_Credit_Limit__c:SUM - Contact.Utilized_Credit_Limit__c:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <developerName>FORMULA1</developerName>
+        <isActive>false</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Available Credit</masterLabel>
+        <scale>2</scale>
+    </aggregates>
     <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <field>Contact$Approved_Credit_Limit__c</field>
+        <field>Contact.Referred_Cases__r$Account.Business_Unit__c</field>
     </columns>
     <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <field>Contact$Utilized_Credit_Limit__c</field>
-    </columns>
-    <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <field>Contact$Available_Credit__c</field>
+        <field>Contact$Account_Name__c</field>
     </columns>
     <columns>
         <field>Contact.Referred_Cases__r$Name</field>
@@ -31,6 +34,13 @@
     <columns>
         <field>Contact.Referred_Cases__r.Drawdowns__r$Reference_Notes__c</field>
     </columns>
+    <customDetailFormulas>
+        <calculatedFormula>Contact.Name + &quot; ( Lmt: &quot; + TEXT(Contact.Approved_Credit_Limit__c) + &quot; , Utl: &quot; + TEXT(Contact.Utilized_Credit_Limit__c) + &quot; , Avl: &quot; + TEXT((Contact.Approved_Credit_Limit__c - Contact.Utilized_Credit_Limit__c)) + &quot; ) &quot;</calculatedFormula>
+        <dataType>Text</dataType>
+        <developerName>CDF1</developerName>
+        <label>Lawyer Info</label>
+        <scale>2</scale>
+    </customDetailFormulas>
     <filter>
         <criteriaItems>
             <column>Contact$RecordType</column>
@@ -48,23 +58,13 @@
             <column>Contact$Id</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value/>
+            <value>0030L000023xRXC</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>Contact$Name</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>Contact$Account_Name__c</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>Contact.Referred_Cases__r$Account.Business_Unit__c</field>
+        <field>CDF1</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <name>Assessment Summary Report</name>

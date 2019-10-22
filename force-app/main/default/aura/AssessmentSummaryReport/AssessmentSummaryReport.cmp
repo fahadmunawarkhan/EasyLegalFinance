@@ -9,6 +9,10 @@
     <aura:attribute name="businessUnitForDesign" type="String" default="ELFI" />
     <aura:attribute name="sortField" type="String" default="Lawyer__r.Approved_Credit_Limit__c"/>
     <aura:attribute name="sortOrder" type="String" default="DESC" />
+    <aura:attribute name="payoutDate" type="date" />
+    <aura:attribute name="reportDate" type="date" />
+    <aura:attribute name="calendarMin" type="date" />
+    <aura:attribute name="calendarMax" type="date" /> 
     
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
@@ -18,6 +22,37 @@
     
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="1">
+                </lightning:layoutItem> 
+                <lightning:layoutItem size="4">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                                <span class="slds-form-element__static">
+                                    <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                        <lightning:input label="Report Date" type="date" value="{!v.reportDate}" 
+                                                            min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="4">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                                <span class="slds-form-element__static">
+                                    <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                        
+                                        <lightning:input label="Payout Date" type="date" value="{!v.payoutDate}" 
+                                                            min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="2">
+                    </lightning:layoutItem>                                                       
+                </lightning:layout>                
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="4">
                     <div class="slds-form-element slds-m-bottom_small">
@@ -48,7 +83,7 @@
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
                                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                      variant="neutral" type="button" label="Search" onclick="{!c.searchButton}" />                    
+                                                        variant="neutral" type="button" label="Search" onclick="{!c.searchButton}" />                    
                                 </div>                                                    
                             </span>
                         </div>
@@ -83,9 +118,18 @@
     
     <div class="">
         <lightning:card title="Assessment Summary" iconName="standard:case" variant="base">
+            <aura:set attribute="actions">
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for selected" onclick="{!c.generateForSelected}" />
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />
+            </aura:set>
             <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                 <thead>
                     <tr class="slds-line-height_reset">
+                        <th>
+                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title="Select All">
+                                <ui:inputCheckbox aura:id="selectAllcheckbox" change="{!c.checkAll}"/>
+                            </div>
+                        </th>
                         <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Name" style="cursor: pointer;" >
                             <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWYER">LAWYER</span>
                             <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Name')}">
@@ -137,6 +181,7 @@
                 <tbody>
                     <aura:iteration items="{!v.data}" var="item" >
                         <tr>
+                            <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox value="{!item.checked}" change="{!c.check}"/></div></td>
                             <td>
                                 <div class="slds-truncate">
                                     <a href="{!'/'+item.lawyerId}" >{!item.lawyer}</a>
@@ -202,7 +247,17 @@
                             </td> 
                             <td>
                                 <div class="slds-truncate">
-                                        <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
+                                    <lightning:layout pullToBoundary="small" >
+                                        <lightning:layoutItem size="6" padding="horizontal-small">
+                                            <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="6" padding="horizontal-small">
+                                            <aura:if isTrue="{!item.attachmentId != ''}">
+                                                <span Title= "Preview" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
+                                            </aura:if>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                        
                                 </div>
                             </td>
                         </tr>

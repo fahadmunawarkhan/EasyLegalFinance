@@ -17,6 +17,10 @@ public with sharing class AssessmentSummaryReportCtlr {
         public decimal utilizedCreditRhino {get; set;}
         @AuraEnabled
         public decimal availableCredit {get; set;}
+        @AuraEnabled
+        public Boolean checked {get; set;}
+        @AuraEnabled
+        public String attachmentId{get; set;}
 
         public AssessmentWrapper(){
             lawyer = '';
@@ -27,6 +31,8 @@ public with sharing class AssessmentSummaryReportCtlr {
             utilizedCreditElfi = 0;
             utilizedCreditRhino = 0;
             availableCredit = 0;
+            checked = false;
+            attachmentId = '';
 
         }
     }
@@ -63,7 +69,10 @@ public with sharing class AssessmentSummaryReportCtlr {
     public static List<AssessmentWrapper> getAssessmentData(String searchByName, String BusinessUnit, String field, String direction){
         
         List<Opportunity> assessmentOpps = new List<Opportunity>();
+        Set<Id> lawyersIdSet = new Set<Id>();
         Map<String, AssessmentWrapper> lawyerAssessmentMap = new Map<String, AssessmentWrapper>();
+        Map<String,String> lawyersAttachmentsMap = new Map<String,String>();
+
         try{
             
             String filterByBusinessUnit = '';
@@ -95,7 +104,20 @@ public with sharing class AssessmentSummaryReportCtlr {
             system.debug(strQuery);
             
             assessmentOpps = Database.query(strQuery);
-                        
+
+            for(Opportunity opp : assessmentOpps){
+                lawyersIdSet.add(opp.lawyer__c);
+            }
+
+            //query to retrive attached payout attachements
+            if(!lawyersIdSet.isEmpty()){
+                for(Attachment attach : [SELECT Id, ParentId FROM Attachment Where ParentId In :lawyersIdSet
+                                        AND name like '%List of Clients%' 
+                                        AND createddate = today order by createddate desc]){
+                    if(!lawyersAttachmentsMap.containsKey(attach.ParentId))
+                        lawyersAttachmentsMap.put(attach.ParentId, attach.Id);
+                }
+            }            
             
 
             if(!assessmentOpps.isEmpty()){
@@ -106,8 +128,16 @@ public with sharing class AssessmentSummaryReportCtlr {
                     AssessmentWrapper wrapper = null;
                     if(!lawyerAssessmentMap.containsKey(key))
                         lawyerAssessmentMap.put(key, new AssessmentWrapper());
+
+                    
                     
                     wrapper = lawyerAssessmentMap.get(key);
+
+                    wrapper.attachmentId = '';
+
+                    if(lawyersAttachmentsMap.containsKey(opp.Lawyer__c))
+                        wrapper.attachmentId = '' + lawyersAttachmentsMap.get(opp.Lawyer__c);
+                    
                     wrapper.lawyerId =  opp.Lawyer__c;
                     wrapper.lawyer = opp.Lawyer__r.Name;
                     wrapper.firm = opp.Law_Firm__r.Name;
@@ -149,5 +179,48 @@ public with sharing class AssessmentSummaryReportCtlr {
 
         setCustomSetting(BusinessUnit, searchByName);
         return lawyerAssessmentMap.values();
+    }
+
+    @AuraEnabled
+    public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
+        try{
+            APXT_BPM__Conductor__c conductor;
+            APXTConga4__Conga_Merge_Query__c congaQuery;        
+            String ids = '';
+            String query = '';
+            
+            if(!selectedIds.isEmpty()) {
+                ids = String.Join(selectedIds,',');
+                query = 'select id from contact WHERE Id in ('+ ids +')';
+            }
+            
+            Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
+            customSettings.Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date__c;
+            customSettings.Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date__c;
+            customSettings.Business_Unit__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+            
+            if(String.isEmpty(customSettings.Conga_Conductor_Id__c)){
+                congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Assessment Lawyer query - ' + UserInfo.getName(),
+                                                                  APXTConga4__Description__c = 'Query of assessment loan summary for conga conductor.',
+                                                                  APXTConga4__Query__c = query);
+                insert congaQuery;
+                conductor = new APXT_BPM__Conductor__c(APXT_BPM__Title__c = 'Mass Assessment Lawyer - ' + UserInfo.getName(), APXT_BPM__Query_Id__c = congaQuery.Id,
+                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Loans_Lawyer__c');
+                insert conductor;            
+                customSettings.Conga_Conductor_Id__c = conductor.Id;
+            }else{
+                conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:customSettings.Conga_Conductor_Id__c];
+                congaQuery = [SELECT Id, APXTConga4__Query__c FROM APXTConga4__Conga_Merge_Query__c WHERE Id =:conductor.APXT_BPM__Query_Id__c];
+                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Loans_Lawyer__c';
+                update conductor;
+                congaQuery.APXTConga4__Query__c = query;
+                update congaQuery;
+            }
+            upsert customSettings;
+            return conductor.id;	
+        }
+        catch(Exception e){
+            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+        }
     }
 }

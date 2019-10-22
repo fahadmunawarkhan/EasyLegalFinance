@@ -34,6 +34,10 @@
                 helper.errorsHandler(errors);
             }
         );
+
+        helper.getCalendarMin(component);
+        helper.getCalendarMax(component);
+        helper.setDefaultDates(component);
 	},
     searchButton : function(component, event, helper){
         component.set("v.spinner", true);
@@ -103,5 +107,30 @@
         {
             reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
         }
+    },
+    checkAll : function(component, event, helper){
+        helper.checkAll(component);
+    },
+    check : function(component, event, helper){
+        helper.check(component);
+    },
+    generateForSelected : function(component, event, helper){
+        if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
+            helper.generateForSelected(component);
+        }else{
+            alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
+        }
+                
+    },
+    GenerateForAll : function(component, event, helper){
+        if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
+            helper.generateForSelected(component);
+        }else{
+            alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
+        }
+    },
+    downloadAttachment : function(component, event, helper){
+        let attachmentId = event.currentTarget.dataset.attachment;
+        window.open('/servlet/servlet.FileDownload?file=' + attachmentId + '');
     }
 })
