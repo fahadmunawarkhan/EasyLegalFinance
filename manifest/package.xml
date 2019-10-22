@@ -410,7 +410,10 @@
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Template_Id__c</members>
-        <members>Assessment_Summary_Report__c.Search_by_Name__c</members>        
+        <members>Assessment_Summary_Report__c.Search_by_Name__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Conductor_Id__c</members>
+        <members>Assessment_Summary_Report__c.Payout_Date__c</members>  
+        <members>Assessment_Summary_Report__c.Report_Date__c</members>      
         <members>Bad_Debt_Summary_Report__c.BusinessUnit__c</members>
         <members>Bad_Debt_Summary_Report__c.End_Date__c</members>
         <members>Bad_Debt_Summary_Report__c.Start_Date__c</members>
@@ -463,6 +466,7 @@
         <members>Contact.Citizenship_Status__c</members>
         <members>Contact.Collateral_Benefits__c</members>
         <members>Contact.Company__c</members>
+        <members>Contact.Conga_Batch_Assessment_Loans_Lawyer__c</members>
         <members>Contact.Conga_Batch_Lawyer_Summary__c</members>
         <members>Contact.Conga_Batch_Lawyer_Summary_Send_Email__c</members>
         <members>Contact.Conga_Workflow__c</members>
