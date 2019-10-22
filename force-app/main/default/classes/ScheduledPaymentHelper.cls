@@ -10,14 +10,16 @@
  * Ver         Date                     Author      		      Modification
  *==============================================================================
  * 1.0    4/25/2019, 10:05:30 AM   Seth Boyd     Initial Version
+
 **/
 public with sharing class ScheduledPaymentHelper {
     private static Drawdown__c generateDrawdown(Scheduled_Payment__c sp) {
+        system.debug([Select Id, Has_Been_Rejected__c From Scheduled_Payment__c Where Name = 'PS-1200']);
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
         if (sp.First_Sent_to_Bank_Date__c == null) {
-            drawdown.Date__c = Date.today();
+            drawdown.Date__c = DateUtil.today();
         } else {
             drawdown.Date__c = sp.First_Sent_to_Bank_Date__c.date();
         }
@@ -28,6 +30,10 @@ public with sharing class ScheduledPaymentHelper {
         } else {
             drawdown.Payment_Method__c = 'e-Transfer';
             drawdown.EFT__c = sp.EFT_Number__c;
+        }
+
+        if (sp.Opportunity_Service_Provider__c != null) {
+            drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
         }
 
         if (sp.Has_Been_Rejected__c) {
@@ -42,6 +48,9 @@ public with sharing class ScheduledPaymentHelper {
                     } else {
                         drawdown.Reference_Notes__c = 'Payment to Third-Party';
                     }
+                }
+                when 'Assessment' {
+                    drawdown.Reference_Notes__c = 'Payment to Assessment Provider';
                 }
                 when 'Treatment' {
                     drawdown.Reference_Notes__c = 'Payment to Treatment - Service Provider';
@@ -70,14 +79,18 @@ public with sharing class ScheduledPaymentHelper {
             {
             System.debug('Creating new Admin Fee Drawdown');
             // Admin Fee Drawdown needs to be created
+            String reference_note = 'Admin Fee';
+            if (sp.Payment_Type__c == 'Assessment') {
+                reference_note = 'Assessment Fee';
+            }
             adminDrawdowns.put(
                 sp.Opportunity__c,
                 new Drawdown__c(
                     Amount__c = sp.Opportunity__r.Admin_Fee__c,
-                    Date__c = Date.today(),
+                    Date__c = DateUtil.today(),
                     Opportunity__c = sp.Opportunity__c,
                     Payment_Method__c = 'Admin Fee',
-                    Reference_Notes__c = 'Admin Fee'
+                    Reference_Notes__c = reference_note
                 )
             );
             sp.Triggered_Admin_Fee__c = true;
@@ -132,7 +145,7 @@ public with sharing class ScheduledPaymentHelper {
             sp.Status__c = 'Drawdown Created';
             sp.Drawdown_Created__c = true;
             if (sp.Sent_to_Bank_Date__c == null) {
-                sp.Sent_to_Bank_Date__c = Datetime.now();
+                sp.Sent_to_Bank_Date__c = DateUtil.now();
                 sp.Sent_to_Bank_By__c = UserInfo.getUserId();
             }
             if (sp.First_Sent_to_Bank_Date__c == null) {
@@ -151,13 +164,14 @@ public with sharing class ScheduledPaymentHelper {
             manageOpportunityFields(oppMap, adminDrawdownMap, sp);
         }
         */
-        //setOpportunitiesFundingStatus(oppMap, 'Loan Setup Check');
+        setOpportunitiesFundingStatus(oppMap, 'Populate PPSA');
 
         // Combine Scheduled Payment Drawdowns and any created Admin Fee Drawdowns
         drawDownList.addAll(adminDrawdownMap.values());
         System.debug(drawdownList);
 
         insert drawdownList;
+        /*
         for (Drawdown__c dd : drawdownList) {
             if (dd.Scheduled_Payment__c != null) {
                 if (spMap.containsKey(dd.Scheduled_Payment__c)) {
@@ -165,8 +179,9 @@ public with sharing class ScheduledPaymentHelper {
                 }
             }
         }
-        update spMap.values();
-        update oppMap.values();
+        //update spMap.values();
+        //update oppMap.values();
+        */
 
         DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(oppIds);
 
@@ -182,6 +197,7 @@ public with sharing class ScheduledPaymentHelper {
                 Opportunity__r.Admin_Fee__c,
                 Opportunity__r.Admin_Fee_Roll_up__c,
                 Opportunity__r.AccountId,
+                Opportunity_Service_Provider__c,
                 Current_Account_Id__c,
                 Payment_Type__c,
                 Amount__c,
@@ -221,6 +237,7 @@ public with sharing class ScheduledPaymentHelper {
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
+                    Opportunity_Service_Provider__c,
                     EFT_Number__c
                 From
                     Scheduled_Payment__c
@@ -231,6 +248,8 @@ public with sharing class ScheduledPaymentHelper {
 
             return generateDrawdowns(spList);
         } catch (Exception e){
+            System.debug(e);
+            System.debug(e.getMessage());
             throw new AuraHandledException('Error: '+e.getMessage());
         }
     }
@@ -238,6 +257,8 @@ public with sharing class ScheduledPaymentHelper {
     private static void setOpportunitiesFundingStatus(Map<Id, Opportunity> oppMap, String status) {
         for (Opportunity opp : oppMap.values()) {
             opp.Funding_Details_Status__c = status;
+            opp.StageName = 'Closed With Loan';
+            opp.Stage_Status__c = 'Active';
         }
     }
 
@@ -252,7 +273,7 @@ public with sharing class ScheduledPaymentHelper {
             Id=spId,
             Status__c='Approved to Send',
             Verified_By__c = UserInfo.getUserId(),
-            Verified_Date__c = Datetime.now()
+            Verified_Date__c = DateUtil.now()
         );
         update sp;
     }
@@ -264,7 +285,7 @@ public with sharing class ScheduledPaymentHelper {
             Id=spId,
             Status__c='Rejected',
             Verified_By__c = UserInfo.getUserId(),
-            Verified_Date__c = Datetime.now(),
+            Verified_Date__c = DateUtil.now(),
             Hold__c = true,
             Notes__c = notes
         );

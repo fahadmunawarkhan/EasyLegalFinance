@@ -4,9 +4,9 @@
     <description>The lesser of Available Balance for Service Provider and Payment Requested. (Considers Scheduled Payments as well)</description>
     <externalId>false</externalId>
     <formula>IF(
-				Payment_Requested__c &lt; (Opportunity_Service_Provider__r.Allowance_Available__c + Scheduled_Payment__r.Amount__c),
+				Payment_Requested__c &lt; (Opportunity_Service_Provider__r.Allowance_Available__c*Opportunity_Service_Provider__r.Payment_Factor__c + Scheduled_Payment__r.Amount__c),
 				Payment_Requested__c,
-				Opportunity_Service_Provider__r.Allowance_Available__c + Scheduled_Payment__r.Amount__c
+				Opportunity_Service_Provider__r.Allowance_Available__c*Opportunity_Service_Provider__r.Payment_Factor__c + Scheduled_Payment__r.Amount__c
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Payment Amount Available</label>

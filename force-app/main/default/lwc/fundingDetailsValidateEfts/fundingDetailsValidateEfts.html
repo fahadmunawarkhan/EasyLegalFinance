@@ -5,7 +5,6 @@
     </div>
     
     <!-- Moved to parent component
-    -->
     <lightning-layout>
         <lightning-layout-item flexibility="grow" padding="around-small">
             <h1>
@@ -27,13 +26,7 @@
             onfilterinit={handleFilterInitialized}
         ></c-date-range-picker>
     </lightning-layout>
-
-    <lightning-input
-        type="checkbox" 
-        value={selectedAll}
-        label={selectAllText}
-        onchange={toggleSelectAll}
-    ></lightning-input>
+    -->
 
     <!--
     <lightning-combobox
@@ -45,7 +38,7 @@
 
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">
-        <lightning-card key={grouping.Id}>
+        <div key={grouping.Id} class="slds-box group-box">
             <div class="slds-box slds-box_small slds-grid slds-wrap">
                 <div class="slds-size_2-of-12 slds-text-align_left">
                     <c-link-to-id
@@ -143,6 +136,6 @@
                 sorted-direction={sortedDirection}
             ></c-funding-details-datatable>
             -->
-        </lightning-card>
+        </div>
     </template>
 </template>

@@ -29,6 +29,9 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
     @track groupedPayments;
@@ -55,7 +58,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @track sortedBy = 'Sent_to_Bank_Date__c';
     @track sortedDirection = 'asc';
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
     dt; // dataTable reference
 
@@ -175,7 +178,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
                     //this.dataTable.generateErrors(error.body.message);
                     this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
                     showToast(this, 
-                        'Unable to generate drawdowns',
+                        'Unable to update EFT Number',
                         this.errors.table.messages.join('\n'),
                         'error',
                         'sticky'
@@ -238,7 +241,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
             moveToProcessStep({scheduledPayments: spList})
                 .then(result => {
                     showToast(this, 
-                        'Successfully generated drawdowns',
+                        'Successfully updated EFT numbers',
                         'The payments have been marked as \'Processed by Bank\', and can be further processed now.',
                         'success',
                     );

@@ -97,10 +97,13 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
 
     @api
     refresh() {
-        this.loading = true;
-        this.syncMaxAmount();
-        return refreshApex(this.wiredResults)
-            .finally(() => { this.loading = false; }); 
+        if (this.oppId) {
+            this.loading = true;
+            this.syncMaxAmount();
+            return refreshApex(this.wiredResults)
+                .finally(() => { this.loading = false; }); 
+        }
+        return undefined
     }
 
     get shouldShowTable() {
@@ -128,6 +131,7 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
     connectedCallback() {
         this.syncMaxAmount();
         registerListener(`scheduledpaymentschanged-${this.oppId}`, this.refresh, this);
+        registerListener(`amountschanged-${this.oppId}`, this.syncMaxAmount, this);
     }
 
     disconnectedCallback() {

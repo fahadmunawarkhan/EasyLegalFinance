@@ -36,6 +36,11 @@
                 <label>Payment to Other Lender</label>
             </value>
             <value>
+                <fullName>Assessment</fullName>
+                <default>false</default>
+                <label>Assessment</label>
+            </value>
+            <value>
                 <fullName>Loan Payout</fullName>
                 <default>false</default>
                 <isActive>false</isActive>

@@ -63,10 +63,32 @@
         <processMetadataValues>
             <name>originalFormula</name>
             <value>
+                <stringValue>NULL</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_10_myRule_4_A1_9940466199</name>
+        <dataType>DateTime</dataType>
+        <expression>NULL</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>SUBSTITUTE(TEXT([Payment_Rejection__c].Scheduled_Payment_Action__c), &quot;Set to &quot;, &quot;&quot;)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_11_myRule_4_A1_3666141696</name>
+        <dataType>String</dataType>
+        <expression>SUBSTITUTE(TEXT({!myVariable_current.Scheduled_Payment_Action__c}), &quot;Set to &quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
                 <stringValue>0 - [Payment_Rejection__c].Scheduled_Payment__c.Drawdown__c.Amount__c </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_9755802228</name>
+        <name>formula_2_myRule_1_A1_0850691137</name>
         <dataType>Currency</dataType>
         <expression>0 - {!myVariable_current.Scheduled_Payment__r.Drawdown__r.Amount__c}</expression>
         <scale>18</scale>
@@ -78,7 +100,7 @@
                 <stringValue>NULL</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_4_A1_2467162142</name>
+        <name>formula_5_myRule_4_A1_5979937861</name>
         <dataType>String</dataType>
         <expression>NULL</expression>
     </formulas>
@@ -89,9 +111,31 @@
                 <stringValue>IF([Payment_Rejection__c].Use_Original_Sent_Date_for_Interest__c, [Payment_Rejection__c].Scheduled_Payment__c.First_Sent_to_Bank_Date__c, NULL)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_6_myRule_4_A1_0252469762</name>
+        <name>formula_6_myRule_4_A1_3639773825</name>
         <dataType>DateTime</dataType>
         <expression>IF({!myVariable_current.Use_Original_Sent_Date_for_Interest__c}, {!myVariable_current.Scheduled_Payment__r.First_Sent_to_Bank_Date__c}, NULL)</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>NOT(ISBLANK([Payment_Rejection__c].Scheduled_Payment__c.Drawdown__c))</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_7_myRule_4_A1_6325264287</name>
+        <dataType>Boolean</dataType>
+        <expression>NOT(ISBLANK({!myVariable_current.Scheduled_Payment__r.Drawdown__c}))</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>ISPICKVAL([Payment_Rejection__c].Scheduled_Payment_Action__c, &quot;Set to Rejected&quot;)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_8_myRule_4_A1_5990424087</name>
+        <dataType>Boolean</dataType>
+        <expression>ISPICKVAL({!myVariable_current.Scheduled_Payment_Action__c}, &quot;Set to Rejected&quot;)</expression>
     </formulas>
     <formulas>
         <processMetadataValues>
@@ -101,32 +145,10 @@
 [Payment_Rejection__c].Scheduled_Payment__c.Notes__c </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_7_myRule_4_A1_0264112034</name>
+        <name>formula_9_myRule_4_A1_9899247341</name>
         <dataType>String</dataType>
         <expression>{!myVariable_current.Reason__c} + BR() + BR()  +
 {!myVariable_current.Scheduled_Payment__r.Notes__c}</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>NULL</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_8_myRule_4_A1_9653977410</name>
-        <dataType>DateTime</dataType>
-        <expression>NULL</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>SUBSTITUTE(TEXT([Payment_Rejection__c].Scheduled_Payment_Action__c), &quot;Set to &quot;, &quot;&quot;)</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_9_myRule_4_A1_7729623656</name>
-        <dataType>String</dataType>
-        <expression>SUBSTITUTE(TEXT({!myVariable_current.Scheduled_Payment_Action__c}), &quot;Set to &quot;, &quot;&quot;)</expression>
     </formulas>
     <formulas>
         <processMetadataValues>
@@ -150,7 +172,7 @@
         <dataType>Boolean</dataType>
         <expression>ISNEW()</expression>
     </formulas>
-    <interviewLabel>Payment_Rejection_Create_Edit_Handler-10_InterviewLabel</interviewLabel>
+    <interviewLabel>Payment_Rejection_Create_Edit_Handler-7_InterviewLabel</interviewLabel>
     <label>Payment Rejection Create &amp; Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -218,7 +240,7 @@
             </processMetadataValues>
             <field>Amount__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_9755802228</elementReference>
+                <elementReference>formula_2_myRule_1_A1_0850691137</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -327,6 +349,42 @@
             <field>EFT__c</field>
             <value>
                 <elementReference>myVariable_current.Scheduled_Payment__r.Drawdown__r.EFT__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Opportunity Service Provider</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue>Opportunity_Service_Provider__c</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Opportunity_Service_Provider__c</field>
+            <value>
+                <elementReference>myVariable_current.Scheduled_Payment__r.Opportunity_Service_Provider__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -724,7 +782,7 @@
             </processMetadataValues>
             <field>Drawdown__c</field>
             <value>
-                <elementReference>formula_5_myRule_4_A1_2467162142</elementReference>
+                <elementReference>formula_5_myRule_4_A1_5979937861</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -760,7 +818,7 @@
             </processMetadataValues>
             <field>First_Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_6_myRule_4_A1_0252469762</elementReference>
+                <elementReference>formula_6_myRule_4_A1_3639773825</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -791,12 +849,48 @@
             <processMetadataValues>
                 <name>rightHandSideType</name>
                 <value>
-                    <stringValue>Boolean</stringValue>
+                    <stringValue>Formula</stringValue>
                 </value>
             </processMetadataValues>
             <field>Has_Been_Rejected__c</field>
             <value>
-                <booleanValue>true</booleanValue>
+                <elementReference>formula_7_myRule_4_A1_6325264287</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Boolean</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Hold</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Hold__c</field>
+            <value>
+                <elementReference>formula_8_myRule_4_A1_5990424087</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -832,7 +926,7 @@
             </processMetadataValues>
             <field>Notes__c</field>
             <value>
-                <elementReference>formula_7_myRule_4_A1_0264112034</elementReference>
+                <elementReference>formula_9_myRule_4_A1_9899247341</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -868,7 +962,7 @@
             </processMetadataValues>
             <field>Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_8_myRule_4_A1_9653977410</elementReference>
+                <elementReference>formula_10_myRule_4_A1_9940466199</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -904,7 +998,7 @@
             </processMetadataValues>
             <field>Status__c</field>
             <value>
-                <elementReference>formula_9_myRule_4_A1_7729623656</elementReference>
+                <elementReference>formula_11_myRule_4_A1_3666141696</elementReference>
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>

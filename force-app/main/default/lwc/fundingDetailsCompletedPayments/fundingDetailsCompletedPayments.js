@@ -19,7 +19,20 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     @track selectedScheduledPaymentId;
     @track showReverseForm = false;
 
-    @track queryTerm = '';
+    _queryTerm = '';
+
+    _queryTerm = '';
+    @api 
+    get queryTerm() {
+        return this._queryTerm;
+    }
+    set queryTerm(value) {
+        if (this.queryTerm != value && this.filterInitilized && this.resourcesInitialized) {
+            this._queryTerm = value;
+            this.performSearch();
+        }
+    }
+
     _filters = {
         preset: 'today'
     }
@@ -29,6 +42,9 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     }
     set filters(value) {
         this._filters = value || this._filters;
+        if (this.filterInitilized && this.resourcesInitialized) {
+            this.refresh();
+        }
     }
 
 
@@ -41,7 +57,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         { label: 'Client', fieldName: '_client_account', type: 'linkWithLabel', typeAttributes: {target: '_blank'}, sortable: true },
         //{ label: 'Payment Account', fieldName: 'Account__c', type: 'linkWithLabel', typeAttributes: {target: '_blank'}, sortable: true },
         { label: 'Bank Account', fieldName: 'Current_Bank_Account_URL__c', type: 'url', typeAttributes: {target: '_blank', label: {fieldName: 'Current_Bank_Account_Name__c'}}, sortable: true },
-        { label: 'Opportunity #', fieldName: 'opportunity.Loan_Requests__c', type: 'text' },
+        { label: 'Opportunity #', fieldName: 'opportunity.Loan_Requests__c', type: 'text', sortable: true },
         { label: 'Payment Type', fieldName: 'Payment_Type__c', sortable: true },
         //{ label: 'Send Cheque', fieldName: 'Send_Cheque__c', type: 'boolean', sortable: true },
         //{ label: 'Admin Fee', fieldName: 'Triggered_Admin_Fee_Amount__c', type: 'currency', sortable: true },
@@ -87,7 +103,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         ]
     };
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
 
     constructor() {
@@ -121,7 +137,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     handleFilterInitialized(event) {
         this._filters = {...event.detail};
         this.filterInitilized = true;
-        if (this.resourcesInitialized) {
+        if (this.filterInitilized && this.resourcesInitialized) {
             this.refresh();
         }
     }
@@ -192,6 +208,9 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
 
     initFuse() {
         this.fuse = new Fuse(this.spList, this.fuseOptions);
+        if (this.queryTerm) {
+            this.performSearch();
+        }
     }
 
     async performSearch() {

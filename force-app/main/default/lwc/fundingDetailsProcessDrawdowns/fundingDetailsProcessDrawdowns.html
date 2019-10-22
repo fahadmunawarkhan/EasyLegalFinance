@@ -28,8 +28,8 @@
         </div>
         <br/>
         <div class="slds-form-element">
-            <lightning-input type="Number" formatter="currency" value={opp.Amount_Paid_to_Client__c} step="0.01" 
-                                disabled label="Amount Paid to Client"></lightning-input>
+            <lightning-input type="Number" formatter="currency" value={opp.Amount_Paid_to_Borrower__c} step="0.01" 
+                                disabled label="Amount Paid to Borrower"></lightning-input>
         </div>
         <br/>                                                
 
@@ -81,6 +81,20 @@
                     is-loading={ddLoading}
         ></lightning-datatable>
     </lightning-card>
+
+
+    <lightning-layout horizontal-align="end" if:false={hideExtra}>
+        <lightning-layout-item>
+            <lightning-button
+                if:true={showAdd}
+                variant="brand"
+                onclick={fireStageComplete}
+                icon-name="utility:check"
+                label="Move to Next Step"
+                title="Move to Next Step"
+            ></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
 
     <c-modal header="Create New Drawdown" class="createModal">
         <lightning-record-form

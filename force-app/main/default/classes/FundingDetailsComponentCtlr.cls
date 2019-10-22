@@ -47,7 +47,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Client__c, Loan_Available_to_Drawdown__c,
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c,
                 Funding_Details_Status__c, Drawdown_Total__c,
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
@@ -95,7 +95,7 @@ public with sharing class FundingDetailsComponentCtlr {
                 /* Child Scheduled Payments */
             FROM Opportunity
             WHERE Funding_Details_Status__c In :allowedStatuses // Filter by Id until I can clear out bad data
-            ORDER BY Account.AccountNumber ASC
+            ORDER BY Name ASC, Loan_Requests__c ASC
         ];
 
         return oppList;
@@ -130,9 +130,6 @@ public with sharing class FundingDetailsComponentCtlr {
 
     @AuraEnabled(cacheable=False)
     public static Map<String, Object> getScheduledPaymentsWithOpportunities(Date startDate, Date endDate, String workflowStage, String dateField) {
-        System.debug(startDate);
-        //startDate = Date.valueOf(startDate);
-        System.debug(startDate);
         //endDate = Date.valueOf(endDate);
         List<Scheduled_Payment__c> spList;
         String[] statuses;
@@ -173,22 +170,37 @@ public with sharing class FundingDetailsComponentCtlr {
                 statuses = new String[]{};//{'Rejected', 'Scheduled', 'Pre Send Validation', 'Approved to Send', 'Sent to Bank', 'Processed by Bank', 'Drawdown Created'};
             }
         }
-        if (dateField == null) {
+        Boolean useDateTime = true;
+        if (dateField == null || dateField == 'Scheduled_Date__c') {
             dateField = 'Scheduled_Date__c';
+            useDateTime = false;
         }
-        if (endDate != null) {
-            extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :endDate';
-        }
+        Datetime compareStart = null;
         if (startDate != null) {
-            extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :startDate';
+            if ( useDateTime ) {
+                compareStart = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day(), 0, 0, 0);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :compareEnd';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :endDate';
+            }
+        }
+        Datetime compareEnd = null;
+        if (endDate != null) {
+            if ( useDateTime ) {
+                compareEnd = Datetime.newInstance(endDate.year(), endDate.month(), endDate.day(), 23, 59, 59);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :compareStart';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :startDate';
+            }
         }
         String query = 
             'SELECT ' +
                 'Id, Current_Bank_Account_Name__c, Current_Bank_Account_Display__c, Current_Bank_Account_URL__c, Triggered_Admin_Fee_Amount__c, Expected_Admin_Fee_Amount__c' +
                 ', Notes__c, Hold__c' +
-                ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c' +
+                ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+                ', Can_Send_to_Bank__c' +
                 ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
-                ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+                ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
                 ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c' +
             ' FROM Scheduled_Payment__c';
         if(statuses != null) {
@@ -231,7 +243,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id, Name,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Client__c, Loan_Available_to_Drawdown__c, 
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c, 
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
                 /* Loan Details Fields */

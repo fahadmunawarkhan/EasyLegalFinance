@@ -234,6 +234,7 @@ export default class PreviousLoanManager extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.fireLoansChanged();
                 return this.refresh();
             })
             .catch(error => {
@@ -286,6 +287,7 @@ export default class PreviousLoanManager extends LightningElement {
     handleCreateSuccess(event) {
         this.refresh();
         this.hideCreateModal();
+        this.fireLoansChanged();
         this.dispatchEvent(
             new ShowToastEvent({
                 title: 'Success',
@@ -312,6 +314,7 @@ export default class PreviousLoanManager extends LightningElement {
     handleEditSuccess(event) {
         this.refresh();
         this.hideEditModal();
+        this.fireLoansChanged();
         this.dispatchEvent(
             new ShowToastEvent({
                 title: 'Success',
@@ -340,6 +343,7 @@ export default class PreviousLoanManager extends LightningElement {
         this.refresh();
         this.hideScheduleModal();
         fireEvent(this.pageRef, `scheduledpaymentschanged-${this.oppId}`)
+        this.fireLoansChanged();
         this.dispatchEvent(
             new ShowToastEvent({
                 title: 'Success',
@@ -361,4 +365,10 @@ export default class PreviousLoanManager extends LightningElement {
         modal.hide();
     }
     /* END SCHEDULE MODAL METHODS */
+
+    fireLoansChanged() {
+        const filterChangeEvent = new CustomEvent('loanschanged', {});
+        // Fire the custom event
+        this.dispatchEvent(filterChangeEvent);
+    }
 }

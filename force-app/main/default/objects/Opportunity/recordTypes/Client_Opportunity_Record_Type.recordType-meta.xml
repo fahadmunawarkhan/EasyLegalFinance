@@ -724,6 +724,10 @@
     <picklistValues>
         <picklist>Type_of_Loan__c</picklist>
         <values>
+            <fullName>Assessment</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Facility Loan</fullName>
             <default>false</default>
         </values>

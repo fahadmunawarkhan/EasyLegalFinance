@@ -93,7 +93,7 @@ export default class FundingDetailsValidateEfts extends LightningElement {
     @track sortedDirection = 'asc';
     */
 
-    filterInitilized = false;
+    filterInitilized = true;
     resourcesInitialized = false;
     dt; // dataTable reference
 

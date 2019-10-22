@@ -5,6 +5,9 @@
 # Salesforce cache
 .sfdx/
 
+# extra manifests
+manifest/duplicateRules.xml
+
 # LWC VSCode autocomplete
 jsconfig.json
 

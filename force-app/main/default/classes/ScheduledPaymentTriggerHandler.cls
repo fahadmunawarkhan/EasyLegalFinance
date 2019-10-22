@@ -30,6 +30,7 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
 
     public override void afterInsert() {
         System.debug('In After Insert');
+        Previous_Loan__c[] plList = new Previous_Loan__c[]{};
 
         for (Scheduled_Payment__c sp : this.newSPMap.values()) {
             if (sp.Scheduled_Date__c != null) {
@@ -38,9 +39,17 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             }
             if (String.isNotBlank(sp.Opportunity_Service_Provider__c)){
                 if (!this.ospMap.containsKey(sp.Opportunity_Service_Provider__c)) {
-                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c));
+                    // Set to Roll up to 0 because it won't get reset if this was the only payment included
+                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c, Total_Scheduled_Payments__c=0, Opportunity__c=(Id)sp.Opportunity__c));
                 }
             }
+            if (String.isNotBlank(sp.Previous_Loan__c)){
+                plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=sp.Id, Scheduled__c=true));
+            }
+        }
+
+        if (!plList.isEmpty()) {
+            update plList;
         }
 
         setFirstOccuringPayment();
@@ -51,6 +60,8 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
     }
     
     public override void afterUpdate() {
+        Previous_Loan__c[] plList = new Previous_Loan__c[]{};
+
         for (Scheduled_Payment__c sp : this.newSPMap.values()) {
             if (sp.Scheduled_Date__c != this.oldSPMap.get(sp.Id).Scheduled_Date__c) {
                 // Just edited the Scheduled Date, so we need refresh the First scheduled payment status
@@ -58,9 +69,17 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             }
             if (String.isNotBlank(sp.Opportunity_Service_Provider__c)){
                 if (!this.ospMap.containsKey(sp.Opportunity_Service_Provider__c)) {
-                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c));
+                    // Set to Roll up to 0 because it won't get reset if this was the only payment included
+                    this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c, Total_Scheduled_Payments__c=0, Opportunity__c=(Id)sp.Opportunity__c));
                 }
             }
+            if (String.isNotBlank(sp.Previous_Loan__c)){
+                plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=sp.Id, Scheduled__c=true));
+            }
+        }
+
+        if (!plList.isEmpty()) {
+            update plList;
         }
 
         setFirstOccuringPayment();
@@ -71,6 +90,7 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
     }
 
     public override void afterDelete() {
+        Previous_Loan__c[] plList = new Previous_Loan__c[]{};
         for (Scheduled_Payment__c sp : this.oldSPMap.values()) {
             if (sp.First_Scheduled_Payment__c == true) {
                 // Just deleted First payment, so we need to find a new one
@@ -82,6 +102,13 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
                     this.ospMap.put(sp.Opportunity_Service_Provider__c, new Opportunity_Service_Provider__c(Id=(Id)sp.Opportunity_Service_Provider__c, Total_Scheduled_Payments__c=0));
                 }
             }
+            if (String.isNotBlank(sp.Previous_Loan__c)){
+                plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=null, Scheduled__c=false));
+            }
+        }
+
+        if (!plList.isEmpty()) {
+            update plList;
         }
 
         setFirstOccuringPayment();
@@ -103,8 +130,18 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             Group By Opportunity_Service_Provider__c
         ];
 
+        Map<Id, Decimal> arMap = new Map<Id, Decimal>();
+
         for (AggregateResult ar : arList) {
-            this.ospMap.get((Id)ar.get('Opportunity_Service_Provider__c')).Total_Scheduled_Payments__c = (Decimal)ar.get('total');
+            arMap.put((Id)ar.get('Opportunity_Service_Provider__c'), (Decimal)ar.get('total'));
+        }
+
+        for (Opportunity_Service_Provider__c osp : this.ospMap.values()) {
+            if (arMap.containsKey(osp.Id)) {
+                osp.Total_Scheduled_Payments__c = arMap.get(osp.Id);
+            } else {
+                osp.Total_Scheduled_Payments__c = 0;
+            }
         }
 
         if (!this.ospMap.isEmpty()) update this.ospMap.values();

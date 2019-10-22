@@ -18,6 +18,7 @@
         </div>
         <div class="slds-size_2-of-12 slds-text-align_left">
             <lightning-formatted-address
+                if:true={grouping.address}
                 class="slds-m-horizontal_large"
                 street={grouping.address.street}
                 city={grouping.address.city}

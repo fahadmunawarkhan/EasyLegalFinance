@@ -1,4 +1,6 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
+import { fireEvent } from 'c/pubsub';
+import { CurrentPageReference } from 'lightning/navigation';
 
 const FIELDS = [
     'Interest_Rate__c',
@@ -13,6 +15,8 @@ const FIELDS = [
 ]
 
 export default class FundingDetailsLoanSetupCheck extends LightningElement {
+    @wire(CurrentPageReference) pageRef;
+
     _readOnly = false;
     @api 
     get readOnly() {
@@ -32,16 +36,32 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
     set opp(value){
         this._opp = {...value}; // Make a mutable copy of the opp
         this.setDisabled();
-        this.calculationMethod = this.opp.Fee_Calculation_Method__c;
+        //this.calculationMethod = this.opp.Fee_Calculation_Method__c;
+        // Delay rendering due to a bug in record-edit-form causing the form to render with stale values
+        //this.loading = true;
+        /*
+        (function (_this) {
+            _this.searchTimeout = setTimeout(() => {
+                _this.loading = false;
+                _this.fireStopLoadingEvent();
+            }, 100);
+        })(this);
+        */
     }
 
-    @track buttonText = "I confirm the data is accurate";
-    @track confirmedAccurate = false;
+    @track buttonText = "Save and Move to Next Step"; //"I confirm the data is accurate";
+    @track confirmedAccurate = true;//false;
 
     @track calculationMethod;
 
     @track fields = FIELDS;
     @track disabled = {};
+    @track loading = true;
+
+
+    connectedCallback() {
+        this.loading = true;
+    }
 
     handleCalculationMethodChange(event) {
         this.calculationMethod = event.target.value;
@@ -80,15 +100,30 @@ export default class FundingDetailsLoanSetupCheck extends LightningElement {
         if (this.confirmedAccurate) {
             const fields = event.detail.fields;
             fields.Funding_Details_Status__c = 'Process Drawdowns';
+            this.fireStartLoadingEvent();
             this.template.querySelector("lightning-record-edit-form").submit(fields);
         } else {
             this.confirmedAccurate = true;
-            this.buttonText = 'Save and Move to Next Stage';
+            this.buttonText = 'Save and Move to Next Step';
         }
+    }
+
+    fireStartLoadingEvent() {
+        fireEvent(this.pageRef, 'startloading');
+    }
+
+    fireStopLoadingEvent() {
+        fireEvent(this.pageRef, 'stoploading');
+    }
+
+    handleError(event) {
+        // send event to update the opp
+        this.fireStopLoadingEvent();
     }
 
     handleSuccess(event) {
         // send event to update the opp
+        this.fireStopLoadingEvent();
         const evt = new CustomEvent("opportunitychanged", {
             detail: {Id: this.opp.Id, Funding_Details_Status__c: event.detail.fields.Funding_Details_Status__c.value},
             bubbles: true,

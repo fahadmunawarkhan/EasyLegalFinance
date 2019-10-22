@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import updateOpportunity from '@salesforce/apex/FundingDetailsComponentCtlr.updateOpportunity';
 import { showToast } from 'c/showToast';
-//import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
+import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
 import { CurrentPageReference } from 'lightning/navigation';
 //import { updateRecord } from 'lightning/uiRecordApi';
 
@@ -16,7 +16,8 @@ const STAGE_CHOICES = [
 export default class FundingDetailsOpportunityEdit extends LightningElement {
     @wire(CurrentPageReference) pageRef;
 
-    @track loading = true;
+    @track loading = true; // Show spinner
+    @track reinit = true; // reinitilize actual edit components (they are getting stale sometimes)
 
     @track _opp;
     @api
@@ -25,16 +26,25 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     }
     set opp(value){
         this.loading = true;
+        this.reinit = false;
         this._opp = value;
         this.buildPathOptions();
-        this.loading = false;
+        this.reinit = true;
+        (function (_this) {
+            _this.searchTimeout = setTimeout(() => {
+                _this.reinit = false;
+                _this.loading = false;
+            }, 50);
+        })(this);
     }
 
     @track pathOptions = []
 
-    @api refresh = () => {
+    @api refresh() {
+        console.log('OppEdit.refresh()');
         this.loading = true;
         this.buildPathOptions();
+        //this.template.querySelector("c-lightning-path").initOptions();
         this.loading = false;
     }
 
@@ -54,6 +64,7 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     handleStageComplete(event) {
         // Move opp to next Funding_Details_Status__c
         const currIndex = STAGE_CHOICES.findIndex(option => {return option === this.opp.Funding_Details_Status__c});
+        this.startLoading();
         if (currIndex < 0) {
             this.updateOpp({Id: this.opp.Id, Funding_Details_Status__c: STAGE_CHOICES[0]});
         } else if (currIndex < STAGE_CHOICES.length - 1) {
@@ -86,19 +97,19 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
         // Ensure Id in payload
         payload.Id = this.opp.Id;
         payload.sobjectType = 'Opportunity';
-        this.loading = true;
+        this.startLoading();
         updateOpportunity({opp: payload})
             .then(result => {
-                this.loading = false;
                 if (result.Funding_Details_Status__c === 'Closed') {
                     this.fireRemoveOpportunity(result);
                 } else {
                     this.fireOpportunityChanged(result);
-                    this.buildPathOptions();
+                    //this.buildPathOptions();
                 }
+                this.stopLoading();
             })
             .catch(error => {
-                this.loading = false;
+                this.stopLoading();
                 let message;
                 try {
                     message = error.body.message;
@@ -130,11 +141,21 @@ export default class FundingDetailsOpportunityEdit extends LightningElement {
     }
 
     connectedCallback() {
-        // registerListener('opportunityChanged', this.refresh, this);
+        console.log('connected');
+        registerListener('startloading', this.startLoading, this);
+        registerListener('stoploading', this.stopLoading, this);
     }
 
     disconnectedCallback() {
-        // unregisterAllListeners(this);
+        unregisterAllListeners(this);
+    }
+
+    startLoading() {
+        this.loading = true;
+    }
+
+    stopLoading() {
+        this.loading = false;
     }
 
 }

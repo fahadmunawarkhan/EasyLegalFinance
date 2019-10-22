@@ -5,7 +5,7 @@ import momentUrl from '@salesforce/resourceUrl/moment';
 
 export default class DateRangePicker extends LightningElement {
     // emits change event with an object {start: <startDate>, end: <endDate>}
-    //initCompleted = false;
+    initCompleted = false;
     @api timezone = 'UTC';
 
     @track presetOptions; 
@@ -74,6 +74,16 @@ export default class DateRangePicker extends LightningElement {
             this._filterNeedsInit = false;
             if (this.initCompleted) {
                 this.setPresetValues().then(this.sendInitEvent());
+            }
+        } else {
+            if (this.initCompleted) {
+                let newStartDate = this.formatDate(this.filters.startDate);
+                let newEndDate = this.formatDate(this.filters.endDate);
+                if (this.formattedStartDate != newStartDate || this.formattedEndDate != newEndDate) {
+                    this.formattedStartDate = newStartDate;
+                    this.formattedEndDate = newEndDate;
+                    this.sendInitEvent();
+                }
             }
         }
     }
@@ -168,15 +178,16 @@ export default class DateRangePicker extends LightningElement {
     }
 
     formatDate(value) {
-        return value ? value.toISOString().slice(0, 10) : null
+        // toISOString seems to be messing things up. I should format manually in the user's current timezone
+        return value ? moment(value).format('YYYY-MM-DD') : null
     }
 
     sendInitEvent() {
         let evt = new CustomEvent('filterinit', {
             detail: {
                 preset: this.filters.preset,
-                startDate: this.filters.startDate,
-                endDate: this.filters.endDate 
+                startDate: this.formatDate(this.filters.startDate),
+                endDate: this.formatDate(this.filters.endDate)
             }
         });
         this.dispatchEvent(evt);
@@ -224,7 +235,11 @@ export default class DateRangePicker extends LightningElement {
     sendChangeEvent(eventName) {
         eventName = eventName || 'change';
         let evt = new CustomEvent(eventName, {
-            detail: {...this.filters}
+            detail: {
+                preset: this.filters.preset,
+                startDate: this.formatDate(this.filters.startDate),
+                endDate: this.formatDate(this.filters.endDate)
+            }
         });
         this.dispatchEvent(evt);
     }

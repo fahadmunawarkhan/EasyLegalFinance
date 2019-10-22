@@ -3,7 +3,7 @@
     <fullName>Allowance_Available__c</fullName>
     <description>Allowance - Drawdowns - Scheduled Payments</description>
     <externalId>false</externalId>
-    <formula>Allowance_Balance__c - Total_Scheduled_Payments__c</formula>
+    <formula>Allowance_Balance__c - Total_Scheduled_Payments_Factored__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Allowance Available</label>
     <precision>18</precision>

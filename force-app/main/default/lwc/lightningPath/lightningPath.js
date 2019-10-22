@@ -7,7 +7,7 @@ export default class LightningPath extends LightningElement {
         return this._pathOptions;
     }
     set pathOptions(value) {
-        this._pathOptions = [...value];
+        this._pathOptions = JSON.parse(JSON.stringify(value));
         this.initOptions();
     }
     /*
@@ -20,7 +20,7 @@ export default class LightningPath extends LightningElement {
 
     @track currentStage;
 
-    initOptions() {
+    @api initOptions() {
         // Marks options as complete that occur before the option marked as current
         let foundCurrent = false;
         for (let i = this.pathOptions.length - 1; i >= 0; i--) {

@@ -12,8 +12,22 @@ import { PERMISSION_CLASSES } from 'c/fundingDetailsUtils';
 
 export default class FundingDetails_Parent extends LightningElement {
     @track permissions = {};
-    @track stagingFilters = {preset: 'this_week'};
     @track currentStage = "Staging";
+
+    @track filterTimePeriod = 'future';
+    activeFilterName = 'staging';
+    @track filters = {
+        staging: {preset: 'this_week'},
+        all: {preset: 'all'},
+        closed: {preset: 'today'},
+    }
+    @track activeFilter = this.filters[this.activeFilterName];
+    @track hideFilters = true;
+    @track hideSearch = true;
+    @track queryTerm;
+
+    tabQuerySelector = 'c-funding-details-staging-area';
+    @track filterInitilized = false;
 
     @wire(fetchCustomPermissions, {permissions: PERMISSION_CLASSES})
     setPermissions(result) {
@@ -22,8 +36,104 @@ export default class FundingDetails_Parent extends LightningElement {
         }
     }
 
+    tabConfiguration = {
+        Staging: {
+            currentStage: 'Staging',
+            filterName: 'staging',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: false,
+            tabQuerySelector: 'c-funding-details-staging-area'
+        },
+
+        ValidateEfts: {
+            currentStage: 'ValidateEfts',
+            filterName: 'staging',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-validate-efts.eft'
+        },
+
+        BankingSheet: {
+            currentStage: 'BankingSheet',
+            filterName: 'staging',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-update-and-generate-banking-sheet'
+        },
+
+        InputEfts: {
+            currentStage: 'InputEfts',
+            filterName: 'all',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-update-eft'
+        },
+
+        ValidateCheques: {
+            currentStage: 'ValidateCheques',
+            filterName: 'staging',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-validate-efts.cheque'
+        },
+
+        SendCheques: {
+            currentStage: 'SendCheques',
+            filterName: 'staging',
+            filterTimePeriod: 'future',
+            hideFilters: false,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-send-cheques'
+        },
+
+        OpportunityTable: {
+            currentStage: 'OpportunityTable',
+            filterName: 'all',
+            filterTimePeriod: 'future',
+            hideFilters: true,
+            hideSearch: true,
+            tabQuerySelector: 'c-funding-details-opportunity-table'
+        },
+
+        CompletedPayments: {
+            currentStage: 'CompletedPayments',
+            filterName: 'closed',
+            filterTimePeriod: 'past',
+            hideFilters: false,
+            hideSearch: false,
+            tabQuerySelector: 'c-funding-details-completed-payments'
+        },
+
+    }
+
     connectedCallback() {
         // TODO - get history from url
+    }
+
+    tabSelected(event) {
+        this.selectTab(event.target.value);
+        //console.dir(JSON.parse(JSON.stringify(event)));
+        //debugger;
+    }
+
+    selectTab(stageName) {
+        this.currentStage = stageName;
+        this.tabQuerySelector = this.tabConfiguration[this.currentStage].tabQuerySelector;
+        let newFilterName = this.tabConfiguration[this.currentStage].filterName;
+        if (this.activeFilterName != newFilterName) {
+            //this.filterInitilized = false;
+            this.activeFilterName = newFilterName;
+            this.activeFilter = this.filters[this.activeFilterName];
+        }
+        this.filterTimePeriod = this.tabConfiguration[this.currentStage].filterTimePeriod;
+        this.hideFilters = this.tabConfiguration[this.currentStage].hideFilters;
+        this.hideSearch = this.tabConfiguration[this.currentStage].hideSearch;
+        this.queryTerm = '';
     }
 
     canSendPayments() {
@@ -43,42 +153,11 @@ export default class FundingDetails_Parent extends LightningElement {
     }
 
     /* VISIBILITY SETTERS */
-    showStaging() {
-        this.currentStage = "Staging"
-    }
-
-    showValidateEfts() {
-        this.currentStage = "ValidateEfts"
-    }
-
-    showBankingSheet() {
-        this.currentStage = "BankingSheet"
-    }
-
-    showInputEfts() {
-        this.currentStage = "InputEfts"
-    }
-
-    showValidateCheques() {
-        this.currentStage = "ValidateCheques"
-    }
-
-    showSendCheques() {
-        this.currentStage = "SendCheques"
-    }
-
-    showOpportunityTable() {
-        this.currentStage = "OpportunityTable"
-    }
-
-    showCompletedPayments() {
-        this.currentStage = "OpportunityCompletedPayments"
-    }
     /* VISIBILITY SETTERS */
 
     /* VISIBILITY GETTERS */
     get shouldShowSharedFilter() {
-        return this.shouldShowStaging || this.shouldShowValidateEfts || this.shouldShowBankingSheet || this.shouldShowValidateCheques || this.shouldShowSendCheques
+        return this.shouldShowStaging || this.shouldShowValidateEfts || this.shouldShowBankingSheet || this.shouldShowValidateCheques || this.shouldShowSendCheques || this.shouldShowCompletedPayments
     }
 
     get shouldShowStaging() {
@@ -109,65 +188,54 @@ export default class FundingDetails_Parent extends LightningElement {
         return this.currentStage === "OpportunityTable"
     }
 
-    get shouldShowOpportunityCompletedPayments() {
-        return this.currentStage === "OpportunityCompletedPayments"
+    get shouldShowCompletedPayments() {
+        return this.currentStage === "CompletedPayments"
     }
     /* VISIBILITY GETTERS */
 
-    handleFilterInitialized(event) {
+    handleStagingFilterInitialized(event) {
         // Get Active Tab
         // Refresh Active Tab
-        this._filters = {...event.detail};
+        this.filters[this.activeFilterName] = event.detail || {};
+        this.activeFilter = this.filters[this.activeFilterName];
         this.filterInitilized = true;
+        /*
         if (this.resourcesInitialized) {
             this.refresh();
         }
+        */
     }
 
     handleStagingFilterChange(event) {
-        this.stagingFilters = event.detail || {};
+        this.filters[this.activeFilterName] = event.detail || {};
+        this.activeFilter = this.filters[this.activeFilterName];
     }
 
-    refreshStagingArea() {
-        const tab = this.template.querySelector('c-funding-details-staging-area');
-        if (tab)
-            tab.refresh();
+    refresh() {
+        let cmp = this.template.querySelector(this.tabQuerySelector);
+        if (cmp) {
+            cmp.refresh();
+        }
     }
 
-    refreshValidateEfts() {
-        const tab = this.template.querySelector('c-funding-details-validate-efts.eft');
-        if (tab)
-            tab.refresh();
+    handleSearchKeyup(event) {
+        const isEnterKey = event.keyCode === 13;
+        if (isEnterKey) {
+            window.clearTimeout(this.searchTimeout);
+            this.queryTerm = event.target.value;
+        }
     }
 
-    refreshBankingSheet() {
-        const tab = this.template.querySelector('c-funding-details-update-and-generate-banking-sheet');
-        if (tab)
-            tab.refresh();
-    }
-
-    refreshValidateCheques() {
-        const tab = this.template.querySelector('c-funding-details-validate-efts.cheque');
-        if (tab)
-            tab.refresh();
-    }
-
-    refreshSendCheques() {
-        const tab = this.template.querySelector('c-funding-details-send-cheques');
-        if (tab)
-            tab.refresh();
-    }
-
-    refreshOpportunityTable() {
-        const tab = this.template.querySelector('c-funding-details-opportunity-table');
-        if (tab)
-            tab.refresh();
-    }
-
-    refreshClosedPayments() {
-        const tab = this.template.querySelector('c-funding-details-completed-payments');
-        if (tab)
-            tab.refresh();
+    handleSearchChange(event) {
+        window.clearTimeout(this.searchTimeout);
+        //this.queryTerm = event.target.value;
+        
+        (function (_this, value) {
+            _this.searchTimeout = setTimeout(() => {
+                _this.queryTerm = value;
+            }, 300);
+        })(this, event.target.value);
+        
     }
 
 }
