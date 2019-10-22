@@ -35,8 +35,8 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         toDel.addAll(trigger.oldMap.keySet());
         DeletePaymentAllocations.DeletePaymentAllocationsFromPayment(toDel);
     }
-    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) && !TriggerHelper.runOnce('DrawdownTrigger')){
-        TriggerHelper.add('DrawdownTrigger');
+    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) ){
+        //TriggerHelper.runOnce.. removed, because outstanding balance was not calculted correctly on payment applying
         ///*
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,
@@ -53,4 +53,10 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         DrawdownHelper.updatePaymentScheduleForFacilityLoan((List<Drawdown__c>)Trigger.new);
     }
     */
+    if (trigger.isAfter && (Trigger.isInsert || trigger.isUpdate)){
+        DrawdownPaymentAllocator.allocate(Trigger.isInsert, Trigger.oldMap, Trigger.new);
+    }  
+    if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
+        dlrs.RollupService.rollup(Trigger.oldMap, Trigger.newMap, Drawdown__c.SObjectType);
+    }
 }

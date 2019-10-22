@@ -1,0 +1,8 @@
+.THIS {
+}
+.THIS .makeBold {
+    font-weight: bold !important;
+}
+.THIS .file-icon .icn svg {
+    fill: #2a5d9d !important;
+}
