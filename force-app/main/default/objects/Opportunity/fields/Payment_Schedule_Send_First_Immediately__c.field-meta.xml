@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Payment_Schedule_Send_First_Immediately__c</fullName>
-    <defaultValue>true</defaultValue>
+    <defaultValue>false</defaultValue>
     <externalId>false</externalId>
     <label>Send First Payment Immediately</label>
     <trackFeedHistory>false</trackFeedHistory>

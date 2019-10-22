@@ -26,7 +26,7 @@
         </lightning-layout-item>
     </lightning-layout>
     <lightning-layout>
-        <lightning-layout-item padding="around-small" flexibility="auto, grow">
+        <lightning-layout-item padding="around-small" flexibility="auto, grow" if:false={reinit}>
             <c-funding-details-loan-setup-check if:true={isLoanSetupCheck} opp={opp}></c-funding-details-loan-setup-check>
             <c-funding-details-process-drawdowns if:true={isProcessDrawdowns} opp={opp} onmarkstagecomplete={handleStageComplete}></c-funding-details-process-drawdowns>
             <c-funding-details-loan-registration if:true={isPopulatePPSA} opp={opp}></c-funding-details-loan-registration>

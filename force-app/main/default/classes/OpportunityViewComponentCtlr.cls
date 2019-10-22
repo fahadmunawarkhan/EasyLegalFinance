@@ -424,7 +424,10 @@ public class OpportunityViewComponentCtlr {
     public static List<Opportunity_Service_Provider__c> saveProvidersList(String jsonStr, String oppId){
         try {
             List<Opportunity_Service_Provider__c> providers = (List<Opportunity_Service_Provider__c>)JSON.deserialize(jsonStr, List<Opportunity_Service_Provider__c>.class);
-            update providers;            
+            for (Opportunity_Service_Provider__c prov : providers) {
+                update prov;
+            }
+            //update providers;            
             system.debug('providers: ' + providers);
             
             // collect drawdowns

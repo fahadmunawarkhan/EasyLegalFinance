@@ -159,8 +159,10 @@ public with sharing class PaymentHelper {
                 processedPayments = new List<Scheduled_Payment__c>();
 
                 Opportunity inProcessOpp = inProcessOpportunitiesMap.get(opportunity.Id);
+                system.debug(inProcessOpp);
 
                 for (Scheduled_Payment__c sp : inProcessOpp.Scheduled_Payments__r) {
+                    system.debug(sp);
                     if (constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES.contains(sp.Status__c)) {
                         modifiablePayments.add(sp);
                     } else if (constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c) && sp.Current_Opportunity_Schedule_Version__c) {
@@ -289,21 +291,53 @@ public with sharing class PaymentHelper {
             monthCounter += 1;
             currentDate = getPaymentDate(opportunity, monthCounter);
         }
+        Boolean removedImmediate = false;
+        if (processedPayments != null) {
+            for (Scheduled_Payment__c sp : processedPayments) {
+                if (paymentsList.size() > 0) {
+                    if (opportunity.Payment_Schedule_Send_First_Immediately__c && !removedImmediate) {
+                        removedImmediate = true;
+                    } else {
+                        paymentsList.remove(0);
+                    }
+                }
+            }
+        }
+
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c sp : inProcessPayments) {
                 if (paymentsList.size() > 0) {
-                    paymentsList.remove(0);
+                    if (opportunity.Payment_Schedule_Send_First_Immediately__c && !removedImmediate) {
+                        removedImmediate = true;
+                    } else {
+                        paymentsList.remove(0);
+                    }
                 }
             }
         }
 
         if (!paymentsList.isEmpty()) {
             Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
+            amount = amount * 100;
+            amount = amount.round();
+            amount = amount / 100;
+            system.debug(amount);
+            // Account for numbers that don't divide into payments nicely. Keep statement split up because of apex not respecting ooo
+            Decimal sumAmount = 0;
             if (amount == 0) {
                 paymentsList.clear();
             } else {
                 for (Scheduled_Payment__c sp : paymentsList) {
                     sp.Amount__c = amount;
+                    sumAmount += amount;
+                }
+                if (sumAmount != opportunity.Payment_Scheduled_Allotment_Remaining__c) {
+                    Decimal missingAmount = opportunity.Payment_Scheduled_Allotment_Remaining__c - sumAmount;
+                    if (missingAmount > 0) {
+                        paymentsList[0].Amount__c += missingAmount;
+                    } else {
+                        paymentsList[paymentsList.size() - 1].Amount__c += missingAmount;
+                    }
                 }
             }
         }

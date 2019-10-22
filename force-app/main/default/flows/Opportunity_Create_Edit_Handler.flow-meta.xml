@@ -330,7 +330,7 @@
             </processMetadataValues>
             <name>OpportunityName</name>
             <value>
-                <elementReference>formula_2_myRule_1_A1_8002047386</elementReference>
+                <elementReference>formula_2_myRule_1_A1_3776569971</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -1612,7 +1612,7 @@
                 <stringValue>$User.Id</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_16_A1_4998841472</name>
+        <name>formula_17_myRule_16_A1_5984324795</name>
         <dataType>String</dataType>
         <expression>{!$User.Id}</expression>
     </formulas>
@@ -1623,7 +1623,7 @@
                 <stringValue>NOW() </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_18_myRule_16_A1_6042907566</name>
+        <name>formula_18_myRule_16_A1_4094915289</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1638,7 +1638,7 @@
 )</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_21_myRule_20_A1_6367701807</name>
+        <name>formula_21_myRule_20_A1_1320614088</name>
         <dataType>Number</dataType>
         <expression>IF(
     ISNULL({!myVariable_current.Payment_Schedule_Version_Number__c}),
@@ -1654,7 +1654,7 @@
                 <stringValue>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_8002047386</name>
+        <name>formula_2_myRule_1_A1_3776569971</name>
         <dataType>String</dataType>
         <expression>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</expression>
     </formulas>
@@ -1733,7 +1733,7 @@ AND(
                 <stringValue>AND(
 	ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;Yes&#39;),
     OR(
-        OR(
+            ISCHANGED([Opportunity].Amount_Available_for_Scheduled_Payments__c),
             ISCHANGED([Opportunity].Payment_Schedule__c),
             ISCHANGED([Opportunity].Payment_Schedule_Mode__c),
             ISCHANGED([Opportunity].Payment_Use_Primary_Bank_Account__c),
@@ -1744,7 +1744,6 @@ AND(
             ISCHANGED([Opportunity].Drawdown_Total__c),
             ISCHANGED([Opportunity].Payment_Schedule_Allotted_Amount__c),
             ISCHANGED([Opportunity].Payment_Schedule_Send_First_Immediately__c)
-        )
     )
 )</stringValue>
             </value>
@@ -1754,7 +1753,7 @@ AND(
         <expression>AND(
 	ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;Yes&#39;),
     OR(
-        OR(
+            ISCHANGED({!myVariable_current.Amount_Available_for_Scheduled_Payments__c}),
             ISCHANGED({!myVariable_current.Payment_Schedule__c}),
             ISCHANGED({!myVariable_current.Payment_Schedule_Mode__c}),
             ISCHANGED({!myVariable_current.Payment_Use_Primary_Bank_Account__c}),
@@ -1765,11 +1764,10 @@ AND(
             ISCHANGED({!myVariable_current.Drawdown_Total__c}),
             ISCHANGED({!myVariable_current.Payment_Schedule_Allotted_Amount__c}),
             ISCHANGED({!myVariable_current.Payment_Schedule_Send_First_Immediately__c})
-        )
     )
 )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Create_Edit_Handler-15_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Create_Edit_Handler-10_InterviewLabel</interviewLabel>
     <label>Opportunity Create &amp; Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2125,7 +2123,7 @@ AND(
             </processMetadataValues>
             <field>Verified_By__c</field>
             <value>
-                <elementReference>formula_17_myRule_16_A1_4998841472</elementReference>
+                <elementReference>formula_17_myRule_16_A1_5984324795</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2161,7 +2159,7 @@ AND(
             </processMetadataValues>
             <field>Verified_Date__c</field>
             <value>
-                <elementReference>formula_18_myRule_16_A1_6042907566</elementReference>
+                <elementReference>formula_18_myRule_16_A1_4094915289</elementReference>
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>
@@ -2244,7 +2242,7 @@ AND(
             </processMetadataValues>
             <field>Payment_Schedule_Version_Number__c</field>
             <value>
-                <elementReference>formula_21_myRule_20_A1_6367701807</elementReference>
+                <elementReference>formula_21_myRule_20_A1_1320614088</elementReference>
             </value>
         </inputAssignments>
         <object>Opportunity</object>
