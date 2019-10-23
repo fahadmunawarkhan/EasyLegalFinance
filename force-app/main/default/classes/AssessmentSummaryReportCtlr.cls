@@ -45,7 +45,7 @@ public with sharing class AssessmentSummaryReportCtlr {
     
     @AuraEnabled
     public static Assessment_Summary_Report__c getCustomSetting(){
-        Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getOrgDefaults();
+        Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());
         return aSR;
     }
 
