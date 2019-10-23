@@ -119,6 +119,7 @@
     <div class="">
         <lightning:card title="Assessment Summary" iconName="standard:case" variant="base">
             <aura:set attribute="actions">
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for selected" onclick="{!c.generateForSelected}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />
             </aura:set>

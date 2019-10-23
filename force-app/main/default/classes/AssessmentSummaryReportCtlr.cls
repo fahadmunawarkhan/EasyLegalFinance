@@ -181,6 +181,38 @@ public with sharing class AssessmentSummaryReportCtlr {
         return lawyerAssessmentMap.values();
     }
 
+     /******************* Method to generate the payout balance *********************/
+    public static void generatePayoutBalance(Date payoutDate, String businessUnitFilter, String ids){
+        try{
+
+            String assessment = 'Assessment';
+            String paidOff = 'Paid Off';
+
+            String strQueryOpportunity = '';
+            strQueryOpportunity = 'SELECT Id, Name, Payout_Date__c, Lawyer__c';
+            strQueryOpportunity += ' FROM Opportunity';
+            strQueryOpportunity += ' WHERE Type_of_Loan__c =:assessment';
+            strQueryOpportunity += ' AND isClosed = true AND isWon = true';
+            strQueryOpportunity += ' AND Stage_Status__c !=:paidOff';            
+            strQueryOpportunity += (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? 
+                ' AND Account.Business_Unit__c =:businessUnitFilter': '';
+            if(!String.isEmpty(ids))
+                strQueryOpportunity += ' AND Lawyer__c in (' + ids +')';
+
+            List<Opportunity> opportunities = Database.query(strQueryOpportunity);
+
+            for(Opportunity opp : opportunities){
+                opp.Payout_Date__c = payoutDate;
+            }
+            
+            if(!opportunities.isEmpty())
+                update opportunities;
+
+        }catch(Exception e){
+            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+        }
+    }
+
     @AuraEnabled
     public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
         try{
@@ -188,16 +220,21 @@ public with sharing class AssessmentSummaryReportCtlr {
             APXTConga4__Conga_Merge_Query__c congaQuery;        
             String ids = '';
             String query = '';
-            
+            String assessment = 'Assessment';            
+
             if(!selectedIds.isEmpty()) {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from contact WHERE Id in ('+ ids +')';
+            }else{
+                query = 'SELECT Id FROM contact where id in (SELECT lawyer__c from opportunity WHERE Type_of_Loan__c = :assessment)';
             }
             
             Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
             customSettings.Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date__c;
             customSettings.Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date__c;
             customSettings.Business_Unit__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+
+            generatePayoutBalance(customSettings.Payout_Date__c, customSettings.Business_Unit__c, ids);
             
             if(String.isEmpty(customSettings.Conga_Conductor_Id__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Assessment Lawyer query - ' + UserInfo.getName(),
