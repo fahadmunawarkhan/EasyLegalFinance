@@ -16,10 +16,10 @@
         var tempPaymentReceived= component.get('v.tempPaymentReceived');
         var surplus = component.get('v.surplus');
         var stageStatus = component.get('v.stageStatus');
+        var stageName = component.get('v.stageName');
         var actions = new Array();
         var searchType = component.get('v.searchType');
         if (searchType == 'Payout'){
-            console.log(tempPaymentReceived);
             if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && tempPaymentReceived != totalPayout && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
                 actions.push({label:'Partial Payment', value:'Partial Payment'});
             }
@@ -42,12 +42,15 @@
             }
         }
         else if (searchType == 'Misc Income Payment'){
-            if (tempPaymentReceived != 0 && tempPaymentReceived != totalPayout && (stageStatus != 'Paid Off')){
-                actions.push({label:'Partial Payment', value:'Partial Payment'});
+            if (stageName == 'Closed With Loan' && (stageStatus == 'Closed - Paid' || stageStatus == 'Closed - Surplus' || stageStatus == 'Closed - Shortfall' || stageStatus == 'Closed - Bad Debt')){
+                if (tempPaymentReceived != null && tempPaymentReceived > 0){                    
+                    actions.push({label:'Misc Income Payment', value:'Misc Income Payment'});
+                }
+                else{                    
+                    actions.push({label:'No Action', value:'No Action'});
+                }
             }
-            if (tempPaymentReceived == totalPayout && (stageStatus != 'Paid Off')){
-                actions.push({label:'Closed Paid', value:'Closed Paid'});
-            }            
+            
         }
         component.set('v.actions', actions);                        
     },

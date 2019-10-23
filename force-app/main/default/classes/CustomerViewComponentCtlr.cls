@@ -224,13 +224,15 @@ public class CustomerViewComponentCtlr {
     
     /******************* Method to receive payments *********************/
     @AuraEnabled
-    public static List<Opportunity> calculatePayments(String accountId, Decimal amount){    
+    public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String searchType){    
         cleanTempPayments(accountId);        
         
         List<Opportunity> optsList = getOpportunitiesOrderedByDate(accountId);        
         List<Opportunity> openOpsList = new List<Opportunity>();
         for(Opportunity opp : optsList){
-            if(opp.Stage_Status__c != 'Paid Off'){
+            System.debug(searchType + ' '  + opp.Stage_Status__c);
+            if ((searchType == 'Payout' && opp.Stage_Status__c != 'Paid Off') ||
+               (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt'))){
                 openOpsList.add(opp);
             }
         }
@@ -255,7 +257,7 @@ public class CustomerViewComponentCtlr {
                 amountRemaining = 0;
             } else 
                 // This is the full payment, when we have enough for the payout
-                if(amountRemaining > 0 && amountRemaining >= opp.Total_Payout__c){
+                if(amountRemaining > 0 && opp.Total_Payout__c > 0 && amountRemaining >= opp.Total_Payout__c){
                     opp.Temp_Payment_Received__c = opp.Total_Payout__c;    
                     amountRemaining = amountRemaining - opp.Total_Payout__c;
                 } else 
@@ -388,6 +390,25 @@ public class CustomerViewComponentCtlr {
      
     }    
 
+    @AuraEnabled
+    public static void applyMiscPayments(String oppId, String accountId, String payoutDate, String eft, String chq){            
+        Opportunity opp = getSingleOpportunity(oppId);
+        Drawdown__c dd = new Drawdown__c();
+        
+        dd.Amount__c = opp.Temp_Payment_Received__c;
+        dd.Payment_Method__c = 'Payment';        
+        dd.Reference_Notes__c = 'Miscellaneous Payment';        
+        dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
+        dd.Opportunity__c = oppId;        
+        dd.EFT__c = eft;
+        dd.CHQ__c = chq;        
+        insert dd;
+        
+        opp.Temp_Payment_Received__c = 0;
+        update opp;
+     
+    }    
+    
     @AuraEnabled
     public static List<Opportunity> closeMultipleLoans(List<Opportunity> opportunitiesList, String accountId, String searchType, String payoutDate){    
         List<Opportunity> opportunitiesToUpdate = new List<Opportunity>();  
@@ -563,7 +584,7 @@ t.adminFee =  d.Amount__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
                 } else {                    
-					          if(t.referenceNotes == 'Payment Surplus' ){
+					if(t.referenceNotes == 'Payment Surplus' || t.referenceNotes == 'Miscellaneous Payment' ){
                         t.paymentAmount = 0;    
                         t.accruedInterest = d.Total_Amount__c;
                     } else{                    
@@ -1275,6 +1296,9 @@ t.adminFee =  d.Amount__c;
                     if (action == 'Partial Payment'){
                         applyPartialPayments(oppId, accountId, payoutDate, eft, chq);
                     }
+                    else if (action == 'Misc Income Payment'){
+                        applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
+                    }
                     else if (action == 'Bad Debt'){
                         changeToBadDebtStage(oppId, accountId, payoutDate);
                     }
@@ -1325,9 +1349,9 @@ t.adminFee =  d.Amount__c;
         insert task;
     }    
     @AuraEnabled
-    public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String eft, String chq){
+    public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String eft, String chq, String searchType){
         try{
-            List<Opportunity>  opps = calculatePayments(accountId, amount);
+            List<Opportunity>  opps = calculatePayments(accountId, amount, searchType);
             if (amount == 0.0)
                 deletePaymentTasks(accountId);
             else
