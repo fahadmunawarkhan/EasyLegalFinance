@@ -463,6 +463,8 @@
         <members>Contact.Alternate_Email__c</members>
         <members>Contact.Annual_Income_on_Date_of_Loss__c</members>
         <members>Contact.Any_SpousalChild_support_payment__c</members>
+        <members>Contact.Lawyer_Assessment_Payout_Date__c</members>
+        <members>Contact.Lawyer_Assessment_Report_Date__c</members>
         <members>Contact.Citizenship_Status__c</members>
         <members>Contact.Collateral_Benefits__c</members>
         <members>Contact.Company__c</members>

@@ -12,13 +12,16 @@
         component.set("v.calendarMax", max);                
     },
     setDefaultDates : function(component){
+
+        let customSettings = component.get('v.customSetting');
+        console.log('customSettings ' + JSON.stringify(customSettings));
         let dt = new Date();
         
         let defaultPayoutDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate() + '';
-        component.set("v.payoutDate", defaultPayoutDate);
+        component.set("v.payoutDate", customSettings.Payout_Date__c !=null? customSettings.Payout_Date__c: defaultPayoutDate);
         
         let defaultReportDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + dt.getDate() + '';
-        component.set("v.reportDate", defaultReportDate); 
+        component.set("v.reportDate", customSettings.Report_Date__c !=null? customSettings.Report_Date__c: defaultReportDate); 
         
     },
 	getCustomSettings : function(component){

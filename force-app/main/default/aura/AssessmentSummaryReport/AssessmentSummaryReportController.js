@@ -2,6 +2,9 @@
 	doInit : function(component, event, helper) {
 		
         component.set("v.spinner", true);
+        helper.getCalendarMin(component);
+        helper.getCalendarMax(component);
+
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
 
         helper.getDrawdown(component).then(
@@ -25,6 +28,7 @@
         )).then(
             function(result){
                 component.set("v.data", result);
+                helper.setDefaultDates(component);
                 component.set("v.spinner", false);
             }
         ).catch(
@@ -34,10 +38,8 @@
                 helper.errorsHandler(errors);
             }
         );
-
-        helper.getCalendarMin(component);
-        helper.getCalendarMax(component);
-        helper.setDefaultDates(component);
+        
+        
 	},
     searchButton : function(component, event, helper){
         component.set("v.spinner", true);
@@ -56,6 +58,7 @@
             }
         )).then(function(result){
             component.set('v.customSetting', result);
+            component.find("selectAllcheckbox").set("v.value", false);
             component.set("v.spinner", false);
         }).catch(
             function(errors){

@@ -254,7 +254,7 @@
                                         </lightning:layoutItem>
                                         <lightning:layoutItem size="6" padding="horizontal-small">
                                             <aura:if isTrue="{!item.attachmentId != ''}">
-                                                <span Title= "Preview" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
+                                                <span Title= "Preview" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
                                             </aura:if>
                                         </lightning:layoutItem>
                                     </lightning:layout>
