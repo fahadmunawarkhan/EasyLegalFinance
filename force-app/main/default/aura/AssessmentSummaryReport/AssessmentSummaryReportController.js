@@ -124,7 +124,7 @@
     },
     GenerateForAll : function(component, event, helper){
         if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
-            helper.generateForSelected(component);
+            helper.GenerateForAll(component);
         }else{
             alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
         }

@@ -210,6 +210,51 @@
         }
         
     },
+    GenerateForAll: function (component){
+        component.set('v.spinner', true);
+        let payoutDate = component.get("v.payoutDate");
+        let reportDate = component.get("v.reportDate");
+        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+        
+        var action = component.get('c.generate');
+        action.setParams({ 
+            selectedIds : [], 
+            payoutDate : payoutDate, 
+            reportDate : reportDate,
+            businessUnitFilter: businessUnitFilterValue
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+                
+            if (state === 'SUCCESS') {
+                component.set('v.spinner', false);
+                var newWin;
+                try{
+                    newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + response.getReturnValue() + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
+                }
+                catch(e){}
+                if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
+                { 
+                    //alert();
+                    this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
+                    //POPUP BLOCKED
+                }
+                
+            } else if (state === 'ERROR') {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action);
+        
+    },
     
     errorsHandler : function(errors){
         if (errors[0] && errors[0].message) {
