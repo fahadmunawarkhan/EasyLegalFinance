@@ -59,7 +59,7 @@ public with sharing class AssessmentSummaryReportCtlr {
 
     @AuraEnabled
     public static void setCustomSetting(String BusinessUnit, String searchByName){
-        Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getOrgDefaults();
+        Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());
         aSR.Business_Unit__c = !String.isEmpty(BusinessUnit) && BusinessUnit != null? BusinessUnit : 'ELFI';
         aSR.Search_by_Name__c = !String.isEmpty(searchByName) && searchByName != null? searchByName : '';        
         upsert aSR;
