@@ -248,6 +248,8 @@
 	runAllOptsPayout : function(component) {
         component.set("v.displayPaymentValidationErrors", false);
         component.set('v.calculatedPaymentAmount', null);         
+        var sType = component.get("v.paymentSearchTypeSelected");
+        console.log(sType);
         var recordId = component.get("v.recordId");
         var paymentDate = component.get("v.paymentDate");
         var action = component.get('c.runPayoutForAllOpps');             
@@ -260,14 +262,21 @@
                 component.set("v.spinner", false);
                 var resultsList = response.getReturnValue();
                 var oppsList = new Array();
+                var closedLoanExist = false;
                 for(var i=0;i<resultsList.length;i++){
-                    console.log(resultsList[i].StageNam);
+                    console.log(resultsList[i].StageName);
                     if(resultsList[i].StageName == 'Closed With Loan'){
                         oppsList.push(resultsList[i]);
+                        var stageStatus = resultsList[i].Stage_Status__c;
+                        if(stageStatus == 'Closed - Paid' || stageStatus == 'Closed - Surplus' || stageStatus == 'Closed - Shortfall' || stageStatus == 'Closed - Bad Debt')
+                            closedLoanExist = true;                            
                     }
                 }
                 component.set("v.oppList", oppsList);   
                 this.getLoanSummaryInfo(component);
+                if (sType == 'Misc Income Payment' && !closedLoanExist){
+                    this.showToast('Closed loans not found', 'Misc Income Payments can only be applied to  closed loans');                
+                }
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -288,10 +297,11 @@
         var paymentAmount = component.get("v.paymentAmount");
         var eft = component.get("v.EFT");
         var chq = component.get("v.CHQ");
+        var sType = component.get("v.paymentSearchTypeSelected");
 
         var action = component.get('c.calculatePayments');     
         component.set("v._enableCloseAllPaid",false);        
-        action.setParams({ accountId : recordId, amount : paymentAmount, eft : eft, chq : chq})
+        action.setParams({ accountId : recordId, amount : paymentAmount, eft : eft, chq : chq, searchType: sType})
                         
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -1249,7 +1259,7 @@
             console.log(opp);
             console.log(sType + ' ' + opp.Stage_Status__c);
             if ( (sType=='Payout' && (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') ) ||
-               ( sType=='Misc Income Payment' && opp.Stage_Status__c != 'Paid Off' ) )
+               ( sType=='Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt') ) )
                 	return true;
         }
         return false;

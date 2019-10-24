@@ -8,6 +8,7 @@
     <aura:attribute name="tempPaymentReceived" type="Decimal" />
     <aura:attribute name="surplus" type="Decimal" />
     <aura:attribute name="stageStatus" type="String" />
+    <aura:attribute name="stageName" type="String" />
     <aura:attribute name="actions" type="List"/>
     <aura:attribute name="value" type="String"/>
     <aura:attribute name="valid" type="Boolean" />
