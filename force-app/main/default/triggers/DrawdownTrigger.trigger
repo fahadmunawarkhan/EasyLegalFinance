@@ -47,6 +47,9 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
                                                              // Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);        
         //*/
     }
+    if (trigger.isAfter && (Trigger.isInsert || trigger.isUpdate)){
+        DrawdownPaymentAllocator.allocate(Trigger.isInsert, Trigger.oldMap, Trigger.new);
+    } 
     
     /*
     // Replaced with process and InvocableMethod callout to consolidate work
