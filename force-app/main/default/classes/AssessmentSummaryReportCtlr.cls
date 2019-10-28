@@ -104,7 +104,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             }
             
             String strQuery = '';            
-            strQuery = 'SELECT Id, Lawyer__c, Lawyer__r.Name, Law_Firm__c, Law_Firm__r.Name, Lawyer__r.Approved_Credit_Limit__c,';
+            strQuery = 'SELECT Id, Lawyer__c, Lawyer__r.Name, Law_Firm__c, Law_Firm__r.Name, Lawyer__r.Approved_Credit_Limit__c, Lawyer__r.Available_Credit__c,';
             strQuery += ' Drawdown_Total_wo_Payment__c, Account.Business_Unit__c, Principal_Repaid_Roll_up__c, Admin_Fee_Roll_up__c';
             strQuery += ' FROM Opportunity';
             strQuery += ' WHERE Type_of_Loan__c =:assessment';
@@ -173,17 +173,10 @@ public with sharing class AssessmentSummaryReportCtlr {
                     
                     wrapper.utilizedCreditRhino -= opp.Account.Business_Unit__c == 'Rhino'? principalRepaidAmnt != null? principalRepaidAmnt : 0  : 0;
                     
-                    lawyerAssessmentMap.put(key, wrapper);
-                }
-            }
-            if(!lawyerAssessmentMap.isEmpty()){
+                    wrapper.availableCredit = opp.Lawyer__r.Available_Credit__c != null? opp.Lawyer__r.Available_Credit__c : 0;
 
-                for(String key : lawyerAssessmentMap.keySet()){
-                    AssessmentWrapper wrapper = lawyerAssessmentMap.get(key);
-                    wrapper.availableCredit = wrapper.approvedCredit - (wrapper.utilizedCreditElfi + wrapper.utilizedCreditRhino);
                     lawyerAssessmentMap.put(key, wrapper);
                 }
-        
             }
             
         }catch(Exception e){
