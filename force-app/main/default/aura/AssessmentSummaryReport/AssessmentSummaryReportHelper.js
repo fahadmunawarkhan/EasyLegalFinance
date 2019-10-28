@@ -121,35 +121,6 @@
             $A.enqueueAction(action);
         }));
     },
-    checkAll : function(component){
-        component.set('v.spinner', true);
-        let value = component.find("selectAllcheckbox").get("v.value");      
-        let assessmentOpps = component.get("v.data");
-        
-        for(let i=0; i<assessmentOpps.length; i++){
-            assessmentOpps[i].checked = value;
-        }
-        
-        component.set("v.data",assessmentOpps);
-        component.set('v.spinner', false);
-    },
-    check : function(component){
-        var value = component.find("selectAllcheckbox").get("v.value");                
-        if(value){
-            value = false;
-        }
-        let assessmentOpps = component.get("v.data");
-        let count = 0;
-        for(let i=0; i<assessmentOpps.length; i++){
-            if(assessmentOpps[i].checked == true){
-                count++;
-            }
-        }
-        if(count == assessmentOpps.length){
-            value = true;
-        }
-		component.find("selectAllcheckbox").set("v.value", value);
-    },
     generateForSelected: function (component){
         component.set('v.spinner', true);
         let assessmentOpps = component.get("v.data");
@@ -258,7 +229,47 @@
         $A.enqueueAction(action);
         
     },
-    
+    setCustomSettings : function(component){
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let assessmentOpps = component.get("v.data");
+                let payoutDate = component.get("v.payoutDate");
+                let reportDate = component.get("v.reportDate");
+                let countSelected = component.get("v.countSelected");
+                let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+                businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+                let selectedIds = [];
+                let oppList = [];
+                
+                if(countSelected != 0){
+                    for(let i=0; i<assessmentOpps.length; i++){
+                        if(assessmentOpps[i].checked == true){
+                            selectedIds.push("'" + assessmentOpps[i].lawyerId + "'");
+                            oppList.push(assessmentOpps[i]);
+                        }
+                    }
+                }
+
+                let action = component.get('c.setCustomSetting');
+                action.setParams({
+                    selectedIds : selectedIds, 
+                    payoutDate : payoutDate, 
+                    reportDate : reportDate,
+                    businessUnitFilter: businessUnitFilterValue
+                });
+                action.setCallback(this, function (response) {
+                    let state = response.getState();
+                    if(state === 'SUCCESS'){
+                        resolve(response.getReturnValue());
+                    }else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                
+                });
+                $A.enqueueAction(action);
+            }
+        ));
+    },
     errorsHandler : function(errors){
         if (errors[0] && errors[0].message) {
             console.log('Error message: ' + errors[0].message);

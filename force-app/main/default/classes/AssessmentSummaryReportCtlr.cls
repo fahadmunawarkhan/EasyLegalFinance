@@ -58,10 +58,25 @@ public with sharing class AssessmentSummaryReportCtlr {
     }
 
     @AuraEnabled
-    public static void setCustomSetting(String BusinessUnit, String searchByName){
+    public static void setCustomSetting(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
+        
+        String ids = '';                 
+
+        if(!selectedIds.isEmpty()) {
+            ids = String.Join(selectedIds,',');
+        }
+        Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
+        customSettings.Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date__c;
+        customSettings.Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date__c;
+        customSettings.Business_Unit__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+        customSettings.Selected_Ids__c = (!String.isEmpty(ids) && ids != null) ? ids : ''; 
+        upsert customSettings;
+    }
+
+    @AuraEnabled
+    public static void setBusinessUnitCustomSetting(String BusinessUnit){
         Assessment_Summary_Report__c aSR = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());
-        aSR.Business_Unit__c = !String.isEmpty(BusinessUnit) && BusinessUnit != null? BusinessUnit : 'ELFI';
-        aSR.Search_by_Name__c = !String.isEmpty(searchByName) && searchByName != null? searchByName : '';        
+        aSR.Business_Unit__c = !String.isEmpty(BusinessUnit) && BusinessUnit != null? BusinessUnit : 'ELFI';      
         upsert aSR;
     }
     
@@ -177,7 +192,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             throw new AuraHandledException(e.getMessage() + ' ' + e.getLineNumber());
         }
 
-        setCustomSetting(BusinessUnit, searchByName);
+        setBusinessUnitCustomSetting(BusinessUnit);
         return lawyerAssessmentMap.values();
     }
 

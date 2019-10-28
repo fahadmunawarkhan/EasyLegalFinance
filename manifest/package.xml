@@ -410,10 +410,13 @@
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Search_by_Name__c</members>
         <members>Assessment_Summary_Report__c.Conga_Conductor_Id__c</members>
         <members>Assessment_Summary_Report__c.Payout_Date__c</members>  
-        <members>Assessment_Summary_Report__c.Report_Date__c</members>      
+        <members>Assessment_Summary_Report__c.Selected_Ids__c</members>
+        <members>Assessment_Summary_Report__c.Report_Date__c</members>     
         <members>Bad_Debt_Summary_Report__c.BusinessUnit__c</members>
         <members>Bad_Debt_Summary_Report__c.End_Date__c</members>
         <members>Bad_Debt_Summary_Report__c.Start_Date__c</members>
@@ -495,6 +498,7 @@
         <members>Contact.If_yes_please_provide_amount__c</members>
         <members>Contact.If_Yes_please_provide_details__c</members>
         <members>Contact.If_yes_please_provide_previous_name__c</members>
+        <members>Contact.Is_Selected__c</members>
         <members>Contact.Job_description__c</members>
         <members>Contact.Law_Firm__c</members>
         <members>Contact.Lawyer_Pipeline_Report__c</members>
