@@ -2,6 +2,7 @@
 	doInit : function(component, event, helper) {
 		
         component.set("v.spinner", true);
+        component.set("v.countSelected",0);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
 
@@ -43,6 +44,7 @@
 	},
     searchButton : function(component, event, helper){
         component.set("v.spinner", true);
+        component.set("v.countSelected",0);
         helper.getAssessments(component).then($A.getCallback(
             function(result){
                 console.log('--DATA--');
@@ -69,7 +71,7 @@
         );
     },
     sort: function(component, event, helper) {  
-        
+        component.set("v.countSelected",0);
         let selectedItem = event.currentTarget;
         let field = selectedItem.dataset.field;
         let sortOrder = component.get('v.sortOrder');
@@ -84,8 +86,6 @@
         
         helper.getAssessments(component).then($A.getCallback(
             function(result){
-                console.log('----');
-                console.log(result);
                 component.set("v.data", result);
                 component.set("v.businessUnitForDesign", component.get("v.selectedBusinessUnitFilter"));
                 component.set("v.spinner", false);
@@ -111,11 +111,92 @@
             reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
         }
     },
-    checkAll : function(component, event, helper){
-        helper.checkAll(component);
-    },
     check : function(component, event, helper){
-        helper.check(component);
+        let target =  event.getSource();
+        let value = target.get('v.value');
+        let countSelected = component.get("v.countSelected");
+
+        if(value){
+            if(countSelected >= 10){
+                alert('You have selected maximum allowed records.');
+                target.set('v.value', !value);
+            }else{
+                countSelected++;               
+            }
+        }else{
+            countSelected--;
+        }
+        component.set("v.countSelected", countSelected);
+
+    },
+    printReportButtnClick : function(component, event, helper){
+        component.set("v.spinner", true);
+        
+        helper.setCustomSettings(component).then($A.getCallback(
+            function(result){
+                return helper.getCustomSettings(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                component.set('v.customSetting', result);
+                return helper.getDrawdown(component);
+            }
+        )).then(function(result){            
+            component.set('v.drawdown',result);
+            let url = result.Conga_Assessment_Summary_Report_Print__c;
+            url += '%26'+'DefaultPDF=1';
+            let newWin;
+            try{                       
+                newWin = window.open(url);
+            }catch(e){}
+            if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+            {
+                reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+            }
+            component.set("v.spinner", false);
+
+        }).catch(function(errors){
+            console.log('Error ' + errors);
+            component.set("v.spinner", false);
+            helper.errorsHandler(errors);
+        });
+    },
+    viewAllButtnClick : function(component, event, helper){
+        component.set("v.spinner", true);
+        
+        helper.setCustomSettings(component).then($A.getCallback(
+            function(result){
+                return helper.getCustomSettings(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                component.set('v.customSetting', result);
+                return helper.getDrawdown(component);
+            }
+        )).then(function(result){            
+            component.set('v.drawdown',result);
+            let url = result.Conga_Assessment_Summary_Report_View_All__c;
+            let target = event.getSource();
+
+            if(target.get('v.label') == 'View All (PDF)'){
+                url += '%26'+'DefaultPDF=1';
+            }
+            let newWin;
+            try{                       
+                newWin = window.open(url);
+            }catch(e){}
+            if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+            {
+                reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+            }
+            component.set("v.spinner", false);
+
+        }).catch(function(errors){
+            console.log('Error ' + errors);
+            component.set("v.spinner", false);
+            helper.errorsHandler(errors);
+        });
+        
     },
     generateForSelected : function(component, event, helper){
         if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){

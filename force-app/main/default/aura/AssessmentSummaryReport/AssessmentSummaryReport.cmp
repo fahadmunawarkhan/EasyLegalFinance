@@ -6,6 +6,7 @@
     <aura:attribute name="data" type="List" />
     <aura:attribute name="drawdown" type="Drawdown__c" />
     <aura:attribute name="searchByName" type="String" />
+    <aura:attribute name="countSelected" type="Integer" />
     <aura:attribute name="businessUnitForDesign" type="String" default="ELFI" />
     <aura:attribute name="sortField" type="String" default="Lawyer__r.Approved_Credit_Limit__c"/>
     <aura:attribute name="sortOrder" type="String" default="DESC" />
@@ -96,22 +97,22 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="View All (Excel)" />
-                </a>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
+                    variant="neutral" type="button" label="View All (Excel)" />
+                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c}" target="_BLANK">                    
+                </a>-->
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c+'%26'+'DefaultPDF=1'}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="View All (PDF)" />
-                </a>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
+                    variant="neutral" type="button" label="View All (PDF)" />
+                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                 </a>-->
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.drawdown.Conga_Assessment_Summary_Report_Print__c+'%26'+'DefaultPDF=1'}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="Print Report (PDF)" />
-                </a>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printReportButtnClick}"
+                    variant="neutral" type="button" label="Print Report (PDF)" />
+                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_Print__c+'%26'+'DefaultPDF=1'}" target="_BLANK">                    
+                </a>-->
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>
@@ -127,8 +128,8 @@
                 <thead>
                     <tr class="slds-line-height_reset">
                         <th>
-                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title="Select All">
-                                <ui:inputCheckbox aura:id="selectAllcheckbox" change="{!c.checkAll}"/>
+                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title="">
+                                <!--<ui:inputCheckbox aura:id="selectAllcheckbox" change="{!c.checkAll}"/>-->
                             </div>
                         </th>
                         <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Name" style="cursor: pointer;" >
