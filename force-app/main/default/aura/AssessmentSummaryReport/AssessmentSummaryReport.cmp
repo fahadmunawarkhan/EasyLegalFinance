@@ -99,20 +99,20 @@
             <lightning:layoutItem >
                 <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
                     variant="neutral" type="button" label="View All (Excel)" />
-                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c}" target="_BLANK">                    
-                </a>-->
             </lightning:layoutItem>
             <lightning:layoutItem >
                 <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
-                    variant="neutral" type="button" label="View All (PDF)" />
-                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_View_All__c+'%26'+'DefaultPDF=1'}" target="_BLANK">
-                 </a>-->
+                    variant="neutral" type="button" label="View All (PDF)" />                
             </lightning:layoutItem>
             <lightning:layoutItem >
                 <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printReportButtnClick}"
                     variant="neutral" type="button" label="Print Report (PDF)" />
-                <!--<a href="{!v.drawdown.Conga_Assessment_Summary_Report_Print__c+'%26'+'DefaultPDF=1'}" target="_BLANK">                    
-                </a>-->
+            </lightning:layoutItem>
+            <lightning:layoutItem >
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for Selected" onclick="{!c.generateForSelected}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem >
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for All" onclick="{!c.GenerateForAll}" />
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>
@@ -120,9 +120,7 @@
     <div class="">
         <lightning:card title="Assessment Summary" iconName="standard:case" variant="base">
             <aura:set attribute="actions">
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for selected" onclick="{!c.generateForSelected}" />
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />
+                    <lightning:buttonIcon iconName="utility:refresh"  onclick="{! c.searchButton }" size="large" alternativeText="Refresh" />                
             </aura:set>
             <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                 <thead>
@@ -173,7 +171,10 @@
                             </aura:set>
                         </aura:if>
                         <th class="" scope="col">
-                            <div class="slds-truncate" title="AVAILABLE CREDIT">AVAILABLE CREDIT</div>
+                            <div class="slds-truncate" style="float:left;width:75%;" title="AVAILABLE CREDIT">AVAILABLE CREDIT</div>
+                            <div title="Available Credit = Approved Credit - Combined Utilized Credit (Elfi and Rhino)" style="float:right;width:25%;">
+                                <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                            </div>  
                         </th>
                         <th class="" scope="col">
                             <div class="slds-truncate" title="LINK TO CLIENT DATA">LINK TO CLIENT DATA</div>
