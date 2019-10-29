@@ -1115,6 +1115,10 @@
         <members>Opportunity.Year_Quarter__c</members>
         <members>Opportunity.Year_Quarter_Formula__c</members>
         <members>Opportunity.Principal_Repaid_Roll_up__c</members> 
+        <members>Opportunity.Insurer_Name__c</members>
+        <members>Opportunity.Invoice__c</members>
+        <members>Opportunity.Invoice_Type__c</members>
+        <members>Opportunity.Assessment_Provider__c</members>
         <members>Payment_Rejection__c.Reason__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment_Action__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment__c</members>
@@ -1762,6 +1766,7 @@
         <name>QuickAction</name>
     </types>
     <types>
+        <members>Account.Assessment_Provider</members>
         <members>Account.Client</members>
         <members>Account.General_Business</members>
         <members>Account.Law_Firm</members>

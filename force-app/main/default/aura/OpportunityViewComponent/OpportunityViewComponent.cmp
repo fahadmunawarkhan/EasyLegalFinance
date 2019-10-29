@@ -97,6 +97,10 @@
     <aura:attribute name="currIndex" type="integer" default="0" />
     <aura:attribute name="expandedSections" type="Map" default="{}"/>
     
+    <aura:attribute name="invoiceTypeOptions" type="List" default="[]" />
+    <aura:attribute name="insurerNameOptions" type="List" default="[]" />
+    <aura:attribute name="selectedLookUpAssessmentProvider" type="sObject" default="{}"/>
+    
     <aura:attribute name="currentUser" type="User" /> 
 
     <!-- OVERLAY -->
@@ -687,7 +691,7 @@
                                                     disabled="true"/>
                                             </div>
                                         </lightning:layoutItem>
-                                    </lightning:layout> 
+                                    </lightning:layout>
 
                                     <lightning:layout >
                                         <lightning:layoutItem size="8" >     
@@ -697,6 +701,70 @@
                                             </div>
                                         </lightning:layoutItem>
                                     </lightning:layout> 
+
+                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Assessment'}">
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:input label="Invoice #" type="text" value="{!v.oppObj.Invoice__c}" tabindex="25"/>
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:combobox label="Invoice Type" tabindex="26" name="invoiceType" value="{!v.oppObj.Invoice_Type__c}" placeholder="--None--" options="{! v.invoiceTypeOptions }" />
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:combobox label="Insurer Name" tabindex="27" name="InsurerName" value="{!v.oppObj.Insurer_Name__c}" placeholder="--None--" options="{! v.insurerNameOptions }" />
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <div class="slds-form-element__control">
+                                                        <span class="">
+                                                            <span class="slds-form-element__static">
+                                                                <aura:if isTrue="{!notequals(v.clickSource , 'AssessmentProvider')}">
+                                                                    <!-- Show only related record name -->
+                                                                    <lightning:layout>
+                                                                        <lightning:layoutItem size="12">
+                                                                            <ui:inputText class="field" aura:Id="selectedLookUpAssessmentProvider" value="{!v.selectedLookUpAssessmentProvider.Name}" disabled="true" label="Assessment Provider" />
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem class="slds-m-top_medium" >
+                                                                            <button data-source ="AssessmentProvider" 
+                                                                                data-recvar="selectedLookUpAssessmentProvider"
+                                                                                onclick="{!c.inlineEditName}" 
+                                                                                class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small" 
+                                                                                tabindex="3" title="Edit Assessment Provider">
+                                                                                <lightning:icon iconName="utility:search" size="xx-small" alternativeText="search"/>
+                                                                            </button>                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                            <!-- Show lookup option to change related record -->
+                                                                    <aura:set attribute="else">                                    
+                                                                        <c:customLookup objectAPIName="Account" 
+                                                                                        IconName="standard:account" 
+                                                                                        label="Assessment Provider" 
+                                                                                        hideLookupInputAction="{!c.hideLookupInput}"
+                                                                                        selectedRecord="{!v.selectedLookUpAssessmentProvider}"
+                                                                                        filter="RecordType.Name='Assessment Provider' "
+                                                                                        additionalFields="BillingCity,BillingState"
+                                                                                        additionalDisplayFields="BillingCity,BillingState"/>
+                                                                    </aura:set>                                                    
+                                                                </aura:if>                                         
+                                                            </span>                            
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                    </aura:if>
 
                                     <lightning:layout >
                                         <lightning:layoutItem size="8" >     
