@@ -24,7 +24,7 @@ public class OpportunityViewComponentCtlr {
         if(String.isEmpty(oppId))
         {
             List<Opportunity> lastOppty = [select id, Lawyer__c, Law_Firm__c, Date_Financing_Statement_Done__c ,
-                                           Date_Financing_Statement_Expires__c
+                                           Date_Financing_Statement_Expires__c, Assessment_Provider__c
                                            from Opportunity
                                            where AccountId = :accId AND Loan_Requests__c != null AND Lawyer__c != null ORDER BY Loan_Requests__c DESC LIMIT 1];
             oppInfo.Name = ''; 
@@ -39,6 +39,7 @@ public class OpportunityViewComponentCtlr {
             oppInfo.OwnerId = currentUser.Id;
             oppInfo.Lawyer__c = (lastOppty.isEmpty() ? null : lastOppty[0].Lawyer__c);
             oppInfo.Law_Firm__c = (lastOppty.isEmpty() ? null : lastOppty[0].Law_Firm__c);
+            oppInfo.Assessment_Provider__c = (lastOppty.isEmpty() ? null : lastOppty[0].Assessment_Provider__c);
             oppInfo.Date_Financing_Statement_Done__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Done__c);
             oppInfo.Date_Financing_Statement_Expires__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Expires__c);
         }
@@ -57,6 +58,7 @@ public class OpportunityViewComponentCtlr {
             lstFields.add('Law_Firm__r.Name');
             lstFields.add('Lawyer__r.Name');
             lstFields.add('Scenario__r.Name');
+            lstFields.add('Assessment_Provider__r.Name');
             
             // Building the query
             String strQuery = 'SELECT ' + String.join(lstFields, ',');

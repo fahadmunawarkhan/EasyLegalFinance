@@ -46,6 +46,9 @@
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule__c', 'Payment_Schedule__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule_Mode__c', 'Payment_Schedule_Mode__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Day_of_Month__c', 'Day_of_Month__c_options');
+        helper.getPickListValues(component, 'Opportunity', 'Invoice_Type__c', 'invoiceTypeOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');        
+        
         helper.getBankAccountOptions(component);
         
         // get the fields API name and pass it to helper function  

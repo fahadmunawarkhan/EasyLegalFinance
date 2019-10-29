@@ -32,6 +32,14 @@
                     component.set("v.selectedLookUpOwner.Id", component.get("v.oppObj").OwnerId);
                     component.set("v.selectedLookUpOwner.Name",(component.get("v.oppObj").OwnerId ? 
                                                                 component.get("v.oppObj").Owner.Name : ''));
+
+                    //setting lookups
+                    component.set("v.selectedLookUpAssessmentProvider.Id", component.get("v.oppObj").Assessment_Provider__c);
+                    component.set("v.selectedLookUpAssessmentProvider.Name",(component.get("v.oppObj").Assessment_Provider__c ? 
+                                                                         component.get("v.oppObj").Assessment_Provider__r.Name : '')); 
+                    
+
+                                                                
                     
                     
                     self.firePaymentsChangedEvent(component);
@@ -697,6 +705,11 @@
             //setting lookups
             component.set("v.oppObj.OwnerId",(component.get("v.selectedLookUpOwner.Id") ?
                                                          component.get("v.selectedLookUpOwner.Id"):''));
+            
+            //setting lookups
+            component.set("v.oppObj.Assessment_Provider__c",(component.get("v.selectedLookUpAssessmentProvider.Id") ?
+                                                         component.get("v.selectedLookUpAssessmentProvider.Id"):''));
+    
             
             var oppObj = component.get('v.oppObj');
             var action = component.get('c.saveOpportunity');
