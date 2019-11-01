@@ -20,7 +20,8 @@
                 <lightning:tab id="lawyersAssessmentLoans" label="Lawyers Assessment Loans">
                     <c:AssessmentSummaryReport />
                 </lightning:tab>
-                <lightning:tab id="assessmentProvidersLoans" label="Assessment Providers Loans">                    
+                <lightning:tab id="assessmentProvidersLoans" label="Assessment Providers Loans">
+                    <c:AssessmentProviderSummaryReport />                    
                 </lightning:tab>
             </lightning:tabset>
         </body>
