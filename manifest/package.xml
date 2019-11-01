@@ -7,6 +7,7 @@
         <members>AC_ScenarioToolTest</members>
         <members>AmendmentTriggerHandler</members>
         <members>AmendmentTriggerHandlerTest</members>
+        <members>AssessmentProviderSummaryReportCtlr</members>
         <members>BadDebtSummaryReportCtlr</members>
         <members>BadDebtSummaryReportCtlrTest</members>
         <members>BankAccountsController</members>
@@ -289,6 +290,7 @@
         <members>viewPayments</members>
         <members>AssessmentSummaryReport</members>
         <members>AssessmentLoans</members>
+        <members>AssessmentProviderSummaryReport</members>
         <members>LawyerAssessmentOpportunities</members>
         <members>LawyerApprovedCreditHistory</members>
         <members>LawyerAvailableCreditComponent</members>
@@ -343,11 +345,14 @@
         <members>Account.Amount_Paid_to_Client__c</members>
         <members>Account.Area__c</members>
         <members>Account.Authorization_Clause__c</members>
+        <members>Account.Assessment_Provider_Payout_Date__c</members>
+        <members>Account.Assessment_Provider_Report_Date__c</members>
         <members>Account.Business_Unit__c</members>
         <members>Account.CM_Application_Template_Id__c</members>
         <members>Account.CM_Lawyer_Fax__c</members>
         <members>Account.Conga_Account_Notes_URL__c</members>
         <members>Account.Conga_Batch_Law_Firm_Summary__c</members>
+        <members>Account.Conga_Batch_Assessment_Provider__c</members>
         <members>Account.Conga_Batch_Law_Firm_Summary_Send_Email__c</members>
         <members>Account.Conga_Formula_Principal_Total__c</members>
         <members>Account.Conga_Payouts_URL__c</members>
@@ -362,6 +367,7 @@
         <members>Account.External_ID__c</members>
         <members>Account.First_Party_Insurance_Company__c</members>
         <members>Account.How_did_you_hear_about_us__c</members>
+        <members>Account.Is_Selected__c</members>
         <members>Account.Law_Firm_Pipeline_Report__c</members>
         <members>Account.Lawyer__c</members>
         <members>Account.Lawyer_s_Assistant_Paralegal_LC_Info__c</members>
@@ -405,6 +411,17 @@
         <members>Amendment__c.Opportunity__c</members>
         <members>Amendment__c.Renewal_date__c</members>
         <members>Amendment__c.Renewal_Date_New__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Business_Unit__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_View_All_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_View_All_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Conductor_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Payout_Date__c</members>  
+        <members>Assessment_Provider_Summary_Report__c.Selected_Ids__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Report_Date__c</members>
         <members>Assessment_Summary_Report__c.Business_Unit__c</members>
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
@@ -574,7 +591,9 @@
         <members>Drawdown__c.Balance_Change_In_Reporting_Period__c</members>
         <members>Drawdown__c.CHQ__c</members>
         <members>Drawdown__c.Compounding_Frequency__c</members>
-        <members>Drawdown__c.Compounding_Interest__c</members>
+        <members>Drawdown__c.Compounding_Interest__c</members>        
+        <members>Drawdown__c.Conga_Assessment_Provider_Report_Print__c</members>
+        <members>Drawdown__c.Conga_Assessment_Provider_Report_ViewAll__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All2__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All3__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All__c</members>
@@ -1292,6 +1311,7 @@
         <members>abc__c</members>
         <members>Actual_Sales_by_Month_Report__c</members>
         <members>Amendment__c</members>
+        <members>Assessment_Provider_Summary_Report__c</members>
         <members>Assessment_Summary_Report__c</members>
         <members>Bad_Debt_Summary_Report__c</members>
         <members>Bank_Account__c</members>
