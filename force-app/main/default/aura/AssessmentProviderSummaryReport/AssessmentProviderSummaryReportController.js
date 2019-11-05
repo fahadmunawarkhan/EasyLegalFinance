@@ -103,10 +103,10 @@
     openLinkReport : function(component, event, helper) { 
         let providerId = event.currentTarget.dataset.attachment;
         let newWin;
-        let url = '/lightning/r/Report/00O1F000000iWziUAE/view';
+        let url = '/lightning/r/Report/00O1F000000iwrWUAQ/view';
         
         try{                       
-            newWin = window.open(url + '?fv2=' + providerId);
+            newWin = window.open(url + '?fv1=' + providerId);
         }catch(e){}
         if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
         {

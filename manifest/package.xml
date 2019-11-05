@@ -1946,6 +1946,7 @@
 		<members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Advances_JHh</members>
         <members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Losses_sE5</members>
         <members>TroubleshootingReportsByFahad/Assessment_Summary_Report_HYP</members>
+        <members>TroubleshootingReportsByFahad/Assessment_Provider_Summary_Report_KXp</members>
         <name>Report</name>
     </types>
     <types>
@@ -1962,6 +1963,7 @@
         <members>Opportunities_with_Contact_Info</members>
         <members>Opportunities_with_Scheduled_Payments_with_Payment_Rejections</members>
         <members>WIP_List_with_Activities</members>
+        <members>Assessment_Provider_Referred_Cases</members>
         <name>ReportType</name>
     </types>
     <types>
