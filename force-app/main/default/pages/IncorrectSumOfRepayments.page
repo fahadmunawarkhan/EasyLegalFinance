@@ -8,7 +8,11 @@
        <apex:column >
         <apex:facet name="header">Opportunity Name</apex:facet>
       	<a href="{!'/lightning/r/Opportunity/' + repayment.oppId + '/view'}" target="_blank">{!repayment.oppName}</a>                
-       </apex:column>                    
+       </apex:column>  
+       <apex:column >
+        <apex:facet name="header">Business Unit</apex:facet>
+        <apex:outputText value="{!repayment.businessUnit}"/>
+       </apex:column>          
 	   <apex:column >
         <apex:facet name="header">Sum Of Repayments</apex:facet>
         <apex:outputText value="{!repayment.sumOfRepayments}"/>
