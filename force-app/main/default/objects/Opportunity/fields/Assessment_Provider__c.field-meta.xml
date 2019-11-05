@@ -6,6 +6,7 @@
     <label>Assessment Provider</label>
     <lookupFilter>
         <active>true</active>
+        <errorMessage>Assessment Provider account must be of type Assessment Provider</errorMessage>
         <filterItems>
             <field>Account.RecordTypeId</field>
             <operation>equals</operation>
@@ -14,7 +15,7 @@
         <isOptional>false</isOptional>
     </lookupFilter>
     <referenceTo>Account</referenceTo>
-    <relationshipLabel>Opportunities (Assessment Provider)</relationshipLabel>
+    <relationshipLabel>Assessment Provider Referred Cases</relationshipLabel>
     <relationshipName>Opportunities</relationshipName>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>

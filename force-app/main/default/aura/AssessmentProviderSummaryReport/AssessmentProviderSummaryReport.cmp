@@ -198,7 +198,7 @@
                                     <div class="slds-truncate">
                                         <lightning:layout pullToBoundary="small" >
                                             <lightning:layoutItem size="6" padding="horizontal-small">
-                                                <!--<span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!provider.assessmentProviderId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>-->
+                                                <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!provider.assessmentProviderId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
                                             </lightning:layoutItem>
                                             <lightning:layoutItem size="6" padding="horizontal-small">
                                                 <aura:if isTrue="{!provider.attachmentId != ''}">
