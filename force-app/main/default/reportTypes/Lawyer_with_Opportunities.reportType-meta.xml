@@ -732,6 +732,11 @@
     <sections>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Amount__c</field>
+            <table>Contact.Referred_Cases__r.Drawdowns__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Id</field>
             <table>Contact.Referred_Cases__r.Drawdowns__r</table>
         </columns>
