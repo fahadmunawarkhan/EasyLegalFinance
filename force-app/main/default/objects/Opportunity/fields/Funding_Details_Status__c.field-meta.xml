@@ -33,8 +33,13 @@
             </value>
             <value>
                 <fullName>Closed</fullName>
-                <default>true</default>
+                <default>false</default>
                 <label>Closed</label>
+            </value>
+            <value>
+                <fullName>none</fullName>
+                <default>true</default>
+                <label>none</label>
             </value>
         </valueSetDefinition>
     </valueSet>

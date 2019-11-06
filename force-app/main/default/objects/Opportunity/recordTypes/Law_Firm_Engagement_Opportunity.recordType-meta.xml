@@ -185,7 +185,7 @@
         </values>
         <values>
             <fullName>Loan Setup Check</fullName>
-            <default>true</default>
+            <default>false</default>
         </values>
         <values>
             <fullName>Populate PPSA</fullName>
@@ -194,6 +194,10 @@
         <values>
             <fullName>Process Drawdowns</fullName>
             <default>false</default>
+        </values>
+        <values>
+            <fullName>none</fullName>
+            <default>true</default>
         </values>
     </picklistValues>
     <picklistValues>
