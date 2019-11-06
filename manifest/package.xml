@@ -164,6 +164,8 @@
         <members>TriggerHandler</members>
         <members>TriggerHandler_Test</members>
         <members>TriggerHelper</members>
+        <members>LawSocietyReviewController</members>
+        <members>LawSocietyReviewControllerTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -294,6 +296,7 @@
         <members>LawyerAssessmentOpportunities</members>
         <members>LawyerApprovedCreditHistory</members>
         <members>LawyerAvailableCreditComponent</members>
+        <members>lawSocietyReviewReport</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -1379,6 +1382,7 @@
         <members>Scheduled_Payment__c</members>
         <members>Service_Provider_Drawdown__c</members>
         <members>System_Monitoring__c</members>
+        <members>lawSocietyReviewReport</members>
         <name>CustomTab</name>
     </types>
     <types>
