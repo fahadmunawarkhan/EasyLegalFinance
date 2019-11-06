@@ -102,10 +102,10 @@
                     <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table--header-fixed">
                         <thead>
                             <tr class="slds-text-heading_label"  style="font-size:10px; font-weight:bold;">
-                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_small slds-p-left_small slds-cell-fixed">Lawyer Name</div></th>
-                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_small slds-p-left_small slds-cell-fixed">Law Firm Name</div></th>
+                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Lawyer Name</div></th>
+                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Law Firm Name</div></th>
                                 <th scope="col" onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted slds-cell-wrap col-width" data-field="COUNT_DISTINCT(Opportunity__r.AccountId)" style="cursor: pointer;">
-                                    <div class="slds-p-left_small slds-cell-fixed">#Active <br/>Accounts
+                                    <div class="slds-p-top_large slds-p-left_small slds-cell-fixed">#Active <br/>Accounts
                                     <aura:if isTrue="{!and(v._sortOrder=='DESC',v._sortField=='COUNT_DISTINCT(Opportunity__r.AccountId)')}">
                                         <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
                                     </aura:if> 
@@ -115,7 +115,7 @@
                                     </div>
                                 </th>
                                 <th scope="col" onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted slds-cell-wrap col-width" data-field="SUM(Amount__c)" style="cursor: pointer;">
-                                    <div class="slds-p-left_small slds-cell-fixed">Outstanding <br/>Balance
+                                    <div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Outstanding <br/>Balance
                                     <aura:if isTrue="{!and(v._sortOrder=='DESC',v._sortField=='SUM(Amount__c)')}">
                                         <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
                                     </aura:if> 
@@ -166,7 +166,7 @@
                                         <lightning:input type="date" label="Date Reviewed" variant="label-hidden" value="{!v.filterNextReviewDate}" class="set-dateFilter" onchange="{!c.filterChangeHandler}"/>
                                     </div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_small slds-p-left_small slds-cell-fixed">Action</div></th>
+                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Action</div></th>
                             </tr>
                         </thead>
                         <tbody style="font-size:10px;">
