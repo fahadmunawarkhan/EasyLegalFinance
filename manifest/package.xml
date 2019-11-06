@@ -1489,6 +1489,7 @@
     </types>
     <types>
         <members>abc__c-abc Layout</members>
+        <members>Account-Account Layout - Assessment Provider</members>
         <members>Account-Account Layout</members>
         <members>Account-Account Layout - Client</members>
         <members>Account-Account Layout - General Business</members>

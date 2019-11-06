@@ -14,7 +14,7 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>Account.Opportunities__r.Drawdowns__r$Drawdown_Amount__c</field>
+        <field>Account.Opportunities__r.Drawdowns__r$Amount__c</field>
     </columns>
     <columns>
         <field>Account.Opportunities__r.Drawdowns__r$Payment_Method__c</field>
