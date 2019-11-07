@@ -39,7 +39,7 @@ public with sharing class FundingDetailsComponentCtlr {
     */
 
     @AuraEnabled(cacheable=False)
-    public static Opportunity[] getOpportunitiesWithScheduledPayments(){
+    public static Opportunity[] getOpportunitiesWithScheduledPayments(Date startDate, Date endDate){
         String[] allowedStatuses = new String[]{'Loan Setup Check', 'Process Drawdowns', 'Populate PPSA', 'Final Review'};
         String[] spStasuses = new String[]{'Processed by Bank', 'Drawdown Created'};
 
@@ -98,7 +98,50 @@ public with sharing class FundingDetailsComponentCtlr {
             ORDER BY Name ASC, Loan_Requests__c ASC
         ];
 
-        return oppList;
+        return filterOpportunitiesByScheduledPaymentDate(oppList, startDate, endDate);
+    }
+
+    @testVisible
+    private static Opportunity[] filterOpportunitiesByScheduledPaymentDate(Opportunity[] oppList, Date startDate, Date endDate) {
+        // Should return all opportunities and their child payments if any payment meets the filter criteria
+        Datetime compareStart = null;
+        if (startDate != null) {
+            compareStart = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day(), 0, 0, 0);
+        }
+        Datetime compareEnd = null;
+        if (endDate != null) {
+            compareEnd = Datetime.newInstance(endDate.year(), endDate.month(), endDate.day(), 23, 59, 59);
+        }
+
+        if (compareStart != null || compareEnd != null) {
+            Opportunity[] filteredOpps = new Opportunity[]{};
+            for (Opportunity opp : oppList) {
+                Boolean keep = false;
+                for (Scheduled_Payment__c sp : opp.Scheduled_Payments__r) {
+                    if (compareStart != null) {
+                        if (compareEnd != null) {
+                            if (sp.Sent_to_Bank_Date__c >= compareStart && sp.Sent_to_Bank_Date__c <= compareEnd) {
+                                keep = true;
+                            }
+                        } else {
+                            if (sp.Sent_to_Bank_Date__c >= compareStart) {
+                                keep = true;
+                            }
+                        }
+                    } else if (compareEnd != null) {
+                        if (sp.Sent_to_Bank_Date__c <= compareEnd) {
+                            keep = true;
+                        }
+                    }
+                }
+                if (keep) {
+                    filteredOpps.add(opp);
+                }
+            }
+            return filteredOpps;
+        } else {
+            return oppList;
+        }
     }
 
     /*
