@@ -48,7 +48,7 @@ public with sharing class EFTFile {
 
         // Fetch Accounts with Bank Account and Contact information mapped by Id for ease of use
         this.bankAccountList = new Map<Id, Bank_Account__c>([
-            SELECT Id, Bank__c, Transit__c, Account__c, Client__r.Name
+            SELECT Id, Name, Bank__c, Transit__c, Account__c, Client__r.Name
             FROM Bank_Account__c
             WHERE Id in :bankAccountIds
             ORDER BY Id
