@@ -2,7 +2,6 @@
     
     <!-- PRIVATE ATTRIBUTES -->
     <aura:attribute name="spinner" type="Boolean" default="false"/>
-    <aura:attribute name="printURL" type="String" />
     <aura:attribute name="filterUpcomingHearings" type="String" />
     <aura:attribute name="filterCurrentProceedings" type="String" />
     <aura:attribute name="filterOrders" type="String" />

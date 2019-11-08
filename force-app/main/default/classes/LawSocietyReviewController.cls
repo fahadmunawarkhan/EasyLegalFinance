@@ -101,25 +101,7 @@ public with sharing class LawSocietyReviewController {
         
         objectsMap.put('lawyers',lawyersList);
         objectsMap.put('isCurrentUserSeeLawSocietyReviewReport',[SELECT Id, Law_Society_Review__c FROM User WHERE Id =: UserInfo.getUserId() LIMIT 1].Law_Society_Review__c);
-        objectsMap.put('printURL', [SELECT Id, Conga_Law_Society_Review_Print__c FROM Contact LIMIT 1].Conga_Law_Society_Review_Print__c);
-        
-       // setCustomSettings(sDate, eDate, businessUnit, searchByName, upcomingHearings, currentProceedings, orders, dtReviewed, nxtReviewDate);
-        
         return objectsMap;
-    }
-    
-    public static void setCustomSettings(Date startDate, Date endDate, String businessUnit, String searchByName, String upcomingHearings, String currentProceedings, String orders, Date dateReviewed, Date nextReviewDate){
-        Law_Society_Review__c customSettings = Law_Society_Review__c.getOrgDefaults();
-        customSettings.Business_Unit__c = !String.isEmpty(businessUnit)? businessUnit : '';
-        customSettings.Start_Date__c = startDate;
-        customSettings.End_Date__c = endDate;
-        customSettings.Search_Param__c = !String.isEmpty(searchByName) && searchByName != null? searchByName : '';
-        customSettings.Upcoming_Hearings__c = !String.isEmpty(upcomingHearings) && upcomingHearings != null? upcomingHearings : '';
-        customSettings.Current_Proceedings__c = !String.isEmpty(currentProceedings) && currentProceedings != null? currentProceedings : '';
-        customSettings.Orders__c = !String.isEmpty(orders) && orders != null? orders : '';
-        customSettings.Date_Reviewed__c = dateReviewed;
-        customSettings.Next_Review_Date__c = nextReviewDate;
-        upsert customSettings;
     }
     
     @AuraEnabled
