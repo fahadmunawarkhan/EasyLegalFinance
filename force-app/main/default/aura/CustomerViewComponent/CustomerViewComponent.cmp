@@ -26,6 +26,7 @@
     <aura:attribute name="selectedNoteId" type="String" default="" />
     <aura:attribute name="criticalDateList" type="Critical_Date__c[]" />
     <aura:attribute name="criticalDateName" type="List" default="[]"/>
+	<aura:attribute name="oppIdList" type="Id[]" />    
     
     
     <aura:attribute name="notes" type="Object[]" />
@@ -1518,7 +1519,7 @@
                             <hr/>
                             <div class="slds-m-top_xxx-small slds-align_absolute-center">                 
                                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />                    
-                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />                                
                             </div>
 
                             <aura:if isTrue="{!v.displayPaymentValidationErrors}">                                    
