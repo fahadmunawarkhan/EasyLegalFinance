@@ -104,12 +104,6 @@ public with sharing class LawSocietyReviewController {
         return objectsMap;
     }
     
-    @AuraEnabled
-    public static Law_Society_Review__c getCustomSettings(){
-        Law_Society_Review__c customSettings = Law_Society_Review__c.getOrgDefaults();
-        return customSettings;
-    }
-    
     /**
     * @description Method to fetch lawyer details
     **/
