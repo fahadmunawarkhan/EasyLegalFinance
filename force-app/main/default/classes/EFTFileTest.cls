@@ -37,6 +37,7 @@ public class EFTFileTest {
 
         FObject baConfig = TestDataFactory.getBankAccountConfig(1);
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(baConfig, false)[0];
+        bankRec.Name = 'Seth Boyd';
         bankRec.Client__c = acc.Id;
         bankRec.Account__c = '466313001';
         bankRec.Bank__c = '0016';
@@ -68,7 +69,7 @@ public class EFTFileTest {
         EFT_File__c[] eftFileObjs = [Select Id, File_Number__c From EFT_File__c];
         System.assertEquals(1, eftFileObjs.size(), 'Should have created one EFT File Object');
         // Had to do some string manipulation since we refer to Scheduled Payment Names and File Number which are Auto-Numbers
-        String compareTo = 'HTWELF10201C351300419EasyLegalFinana00041020206905521363 {0}                   \r\nDLarry Sample Facility  300419{1}001610329466313001   0000200000\r\nT0000000100000000200000                                                         \r\n';
+        String compareTo = 'HTWELF10201C351300419EasyLegalFinana00041020206905521363 {0}                   \r\nDSeth Boyd              300419{1}001610329466313001   0000200000\r\nT0000000100000000200000                                                         \r\n';
         String spacedName = EFTHelper.formatString(spRec.Transaction_Reference_Number__c, '', 19, 'left');
         compareTo = String.format(compareTo, new List<Object>{eftFileObjs[0].File_Number__c, spacedName});
 
@@ -109,10 +110,10 @@ public class EFTFileTest {
         validateFileFormat(fileText, u, eftSettings);
 
         system.assertEquals(3, fileText.countMatches('\r\n'), 'Generated text should 3 carriage returns "\\r\n":\r\n' + fileText); // Should contain two newline chars
-        if (acc.Name.length() > 23) {
-            system.assertEquals(1, fileText.countMatches(acc.Name.substring(0, 23)), 'Generated text should include account name truncated to 23 digits: ' + acc.Name + '\r\n' + fileText);
+        if (bankRec.Name.length() > 23) {
+            system.assertEquals(1, fileText.countMatches(bankRec.Name.substring(0, 23)), 'Generated text should include account name truncated to 23 digits: ' + bankRec.Name + '\r\n' + fileText);
         } else {
-            system.assertEquals(1, fileText.countMatches(acc.Name), 'Generated text should include account name: ' + acc.Name + '\r\n' + fileText);
+            system.assertEquals(1, fileText.countMatches(bankRec.Name), 'Generated text should include account name: ' + bankRec.Name + '\r\n' + fileText);
         }
     }
 
@@ -156,10 +157,10 @@ public class EFTFileTest {
 
         validateFileFormat(fileText, u, eftSettings);
 
-        if (accRecs[1].Name.length() > 23) {
-            system.assertEquals(1, fileText.countMatches(accRecs[1].Name.substring(0, 23)), 'Generated text should include account name from Scheduled Payment truncated to 23 digits: ' + accRecs[1].Name + '\r\n' + fileText);
+        if (bankRecs[1].Name.length() > 23) {
+            system.assertEquals(1, fileText.countMatches(bankRecs[1].Name.substring(0, 23)), 'Generated text should include account name from Scheduled Payment truncated to 23 digits: ' + bankRecs[1].Name + '\r\n' + fileText);
         } else {
-            system.assertEquals(1, fileText.countMatches(accRecs[1].Name), 'Generated text should include account name from Scheduled Payment: ' + accRecs[1].Name + '\r\n' + fileText);
+            system.assertEquals(1, fileText.countMatches(bankRecs[1].Name), 'Generated text should include account name from Scheduled Payment: ' + bankRecs[1].Name + '\r\n' + fileText);
         }
     }
 
@@ -260,7 +261,7 @@ public class EFTFileTest {
         system.assertEquals(3, fileText.countMatches('\r\n'), 'Generated text should be 4 lines:' + fileText); // Should contain 3 newline chars
         system.assertEquals(0, fileText.countMatches('12345'), 'Generated text should not include amount for individual Scheduled Payments:' + fileText);
         system.assertEquals(2, fileText.countMatches('24690'), 'Generated text should include total amount for all grouped Scheduled Payments:' + fileText);
-        system.assertEquals(1, fileText.countMatches(acc.Name), 'Generated text should include account name for the grouped Scheduled Payments:' + fileText);
+        system.assertEquals(1, fileText.countMatches(bankRec.Name), 'Generated text should include account name for the grouped Scheduled Payments:' + fileText);
     }
 
     static void validateFileFormat(String fileText, User u, EFT_File_Setting__c eftSettings) {

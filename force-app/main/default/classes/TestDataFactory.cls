@@ -96,6 +96,7 @@ public class TestDataFactory {
 
     public static FObject getBankAccountConfig(Integer count) {
         FObject baConfig = new Fobject('Bank_Account__c', count);
+        baConfig.setDefinition('Name', 'static value(First Last)');
         baConfig.setDefinition('Account__c', 'static value(222-222-222)');
         baConfig.setDefinition('Bank__c', 'static value(0333)');
         baConfig.setDefinition('Transit__c', 'static value(44444)');

@@ -24,7 +24,7 @@ public with sharing class EFTFileDetail {
     *    @description : Method to set payee type
     **/
     private void setPayeeName(){
-        this.eftFileDetail += EFTHelper.formatString(this.bankAccount.Client__r.Name, '', 23, 'right');
+        this.eftFileDetail += EFTHelper.formatString(this.bankAccount.Name, '', 23, 'right');
     }
     
     /**
