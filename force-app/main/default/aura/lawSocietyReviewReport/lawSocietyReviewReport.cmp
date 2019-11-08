@@ -2,6 +2,7 @@
     
     <!-- PRIVATE ATTRIBUTES -->
     <aura:attribute name="spinner" type="Boolean" default="false"/>
+    <aura:attribute name="printURL" type="String" />
     <aura:attribute name="filterUpcomingHearings" type="String" />
     <aura:attribute name="filterCurrentProceedings" type="String" />
     <aura:attribute name="filterOrders" type="String" />
@@ -71,6 +72,12 @@
             </lightning:layout>
         </lightning:card>
         <lightning:card >
+            <lightning:layout horizontalAlign="center" >
+                <lightning:layoutItem >
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printReportButtnClick}"
+                                      variant="neutral" type="button" label="Print Report (PDF)" />
+                </lightning:layoutItem>
+            </lightning:layout>
             <lightning:layout verticalAlign="center" >
                 <lightning:layoutItem size="4" padding="around-medium" >
                     <div class="slds-grid slds-grid_vertical-align-center" >

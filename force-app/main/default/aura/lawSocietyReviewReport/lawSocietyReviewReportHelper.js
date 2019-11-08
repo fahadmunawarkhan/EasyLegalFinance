@@ -63,6 +63,7 @@
                     console.log(result['lawyers']);
 					component.set("v._tempRecordsList",result['lawyers']);
 					component.set("v._currentUserHasPermissionToSeeLawSocietyReview",result['isCurrentUserSeeLawSocietyReviewReport']);
+                    component.set("v.printURL", result['printURL']);
 					if(component.get("v._currentUserHasPermissionToSeeLawSocietyReview")) helper.setRecordsToDisplay(component);
 					else $A.util.toggleClass(component.find("spinner"),"slds-hide");
 					

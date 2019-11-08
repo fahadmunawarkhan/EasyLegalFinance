@@ -219,6 +219,7 @@
         <members>RDS_OpportunityDispatcher</members>
         <members>Template_MassEditCustomObject</members>
         <members>Template_MassUpdateCustomObject</members>
+        <members>LawSocietyReviewPrint</members>
         <name>ApexPage</name>
     </types>
     <types>
