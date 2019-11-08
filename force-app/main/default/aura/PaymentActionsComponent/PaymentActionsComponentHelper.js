@@ -20,7 +20,6 @@
         var actions = new Array();
         var searchType = component.get('v.searchType');
         if (searchType == 'Payout'){
-            console.log(tempPaymentReceived);
             if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && tempPaymentReceived != totalPayout && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
                 actions.push({label:'Partial Payment', value:'Partial Payment'});
             }
