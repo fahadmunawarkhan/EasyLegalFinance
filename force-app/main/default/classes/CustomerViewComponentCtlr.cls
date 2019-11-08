@@ -1295,7 +1295,6 @@ t.adminFee =  d.Amount__c;
             }
             else if (action == 'Bad Debt'){
                 changeToBadDebtStage(oppId, accountId, payoutDate);
-
             }
             else if (action == 'Closed Paid'){
                 applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq);

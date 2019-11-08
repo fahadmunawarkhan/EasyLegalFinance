@@ -663,4 +663,5 @@ public class CustomerViewComponentCtlrTest {
         System.assertEquals(true, tasks.isEmpty());
         Test.stopTest();
     }
+
 }

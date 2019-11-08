@@ -49,7 +49,8 @@
                 else{                    
                     actions.push({label:'No Action', value:'No Action'});
             }
-            }                        
+            }            
+            
         }
         component.set('v.actions', actions);                        
     },
