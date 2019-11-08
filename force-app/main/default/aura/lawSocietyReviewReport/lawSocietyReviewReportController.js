@@ -129,7 +129,8 @@
         let url = '/apex/LawSocietyReviewPrint?';
         url += 'startDate=' + component.get('v._startDate') + '&endDate=' + component.get('v._endDate');
         url += '&businessUnit=' + component.get('v._selectedBusinessUnit');
-        url += '&searchByName=' + component.get('v._lawyerOrLawFirmName') != null && component.get('v._lawyerOrLawFirmName') != undefined? component.get('v._lawyerOrLawFirmName') : '';
+        url += '&searchByName=';
+        url += component.get('v._lawyerOrLawFirmName') != null && component.get('v._lawyerOrLawFirmName') != undefined? component.get('v._lawyerOrLawFirmName') : '';
         url += '&upcomingHearings=' + component.get('v.filterUpcomingHearings') + '&currentProceedings=' + component.get('v.filterCurrentProceedings');
         url += '&orders=' + component.get('v.filterOrders');
         url += '&dateReviewed=';
