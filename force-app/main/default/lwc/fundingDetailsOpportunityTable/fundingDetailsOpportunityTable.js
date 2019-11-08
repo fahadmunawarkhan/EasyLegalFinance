@@ -16,6 +16,19 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
         this.buildNestedData();
     }
 
+
+    _filters = {};
+    @api 
+    get filters() {
+        return this._filters;
+    }
+    set filters(value) {
+        this._filters = value || this._filters;
+        this.refresh();
+    }
+
+
+
     @api refresh() {
         this.refreshData();
     }
@@ -56,7 +69,11 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
     fetchOpporunities() {
         return new Promise((resolve, reject) => {
             this.loading = true;
-            getOpportunitiesWithScheduledPayments()
+            // Add Date Filter
+            getOpportunitiesWithScheduledPayments({
+                startDate: this.filters.startDate,
+                endDate: this.filters.endDate
+            })
                 .then(result => {
                     result.forEach(opp => {
                         opp.Scheduled_Payments__r = opp.Scheduled_Payments__r || [];

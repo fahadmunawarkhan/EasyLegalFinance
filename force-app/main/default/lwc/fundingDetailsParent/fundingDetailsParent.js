@@ -93,9 +93,9 @@ export default class FundingDetails_Parent extends LightningElement {
 
         OpportunityTable: {
             currentStage: 'OpportunityTable',
-            filterName: 'all',
-            filterTimePeriod: 'future',
-            hideFilters: true,
+            filterName: 'closed',
+            filterTimePeriod: 'past',
+            hideFilters: false,
             hideSearch: true,
             tabQuerySelector: 'c-funding-details-opportunity-table'
         },

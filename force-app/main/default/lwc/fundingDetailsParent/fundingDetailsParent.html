@@ -90,7 +90,7 @@
                 <c-funding-details-send-cheques onfilterchange={handleStagingFilterChange} filters={filters.staging}></c-funding-details-send-cheques>
             </template>
             <template if:true={shouldShowOpportunityTable}>
-                <c-funding-details-opportunity-table></c-funding-details-opportunity-table>
+                <c-funding-details-opportunity-table filters={filters.closed}></c-funding-details-opportunity-table>
             </template>
             <template if:true={shouldShowCompletedPayments}>
                 <c-funding-details-completed-payments filters={filters.closed} query-term={queryTerm}></c-funding-details-completed-payments>
