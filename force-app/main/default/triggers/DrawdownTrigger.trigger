@@ -35,8 +35,9 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         toDel.addAll(trigger.oldMap.keySet());
         DeletePaymentAllocations.DeletePaymentAllocationsFromPayment(toDel);
     }
-    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) ){
-        //TriggerHelper.runOnce.. removed, because outstanding balance was not calculted correctly on payment applying
+    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) /*&& !TriggerHelper.runOnce('DrawdownTrigger')*/ ){
+        //TriggerHelper.add('DrawdownTrigger');
+		//TriggerHelper.runOnce.. removed, because outstanding balance was not calculted correctly on payment applying
         ///*
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,

@@ -1817,10 +1817,9 @@
                                         <div style="width:350px;margin-left:5%;">
                                             
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + (opp.Stage_Status__c == 'Bad Debt' ? ' (Bad Debt) ' : '')}" variant="base">
-                                                
-                                                <aura:set attribute="actions">     
+                                                <aura:set attribute="actions">
                                                     <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Surplus__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" />                                                            
-                                                </aura:set>                                                
+                                                </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                                                     <thead>
                                                         <tr class="slds-text-title_caps">
