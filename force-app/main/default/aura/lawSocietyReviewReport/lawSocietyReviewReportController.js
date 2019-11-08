@@ -124,5 +124,26 @@
         $A.util.toggleClass(component.find("spinner"),"slds-hide");
       	component.set("v._currentpage",1);
         helper.fetchLawyers(component,1,event,helper);
+    },
+    printReportButtnClick : function(component, event, helper) {
+        let url = '/apex/LawSocietyReviewPrint?';
+        url += 'startDate=' + component.get('v._startDate') + '&endDate=' + component.get('v._endDate');
+        url += '&businessUnit=' + component.get('v._selectedBusinessUnit');
+        url += '&searchByName=' + component.get('v._lawyerOrLawFirmName') != null && component.get('v._lawyerOrLawFirmName') != undefined? component.get('v._lawyerOrLawFirmName') : '';
+        url += '&upcomingHearings=' + component.get('v.filterUpcomingHearings') + '&currentProceedings=' + component.get('v.filterCurrentProceedings');
+        url += '&orders=' + component.get('v.filterOrders');
+        url += '&dateReviewed=';
+        url += component.get('v.filterDateReviewed') != null && component.get('v.filterDateReviewed') != undefined? component.get('v.filterDateReviewed') : '';
+        url += '&nextReviewDate=';
+        url += component.get('v.filterNextReviewDate') != null && component.get('v.filterNextReviewDate') != undefined?component.get('v.filterNextReviewDate') : '' ;
+            
+        let newWin;
+        try{                       
+            newWin = window.open(url);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
     }
 })

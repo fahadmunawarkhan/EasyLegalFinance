@@ -2,6 +2,42 @@
 * @description Class used to fetch the lawyer details
 **/
 public with sharing class LawSocietyReviewController {
+    public Date startDate{get;set;}
+    public Date endDate{get;set;}
+    public String businessUnit{get;set;}
+    public String searchByName{get;set;}
+    public String upcomingHearings{get;set;}
+    public String currentProceedings{get;set;}
+    public String orders{get;set;}
+    public String dateReviewed{get;set;}
+    public String nextReviewDate{get;set;}
+    
+    public LawSocietyReviewController(){
+        Date dt = Date.today();
+        String paramBusinessUnit = ApexPages.currentPage().getParameters().get('businessUnit');
+        String paramStartDate = ApexPages.currentPage().getParameters().get('startDate');
+        String paramEndDate = ApexPages.currentPage().getParameters().get('endDate');
+        String paramSearchByName = ApexPages.currentPage().getParameters().get('searchByName');
+        String paramUpcomingHearings = ApexPages.currentPage().getParameters().get('upcomingHearings');
+        String paramCurrentProceedings = ApexPages.currentPage().getParameters().get('currentProceedings');
+        String paramOrders= ApexPages.currentPage().getParameters().get('orders');
+        String paramDateReviewed= ApexPages.currentPage().getParameters().get('dateReviewed');
+        String paramNextReviewDate= ApexPages.currentPage().getParameters().get('nextReviewDate');
+        
+        this.businessUnit = !String.isEmpty(paramBusinessUnit) ? paramBusinessUnit : 'ELFI';
+        this.startDate = !String.isEmpty(paramStartDate)? Date.valueOf(paramStartDate) : dt.addDays(-30);
+        this.endDate = !String.isEmpty(paramEndDate)? Date.valueOf(paramEndDate) : dt;
+        this.searchByName = !String.isEmpty(paramSearchByName) && paramSearchByName != null? paramSearchByName : '';
+        this.upcomingHearings = !String.isEmpty(paramUpcomingHearings) && paramUpcomingHearings != null? paramUpcomingHearings : '';
+        this.currentProceedings = !String.isEmpty(paramCurrentProceedings) && paramCurrentProceedings != null? paramCurrentProceedings : '';
+        this.orders = !String.isEmpty(paramOrders) && paramOrders != null? paramOrders : '';
+        this.dateReviewed = !String.isEmpty(paramDateReviewed) && paramDateReviewed != null? paramDateReviewed : '';
+        this.nextReviewDate = !String.isEmpty(paramNextReviewDate) && paramNextReviewDate != null? paramNextReviewDate : '';
+    }
+    public List<Lawyer> getLawyers(){        
+        Map<String,Object> result = getLawyersList(this.startDate + '', this.endDate + '', this.businessUnit, this.searchByName, 'SUM(Amount__c)', 'ASC', this.upcomingHearings, this.currentProceedings, this.orders, this.dateReviewed, this.nextReviewDate);
+        return (List<Lawyer>)result.get('lawyers');
+    }
     
     /**
     * @description Method to fetch lawyer details
@@ -28,10 +64,10 @@ public with sharing class LawSocietyReviewController {
                 lawyerIds.add((Id)aggregateResult.get('lawyerId'));
             }
         }
+        Date dtReviewed = !String.isEmpty(dateReviewed) && dateReviewed != null? Date.valueOf(dateReviewed) : null;
+        Date nxtReviewDate = !String.isEmpty(nextReviewDate) && nextReviewDate != null? Date.valueOf(nextReviewDate) : null;
         
         If(!lawyerIds.isEmpty()){
-            Date dtReviewed = !String.isEmpty(dateReviewed) && dateReviewed != null? Date.valueOf(dateReviewed) : null;
-            Date nxtReviewDate = !String.isEmpty(nextReviewDate) && nextReviewDate != null? Date.valueOf(nextReviewDate) : null;
             
             String soqlContact = 'SELECT Id, Name, AccountId, Account.Name, Upcoming_Hearings__c, Current_Proceedings__c,';
             soqlContact += 'Orders__c, Date_Reviewed__c, Next_Review_Date__c';
@@ -65,7 +101,31 @@ public with sharing class LawSocietyReviewController {
         
         objectsMap.put('lawyers',lawyersList);
         objectsMap.put('isCurrentUserSeeLawSocietyReviewReport',[SELECT Id, Law_Society_Review__c FROM User WHERE Id =: UserInfo.getUserId() LIMIT 1].Law_Society_Review__c);
+        objectsMap.put('printURL', [SELECT Id, Conga_Law_Society_Review_Print__c FROM Contact LIMIT 1].Conga_Law_Society_Review_Print__c);
+        
+       // setCustomSettings(sDate, eDate, businessUnit, searchByName, upcomingHearings, currentProceedings, orders, dtReviewed, nxtReviewDate);
+        
         return objectsMap;
+    }
+    
+    public static void setCustomSettings(Date startDate, Date endDate, String businessUnit, String searchByName, String upcomingHearings, String currentProceedings, String orders, Date dateReviewed, Date nextReviewDate){
+        Law_Society_Review__c customSettings = Law_Society_Review__c.getOrgDefaults();
+        customSettings.Business_Unit__c = !String.isEmpty(businessUnit)? businessUnit : '';
+        customSettings.Start_Date__c = startDate;
+        customSettings.End_Date__c = endDate;
+        customSettings.Search_Param__c = !String.isEmpty(searchByName) && searchByName != null? searchByName : '';
+        customSettings.Upcoming_Hearings__c = !String.isEmpty(upcomingHearings) && upcomingHearings != null? upcomingHearings : '';
+        customSettings.Current_Proceedings__c = !String.isEmpty(currentProceedings) && currentProceedings != null? currentProceedings : '';
+        customSettings.Orders__c = !String.isEmpty(orders) && orders != null? orders : '';
+        customSettings.Date_Reviewed__c = dateReviewed;
+        customSettings.Next_Review_Date__c = nextReviewDate;
+        upsert customSettings;
+    }
+    
+    @AuraEnabled
+    public static Law_Society_Review__c getCustomSettings(){
+        Law_Society_Review__c customSettings = Law_Society_Review__c.getOrgDefaults();
+        return customSettings;
     }
     
     /**
@@ -122,11 +182,11 @@ public with sharing class LawSocietyReviewController {
     **/
     public class Lawyer {
         @AuraEnabled
-        public Contact contact;
+        public Contact contact{get;set;}
         @AuraEnabled
-        public Decimal outstandingBalance;
+        public Decimal outstandingBalance{get;set;}
         @AuraEnabled
-        public Integer noOfAccountFiles;
+        public Integer noOfAccountFiles{get;set;}
 
         /**
         * @description Constructor
