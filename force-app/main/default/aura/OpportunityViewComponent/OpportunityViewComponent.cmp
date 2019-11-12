@@ -922,6 +922,7 @@
                                         <lightning:layout>
                                             <lightning:layoutItem padding="horizontal-small">
                                                 <lightning:button
+                                                    disabled="{!if(v.currentUser.Schedule_Payments__c, false, true)}"
                                                     variant="brand"
                                                     label="New"
                                                     title="New Scheduled Payment"
