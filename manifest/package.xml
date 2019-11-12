@@ -167,6 +167,9 @@
         <members>TriggerHandler</members>
         <members>TriggerHandler_Test</members>
         <members>TriggerHelper</members>
+        <members>PermissionAssigner</members>
+        <members>PermissionAssignerTest</members>
+        <members>UserTriggerHandler</members>
         <members>LawSocietyReviewController</members>
         <members>LawSocietyReviewControllerTest</members>
         <name>ApexClass</name>
@@ -243,6 +246,7 @@
         <members>LeadTrigger</members>
         <members>PortfolioReportTrigger</members>
         <members>ScheduledPaymentTrigger</members>
+        <members>UserTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -1265,6 +1269,9 @@
         <members>User.Report_End_Date__c</members>
         <members>User.Report_Start_Date__c</members>
         <members>User.Treatment_Providers__c</members>
+        <members>User.Schedule_Payments__c</members>
+        <members>User.Funding_Tab__c</members>
+        <members>User.Generate_Banking_Sheets__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1312,6 +1319,9 @@
         <members>dlrs__LookupRollupSummary2.ContactPrincipalRepaidRollup</members>
         <members>dlrs__LookupRollupSummary2.PrincipalRepaidRollUp</members>
         <members>ForceeaSetting.Default</members>
+        <members>Permission_Assignment__mdt.Funding_Tab</members>
+        <members>Permission_Assignment__mdt.Generate_Banking_Sheets</members>
+        <members>Permission_Assignment__mdt.Schedule_Payments</members>
         <name>CustomMetadata</name>
     </types>
     <types>
