@@ -146,5 +146,16 @@
         {
             reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
         }
+    },
+    resetFilter : function(component, event, helper){
+        $A.util.toggleClass(component.find("spinner"),"slds-hide");
+        var selectedvalue = event.currentTarget.dataset.value;        
+        component.set("v.filter" + selectedvalue, "");
+        if(selectedvalue == "DateReviewed" || selectedvalue == "NextReviewDate"){
+            component.set("v.filter" + selectedvalue, null);
+        }
+        
+      	component.set("v._currentpage",1);
+        helper.fetchLawyers(component,1,event,helper);
     }
 })

@@ -6,12 +6,28 @@
     left: -0.71875px;
 }
 
+.THIS .date-in-table td.slds-is-today>.slds-day {
+    background-color: #cac6c6 !important;
+    color: #000 !important;
+    display: block;
+    top: 5px;
+}
+
+.THIS .date-in-table .slds-is-selected.slds-is-today .slds-day{
+    background: rgba(27, 82, 151, 1.0) !important;
+    color: rgb(255, 255, 255) !important;
+    display: block;
+    top: 5px;
+}
+
 .THIS .date-in-table .slds-is-selected .slds-day{
     background: rgba(27, 82, 151, 1.0) !important;
     color: rgb(255, 255, 255) !important;
     display: block;
     top: 5px;
 }
+
+
 .THIS .col-width{
     width: 10%;
 }
@@ -34,5 +50,5 @@
 }
 .THIS .set-dateFilter{
     margin-top:3px;
-    width : 100px;
+    width : 90px;
 }
