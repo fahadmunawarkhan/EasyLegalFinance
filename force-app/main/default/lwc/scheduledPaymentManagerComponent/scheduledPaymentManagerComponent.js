@@ -31,7 +31,7 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
     @track boolTrue = true;
     @track boolFalse = false;
 
-    @track showAdd = true;
+    @track showAdd = false;
     _shown = false;
     @api 
     get shown() {
@@ -334,9 +334,11 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
     }
 
     @api showCreateModal() {
-        this.showCreateForm = true;
-        const modal = this.template.querySelector("c-modal.createModal")
-        modal.show();
+        if (this.permissions.Can_Schedule_Payments) {
+            this.showCreateForm = true;
+            const modal = this.template.querySelector("c-modal.createModal")
+            modal.show();
+        }
     }
 
     hideCreateModal() {
