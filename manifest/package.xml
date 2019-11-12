@@ -1283,6 +1283,7 @@
         <members>Opportunity_Service_Provider_Invoice__c</members>
         <members>Payment_Rejection__c</members>
         <members>Payment_Summary_Report__c</members>
+        <members>Permission_Assignment__mdt</members>
         <members>Portfolio_Report__c</members>
         <members>Previous_Loan__c</members>
         <members>Report_Settings__c</members>
