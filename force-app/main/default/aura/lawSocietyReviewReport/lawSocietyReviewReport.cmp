@@ -133,46 +133,103 @@
                                 <th scope="col" class="slds-cell-wrap col-width">
                                     <div class="slds-p-left_small slds-cell-fixed">
                                         Upcoming<br/>Hearings
-                                        <lightning:select label="UH" variant="label-hidden" value="{!v.filterUpcomingHearings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                            <option value="">choose one...</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </lightning:select>
+                                        <div class="slds-grid">
+                                            <div class="slds-col" style="width:90px;">
+                                                <lightning:select label="UH" variant="label-hidden" value="{!v.filterUpcomingHearings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
+                                                    <option value="">choose one...</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </lightning:select>
+                                            </div>
+                                            <div class="slds-col slds-m-top_small slds-m-left_xx-small">
+                                                <aura:if isTrue="{!not(v.filterUpcomingHearings == '')}">
+                                                    <div data-value="UpcomingHearings" style="cursor: pointer;" onclick="{!c.resetFilter}">
+                                                        <lightning:icon iconName="utility:clear" size="xx-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
                                     </div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap col-width">
                                     <div class="slds-p-left_small slds-cell-fixed">
                                         Current<br/>Proceedings
-                                        <lightning:select label="CP" variant="label-hidden" value="{!v.filterCurrentProceedings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                            <option value="">choose one...</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </lightning:select>
+                                        <div class="slds-grid">
+                                            <div class="slds-col" style="width:90px;">
+                                                <lightning:select label="CP" variant="label-hidden" value="{!v.filterCurrentProceedings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
+                                                    <option value="">choose one...</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </lightning:select>
+                                            </div>
+                                            <div class="slds-col slds-m-top_small slds-m-left_xx-small">
+                                                <aura:if isTrue="{!not(v.filterCurrentProceedings == '')}">
+                                                    <div data-value="CurrentProceedings" style="cursor: pointer;" onclick="{!c.resetFilter}">
+                                                        <lightning:icon iconName="utility:clear" size="xx-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
                                     </div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap col-width">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed">
                                         Orders
-                                        <lightning:select label="Order" variant="label-hidden" value="{!v.filterOrders}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                            <option value="">choose one...</option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </lightning:select>
+                                        <div class="slds-grid">
+                                            <div class="slds-col" style="width:90px;">
+                                                <lightning:select label="Order" variant="label-hidden" value="{!v.filterOrders}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
+                                                    <option value="">choose one...</option>
+                                                    <option value="Yes">Yes</option>
+                                                    <option value="No">No</option>
+                                                </lightning:select>
+                                            </div>
+                                            <div class="slds-col slds-m-top_small slds-m-left_xx-small">
+                                                <aura:if isTrue="{!not(v.filterOrders == '')}">
+                                                    <div data-value="Orders" style="cursor: pointer;" onclick="{!c.resetFilter}">
+                                                        <lightning:icon iconName="utility:clear" size="xx-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap col-width">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed">
                                         Date Reviewed
-                                        <lightning:input type="date" label="Date Reviewed" variant="label-hidden" value="{!v.filterDateReviewed}" class="set-dateFilter" onchange="{!c.filterChangeHandler}"/>
+                                        <div class="slds-grid">
+                                            <div class="slds-col" style="">
+                                                <lightning:input type="date" label="Date Reviewed" variant="label-hidden" value="{!v.filterDateReviewed}" class="set-dateFilter" onchange="{!c.filterChangeHandler}"/>
+                                            </div>
+                                            <div class="slds-col slds-m-top_small slds-m-left_xx-small">
+                                                <aura:if isTrue="{!not(v.filterDateReviewed == null)}">
+                                                    <div data-value="DateReviewed" style="cursor: pointer;" onclick="{!c.resetFilter}">
+                                                        <lightning:icon iconName="utility:clear" size="xx-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>                                        
                                     </div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap col-width">
                                     <div class="slds-p-left_small slds-cell-fixed">
                                         Next Review <br/>Date
-                                        <lightning:input type="date" label="Date Reviewed" variant="label-hidden" value="{!v.filterNextReviewDate}" class="set-dateFilter" onchange="{!c.filterChangeHandler}"/>
+                                        <div class="slds-grid">
+                                            <div class="slds-col" style="">
+                                                <lightning:input type="date" label="Date Reviewed" variant="label-hidden" value="{!v.filterNextReviewDate}" class="set-dateFilter" onchange="{!c.filterChangeHandler}"/>
+                                            </div>
+                                            <div class="slds-col slds-m-top_small slds-m-left_xx-small">
+                                                <aura:if isTrue="{!not(v.filterNextReviewDate == null)}">
+                                                    <div data-value="NextReviewDate" style="cursor: pointer;" onclick="{!c.resetFilter}">
+                                                        <lightning:icon iconName="utility:clear" size="xx-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Action</div></th>
+                                <th scope="col" class="slds-cell-wrap col-width"><div class="slds-p-top_large slds-p-left_small slds-cell-fixed">Notes</div></th>
                             </tr>
                         </thead>
                         <tbody style="font-size:10px;">
