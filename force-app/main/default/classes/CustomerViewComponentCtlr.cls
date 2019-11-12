@@ -1282,53 +1282,51 @@ t.adminFee =  d.Amount__c;
     }    
     
     @AuraEnabled
-    public static List<Opportunity> applyPayments(String accountId, String payoutDate, String searchType, Map<String, String> paymentActions,
-                                                    String eft, String chq){   
+    public static List<Opportunity> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment){   
         Savepoint sp = null;
         try{
-            System.debug('applyPayments' + paymentActions.keySet());    
             sp = Database.setSavepoint();
-            for (String oppId : paymentActions.keySet()) {
-                String action = paymentActions.get(oppId);
-
-                {
-                    System.debug(oppId + ' ' + action); 
-                    if (action == 'Partial Payment'){
-                        applyPartialPayments(oppId, accountId, payoutDate, eft, chq);
-                    }
-                    else if (action == 'Misc Income Payment'){
-                        applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
-                    }
-                    else if (action == 'Bad Debt'){
-                        changeToBadDebtStage(oppId, accountId, payoutDate);
-                    }
-                    else if (action == 'Closed Paid'){
-                        applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq);
-                    }
-                    else if (action == 'Surplus'){
-                        changeToSurplusStage(oppId, accountId, payoutDate);
-                    }
-                    else if (action == 'Shortfall'){
-                        changeToShortfallStage(oppId, accountId, payoutDate);
-                    }
-                    
-                }                
+            System.debug('AP: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
+            if (action == 'Partial Payment'){
+                applyPartialPayments(oppId, accountId, payoutDate, eft, chq);
             }
-            deletePaymentTasks(accountId);
+            else if (action == 'Misc Income Payment'){
+                applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
+            }
+            else if (action == 'Bad Debt'){
+                changeToBadDebtStage(oppId, accountId, payoutDate);
+            }
+            else if (action == 'Closed Paid'){
+                applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq);
+            }
+            else if (action == 'Surplus'){
+                changeToSurplusStage(oppId, accountId, payoutDate);
+            }
+            else if (action == 'Shortfall'){
+                changeToShortfallStage(oppId, accountId, payoutDate);
+            }
+            if (isLastPayment)   
+            	deletePaymentTasks(accountId);
+            deletePaymentApplyingErrorTasks(accountId, oppId);
+            System.debug('AP1: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
         }
         catch (DMLException e){
             if (sp != null)
                 Database.rollback(sp);
-            System.debug('DML Exception ' +e.getMessage());
+            System.debug('DML Exception ' +e.getMessage());            
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
             if (sp != null)
-                Database.rollback(sp);
-            System.debug('Exception ' + e.getMessage());
+                Database.rollback(sp);            
+            System.debug('Exception ' + e.getMessage());            
             throw new AuraHandledException('Error:'+e.getMessage());
         }
-        return getOpportunities(accountId);
-    }
+        if (isLastPayment)
+        	return getOpportunities(accountId);
+        else
+            return new List<Opportunity>();
+    }   
+
     @AuraEnabled
     public static void createPaymentTask(String accountId, Decimal amount, String eft, String chq){
         Account account = [select Id, Name from Account where Id=:accountId];
@@ -1348,6 +1346,7 @@ t.adminFee =  d.Amount__c;
         task.Description = comment;
         insert task;
     }    
+
     @AuraEnabled
     public static List<Opportunity> calculatePayments(String accountId, Decimal amount, String eft, String chq, String searchType){
         try{
@@ -1387,4 +1386,31 @@ t.adminFee =  d.Amount__c;
         return String.valueOf(x.format()) + delimiter + '00';
         
     }
+
+    @AuraEnabled
+    public static void createPaymentApplyingErrorTask(String accountId, String oppId){ 
+        Account account = [select Id, Name from Account where Id=:accountId];
+        Opportunity opp = [select Id, Name, Loan_Requests__c from Opportunity where Id=:oppId];
+        Task task = new Task();        
+        task.Priority = 'Normal';
+        task.Status = 'Open';
+        task.WhatId = accountId;
+        task.Subject = 'Payment allocation failed';
+        task.Description = 'Payment was not applied to: ' + opp.Name + ' ' + opp.Loan_Requests__c + '.';
+        insert task;
+    }    
+    
+    @AuraEnabled
+	public static void deletePaymentApplyingErrorTasks(String accountId, String oppId){
+        Opportunity opp = [select Id, Name, Loan_Requests__c from Opportunity where Id=:oppId];        
+        Task[] tasks = [select Id,Subject, Description from Task where accountId=:accountId and Subject Like 'Payment allocation failed%'];
+        List<Task> tasksToDelete = new List<Task>();
+        String description = 'Payment was not applied to: ' + opp.Name + ' ' + opp.Loan_Requests__c + '.';
+        for (Task task : tasks){
+            if (task.Description == description)
+                tasksToDelete.add(task);
+        }
+        if (!tasksToDelete.isEmpty())
+        	delete tasksToDelete;
+    }    
 }

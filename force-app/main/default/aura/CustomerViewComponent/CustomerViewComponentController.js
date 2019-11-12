@@ -64,6 +64,7 @@
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentMiscSearch", false);
         component.set("v.paymentSearchTypeSelected", "Payout");        
+        component.set("v.paymentSearchDisabled", false);
     },
     onfocusAccountTab: function(component, event, helper)
     {

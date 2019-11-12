@@ -162,7 +162,7 @@ public class FundingDetailsComponentCtlrTest {
 
         FObject sp = new Fobject('Scheduled_Payment__c', 1);
         sp.setDefinition('Amount__c', 'static value(1000)');
-        sp.setDefinition('Status__c', 'static value(Sent to Bank)');
+        sp.setDefinition('Status__c', 'static value(Processed by Bank)');
         sp.setDefinition('Payment_Type__c', 'static value(Ad-Hoc)');
         //sp.setDefinition('Sent_to_Bank_Date__c', 'random type(datetime) from(2010-1-1) to(2015-12-31 15:13:00)');
         sp.setDefinition('Send_Cheque__c', 'static value(true)');
@@ -171,8 +171,72 @@ public class FundingDetailsComponentCtlrTest {
         Scheduled_Payment__c[] spRecs = ((List<Scheduled_Payment__c>)sp.getRecords());
 
         Test.startTest();
-        List<Opportunity> opps = FundingDetailsComponentCtlr.getOpportunitiesWithScheduledPayments();
+        List<Opportunity> opps = FundingDetailsComponentCtlr.getOpportunitiesWithScheduledPayments(null, null);
         Test.stopTest();
+
+        system.assertEquals(1, opps.size(), 'Should return 1 opp');
+        system.assertEquals(1, opps[0].Scheduled_Payments__r.size(), 'Opp should have 1 scheduled payment');
+    }
+
+    public static testMethod void testFilterOpportunitiesByScheduledPaymentDate(){
+        Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(1)[0];
+
+        FObject opp = new FObject('Opportunity', 1);
+        opp.setDefinition('Amount', 'static value(5000)');
+        opp.setDefinition('Admin_Fee__c', 'static value(475)');
+        opp.setDefinition('StageName', 'static value(Loan Approved)');
+        opp.setDefinition('Stage_Status__c', 'static value(File Sent for EFT)');
+        opp.setDefinition('AccountId', 'random lookup(Account) source(forceea)');
+        opp.setDefinition('Minimum_Interest_Period__c', 'random type(picklist)');
+        opp.setDefinition('Interest_Deferral_Period__c', 'random type(picklist)');
+        opp.setDefinition('Interest_Rate__c', 'static value(0.245)');
+        opp.setDefinition('Interest_Compounding_Period__c', 'static value(Simple Interest)');
+        opp.setDefinition('Funding_Details_Status__c', 'static value(Loan Setup Check)');
+        opp.insertRecords(true);
+        Opportunity oppRec = ((List<Opportunity>)opp.getRecords())[0];
+
+        
+        Datetime firstDate = Datetime.newInstance(2019, 10, 1, 0, 0, 0);
+        Datetime secondDate = Datetime.newInstance(2019, 10, 2, 0, 0, 0);
+        FObject spConfig = TestDataFactory.getScheduledPaymentConfig(2);
+        Scheduled_Payment__c[] spRecs = TestDataFactory.getScheduledPaymentObjects(spConfig, false);
+        spRecs[0].Amount__c = 1000;
+        spRecs[0].Payment_Type__c = 'Ad-Hoc';
+        spRecs[0].Status__c = 'Processed by Bank';
+        spRecs[1].Amount__c = 1000;
+        spRecs[1].Payment_Type__c = 'Ad-Hoc';
+        spRecs[1].Status__c = 'Processed by Bank';
+        spRecs[1].Sent_to_Bank_Date__c = secondDate;
+        spRecs = TestDataFactory.getScheduledPaymentObjects(spConfig, true);
+        spRecs[0].Sent_to_Bank_Date__c = firstDate;
+        spRecs[1].Sent_to_Bank_Date__c = secondDate;
+        update spRecs;
+
+        Opportunity[] filteredOpps;
+        Test.startTest();
+        List<Opportunity> opps = FundingDetailsComponentCtlr.getOpportunitiesWithScheduledPayments(null, null);
+        Test.stopTest();
+
+        // No filters
+        filteredOpps = FundingDetailsComponentCtlr.filterOpportunitiesByScheduledPaymentDate(opps, null, null);
+        system.assertEquals(1, filteredOpps.size(), 'Should return 1 opp');
+        system.assertEquals(2, filteredOpps[0].Scheduled_Payments__r.size(), 'Opp should have 2 scheduled payments');
+
+        filteredOpps = FundingDetailsComponentCtlr.filterOpportunitiesByScheduledPaymentDate(opps, firstDate.Date(), secondDate.date());
+        system.assertEquals(1, filteredOpps.size(), 'Should return 1 opp');
+        system.assertEquals(2, filteredOpps[0].Scheduled_Payments__r.size(), 'Opp should have 2 scheduled payments');
+
+        filteredOpps = FundingDetailsComponentCtlr.filterOpportunitiesByScheduledPaymentDate(opps, null, firstDate.Date());
+        system.assertEquals(1, filteredOpps.size(), 'Should return 1 opp');
+        system.assertEquals(2, filteredOpps[0].Scheduled_Payments__r.size(), 'Opp should have 2 scheduled payments');
+
+        filteredOpps = FundingDetailsComponentCtlr.filterOpportunitiesByScheduledPaymentDate(opps, secondDate.Date(), null);
+        system.assertEquals(1, filteredOpps.size(), 'Should return 1 opp');
+        system.assertEquals(2, filteredOpps[0].Scheduled_Payments__r.size(), 'Opp should have 2 scheduled payments');
+
+        Date outOfBoundsDate = secondDate.date().addDays(1);
+        filteredOpps = FundingDetailsComponentCtlr.filterOpportunitiesByScheduledPaymentDate(opps, outOfBoundsDate, outOfBoundsDate);
+        system.assertEquals(0, filteredOpps.size(), 'Should return no opp');
     }
 
     //public static string generateBankingSheet(Id[] spIds){

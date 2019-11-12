@@ -35,8 +35,9 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         toDel.addAll(trigger.oldMap.keySet());
         DeletePaymentAllocations.DeletePaymentAllocationsFromPayment(toDel);
     }
-    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) ){
-        //TriggerHelper.runOnce.. removed, because outstanding balance was not calculted correctly on payment applying
+    if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) /*&& !TriggerHelper.runOnce('DrawdownTrigger')*/ ){
+        //TriggerHelper.add('DrawdownTrigger');
+		//TriggerHelper.runOnce.. removed, because outstanding balance was not calculted correctly on payment applying
         ///*
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,
@@ -45,7 +46,7 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         // DrawdownTriggerHandler.reCalculateCriticalDatePayout(Trigger.isDelete ? Trigger.old : Trigger.new, 
                                                              // Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);        
         //*/
-    }
+    }    
     
     /*
     // Replaced with process and InvocableMethod callout to consolidate work
