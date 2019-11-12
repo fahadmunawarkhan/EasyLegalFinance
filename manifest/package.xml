@@ -8,6 +8,9 @@
         <members>AmendmentTriggerHandler</members>
         <members>AmendmentTriggerHandlerTest</members>
         <members>AssessmentProviderSummaryReportCtlr</members>
+        <members>AssessmentProviderSummaryReportCtlrTest</members>
+        <members>AssessmentSummaryReportCtlr</members>
+        <members>AssessmentSummaryReportCtlrTest</members>
         <members>BadDebtSummaryReportCtlr</members>
         <members>BadDebtSummaryReportCtlrTest</members>
         <members>BankAccountsController</members>
