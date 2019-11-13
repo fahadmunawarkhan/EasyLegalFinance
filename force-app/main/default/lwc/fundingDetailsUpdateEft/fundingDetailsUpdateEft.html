@@ -57,12 +57,22 @@
     </div>
     -->
 
-    <lightning-input
-        type="checkbox" 
-        value={selectedAll}
-        label={selectAllText}
-        onchange={toggleSelectAll}
-    ></lightning-input>
+    <lightning-layout>
+        <lightning-layout-item>
+            <lightning-input
+                type="checkbox" 
+                value={selectedAll}
+                label={selectAllText}
+                onchange={toggleSelectAll}
+            ></lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item>
+            <lightning-input name="EFTNum" value={eftNum} onchange={handleEFTChange} variant="label-hidden"></lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item>
+            <lightning-button label="Update Selected EFT #'s'" onclick={handleSetEFTClick} variant="success"></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
 
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">

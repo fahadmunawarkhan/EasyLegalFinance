@@ -44,6 +44,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @track selectedOpportunity;
     @track permissions;
     @track pageSize = 50;
+    @track eftNum;
 
     @wire(fetchCustomPermissions, {permissions: PERMISSION_CLASSES})
     setPermissions(result) {
@@ -154,6 +155,19 @@ export default class FundingDetailsUpdateEft extends LightningElement {
             spIds = spIds.concat(dt.selectedRows);
         });
         return spIds
+    }
+
+    handleEFTChange(event) {
+        this.eftNum = event.detail.value;
+    }
+
+    handleSetEFTClick(event) {
+        // loop over group components and call setEFT on them
+        let groups = this.template.querySelectorAll('c-funding-details-eft-group');
+        groups.forEach(group => {
+            group.setEFT(this.eftNum);
+        });
+        //this.dt.draftValues = this.draftValues;
     }
 
     handleSendBack() {
