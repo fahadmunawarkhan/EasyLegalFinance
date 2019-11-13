@@ -245,6 +245,7 @@ public with sharing class FundingDetailsComponentCtlr {
                 ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
                 ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
                 ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c' +
+                ', Drawdown_Date__c' +
             ' FROM Scheduled_Payment__c';
         if(statuses != null) {
             query = query + ' WHERE Status__c in :statuses ';

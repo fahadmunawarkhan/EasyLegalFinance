@@ -63,6 +63,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         //{ label: 'Admin Fee', fieldName: 'Triggered_Admin_Fee_Amount__c', type: 'currency', sortable: true },
         //{ label: 'Scheduled', fieldName: 'Scheduled_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'}, sortable: true },
         { label: 'Sent to Bank', fieldName: 'Sent_to_Bank_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'}, sortable: true },
+        { label: 'Drawdown Date', fieldName: 'Drawdown_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'}, sortable: true },
         //{ label: 'Available Credit', fieldName: 'opportunity.Loan_Available_to_Drawdown__c', type: 'currency', sortable: true },
         { label: 'Payment Amount', fieldName: 'Amount__c', type: 'currency', sortable: true },
         { label: 'Verified By', fieldName: 'Verified_By__r.Name', type: 'text', sortable: true },
