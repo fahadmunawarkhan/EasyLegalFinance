@@ -11,6 +11,7 @@ public with sharing class LawSocietyReviewController {
     public String orders{get;set;}
     public String dateReviewed{get;set;}
     public String nextReviewDate{get;set;}
+    public String reviewedStatus{get;set;}
     
     public LawSocietyReviewController(){
         Date dt = Date.today();
@@ -23,6 +24,8 @@ public with sharing class LawSocietyReviewController {
         String paramOrders= ApexPages.currentPage().getParameters().get('orders');
         String paramDateReviewed= ApexPages.currentPage().getParameters().get('dateReviewed');
         String paramNextReviewDate= ApexPages.currentPage().getParameters().get('nextReviewDate');
+        String paramReviewedStatus= ApexPages.currentPage().getParameters().get('reviewedStatus');
+        
         
         this.businessUnit = !String.isEmpty(paramBusinessUnit) ? paramBusinessUnit : 'ELFI';
         this.startDate = !String.isEmpty(paramStartDate)? Date.valueOf(paramStartDate) : dt.addDays(-30);
@@ -33,9 +36,10 @@ public with sharing class LawSocietyReviewController {
         this.orders = !String.isEmpty(paramOrders) && paramOrders != null? paramOrders : '';
         this.dateReviewed = !String.isEmpty(paramDateReviewed) && paramDateReviewed != null? paramDateReviewed : '';
         this.nextReviewDate = !String.isEmpty(paramNextReviewDate) && paramNextReviewDate != null? paramNextReviewDate : '';
+        this.reviewedStatus = !String.isEmpty(paramReviewedStatus) && paramReviewedStatus != null? paramReviewedStatus : 'All';
     }
     public List<Lawyer> getLawyers(){        
-        Map<String,Object> result = getLawyersList(this.startDate + '', this.endDate + '', this.businessUnit, this.searchByName, 'SUM(Amount__c)', 'ASC', this.upcomingHearings, this.currentProceedings, this.orders, this.dateReviewed, this.nextReviewDate);
+        Map<String,Object> result = getLawyersList(this.startDate + '', this.endDate + '', this.businessUnit, this.searchByName, 'SUM(Amount__c)', 'ASC', this.upcomingHearings, this.currentProceedings, this.orders, this.dateReviewed, this.nextReviewDate, this.reviewedStatus);
         return (List<Lawyer>)result.get('lawyers');
     }
     
@@ -43,7 +47,7 @@ public with sharing class LawSocietyReviewController {
     * @description Method to fetch lawyer details
     **/
     @AuraEnabled
-    public static Map<String,Object> getLawyersList(String startDate, String endDate, String businessUnit, String searchByName, String field, String direction, String upcomingHearings, String currentProceedings, String orders, String dateReviewed, String nextReviewDate){
+    public static Map<String,Object> getLawyersList(String startDate, String endDate, String businessUnit, String searchByName, String field, String direction, String upcomingHearings, String currentProceedings, String orders, String dateReviewed, String nextReviewDate, String reviewedStatus){
        
         Map<String, Object> objectsMap = new Map<String, Object>();
         Set<Id> lawyerIds = new Set<Id>();
@@ -73,6 +77,8 @@ public with sharing class LawSocietyReviewController {
             soqlContact += 'Orders__c, Date_Reviewed__c, Next_Review_Date__c';
             soqlContact += ' FROM Contact';
             soqlContact += ' WHERE RecordType.DeveloperName = \'Lawyers\'';
+            soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Reviewed'? ' AND Date_Reviewed__c != null' : '';
+            soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Not Reviewed'? ' AND Date_Reviewed__c = null' : '';
             soqlContact += !String.isEmpty(upcomingHearings)? ' AND Upcoming_Hearings__c =:upcomingHearings' : '';
             soqlContact += !String.isEmpty(currentProceedings)? ' AND Current_Proceedings__c =:currentProceedings' : '';
             soqlContact += !String.isEmpty(orders)? ' AND Orders__c =:orders' : '';

@@ -172,6 +172,7 @@
         <members>UserTriggerHandler</members>
         <members>LawSocietyReviewController</members>
         <members>LawSocietyReviewControllerTest</members>
+        <members>LawyerLawSocietyPageTabCtlr</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -305,6 +306,7 @@
         <members>LawyerApprovedCreditHistory</members>
         <members>LawyerAvailableCreditComponent</members>
         <members>lawSocietyReviewReport</members>
+        <members>LawyerLawSocietyPageTab</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>

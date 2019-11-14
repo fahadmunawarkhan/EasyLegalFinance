@@ -102,6 +102,12 @@
     **/
 	handleFilter : function(component, event, helper){
         $A.util.toggleClass(component.find("spinner"),"slds-hide");
+        component.set("v.filterUpcomingHearings","");
+        component.set("v.filterCurrentProceedings","");
+        component.set("v.filterOrders","");
+        component.set("v.filterDateReviewed",null);
+        component.set("v.filterNextReviewDate",null);
+        
       	component.set("v._currentpage",1);
         helper.fetchLawyers(component,1,event,helper);
 	},
@@ -137,7 +143,8 @@
         url += component.get('v.filterDateReviewed') != null && component.get('v.filterDateReviewed') != undefined? component.get('v.filterDateReviewed') : '';
         url += '&nextReviewDate=';
         url += component.get('v.filterNextReviewDate') != null && component.get('v.filterNextReviewDate') != undefined?component.get('v.filterNextReviewDate') : '' ;
-            
+        url += '&reviewedStatus=' + component.get('v._selectedReviewedStatus');
+        
         let newWin;
         try{                       
             newWin = window.open(url);

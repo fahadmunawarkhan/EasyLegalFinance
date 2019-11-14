@@ -52,7 +52,8 @@
             currentProceedings : component.get("v.filterCurrentProceedings"),
             orders : component.get("v.filterOrders"),
             dateReviewed : component.get("v.filterDateReviewed"),
-            nextReviewDate : component.get("v.filterNextReviewDate")
+            nextReviewDate : component.get("v.filterNextReviewDate"),
+            reviewedStatus : component.get("v._selectedReviewedStatus")
             
 		});
 		this.promiseServerSideCall(action).then(
