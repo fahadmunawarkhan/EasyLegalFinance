@@ -20,6 +20,7 @@
     <aura:attribute name="_selectedEntry" type="Integer" description="Selected Entry" default="25" />
     <aura:attribute name="_startDate" type="Date" description="Selected Start Date"  />
     <aura:attribute name="_endDate" type="Date" description="Selected End Date" />
+    <aura:attribute name="_selectedReviewedStatus" type="String" description="Selected Reviewed Status" default="All" />
     <aura:attribute name="_selectedBusinessUnit" type="String" description="Selected Business Unit" default="ELFI" />
     <aura:attribute name="_lawyerOrLawFirmName" type="String" description="Lawyer or Law Firm Search String" />
     <aura:attribute name="_contentNote" type="String" description="Content note." />
@@ -55,6 +56,13 @@
                 </lightning:layoutItem>
                 <lightning:layoutItem size="3" padding="around-medium">
                     <lightning:input label="Search" type="text" value="{!v._lawyerOrLawFirmName}" placeholder="Search by law firm or lawyer name" />
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2" padding="around-medium">
+                    <lightning:select aura:id="reviewedStatusOptions" label="Reviewed Status" value="{!v._selectedReviewedStatus}" class="slds-p-left_xx-small">
+                        <option value="All">All</option>
+                        <option value="Reviewed">Reviewed</option>
+                        <option value="Not Reviewed">Not Reviewed</option>
+                    </lightning:select>  
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2" padding="around-medium">
                     <lightning:select aura:id="businessUnitOptions" label="Business Unit" value="{!v._selectedBusinessUnit}" class="slds-p-left_xx-small">
@@ -136,7 +144,7 @@
                                         <div class="slds-grid">
                                             <div class="slds-col" style="width:90px;">
                                                 <lightning:select label="UH" variant="label-hidden" value="{!v.filterUpcomingHearings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                                    <option value="">choose one...</option>
+                                                    <option value="">All</option>
                                                     <option value="Yes">Yes</option>
                                                     <option value="No">No</option>
                                                 </lightning:select>
@@ -157,7 +165,7 @@
                                         <div class="slds-grid">
                                             <div class="slds-col" style="width:90px;">
                                                 <lightning:select label="CP" variant="label-hidden" value="{!v.filterCurrentProceedings}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                                    <option value="">choose one...</option>
+                                                    <option value="">All</option>
                                                     <option value="Yes">Yes</option>
                                                     <option value="No">No</option>
                                                 </lightning:select>
@@ -178,7 +186,7 @@
                                         <div class="slds-grid">
                                             <div class="slds-col" style="width:90px;">
                                                 <lightning:select label="Order" variant="label-hidden" value="{!v.filterOrders}" class="fixmargin-top" onchange="{!c.filterChangeHandler}">
-                                                    <option value="">choose one...</option>
+                                                    <option value="">All</option>
                                                     <option value="Yes">Yes</option>
                                                     <option value="No">No</option>
                                                 </lightning:select>

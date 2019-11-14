@@ -65,7 +65,7 @@ private with sharing class LawSocietyReviewControllerTest {
         User currentUser = [SELECT Id, Law_Society_Review__c FROM User WHERE Id =: UserInfo.getUserId() LIMIT 1];
         currentUser.Law_Society_Review__c = false;
         update currentUser;
-        System.assertEquals(false,(Boolean)LawSocietyReviewController.getLawyersList(Date.today().addYears(-3)+'',Date.today()+'','ELFI', '', 'SUM(Amount__c)','ASC','','','',null,null).get('isCurrentUserSeeLawSocietyReviewReport'));
+        System.assertEquals(false,(Boolean)LawSocietyReviewController.getLawyersList(Date.today().addYears(-3)+'',Date.today()+'','ELFI', '', 'SUM(Amount__c)','ASC','','','',null,null, 'All').get('isCurrentUserSeeLawSocietyReviewReport'));
         Test.stopTest();
     }
 
