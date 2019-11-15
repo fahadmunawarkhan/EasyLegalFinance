@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 
-export default class ReversePaymentForm extends LightningElement {
+export default class reversePaymentForm extends LightningElement {
     @api recordId;
     @api scheduledPaymentId;
     @api showProcessedFields = false;

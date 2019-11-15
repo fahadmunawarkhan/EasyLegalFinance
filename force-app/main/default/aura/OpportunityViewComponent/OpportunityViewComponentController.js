@@ -63,54 +63,7 @@
         */
     },
     reInitSomeData:function(component, event, helper) {
-        let initialized = component.get('v.initialized');
-        if (initialized === true) {
-            component.set('v.drawDownList', undefined);
-            helper.getOpportunityInfo(component);
-            helper.getDrawdownList(component, true);
-            helper.getDrawdownPaymentsList(component);
-            helper.getServiceProvidersList(component);
-            //helper.getReAssessmentOpportunitiesList(component);
-            //helper.getCalendarMin(component);
-            //helper.getCalendarMax(component); 
-            //helper.getSingleContactHistory(component);
-            helper.getBankAccountOptions(component);
-            //helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-            //helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
-            /*
-            let loanType = component.get('v.oppObj').Type_of_Loan__c;
-            
-            if(loanType != 'Treatment Loan' && loanType != 'Treatment Loan 2'){
-                let drawDownList = component.get('v.drawDownList');
-                for(let i = 0 ; i < drawDownList.length ; i++)
-                {
-                    let newPaymentMethod = drawDownList[i].Payment_Method__c;
-                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i, true);
-                }
-            } else {
-                let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
-                for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
-                {
-                    let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
-                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i);
-                }                  
-            }
-            */
-            let pubsub = component.find('pubsub');
-            if (pubsub) {
-                pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
-                pubsub.fireEvent(`previousloanschanged-${component.get('v.recordId')}`);
-            }
-        } else {
-            component.set('v.initialized', true);
-        }
-        //component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
-        
-        /*console.log('tab switch');
-        var oldVal = component.get('v.oppObj.Have_you_ever_declared_bankruptcy__c');
-        component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c','');
-        component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c',oldVal);*/
-        
+        helper.reInitSomeData(component, helper);
     },
     
     onControllerFieldChange: function(component, event, helper) { 
@@ -525,5 +478,17 @@
     },
     updateAmounts: function(component, event, helper) {
         helper.getUpdatedAmounts(component);
-    }
+    },
+    handleReverseClick: function(component, event, helper) {
+        helper.showReverseModal(component, event.getParam("Id"));
+    },
+    handleReverseSuccess : function(component, event, helper) {
+        helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+        //helper.getServiceProvidersList(component);
+    },
+    handleReverseCancel: function(component, event, helper) {
+        helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+    },
 })
