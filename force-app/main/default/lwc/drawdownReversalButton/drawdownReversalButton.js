@@ -10,7 +10,7 @@ export default class drawdownReversalButton extends LightningElement {
     handleClick(event) {
         event.preventDefault();
         const evt = new CustomEvent("reverseclick", {
-            detail: {Id: this.scheduledPaymentId},
+            detail: {Id: this.drawdown.Scheduled_Payment__c},
             bubbles: true,
             composed: true
         });
