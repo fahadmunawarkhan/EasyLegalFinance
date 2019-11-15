@@ -123,7 +123,7 @@
         <members>PaymentControllerTest</members>
         <members>PaymentHelper</members>
         <members>PaymentRejectionTriggerHandler</members>
-        <members>PaymentRejectionTriggerTest</members>
+        <members>PaymentRejectionTriggerHandlerTest</members>
         <members>PaymentSummaryComponentCtlr</members>
         <members>PaymentSummaryComponentCtrlTest</members>
         <members>PayoutStatementController</members>
