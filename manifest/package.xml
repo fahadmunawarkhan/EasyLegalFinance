@@ -127,6 +127,8 @@
         <members>PaymentController</members>
         <members>PaymentControllerTest</members>
         <members>PaymentHelper</members>
+        <members>PaymentRejectionTriggerHandler</members>
+        <members>PaymentRejectionTriggerTest</members>
         <members>PaymentSummaryComponentCtlr</members>
         <members>PaymentSummaryComponentCtrlTest</members>
         <members>PayoutStatementController</members>
@@ -245,6 +247,7 @@
         <members>FirmTrigger</members>
         <members>handleLeadTrigger</members>
         <members>LeadTrigger</members>
+        <members>PaymentRejectionTrigger</members>
         <members>PortfolioReportTrigger</members>
         <members>ScheduledPaymentTrigger</members>
         <members>UserTrigger</members>
@@ -1593,6 +1596,7 @@
         <members>bankAccountForm</members>
         <members>bankAccountsHistoryReport</members>
         <members>dateRangePicker</members>
+        <members>drawdownReversalButton</members>
         <members>errorPanel</members>
         <members>flatley</members>
         <members>fundingDetailsChequeGroup</members>

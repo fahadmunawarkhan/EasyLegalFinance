@@ -145,14 +145,26 @@
         var recordId = component.get("v.recordId");
         var action = component.get('c.getDrawdownList');             
         action.setParams({ oppId : recordId});
-        
+
         action.setCallback(this, function (response) {
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                component.set("v.drawDownList", response.getReturnValue());                
+                let drawDownList = response.getReturnValue();
+                if (component.get("v.oppObj").Type_of_Loan__c.startsWith('Treatment')) {
+                    let nonServiceProviderDrawdowns = [];
+                    drawDownList.forEach(dd => {
+                        if (!dd.Opportunity_Service_Provider__c) {
+                            nonServiceProviderDrawdowns.push(dd);
+                        }
+                    });
+                    component.set("v.drawDownList", nonServiceProviderDrawdowns);
+                }
+                else {
+                    component.set("v.drawDownList", drawDownList);                
+                }
+                drawDownList = component.get('v.drawDownList');
                 if (fetchRefNotes === true) {
-                    let drawDownList = component.get('v.drawDownList');
                     for(let i = 0 ; i < drawDownList.length ; i++)
                     {
                         let newPaymentMethod = drawDownList[i].Payment_Method__c;
@@ -199,6 +211,11 @@
     
     saveDrawdowns : function(component) {
         var drawDowns = component.get("v.drawDownList");
+        this.saveDrawdownsCallout(component, drawDowns);
+    },
+    
+    saveDrawdownsCallout : function(component, drawDowns) {
+        var drawDowns = component.get("v.drawDownList");
         var action = component.get('c.saveNewDrawdownList');             
         action.setParams({ drawDownNewList : drawDowns});
         
@@ -223,6 +240,7 @@
         });
         $A.enqueueAction(action);        
     },
+    
     
     savePaymentDrawdowns : function(component) {
         var drawDowns = component.get("v.drawDownPaymentsList");
@@ -1237,20 +1255,19 @@
                         notes.push(result);
                     }
                     
-                    var loanType = component.get('v.oppObj').Type_of_Loan__c;
+                    let loanType = component.get('v.oppObj').Type_of_Loan__c;
                     
-                    if(loanType != 'Treatment Loan' && loanType != 'Treatment Loan 2'){
-                        var drawDownList = component.get('v.drawDownList');
-                        for(var i = 0 ; i < drawDownList.length ; i++)
+                    let drawDownList = component.get('v.drawDownList');
+                    for(let i = 0 ; i < drawDownList.length ; i++)
+                    {
+                        let newPaymentMethod = drawDownList[i].Payment_Method__c;
+                        this.fetchRefNotesDepValues(component, newPaymentMethod, i);
+                    }
+                    if (loanType.startsWith('Treatment Loan')) {
+                        let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
+                        for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
                         {
-                            var newPaymentMethod = drawDownList[i].Payment_Method__c;
-                            this.fetchRefNotesDepValues(component, newPaymentMethod, i);
-                        }
-                    } else {
-                        var drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
-                        for(var i = 0 ; i < drawDownPaymentsList.length ; i++)
-                        {
-                            var newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
+                            let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
                             this.fetchRefNotesDepValues(component, newPaymentMethod, i);
                         }                  
                     }
@@ -1485,5 +1502,69 @@
                 })
             }
 		);
-	},
+    },
+    getReverseModalElement: function(component) {
+        return component.find("reverseModal")
+    },
+    showReverseModal: function(component, scheduledPaymentId) {
+        if (scheduledPaymentId) {
+            component.set("v.reverseScheduledPaymentId", scheduledPaymentId);
+            $A.createComponent(
+                "c:reversePaymentForm",
+                {
+                    scheduledPaymentId: component.get("v.reverseScheduledPaymentId"),
+                    showProcessedFields: true,
+                    onsuccess: component.getReference("c.handleReverseSuccess"),
+                    oncancel: component.getReference("c.handleReverseCancel")
+                }
+            ,
+            function(formComponent, status, errorMessage){
+                if (status === "SUCCESS") {
+                    let modalPromise = component.find("overlayLib").showCustomModal({
+                        body: formComponent,
+                        showCloseButton: true,
+                        closeCallback: function() {}
+                    });
+                    component.set("v.reverseModalPromise", modalPromise);
+                    /*
+                    .then(function(overlay){
+                        // we need to set the modal instance in an attribute to call its methods
+                        component.set("v.overlayPanel",overlay);
+                    */
+                } else {
+                    console.error(errorMessage);
+                }
+            });
+        }
+    },
+    hideReverseModal: function(component) {
+        component.get("v.reverseModalPromise").then(
+            function(modal) {
+                modal.close();
+            }
+        );
+        /*
+        component.set("v.showReverseForm", false)
+        let modal = this.getReverseModalElement(component);           
+        modal.hide();
+        */
+    },
+    reInitSomeData:function(component) {
+        let initialized = component.get('v.initialized');
+        if (initialized === true) {
+            component.set('v.drawDownList', undefined);
+            this.getOpportunityInfo(component);
+            this.getDrawdownList(component, true);
+            this.getDrawdownPaymentsList(component);
+            this.getServiceProvidersList(component);
+            this.getBankAccountOptions(component);
+            let pubsub = component.find('pubsub');
+            if (pubsub) {
+                pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
+                pubsub.fireEvent(`previousloanschanged-${component.get('v.recordId')}`);
+            }
+        } else {
+            component.set('v.initialized', true);
+        }
+    },
 })
