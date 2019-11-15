@@ -88,7 +88,11 @@ public class PaymentRejectionTriggerHandler extends TriggerHandler {
             sp.Hold__c = true;
         }
         if (String.isNotBlank(pr.Reason__c)) {
-            sp.Notes__c = pr.Reason__c + '\r\n\r\n' + sp.Notes__c;
+            if (String.isBlank(sp.Notes__c)){
+                sp.Notes__c = pr.Reason__c;
+            } else {
+                sp.Notes__c = pr.Reason__c + '\r\n\r\n' + sp.Notes__c;
+            }
         }
         sp.Sent_to_Bank_Date__c = null;
         sp.Status__c = pr.Scheduled_Payment_Action__c.remove('Set to ');
