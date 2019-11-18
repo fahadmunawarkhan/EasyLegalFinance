@@ -151,7 +151,8 @@
             
             if (state === 'SUCCESS') {
                 let drawDownList = response.getReturnValue();
-                if (component.get("v.oppObj").Type_of_Loan__c.startsWith('Treatment')) {
+                let loanType = component.get("v.oppObj").Type_of_Loan__c;
+                if (loanType && loanType.startsWith('Treatment')) {
                     let nonServiceProviderDrawdowns = [];
                     drawDownList.forEach(dd => {
                         if (!dd.Opportunity_Service_Provider__c) {
@@ -1263,7 +1264,7 @@
                         let newPaymentMethod = drawDownList[i].Payment_Method__c;
                         this.fetchRefNotesDepValues(component, newPaymentMethod, i);
                     }
-                    if (loanType.startsWith('Treatment Loan')) {
+                    if (loanType && loanType.startsWith('Treatment Loan')) {
                         let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
                         for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
                         {
