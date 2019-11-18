@@ -83,6 +83,9 @@ public with sharing class ScheduledPaymentHelper {
             if (sp.Payment_Type__c == 'Assessment') {
                 reference_note = 'Assessment Fee';
             }
+            if (sp.Opportunity__r.Admin_Fee__c == 0) {
+                reference_note = 'Waived Fee';
+            }
             adminDrawdowns.put(
                 sp.Opportunity__c,
                 new Drawdown__c(
