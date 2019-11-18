@@ -71,14 +71,17 @@ public with sharing class LawSocietyReviewController {
         Date dtReviewed = !String.isEmpty(dateReviewed) && dateReviewed != null? Date.valueOf(dateReviewed) : null;
         Date nxtReviewDate = !String.isEmpty(nextReviewDate) && nextReviewDate != null? Date.valueOf(nextReviewDate) : null;
         
+                
         If(!lawyerIds.isEmpty()){
+            Date dt = Date.today();
             
             String soqlContact = 'SELECT Id, Name, AccountId, Account.Name, Upcoming_Hearings__c, Current_Proceedings__c,';
             soqlContact += 'Orders__c, Date_Reviewed__c, Next_Review_Date__c';
             soqlContact += ' FROM Contact';
             soqlContact += ' WHERE RecordType.DeveloperName = \'Lawyers\'';
-            soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Reviewed'? ' AND Date_Reviewed__c != null' : '';
+            soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Reviewed'? ' AND Date_Reviewed__c <= :dt AND (Next_Review_Date__c = null OR Next_Review_Date__c >= :dt)'  : '';
             soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Not Reviewed'? ' AND Date_Reviewed__c = null' : '';
+            soqlContact += !String.isEmpty(reviewedStatus) && reviewedStatus == 'Over due'? ' AND Next_Review_Date__c < :dt' : '';
             soqlContact += !String.isEmpty(upcomingHearings)? ' AND Upcoming_Hearings__c =:upcomingHearings' : '';
             soqlContact += !String.isEmpty(currentProceedings)? ' AND Current_Proceedings__c =:currentProceedings' : '';
             soqlContact += !String.isEmpty(orders)? ' AND Orders__c =:orders' : '';
