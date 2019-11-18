@@ -62,6 +62,7 @@
                         <option value="All">All</option>
                         <option value="Reviewed">Reviewed</option>
                         <option value="Not Reviewed">Not Reviewed</option>
+                        <option value="Over due">Over due</option>
                     </lightning:select>  
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2" padding="around-medium">
