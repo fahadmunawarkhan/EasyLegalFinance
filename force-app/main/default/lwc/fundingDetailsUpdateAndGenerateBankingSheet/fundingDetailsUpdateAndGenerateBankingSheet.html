@@ -145,7 +145,10 @@
 
     <div slot="footer" class="slds-p-top_medium">
         <lightning-layout horizontal-align="end">
-            <lightning-layout-item>
+            <lightning-layout-item padding="around-small">
+                <lightning-button label="Send Back to Validation" onclick={handleSendBack} variant="destructive"></lightning-button>
+            </lightning-layout-item>
+            <lightning-layout-item padding="around-small">
                 <lightning-button label={bankingSheetText} onclick={handleBankingSheetClick} variant="brand"></lightning-button>
             </lightning-layout-item>
         </lightning-layout>
