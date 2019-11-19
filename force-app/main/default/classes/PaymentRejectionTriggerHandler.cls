@@ -68,6 +68,7 @@ public class PaymentRejectionTriggerHandler extends TriggerHandler {
             dd.Payment_Method__c = sp.Drawdown__r.Payment_Method__c;
             dd.Reference_Notes__c = 'Payment Rejected';
             dd.Scheduled_Payment__c = sp.Id;
+            sp.Has_Been_Rejected__c = true;
             result[1] = dd;
         }
 
