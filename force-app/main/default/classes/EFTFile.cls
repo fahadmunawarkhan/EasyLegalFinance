@@ -124,6 +124,7 @@ public with sharing class EFTFile {
                     gp = new GroupedPayments(ba);
                     groupedPayments.put(sp.Current_Bank_Account_Id__c, gp);
                 }
+                sp.Bank_Account__c = sp.Current_Bank_Account_Id__c;
                 gp.addPayment(sp);
                 //eftFileDetail = new eftFileDetail(this.bankAccountList.get(sp.Current_Bank_Account_Id__c), this.dueDate, sp);
                 //eftFileData += eftFileDetail.getFileDetailAsString() + '\r\n';

@@ -35,6 +35,8 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
         }
 
+        drawdown.Reference_Notes__c = sp.Calculated_Reference_Notes__c;
+        /*
         if (sp.Has_Been_Rejected__c) {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
@@ -43,6 +45,7 @@ public with sharing class ScheduledPaymentHelper {
                     // Check if account is opportunity's account
                     // TODO - Should I check if it is a law firm or have some other advanced way to figure this out?
                     if (sp.Opportunity__r.AccountId == sp.Current_Account_Id__c) {
+                        if ()
                         drawdown.Reference_Notes__c = 'Payment to Client';
                     } else {
                         drawdown.Reference_Notes__c = 'Payment to Third-Party';
@@ -63,6 +66,7 @@ public with sharing class ScheduledPaymentHelper {
                 }
             }
         }
+        */
 
 
         return drawdown;
@@ -209,7 +213,8 @@ public with sharing class ScheduledPaymentHelper {
                 Has_Been_Rejected__c,
                 Sent_to_Bank_By__c,
                 Cheque_Number__c,
-                EFT_Number__c
+                EFT_Number__c,
+                Calculated_Reference_Notes__c
             From
                 Scheduled_Payment__c
             Where
@@ -240,7 +245,8 @@ public with sharing class ScheduledPaymentHelper {
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
                     Opportunity_Service_Provider__c,
-                    EFT_Number__c
+                    EFT_Number__c,
+                    Calculated_Reference_Notes__c
                 From
                     Scheduled_Payment__c
                 Where
