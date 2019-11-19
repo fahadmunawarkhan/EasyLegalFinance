@@ -172,14 +172,21 @@ export default class FundingDetailsUpdateEft extends LightningElement {
 
     handleSendBack() {
         const spList = [];
-        this.getSelectedIds().forEach(id => spList.push({Id: id, Status__c: 'Scheduled'}));
+        this.getSelectedIds().forEach(id => spList.push({
+            Id: id,
+            Status__c: 'Pre Send Validation',
+            Banking_Verified__c: false,
+            Credit_Verified__c: false,
+            Documents_Verified__c: false,
+            BIA_PPSA_LL_Verified__c: false
+        }));
 
         this.loading = true;
         this.errors = undefined;
         updateScheduledPaymentsFromDraftValues(spList)
             .then(result => {
                 showToast(this, 
-                    'Successfully Reverted Scheduled Payments to \'Scheduled\'',
+                    'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
                     'You may now generate an updated Banking Sheet',
                     'success'
                 );
