@@ -488,7 +488,7 @@
         //helper.getServiceProvidersList(component);
     },
     handleReverseCancel: function(component, event, helper) {
-        helper.reInitSomeData(component, event, helper);
+        //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
     },
 })
