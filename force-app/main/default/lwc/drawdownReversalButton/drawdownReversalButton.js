@@ -4,7 +4,7 @@ export default class drawdownReversalButton extends LightningElement {
     @api drawdown = null;
 
     get shouldShowButton() {
-        return !!this.drawdown && !!this.drawdown.Scheduled_Payment__c && this.drawdown.Amount__c && this.drawdown.Amount__c > 0
+        return !!this.drawdown && !!this.drawdown.Can_Be_Reversed__c
     }
 
     handleClick(event) {

@@ -1,13 +1,19 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import getDrawdownDate from '@salesforce/apex/ScheduledPaymentHelper.getDrawdownDate';
 
 export default class reversePaymentForm extends LightningElement {
     @api recordId;
     @api scheduledPaymentId;
     @api showProcessedFields = false;
 
+    @track drawdownDate;
+
+
     @track loading = false;
 
     connectedCallback() {
+        getDrawdownDate({spId: this.scheduledPaymentId})
+            .then(result => {this.drawdownDate = result});
     }
 
     handleCancel(event) {
