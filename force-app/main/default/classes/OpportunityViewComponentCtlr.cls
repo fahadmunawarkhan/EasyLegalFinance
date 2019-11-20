@@ -377,7 +377,7 @@ public class OpportunityViewComponentCtlr {
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
         
-        strQuery += ', (SELECT Id, Name, Amount__c, Date__c, CreatedDate, Payment_Method__c, Reference_Notes__c, CHQ__c, EFT__c, Scheduled_Payment__c'+
+        strQuery += ', (SELECT Id, Name, Amount__c, Date__c, CreatedDate, Payment_Method__c, Reference_Notes__c, CHQ__c, EFT__c, Scheduled_Payment__c, Can_Be_Reversed__c'+
                      ' FROM Drawdowns__r' +
                      ' ORDER BY Date__c DESC)';
         strQuery += ', (SELECT Id, Name, Date_Received__c, Provider_Invoice_Number__c, Amount__c, Amount_Paid__c, CreatedDate, Paid__c, Paid_Date__c, Payment_Amount_Available__c, Payment_Requested__c, Status__c, Scheduled_Payment__c'+
