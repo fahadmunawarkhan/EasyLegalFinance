@@ -3939,6 +3939,10 @@
         <field>dsfs__DocuSign_Status__c.Opportunity_Service_Provider__c</field>
         <readable>false</readable>
     </fieldPermissions>
+    <tabSettings>
+        <tab>Funding_Details1</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Can Process Payments</label>
     <license>Salesforce</license>

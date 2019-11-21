@@ -17,11 +17,7 @@ public with sharing class ScheduledPaymentHelper {
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
-        if (sp.First_Sent_to_Bank_Date__c == null) {
-            drawdown.Date__c = DateUtil.today();
-        } else {
-            drawdown.Date__c = sp.First_Sent_to_Bank_Date__c.date();
-        }
+        drawdown.Date__c = sp.Calculated_Drawdown_Date__c;
         drawdown.Opportunity__c = sp.Opportunity__c;
         if (sp.Send_Cheque__c) {
             drawdown.Payment_Method__c = 'Cheque';
@@ -35,6 +31,8 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
         }
 
+        drawdown.Reference_Notes__c = sp.Calculated_Reference_Notes__c;
+        /*
         if (sp.Has_Been_Rejected__c) {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
@@ -43,6 +41,7 @@ public with sharing class ScheduledPaymentHelper {
                     // Check if account is opportunity's account
                     // TODO - Should I check if it is a law firm or have some other advanced way to figure this out?
                     if (sp.Opportunity__r.AccountId == sp.Current_Account_Id__c) {
+                        if ()
                         drawdown.Reference_Notes__c = 'Payment to Client';
                     } else {
                         drawdown.Reference_Notes__c = 'Payment to Third-Party';
@@ -63,6 +62,7 @@ public with sharing class ScheduledPaymentHelper {
                 }
             }
         }
+        */
 
 
         return drawdown;
@@ -211,10 +211,12 @@ public with sharing class ScheduledPaymentHelper {
                 Send_Cheque__c,
                 Sent_to_Bank_Date__c,
                 First_Sent_to_Bank_Date__c,
+                Calculated_Drawdown_Date__c,
                 Has_Been_Rejected__c,
                 Sent_to_Bank_By__c,
                 Cheque_Number__c,
-                EFT_Number__c
+                EFT_Number__c,
+                Calculated_Reference_Notes__c
             From
                 Scheduled_Payment__c
             Where
@@ -241,11 +243,13 @@ public with sharing class ScheduledPaymentHelper {
                     Send_Cheque__c,
                     Sent_to_Bank_Date__c,
                     First_Sent_to_Bank_Date__c,
+                    Calculated_Drawdown_Date__c,
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
                     Opportunity_Service_Provider__c,
-                    EFT_Number__c
+                    EFT_Number__c,
+                    Calculated_Reference_Notes__c
                 From
                     Scheduled_Payment__c
                 Where
@@ -283,6 +287,11 @@ public with sharing class ScheduledPaymentHelper {
             Verified_Date__c = DateUtil.now()
         );
         update sp;
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static Date getDrawdownDate(Id spId) {
+        return [Select Drawdown_Date__c From Scheduled_Payment__c Where Id = :spId].Drawdown_Date__c;
     }
 
     /*

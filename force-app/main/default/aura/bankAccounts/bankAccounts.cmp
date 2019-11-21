@@ -57,6 +57,7 @@
 					<lightning:inputField fieldName="Bank__c" />
 					<lightning:inputField fieldName="Transit__c" />
 					<lightning:inputField fieldName="Account__c" />
+					<lightning:inputField fieldName="Third_Party__c" />
 					<lightning:inputField fieldName="Mark_as_Primary__c" />
 					<div align="center" class="slds-p-top_small" >
 						<lightning:button variant="brand" type="submit" label="Save" />
@@ -74,6 +75,7 @@
 					<lightning:inputField fieldName="Bank__c" />
 					<lightning:inputField fieldName="Transit__c" />
 					<lightning:inputField fieldName="Account__c" />
+					<lightning:inputField fieldName="Third_Party__c" />
 					<lightning:inputField fieldName="Mark_as_Primary__c" />
 					<div align="center" class="slds-p-top_small" >
 						<lightning:button variant="brand" type="submit" label="Save" />

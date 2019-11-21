@@ -136,19 +136,19 @@ export default class FundingDetails_Parent extends LightningElement {
         this.queryTerm = '';
     }
 
-    canSendPayments() {
+    get canSendPayments() {
         return this.permissions.EFT_Permission;
     }
 
-    canInputEFTNumbers() {
+    get canInputEFTNumbers() {
         return this.permissions.Can_Process_Scheduled_Payments;
     }
 
-    canProcessAndValidateLoan() {
+    get canProcessAndValidateLoan() {
         return this.permissions.Can_Process_Scheduled_Payments;
     }
 
-    canReviewClosedPayments() {
+    get canReviewClosedPayments() {
         return this.permissions.Can_Process_Scheduled_Payments;
     }
 
@@ -161,35 +161,35 @@ export default class FundingDetails_Parent extends LightningElement {
     }
 
     get shouldShowStaging() {
-        return this.currentStage === "Staging"
+        return this.currentStage === "Staging" && this.canProcessAndValidateLoan
     }
 
     get shouldShowValidateEfts() {
-        return this.currentStage === "ValidateEfts"
+        return this.currentStage === "ValidateEfts" && this.canProcessAndValidateLoan
     }
 
     get shouldShowBankingSheet() {
-        return this.currentStage === "BankingSheet"
+        return this.currentStage === "BankingSheet" && this.canSendPayments
     }
 
     get shouldShowInputEfts() {
-        return this.currentStage === "InputEfts"
+        return this.currentStage === "InputEfts" && this.canProcessAndValidateLoan
     }
 
     get shouldShowValidateCheques() {
-        return this.currentStage === "ValidateCheques"
+        return this.currentStage === "ValidateCheques" && this.canProcessAndValidateLoan
     }
 
     get shouldShowSendCheques() {
-        return this.currentStage === "SendCheques"
+        return this.currentStage === "SendCheques" && this.canProcessAndValidateLoan
     }
 
     get shouldShowOpportunityTable() {
-        return this.currentStage === "OpportunityTable"
+        return this.currentStage === "OpportunityTable" && this.canProcessAndValidateLoan
     }
 
     get shouldShowCompletedPayments() {
-        return this.currentStage === "CompletedPayments"
+        return this.currentStage === "CompletedPayments" && this.canProcessAndValidateLoan
     }
     /* VISIBILITY GETTERS */
 

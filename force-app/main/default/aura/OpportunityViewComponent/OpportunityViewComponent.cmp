@@ -96,6 +96,15 @@
     <aura:attribute name="refreshAllOppties" type="Aura.action"/>
     <aura:attribute name="currIndex" type="integer" default="0" />
     <aura:attribute name="expandedSections" type="Map" default="{}"/>
+
+    <!-- Payment Revsersal Variables -->
+    <aura:attribute name="showReverseForm" type="Boolean" default="{false}" /> 
+    <aura:attribute name="reverseScheduledPaymentId" type="Id" /> 
+    <aura:attribute name="reverseModalPromise" type="Aura.Action"/>
+    
+    <aura:attribute name="invoiceTypeOptions" type="List" default="[]" />
+    <aura:attribute name="insurerNameOptions" type="List" default="[]" />
+    <aura:attribute name="selectedLookUpAssessmentProvider" type="sObject" default="{}"/>
     
     <aura:attribute name="currentUser" type="User" /> 
 
@@ -687,7 +696,7 @@
                                                     disabled="true"/>
                                             </div>
                                         </lightning:layoutItem>
-                                    </lightning:layout> 
+                                    </lightning:layout>
 
                                     <lightning:layout >
                                         <lightning:layoutItem size="8" >     
@@ -697,6 +706,70 @@
                                             </div>
                                         </lightning:layoutItem>
                                     </lightning:layout> 
+
+                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Assessment'}">
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:input label="Invoice #" type="text" value="{!v.oppObj.Invoice__c}" tabindex="25"/>
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:combobox label="Invoice Type" tabindex="26" name="invoiceType" value="{!v.oppObj.Invoice_Type__c}" placeholder="--None--" options="{! v.invoiceTypeOptions }" />
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <lightning:combobox label="Insurer Name" tabindex="27" name="InsurerName" value="{!v.oppObj.Insurer_Name__c}" placeholder="--None--" options="{! v.insurerNameOptions }" />
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        <lightning:layout >
+                                            <lightning:layoutItem size="8" class="">
+                                                <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                                    <div class="slds-form-element__control">
+                                                        <span class="">
+                                                            <span class="slds-form-element__static">
+                                                                <aura:if isTrue="{!notequals(v.clickSource , 'AssessmentProvider')}">
+                                                                    <!-- Show only related record name -->
+                                                                    <lightning:layout>
+                                                                        <lightning:layoutItem size="12">
+                                                                            <ui:inputText class="field" aura:Id="selectedLookUpAssessmentProvider" value="{!v.selectedLookUpAssessmentProvider.Name}" disabled="true" label="Assessment Provider" />
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem class="slds-m-top_medium" >
+                                                                            <button data-source ="AssessmentProvider" 
+                                                                                data-recvar="selectedLookUpAssessmentProvider"
+                                                                                onclick="{!c.inlineEditName}" 
+                                                                                class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small" 
+                                                                                tabindex="3" title="Edit Assessment Provider">
+                                                                                <lightning:icon iconName="utility:search" size="xx-small" alternativeText="search"/>
+                                                                            </button>                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                            <!-- Show lookup option to change related record -->
+                                                                    <aura:set attribute="else">                                    
+                                                                        <c:customLookup objectAPIName="Account" 
+                                                                                        IconName="standard:account" 
+                                                                                        label="Assessment Provider" 
+                                                                                        hideLookupInputAction="{!c.hideLookupInput}"
+                                                                                        selectedRecord="{!v.selectedLookUpAssessmentProvider}"
+                                                                                        filter="RecordType.Name='Assessment Provider' "
+                                                                                        additionalFields="BillingCity,BillingState"
+                                                                                        additionalDisplayFields="BillingCity,BillingState"/>
+                                                                    </aura:set>                                                    
+                                                                </aura:if>                                         
+                                                            </span>                            
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                    </aura:if>
 
                                     <lightning:layout >
                                         <lightning:layoutItem size="8" >     
@@ -854,6 +927,7 @@
                                         <lightning:layout>
                                             <lightning:layoutItem padding="horizontal-small">
                                                 <lightning:button
+                                                    disabled="{!if(v.currentUser.Schedule_Payments__c, false, true)}"
                                                     variant="brand"
                                                     label="New"
                                                     title="New Scheduled Payment"
@@ -1082,6 +1156,7 @@
                                                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right">                            
                                                                                     <form class="drawdown-treatment-form" onsubmit="{!c.deleteServiceProviderDrawdownItem}">
                                                                                         <input type="hidden" value="{!d.Id}" class="drawdown-item-id"/>
+                                                                                        <c:drawdownReversalButton drawdown="{!d}" onreverseclick="{!c.handleReverseClick}"></c:drawdownReversalButton>
                                                                                         <lightning:buttonIcon iconName="utility:delete" 
                                                                                                             variant="bare" 
                                                                                                             onclick="{! c.deleteServiceProviderDrawdownItem}" 
@@ -1333,6 +1408,7 @@
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">                            
                                                         <form class="drawdown-form" onsubmit="{!c.deleteDrawdownItem}">
                                                             <input type="hidden" value="{!item.Id}" class="drawdown-item-id"/>
+                                                            <c:drawdownReversalButton drawdown="{!item}" onreverseclick="{!c.handleReverseClick}"></c:drawdownReversalButton>
                                                             <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.deleteDrawdownItem}" alternativeText="Delete" disabled="{!if(v.currentUser.Lump_Sum_drawdowns__c, False, True)}" />
                                                         </form>                                 
                                                     </td>
@@ -1422,6 +1498,7 @@
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">                            
                                                         <form class="drawdown-form" onsubmit="{!c.deleteDrawdownItem}">
                                                             <input type="hidden" value="{!item.Id}" class="drawdown-item-id"/>
+                                                            <c:drawdownReversalButton drawdown="{!item}" onreverseclick="{!c.handleReverseClick}"></c:drawdownReversalButton>
                                                             <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.deleteDrawdownItem}" alternativeText="Delete" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" />
                                                         </form>                                 
                                                     </td>
@@ -1439,12 +1516,102 @@
                             <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Treatment Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan 2'}">
                                 
                                 <!-- <<<<<<<<<< Treatment Repayments Drawdowns >>>>>>>>>>   -->          
+                                <lightning:card title="Non-Service Provider Drawdowns" iconName="standard:case" variant="base" >
+                                    <aura:set attribute="actions">
+                                        <aura:if isTrue="{!v.currentUser.Drawdowns__c}">
+                                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
+                                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveDrawdowns}" />
+                                        </aura:if>
+                                    </aura:set>   
+                                    <table class="slds-table slds-table_bordered slds-table_col-bordered">
+                                        <thead>
+                                            <tr class="slds-text-title_caps">
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">DRAWDOWN</div>
+                                                </th>
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">AMOUNT</div>
+                                                </th>
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">DATE</div>
+                                                </th>
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">PAYMENT METHOD</div>
+                                                </th>
+                                                <!--
+                                                <aura:if isTrue="{!v.oppObj.Type_of_Loan__c == 'Lump-Sum' }">
+                                                    <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                        <div class="slds-truncate" title="Column 1">Type</div>
+                                                    </th>                       
+                                                </aura:if>
+                                                -->
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">EFT #</div>
+                                                </th>
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">Chq #</div>
+                                                </th>  
+                                                <th class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                    <div class="slds-truncate" title="Column 1">REFERENCE NOTES</div>
+                                                </th>  
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <aura:iteration items="{!v.drawDownList}" var="item" indexVar="i">
+                                                <tr class="slds-hint-parent">
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                        <!--<lightning:combobox data-index="{!i}" Id="{!item.Id}" name="PaymentMethod" value="{!item.Payment_Method__c}" placeholder="-None-" options="{! v.paymentMethod }" style="margin-top:-20px;" onchange="{!c.onpaymentMethodChange}"/>
+                                                        <span data-index="{!i}"></span-->
+                                                        <div style="margin-top:-20px;">
+                                                            <lightning:select name="controllerFld"
+                                                                            value="{!item.Payment_Method__c}"
+                                                                            onchange="{!c.onPaymentMethodChange}" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}">
+                                                                <aura:iteration items="{!v.paymentMethod}" var="val">
+                                                                    <option value="{!val.value}" selected="{!val.value == item.Payment_Method__c}">{!val.label}</option>
+                                                                </aura:iteration>
+                                                            </lightning:select>
+                                                        </div>
+                                                        <span data-index="{!i}"></span>
+                                                    </td>
+                                                    <!--
+                                                    <aura:if isTrue="{!v.oppObj.Type_of_Loan__c == 'Lump-Sum' }">
+                                                        <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                            <lightning:combobox name="Type" value="{!item.Type__c}" placeholder="None" options="{! v.drawdownType }" style="margin-top:-20px;"/>
+                                                        </td>
+                                                    </aura:if>
+                                                    -->
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="Text" variant="label-hidden" tabindex="0" value="{!item.EFT__c}" disabled="{!if(and(v.currentUser.Drawdowns__c, item.Reference_Notes__c != 'Admin Fee'), False, True)}"/></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="Text" variant="label-hidden" tabindex="0" value="{!item.CHQ__c }" disabled="{!if(and(v.currentUser.Drawdowns__c, item.Reference_Notes__c != 'Admin Fee'), False, True)}"/></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                        <lightning:combobox aura:Id="Reference_Notes__c" name="Reference_Notes__c" value="{!item.Reference_Notes__c}" placeholder="--None--" options="[]" style="margin-top:-20px;width: 180px" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}"/>
+                                                    </td>  
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">                            
+                                                        <form class="drawdown-form" onsubmit="{!c.deleteDrawdownItem}">
+                                                            <input type="hidden" value="{!item.Id}" class="drawdown-item-id"/>
+                                                            <c:drawdownReversalButton drawdown="{!item}" onreverseclick="{!c.handleReverseClick}"></c:drawdownReversalButton>
+                                                            <lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{! c.deleteDrawdownItem}" alternativeText="Delete" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" />
+                                                        </form>                                 
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                    <br/>
+                                </lightning:card>
+
+                                <!--
                                 <c:fundingDetailsProcessDrawdowns 
                                     opp='{!v.oppObj}'
                                     customConditions="{! 'Opportunity__c = \'' + v.oppObj.Id + '\' AND Opportunity_Service_Provider__c = null'}"
                                     hideExtra="{! true}"
                                     ondrawdownschanged="{!c.updateAmounts}"
                                 ></c:fundingDetailsProcessDrawdowns>
+                                -->
                             </aura:if>
                         </div>
                     </div>
@@ -1855,6 +2022,20 @@
                 </div>
             </div>
         </lightning:card>        
+        
+        <!-- <<<<<<<<<< PAYMENT REVERSAL MODAL >>>>>>>>>> -->
+        <!--
+        <c:modal header="Reverse Payment" aura:id="reverseModal">
+        </c:modal>
+        <aura:if isTrue="{!v.showReverseForm}">
+            <c:reversePaymentForm
+                scheduledPaymentId="{!v.reverseScheduledPaymentId}"
+                onsuccess="{!c.handleReverseSuccess}"
+                oncancel="{!c.handleReverseCancel}"
+                showProcessedFields="{true}"
+            ></c:reversePaymentForm>
+        </aura:if>
+        -->
         
         <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
         <aura:if isTrue="{!v.spinner}">
