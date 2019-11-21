@@ -39,15 +39,16 @@ public class ScheduledPaymentHelperTest {
         sp.setDefinition('Amount__c', 'static value(1000)');
         sp.setDefinition('Status__c', 'static value(Sent to Bank)');
         sp.setDefinition('Payment_Type__c', 'static value(Lump-Sum)');
-        //sp.setDefinition('Sent_to_Bank_Date__c', 'random type(datetime) from(2010-1-1) to(2015-12-31 15:13:00)');
+        sp.setDefinition('Sent_to_Bank_Date__c', 'static value(2015-12-31 15:13:00)');
         sp.setDefinition('EFT_Number__c', 'static value(123)');
         sp.insertRecords(true);
         Scheduled_Payment__c spRec = ((List<Scheduled_Payment__c>)sp.getRecords())[0];
+        Date sentDate = Date.newInstance(2015,12,31);
 
         String eftNum = '123';
         test.startTest();
         Id[] spIds = new Id[]{spRec.Id};
-        system.debug(System.LoggingLevel.ERROR, spRec.First_Sent_to_Bank_Date__c);
+        system.debug(System.LoggingLevel.ERROR, spRec.Sent_to_Bank_Date__c);
         ScheduledPaymentHelper.generateDrawdowns(spIds);
         test.stopTest();
 
@@ -88,6 +89,7 @@ public class ScheduledPaymentHelperTest {
         system.assertEquals('e-Transfer', dd[0].Payment_Method__c, 'Drawdown payment method should be set');
         system.assertEquals('Payment to Client', dd[0].Reference_Notes__c, 'Drawdown Reference Notes should be set');
         system.assertEquals(dd[0].Scheduled_Payment__r.First_Sent_to_Bank_Date__c, dd[0].Date__c, 'Drawdown date should be set');
+        system.assertEquals(sentDate, dd[0].Date__c, 'Drawdown date should be set');
 
         // ensure admin fee drawdown was created
         Drawdown__c[] adminDD = [
@@ -106,7 +108,8 @@ public class ScheduledPaymentHelperTest {
         system.assertEquals(oppRec.Admin_Fee__c, adminDD[0].Amount__c, 'Amount should have been set');
         system.assertEquals(oppRec.Id, adminDD[0].Opportunity__c, 'Opporunity should have been set');
         system.assertEquals('Admin Fee', adminDD[0].Reference_Notes__c, 'Reference notes should have been set');
-        system.assertEquals(DateUtil.today(), adminDD[0].Date__c, 'Date should have been set');
+        system.assertEquals(dd[0].Date__c, adminDD[0].Date__c, 'Date should have been set');
+        system.assertEquals(sentDate, adminDD[0].Date__c, 'Date should have been set');
 
         //oppRec = [Select Id, Funding_Details_Status__c from Opportunity Where Id = :oppRec.Id][0];
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
