@@ -175,6 +175,7 @@
         <members>LawSocietyReviewController</members>
         <members>LawSocietyReviewControllerTest</members>
         <members>LawyerLawSocietyPageTabCtlr</members>
+        <members>LawyerLawSocietyPageTabCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1277,6 +1278,12 @@
         <members>User.Schedule_Payments__c</members>
         <members>User.Funding_Tab__c</members>
         <members>User.Generate_Banking_Sheets__c</members>
+        <members>Contact.Current_Proceedings__c</members>
+        <members>Contact.Date_Reviewed__c</members>
+        <members>Contact.Orders__c</members>
+        <members>Contact.Next_Review_Date__c</members>
+        <members>Contact.Upcoming_Hearings__c</members>
+        <members>User.Law_Society_Review__c</members>
         <name>CustomField</name>
     </types>
     <types>
