@@ -97,7 +97,7 @@ public with sharing class ScheduledPaymentHelper {
             );
             sp.Triggered_Admin_Fee__c = true;
             sp.Triggered_Admin_Fee_Amount__c = sp.Opportunity__r.Admin_Fee__c;
-        } else {
+        } else if (adminDrawdowns.containsKey(sp.Opportunity__c)) {
             Drawdown__c adminDrawdown = adminDrawdowns.get(sp.Opportunity__c);
             if (adminDrawdown.Date__c > sp.Sent_to_Bank_Date__c.date()) {
                 adminDrawdown.Date__c = sp.Sent_to_Bank_Date__c.date();
