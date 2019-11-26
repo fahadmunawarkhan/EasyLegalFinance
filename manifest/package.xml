@@ -1291,6 +1291,7 @@
         <members>Contact.Next_Review_Date__c</members>
         <members>Contact.Upcoming_Hearings__c</members>
         <members>User.Law_Society_Review__c</members>
+        <members>User.Can_Edit_Assessment_Schedule__c</members>
         <members>Opportunity.Amount_Paid_to_Assessment_Provider__c</members>
         <members>Opportunity.Deferred_Revenue__c</members>
         <members>Opportunity.Discount_Rate__c</members>
