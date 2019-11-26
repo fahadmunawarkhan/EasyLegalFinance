@@ -1471,6 +1471,8 @@
         <members>Lawyer_Contact_Record_Page</members>
         <members>System_Monitoring_Record_Page</members>
         <members>System_Monitoring_UtilityBar</members>
+        <members>Assessment_Provider_Account_Layout</members>
+        <members>Lawyer_Contact_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>
