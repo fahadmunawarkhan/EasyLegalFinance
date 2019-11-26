@@ -512,4 +512,41 @@ public class OpportunityViewComponentCtlr {
             Where Id = :oppId
             Limit 1];
     }
+    
+    @AuraEnabled
+    public static void setLatestDiscountRateLaywer(Id oppId, Id assessmentProviderId, Id lawyerId){
+        try{
+            If(oppId != null && assessmentProviderId != null && lawyerId != null){
+                List<Assessment_Provider_Schedule__c> discountSchedule = [SELECT Id, Discount__c, Assessment_Provider__c, Lawyer__c
+                                                                          FROM Assessment_Provider_Schedule__c
+                                                                          WHERE Assessment_Provider__c = :assessmentProviderId
+                                                                          AND Lawyer__c = :lawyerId];
+                Opportunity opp = new Opportunity();
+                opp.Id = oppId;
+                if(!discountSchedule.isEmpty()){
+                    opp.Discount_Rate__c = discountSchedule[0].Discount__c;
+                }else{
+                    opp.Discount_Rate__c = 0;
+                    Assessment_Provider_Schedule__c dSchedule = new Assessment_Provider_Schedule__c(
+                        Discount__c = 0,
+                        Assessment_Provider__c = assessmentProviderId,
+                        Lawyer__c = lawyerId
+                    );
+                    
+                    insert dSchedule;
+                }
+                update opp;
+            }else{
+                String message = '';
+                message += oppId == null? 'Opportunity does not exit. Please save opportunity first.' : assessmentProviderId == null? 
+                    'No Assessment Provider found. Please select Assessment provider first.' : lawyerId == null? 
+                        'No Lawyer found. Please select lawyer first.' : 'Unknown Error.';
+                AuraHandledException e = new AuraHandledException(message);
+                e.setMessage(message);
+                throw  e;
+            }
+        }catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+    }
 }

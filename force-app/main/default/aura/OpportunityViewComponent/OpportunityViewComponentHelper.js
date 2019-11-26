@@ -1568,4 +1568,27 @@
             component.set('v.initialized', true);
         }
     },
+    setLatestDiscountRateLaywer : function(component){
+          return new Promise($A.getCallback(
+              function(resolve, reject){
+                  let oppObj = component.get('v.oppObj');
+                  let action = component.get("c.setLatestDiscountRateLaywer");
+                  action.setParams({
+                      oppId : oppObj.Id,
+                      assessmentProviderId : oppObj.Assessment_Provider__c,
+                      lawyerId : oppObj.Lawyer__c
+                  });
+                  
+                  action.setCallback(this, function(response){
+                      let state = response.getState();
+                      if(state == 'SUCCESS'){
+                          resolve(response.getReturnValue());
+                      }else if(state == 'ERROR'){
+                          reject(response.getError());
+                      }
+                  });
+                  $A.enqueueAction(action);
+              }
+          ));  
+    }
 })
