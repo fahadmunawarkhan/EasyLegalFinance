@@ -494,4 +494,27 @@
         //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
     },
+    refreshDiscountButton : function(component, event, helper){
+        
+        var confirm = window.confirm('Are you sure you want to apply the recent discount rate of lawyer by assessment provider?');
+        if (confirm) {
+            component.set("v.spinner", true);
+            helper.setLatestDiscountRateLaywer(component).then(
+                function(result){
+                    helper.getOpportunityInfo(component);
+                }
+            ).then(
+                function(){
+                    helper.showToast('SUCCESS','New discount rate is applied successfully.','success');
+                    component.set("v.spinner", false);
+                }
+            ).catch(
+                function(errors){
+                    component.set("v.spinner", false);
+                    console.log('error : ' + errors);
+                    helper.errorsHandler(errors);
+                }
+            );
+        }
+    }
 })

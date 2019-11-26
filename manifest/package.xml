@@ -176,6 +176,9 @@
         <members>LawSocietyReviewControllerTest</members>
         <members>LawyerLawSocietyPageTabCtlr</members>
         <members>LawyerLawSocietyPageTabCtlrTest</members>
+        <members>OpportunityTriggerHandler</members>         
+        <members>OpportunityViewComponentCtlr</members>  
+        <members>AssessmentProviderScheduleCtlr</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -252,6 +255,7 @@
         <members>PortfolioReportTrigger</members>
         <members>ScheduledPaymentTrigger</members>
         <members>UserTrigger</members>
+        <members>OpportunityTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -311,6 +315,9 @@
         <members>LawyerAvailableCreditComponent</members>
         <members>lawSocietyReviewReport</members>
         <members>LawyerLawSocietyPageTab</members>
+        <members>AssessmentProviderSchedule</members>
+        <members>AssessmentScheduleLawyerTab</members>
+        <members>EditAssessmentProviderSchedule</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -1284,6 +1291,15 @@
         <members>Contact.Next_Review_Date__c</members>
         <members>Contact.Upcoming_Hearings__c</members>
         <members>User.Law_Society_Review__c</members>
+        <members>Opportunity.Amount_Paid_to_Assessment_Provider__c</members>
+        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Opportunity.Discount_Rate__c</members>
+        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
+        <members>Assessment_Provider_Schedule__c.Discount__c</members>
+        <members>Assessment_Provider_Schedule__c.Lawyer__c</members>
+        <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1379,6 +1395,7 @@
         <members>Scheduled_Payment__c</members>
         <members>Service_Provider_Drawdown__c</members>
         <members>System_Monitoring__c</members>
+        <members>Assessment_Provider_Schedule__c</members>
         <name>CustomObject</name>
     </types>
     <types>
