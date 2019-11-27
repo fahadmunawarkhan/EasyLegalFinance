@@ -330,125 +330,7 @@
             </processMetadataValues>
             <name>OpportunityName</name>
             <value>
-                <elementReference>formula_2_myRule_1_A1_3776569971</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
-        <processMetadataValues>
-            <name>apexSelection</name>
-            <value>
-                <stringValue>Recalculate Payments</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_23_A1</name>
-        <label>Recalculate Payments</label>
-        <locationX>2300</locationX>
-        <locationY>200</locationY>
-        <actionName>PaymentHelper</actionName>
-        <actionType>apex</actionType>
-        <connector>
-            <targetReference>myDecision24</targetReference>
-        </connector>
-        <inputParameters>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>opportunityIds</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>maxOccurs</name>
-                <value>
-                    <numberValue>1.0</numberValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>objectType</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Reference</stringValue>
-                </value>
-            </processMetadataValues>
-            <name>opportunityIds</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
-        <processMetadataValues>
-            <name>apexSelection</name>
-            <value>
-                <stringValue>Generate Drawdowns</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_25_A1</name>
-        <label>Generate Drawdowns</label>
-        <locationX>2500</locationX>
-        <locationY>200</locationY>
-        <actionName>ScheduledPaymentHelper</actionName>
-        <actionType>apex</actionType>
-        <connector>
-            <targetReference>myDecision26</targetReference>
-        </connector>
-        <inputParameters>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>oppIds</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>maxOccurs</name>
-                <value>
-                    <numberValue>1.0</numberValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>objectType</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Reference</stringValue>
-                </value>
-            </processMetadataValues>
-            <name>oppIds</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
+                <elementReference>formula_2_myRule_1_A1_5313153483</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -752,126 +634,9 @@
         <label>myDecision19</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>myDecision22</targetReference>
-        </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myRule_20</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>formula_myRule_20</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myRule_20_A1</targetReference>
-            </connector>
-            <label>Payment Schedule Details Changed</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <processMetadataValues>
-            <name>index</name>
-            <value>
-                <numberValue>9.0</numberValue>
-            </value>
-        </processMetadataValues>
-        <name>myDecision22</name>
-        <label>myDecision22</label>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>myDecision24</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>default</defaultConnectorLabel>
-        <rules>
-            <name>myRule_23</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>formula_myRule_23</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myRule_23_A1</targetReference>
-            </connector>
-            <label>Needs Payments Recalculated</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <processMetadataValues>
-            <name>index</name>
-            <value>
-                <numberValue>10.0</numberValue>
-            </value>
-        </processMetadataValues>
-        <name>myDecision24</name>
-        <label>myDecision24</label>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>myDecision26</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>default</defaultConnectorLabel>
-        <rules>
-            <name>myRule_25</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.Funding_Details_Status__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Process Drawdowns</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myRule_25_pmetdec</targetReference>
-            </connector>
-            <label>Funding Details Process Drawdowns</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <processMetadataValues>
-            <name>index</name>
-            <value>
-                <numberValue>11.0</numberValue>
-            </value>
-        </processMetadataValues>
-        <name>myDecision26</name>
-        <label>myDecision26</label>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>default</defaultConnectorLabel>
-        <rules>
-            <name>myRule_27</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -905,7 +670,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_27_pmetdec</targetReference>
+                <targetReference>myRule_20_pmetdec</targetReference>
             </connector>
             <label>Funding Details Drawdowns Created</label>
         </rules>
@@ -1416,16 +1181,16 @@
         </rules>
     </decisions>
     <decisions>
-        <name>myRule_25_pmetdec</name>
+        <name>myRule_20_pmetdec</name>
         <label>Previously Met Decision</label>
-        <locationX>2500</locationX>
+        <locationX>2000</locationX>
         <locationY>100</locationY>
         <defaultConnector>
-            <targetReference>myRule_25_A1</targetReference>
+            <targetReference>myRule_20_A1</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
         <rules>
-            <name>myRule_25_pmetnullrule</name>
+            <name>myRule_20_pmetnullrule</name>
             <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>myVariable_old</leftValueReference>
@@ -1435,76 +1200,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_25_A1</targetReference>
+                <targetReference>myRule_20_A1</targetReference>
             </connector>
             <label>Previously Met - Null</label>
         </rules>
         <rules>
-            <name>myRule_25_pmetrule</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_old.Funding_Details_Status__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Process Drawdowns</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myDecision26</targetReference>
-            </connector>
-            <label>Previously Met - Prev</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>myRule_27_pmetdec</name>
-        <label>Previously Met Decision</label>
-        <locationX>2700</locationX>
-        <locationY>100</locationY>
-        <defaultConnector>
-            <targetReference>myRule_27_A1</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
-        <rules>
-            <name>myRule_27_pmetnullrule</name>
-            <conditionLogic>or</conditionLogic>
-            <conditions>
-                <leftValueReference>myVariable_old</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myRule_27_A1</targetReference>
-            </connector>
-            <label>Previously Met - Null</label>
-        </rules>
-        <rules>
-            <name>myRule_27_pmetrule</name>
+            <name>myRule_20_pmetrule</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1612,7 +1313,7 @@
                 <stringValue>$User.Id</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_16_A1_5984324795</name>
+        <name>formula_17_myRule_16_A1_4423478621</name>
         <dataType>String</dataType>
         <expression>{!$User.Id}</expression>
     </formulas>
@@ -1623,29 +1324,9 @@
                 <stringValue>NOW() </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_18_myRule_16_A1_4094915289</name>
+        <name>formula_18_myRule_16_A1_7123148443</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>IF(
-    ISNULL([Opportunity].Payment_Schedule_Version_Number__c),
-    1,
-    [Opportunity].Payment_Schedule_Version_Number__c + 1
-)</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_21_myRule_20_A1_1320614088</name>
-        <dataType>Number</dataType>
-        <expression>IF(
-    ISNULL({!myVariable_current.Payment_Schedule_Version_Number__c}),
-    1,
-    {!myVariable_current.Payment_Schedule_Version_Number__c} + 1
-)</expression>
-        <scale>18</scale>
     </formulas>
     <formulas>
         <processMetadataValues>
@@ -1654,7 +1335,7 @@
                 <stringValue>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_3776569971</name>
+        <name>formula_2_myRule_1_A1_5313153483</name>
         <dataType>String</dataType>
         <expression>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</expression>
     </formulas>
@@ -1662,112 +1343,20 @@
         <processMetadataValues>
             <name>originalFormula</name>
             <value>
-                <stringValue>OR(
-AND(
+                <stringValue>AND(
     ISPICKVAL(PRIORVALUE([Opportunity].Payment_Schedule__c), &#39;Yes&#39;),
     ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;No&#39;)
-),
-AND(
-    ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;Yes&#39;),
-    ISCHANGED([Opportunity].Payment_Schedule_Send_First_Immediately__c)
-)
 )</stringValue>
             </value>
         </processMetadataValues>
         <name>formula_myRule_14</name>
         <dataType>Boolean</dataType>
-        <expression>OR(
-AND(
+        <expression>AND(
     ISPICKVAL(PRIORVALUE({!myVariable_current.Payment_Schedule__c}), &#39;Yes&#39;),
     ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;No&#39;)
-),
-AND(
-    ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;Yes&#39;),
-    ISCHANGED({!myVariable_current.Payment_Schedule_Send_First_Immediately__c})
-)
 )</expression>
     </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>AND(
-	ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;Yes&#39;),
-	OR(
-		ISCHANGED([Opportunity].Payment_Schedule__c),
-		ISCHANGED([Opportunity].Payment_Schedule_Mode__c),
-		ISCHANGED([Opportunity].Payment_Use_Primary_Bank_Account__c),
-		ISCHANGED([Opportunity].Payment_Default_Bank_Account__c),
-		ISCHANGED([Opportunity].Day_of_Month__c),
-		ISCHANGED([Opportunity].Start_Date__c),
-		ISCHANGED([Opportunity].End_Date__c),
-		ISCHANGED([Opportunity].Drawdown_Amount__c),
-		ISCHANGED([Opportunity].Payment_Schedule_Allotted_Amount__c),
-		ISCHANGED([Opportunity].Drawdown_Amount__c)
-	)
-)</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_myRule_20</name>
-        <dataType>Boolean</dataType>
-        <expression>AND(
-	ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;Yes&#39;),
-	OR(
-		ISCHANGED({!myVariable_current.Payment_Schedule__c}),
-		ISCHANGED({!myVariable_current.Payment_Schedule_Mode__c}),
-		ISCHANGED({!myVariable_current.Payment_Use_Primary_Bank_Account__c}),
-		ISCHANGED({!myVariable_current.Payment_Default_Bank_Account__c}),
-		ISCHANGED({!myVariable_current.Day_of_Month__c}),
-		ISCHANGED({!myVariable_current.Start_Date__c}),
-		ISCHANGED({!myVariable_current.End_Date__c}),
-		ISCHANGED({!myVariable_current.Drawdown_Amount__c}),
-		ISCHANGED({!myVariable_current.Payment_Schedule_Allotted_Amount__c}),
-		ISCHANGED({!myVariable_current.Drawdown_Amount__c})
-	)
-)</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>AND(
-	ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;Yes&#39;),
-    OR(
-            ISCHANGED([Opportunity].Amount_Available_for_Scheduled_Payments__c),
-            ISCHANGED([Opportunity].Payment_Schedule__c),
-            ISCHANGED([Opportunity].Payment_Schedule_Mode__c),
-            ISCHANGED([Opportunity].Payment_Use_Primary_Bank_Account__c),
-            ISCHANGED([Opportunity].Payment_Default_Bank_Account__c),
-            ISCHANGED([Opportunity].Day_of_Month__c),
-            ISCHANGED([Opportunity].Start_Date__c),
-            ISCHANGED([Opportunity].End_Date__c),
-            ISCHANGED([Opportunity].Drawdown_Total__c),
-            ISCHANGED([Opportunity].Payment_Schedule_Allotted_Amount__c),
-            ISCHANGED([Opportunity].Payment_Schedule_Send_First_Immediately__c)
-    )
-)</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_myRule_23</name>
-        <dataType>Boolean</dataType>
-        <expression>AND(
-	ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;Yes&#39;),
-    OR(
-            ISCHANGED({!myVariable_current.Amount_Available_for_Scheduled_Payments__c}),
-            ISCHANGED({!myVariable_current.Payment_Schedule__c}),
-            ISCHANGED({!myVariable_current.Payment_Schedule_Mode__c}),
-            ISCHANGED({!myVariable_current.Payment_Use_Primary_Bank_Account__c}),
-            ISCHANGED({!myVariable_current.Payment_Default_Bank_Account__c}),
-            ISCHANGED({!myVariable_current.Day_of_Month__c}),
-            ISCHANGED({!myVariable_current.Start_Date__c}),
-            ISCHANGED({!myVariable_current.End_Date__c}),
-            ISCHANGED({!myVariable_current.Drawdown_Total__c}),
-            ISCHANGED({!myVariable_current.Payment_Schedule_Allotted_Amount__c}),
-            ISCHANGED({!myVariable_current.Payment_Schedule_Send_First_Immediately__c})
-    )
-)</expression>
-    </formulas>
-    <interviewLabel>Opportunity_Create_Edit_Handler-10_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Create_Edit_Handler-15_InterviewLabel</interviewLabel>
     <label>Opportunity Create &amp; Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2123,7 +1712,7 @@ AND(
             </processMetadataValues>
             <field>Verified_By__c</field>
             <value>
-                <elementReference>formula_17_myRule_16_A1_5984324795</elementReference>
+                <elementReference>formula_17_myRule_16_A1_4423478621</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2159,7 +1748,7 @@ AND(
             </processMetadataValues>
             <field>Verified_Date__c</field>
             <value>
-                <elementReference>formula_18_myRule_16_A1_4094915289</elementReference>
+                <elementReference>formula_18_myRule_16_A1_7123148443</elementReference>
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>
@@ -2190,91 +1779,8 @@ AND(
             <name>referenceTargetField</name>
         </processMetadataValues>
         <name>myRule_20_A1</name>
-        <label>Update Schedule Version</label>
-        <locationX>2000</locationX>
-        <locationY>200</locationY>
-        <connector>
-            <targetReference>myDecision22</targetReference>
-        </connector>
-        <filters>
-            <processMetadataValues>
-                <name>implicit</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </processMetadataValues>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Number</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Payment Schedule Version Number</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Payment_Schedule_Version_Number__c</field>
-            <value>
-                <elementReference>formula_21_myRule_20_A1_1320614088</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Opportunity</object>
-    </recordUpdates>
-    <recordUpdates>
-        <processMetadataValues>
-            <name>evaluationType</name>
-            <value>
-                <stringValue>always</stringValue>
-            </value>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>extraTypeInfo</name>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>isChildRelationship</name>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>reference</name>
-            <value>
-                <stringValue>[Opportunity]</stringValue>
-            </value>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>referenceTargetField</name>
-        </processMetadataValues>
-        <name>myRule_27_A1</name>
         <label>Mark Loan as Closed</label>
-        <locationX>2700</locationX>
+        <locationX>2000</locationX>
         <locationY>200</locationY>
         <filters>
             <processMetadataValues>
