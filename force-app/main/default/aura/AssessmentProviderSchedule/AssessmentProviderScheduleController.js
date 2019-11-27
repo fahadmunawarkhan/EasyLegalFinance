@@ -2,18 +2,6 @@
 	doInit : function(component, event, helper) {
         component.set("v.spinner", true);
         
-        
-        
-        
-        /*component.set('v.columns', [
-            {label: 'Name', fieldName: 'linkName', type: 'url', typeAttributes: {label: { fieldName: 'Name' }, target: '_blank'}, sortable: true},
-            {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
-            {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
-            {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
-            
-            {type: 'action', typeAttributes: { rowActions: {label: 'Edit', iconName:'utility:edit', disabled: true }}
-        ]);*/
-        
         helper.getAssessmentProviderInfo(component).then($A.getCallback(
             function(result){
                 component.set('v.assessmentProvider',result);
@@ -21,7 +9,6 @@
             }
         )).then(
             function(result){
-                console.log('current -- > ' + JSON.stringify(result));
                 component.set('v.currentUser', result);
             }
         ).catch(
@@ -38,16 +25,18 @@
                 component.set('v.columns', [
                     {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
                     {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
-                    {label: 'Last Modified Date', fieldName: 'LastModifiedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
-            		{label: 'Last Modified By', fieldName: 'LastModifiedByName', type: 'text', sortable: true},
+                    {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
+            		{label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true},
                     {type: 'action', label: 'Action', typeAttributes: {rowActions: rowActions}}
                      ]);
-            	
+
                 component.set('v.data',result);
-                component.set("v.datatableIsSet", true);
+                
             }
         ).then(
             function(){
+                helper.sortData(component,component.get("v.sortBy"),component.get("v.sortDirection"));
+                component.set("v.datatableIsSet", true);
                 component.set("v.spinner", false);
             }
         ).catch(
@@ -98,13 +87,21 @@
             function(result){
                 component.set("v.spinner", false);
                 component.set('v.selectedLookUpLawFirm', null);
+                component.set('v.selectedLookUpLawyer', null);
                 component.set('v.discountRate', 0);
+                
                 helper.showToast(component, 'SUCCESS', 'Successfully created assessment provider schedule.', 'success');
                 return helper.getAssessmentSchedules(component);
             }
         )).then(
             function(result){
                 component.set('v.data',result);
+            }
+        ).then(
+            function(){
+                component.set("v.sortBy", 'CreatedDate');
+                component.set("v.sortDirection", 'desc');
+                helper.sortData(component,component.get("v.sortBy"),component.get("v.sortDirection"));
                 component.set("v.datatableIsSet", true);
                 component.set("v.spinner", false);
             }

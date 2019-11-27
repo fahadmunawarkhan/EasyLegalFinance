@@ -35,7 +35,8 @@
 
                     //setting lookups
                     component.set("v.selectedLookUpAssessmentProvider.Id", component.get("v.oppObj").Assessment_Provider__c);
-                    component.set("v.selectedLookUpAssessmentProvider.Name",(component.get("v.oppObj").Assessment_Provider__c ? 
+                    console.log('-' + component.get("v.oppObj").Assessment_Provider__c + '-');
+                    component.set("v.selectedLookUpAssessmentProvider.Name",(component.get("v.oppObj").Assessment_Provider__c != null && component.get("v.oppObj").Assessment_Provider__c != ''? 
                                                                          component.get("v.oppObj").Assessment_Provider__r.Name : '')); 
                     
 
@@ -711,6 +712,7 @@
     },
     
     saveOppty : function(component) {
+        console.log('saveOppty');
         var p = new Promise ($A.getCallback( function( resolve, reject){
             
             //setting lookups
@@ -731,6 +733,7 @@
     
             
             var oppObj = component.get('v.oppObj');
+            console.log('oppObj ' + oppObj.Discount_Rate__c);
             var action = component.get('c.saveOpportunity');
             action.setParams({ opportunity : oppObj});
             console.log('saving oppty'+ oppObj.Primary_Contact__c);
@@ -970,6 +973,9 @@
         var action = component.get("c.getDependentMap");
         // pass paramerters [object definition , contrller field name ,dependent field name] -
         // to server side function 
+        console.log('objDetails ' + objDetails);
+        console.log('controllerField ' + controllerField);
+        console.log('dependentField ' + dependentField);
         action.setParams({
             'objDetail' : objDetails,
             'contrfieldApiName': controllerField,

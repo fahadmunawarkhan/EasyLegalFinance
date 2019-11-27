@@ -7,9 +7,9 @@
     <aura:attribute name="data" type="Assessment_Provider_Schedule__c"/>
     <aura:attribute name="columns" type="List"/>
     
-    <aura:attribute name="sortBy" type="String"/>
-    <aura:attribute name="sortDirection" type="String"/>
-    <aura:attribute name="defaultSortDirection" type="String"/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate"/>
+    <aura:attribute name="sortDirection" type="String" default="desc"/>    
+    <aura:attribute name="defaultSortDirection" type="String" default="desc"/>
     
     <lightning:card title="Assessment Provider Schedules">
         <aura:if isTrue="{!v.datatableIsSet}">

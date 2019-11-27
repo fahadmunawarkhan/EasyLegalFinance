@@ -50,6 +50,8 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         public decimal utilizedCreditRhino {get; set;}
         @AuraEnabled
         public decimal availableCredit {get; set;}
+        @AuraEnabled
+        public decimal discount {get; set;}
         
         public DataWrapper(){
             lawyer = '';
@@ -60,6 +62,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             utilizedCreditElfi = 0;
             utilizedCreditRhino = 0;
             availableCredit = 0;
+            discount = 0;
         }
     }
     
@@ -114,11 +117,13 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         List<AggregateResult> aggResultList = new List<AggregateResult>();
         Map<String, AssessmentWrapper> providerToAssessmentMap = new Map<String,AssessmentWrapper>();
         Set<Id> assessmentProviderIdSet = new Set<Id>();
+        Set<Id> lawyerIdSet = new Set<Id>();
         
         Set<Id> lawyersIdSet = new Set<Id>();
         
         Map<String, DataWrapper> lawyerAssessmentMap = new Map<String, DataWrapper>();
         Map<String,String> providerAttachmentsMap = new Map<String,String>();
+        Map<String,Decimal> providerLawyerDiscountMap = new Map<String,Decimal>();
 
         try{
             
@@ -157,6 +162,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             String key = '';
             for(AggregateResult ars : aggResultList){
                 assessmentProviderIdSet.add((String)ars.get('providerId'));
+                lawyerIdSet.add((String)ars.get('lawyerId'));
                 key = ars.get('providerId') + '-' + ars.get('lawyerId') + ars.get('lawfirmId');
                 DataWrapper wrapper = null;
                 if(!lawyerAssessmentMap.containsKey(key))
@@ -184,6 +190,19 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 lawyerAssessmentMap.put(key, wrapper);
             }
             
+            //query to get discount rate
+            if(!assessmentProviderIdSet.isEmpty()){
+                String askey = '';
+                for(Assessment_Provider_Schedule__c aProviderSchedule :[SELECT Id, Discount__c, Lawyer__c, Lawyer__r.AccountId, Assessment_Provider__c 
+                                                                        FROM Assessment_Provider_Schedule__c WHERE Assessment_Provider__c in :assessmentProviderIdSet 
+                                                                        AND lawyer__c in :lawyerIdSet order by CreatedDate desc]){
+                                                                            askey = aProviderSchedule.Assessment_Provider__c + '-' + aProviderSchedule.Lawyer__c + '-' + aProviderSchedule.Lawyer__r.AccountId;
+                                                                            if(!providerLawyerDiscountMap.containsKey(askey)){
+                                                                                providerLawyerDiscountMap.put(askey, aProviderSchedule.Discount__c);
+                                                                            }
+
+                }
+            }
             //query to retrive attached payout attachements
             if(!assessmentProviderIdSet.isEmpty()){
                 for(Attachment attach : [SELECT Id, ParentId FROM Attachment Where ParentId In :assessmentProviderIdSet
@@ -209,6 +228,12 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 mainWrapper = providerToAssessmentMap.get(aProviderId);
                 if(lawyerAssessmentMap.ContainsKey(dataMapKey))
                     dataWrapper = lawyerAssessmentMap.get(dataMapKey);
+                
+                Decimal lawyerDiscount = 0;
+                if(providerLawyerDiscountMap.ContainsKey(dataMapKey))
+                    lawyerDiscount = providerLawyerDiscountMap.get(dataMapKey);
+                
+                dataWrapper.discount = lawyerDiscount;
                 mainWrapper.dataList.add(dataWrapper);
                 
                 mainWrapper.attachmentId = '';
