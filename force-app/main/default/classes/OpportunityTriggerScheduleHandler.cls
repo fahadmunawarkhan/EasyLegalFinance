@@ -1,4 +1,4 @@
-public class OpportunityTriggerHandler extends TriggerHandler {
+public class OpportunityTriggerScheduleHandler extends TriggerHandler {
     private Map<Id, Opportunity> newMap;
     private Map<Id, Opportunity> oldMap;
     private Opportunity[] newList;
@@ -17,7 +17,7 @@ public class OpportunityTriggerHandler extends TriggerHandler {
     private Id[] updatePaymentVersion = new Id[]{};
     private Id[] needsPaymentsCalculated = new Id[]{};
 
-    public OpportunityTriggerHandler() {
+    public OpportunityTriggerScheduleHandler() {
         this.newMap = (Map<Id, Opportunity>) Trigger.newMap;
         this.oldMap = (Map<Id, Opportunity>) Trigger.oldMap;
         if (this.oldMap == null) {
