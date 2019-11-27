@@ -51,6 +51,7 @@ public class EFTFileTest {
 
         FObject spConfig = TestDataFactory.getScheduledPaymentConfig(1);
         Scheduled_Payment__c spRec = TestDataFactory.getScheduledPaymentObjects(spConfig, false)[0];
+        spRec.Account__c = acc.Id;
         spRec.Amount__c = 2000;
         spRec.Payment_Type__c = 'Ad-Hoc';
         spRec.Status__c = 'Scheduled';
@@ -97,6 +98,8 @@ public class EFTFileTest {
         spConfig.setDefinition('Amount__c', 'static value(1000)');
         spConfig.setDefinition('Status__c', 'static value(Scheduled)');
         Scheduled_Payment__c spRec = TestDataFactory.getScheduledPaymentObjects(spConfig, true)[0];
+        spRec.Account__c = acc.Id;
+        update spRec;
 
         test.startTest();
         String fileText;
@@ -206,6 +209,7 @@ public class EFTFileTest {
         Opportunity oppRec = TestDataFactory.getOpportunityObjects(1)[0];
 
         FObject spConfig = TestDataFactory.getScheduledPaymentConfig(1);
+        //spConfig.setDefinition('Account__c', 'static value(' + acc.Id + ')');
         spConfig.setDefinition('Amount__c', 'static value(1000)');
         spConfig.setDefinition('Status__c', 'static value(Scheduled)');
         Scheduled_Payment__c spRec = TestDataFactory.getScheduledPaymentObjects(spConfig, true)[0];
@@ -243,6 +247,7 @@ public class EFTFileTest {
         Opportunity oppRec = TestDataFactory.getOpportunityObjects(1)[0];
 
         FObject spConfig = TestDataFactory.getScheduledPaymentConfig(2);
+        spConfig.setDefinition('Account__c', 'random lookup(Account) source(forceea)');
         spConfig.setDefinition('Amount__c', 'static value(123.45)');
         spConfig.setDefinition('Status__c', 'static value(Scheduled)');
         Scheduled_Payment__c[] spRecs = TestDataFactory.getScheduledPaymentObjects(spConfig, true);
