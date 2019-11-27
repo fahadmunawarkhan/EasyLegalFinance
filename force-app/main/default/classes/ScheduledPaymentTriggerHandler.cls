@@ -17,6 +17,7 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
     private Set<Id> oppIdsCheckFirstPayment = new Set<Id>();
     private Map<Id, Scheduled_Payment__c> otherUpdatedSPs = new Map<Id, Scheduled_Payment__c>();
     private Map<Id, Opportunity_Service_Provider__c> ospMap = new Map<Id, Opportunity_Service_Provider__c>();
+    private Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>();
     //private Opportunity_Service_Provider__c[] ospList = new Opportunity_Service_Provider__c[]{};
     //private Map<Id, Scheduled_Payment__c> otherUpdatedSPs = new Map<Id, Scheduled_Payment__c>();
     //private Map<Id, Scheduled_Payment__c> oppToFirstSPMap = new Map<Id, Scheduled_Payment__c>();
@@ -46,6 +47,13 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             if (String.isNotBlank(sp.Previous_Loan__c)){
                 plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=sp.Id, Scheduled__c=true));
             }
+            if (sp.Current_Opportunity_Schedule_Version_Val__c == true && sp.Drawdown_Created__c == true) {
+                if (this.oppMap.containsKey(sp.Opportunity__c)) {
+                    this.oppMap.get(sp.Opportunity__c).Amount_sent_from_current_Schedule__c -= sp.Amount__c;
+                } else {
+                    this.oppMap.put(sp.Opportunity__c, new Opportunity(Id=sp.Opportunity__c, Amount_sent_from_current_Schedule__c = 0-sp.Amount__c));
+                }
+            }
         }
 
         if (!plList.isEmpty()) {
@@ -57,6 +65,8 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
         updateOtherSPs();
 
         updateOpportunityServiceProviderRollup();
+
+        updateOpportunities();
     }
     
     public override void afterUpdate() {
@@ -76,6 +86,18 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             if (String.isNotBlank(sp.Previous_Loan__c)){
                 plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=sp.Id, Scheduled__c=true));
             }
+            if (sp.Current_Opportunity_Schedule_Version_Val__c == true && sp.Drawdown_Created__c != this.oldSPMap.get(sp.Id).Drawdown_Created__c) {
+                Integer negator = 1;
+                if (sp.Drawdown_Created__c == false) {
+                    // Reversed
+                    negator = -1;
+                }
+                if (this.oppMap.containsKey(sp.Opportunity__c)) {
+                    this.oppMap.get(sp.Opportunity__c).Amount_sent_from_current_Schedule__c += sp.Amount__c * negator;
+                } else {
+                    this.oppMap.put(sp.Opportunity__c, new Opportunity(Id=sp.Opportunity__c, Amount_sent_from_current_Schedule__c = sp.Amount__c * negator));
+                }
+            }
         }
 
         if (!plList.isEmpty()) {
@@ -87,6 +109,8 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
         updateOtherSPs();
 
         updateOpportunityServiceProviderRollup();
+        
+        updateOpportunities();
     }
 
     public override void afterDelete() {
@@ -105,6 +129,13 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
             if (String.isNotBlank(sp.Previous_Loan__c)){
                 plList.add(new Previous_Loan__c(id=sp.Previous_Loan__c, Scheduled_Payment__c=null, Scheduled__c=false));
             }
+            if (sp.Current_Opportunity_Schedule_Version_Val__c == true && sp.Drawdown_Created__c == true) {
+                if (this.oppMap.containsKey(sp.Opportunity__c)) {
+                    this.oppMap.get(sp.Opportunity__c).Amount_sent_from_current_Schedule__c += sp.Amount__c;
+                } else {
+                    this.oppMap.put(sp.Opportunity__c, new Opportunity(Id=sp.Opportunity__c, Amount_sent_from_current_Schedule__c = sp.Amount__c));
+                }
+            }
         }
 
         if (!plList.isEmpty()) {
@@ -116,6 +147,30 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
         updateOtherSPs();
 
         updateOpportunityServiceProviderRollup();
+
+        updateOpportunities();
+    }
+
+    private void updateOpportunities() {
+        /*
+        fetch opps in map (if any)
+            go through fetched opps
+            update fetched opp values with oppMap values
+            update fetched opps
+        */
+        if (!this.oppMap.isEmpty()) {
+            Opportunity[] oppList = [Select Id, Amount_sent_from_current_Schedule__c From Opportunity Where Id in :this.oppMap.keySet()];
+            for (Opportunity opp : oppList) {
+                system.debug(opp);
+                if (opp.Amount_sent_from_current_Schedule__c == null) {
+                    opp.Amount_sent_from_current_Schedule__c = this.oppMap.get(opp.Id).Amount_sent_from_current_Schedule__c;
+                } else {
+                    opp.Amount_sent_from_current_Schedule__c += this.oppMap.get(opp.Id).Amount_sent_from_current_Schedule__c;
+                }
+                system.debug(opp);
+            }
+            update oppList;
+        }
     }
 
     public void updateOpportunityServiceProviderRollup() {

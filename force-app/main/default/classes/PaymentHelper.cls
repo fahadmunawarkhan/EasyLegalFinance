@@ -14,24 +14,24 @@ public with sharing class PaymentHelper {
         List<Scheduled_Payment__c> paymentsList = new List<Scheduled_Payment__c>();
 
         Decimal inProcessAmount = 0;
+        Integer skipPaymentCount = 0;
         if (inProcessPayments != null) {
-            for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
-                inProcessAmount += inProcessPayment.Amount__c;
-            }
+            skipPaymentCount = inProcessPayments.size();
+            inProcessAmount = calculateInProcessAmount(opportunity, inProcessPayments);
         }
 
-        Integer skipPaymentCount = 0;
         Integer numPayments = 0;
         if (processedPayments != null) {
-            skipPaymentCount = processedPayments.size();
+            skipPaymentCount += processedPayments.size();
         }
         
         // calculate payments
-        Decimal amountAvailableToDrawdown = opportunity.Payment_Scheduled_Allotment_Remaining__c + inProcessAmount;
+        Decimal amountAvailableToDrawdown = opportunity.Payment_Scheduled_Allotment_Remaining__c - inProcessAmount;
         Scheduled_Payment__c sp;
-        if (needsImmediatePayment(opportunity) && amountAvailableToDrawdown > 0) {
+        if (needsImmediatePayment(opportunity, inProcessPayments, processedPayments) && amountAvailableToDrawdown > 0) {
             sp = new Scheduled_Payment__c(
                     Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
+                    Current_Opportunity_Schedule_Version_Val__c = true,
                     Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
                     Scheduled_Date__c = DateUtil.today(),
                     Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
@@ -56,6 +56,7 @@ public with sharing class PaymentHelper {
                 numPayments += 1;
                 sp = new Scheduled_Payment__c(
                         Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
+                        Current_Opportunity_Schedule_Version_Val__c = true,
                         Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
                         Scheduled_Date__c = currentDate,
                         Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
@@ -73,14 +74,30 @@ public with sharing class PaymentHelper {
 
             counter++;
         } 
+        /*
         if (inProcessPayments != null) {
-            for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
-                if (paymentsList.size() > 0) {
+            System.debug(paymentsList);
+            for (Integer i = 1; i <= inProcessPayments.size(); i++) {
+                if (!paymentsList.isEmpty() && i > skipPaymentCount - processedPayments.size()) {
                     paymentsList.remove(0);
                 }
             }
         }
+        */
+        System.debug(paymentsList);
         return paymentsList;
+    }
+
+    public static Decimal calculateInProcessAmount(Opportunity opp, Scheduled_Payment__c[] inProcessPayments){
+        Decimal inProcessAmount = 0;
+        if (opp.Amount_Available_for_Scheduled_Payments__c < opp.Payment_Schedule_Allotted_Amount__c - opp.Amount_sent_from_current_Schedule__c) {
+            // already factored in from formula
+        } else if (inProcessPayments != null) {
+            for (Scheduled_Payment__c inProcessPayment : inProcessPayments) {
+                inProcessAmount += inProcessPayment.Amount__c;
+            }
+        }
+        return inProcessAmount;
     }
 
 
@@ -89,16 +106,14 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     **/
-    public static Boolean needsImmediatePayment(Opportunity opportunity){
+    public static Boolean needsImmediatePayment(Opportunity opportunity, Scheduled_Payment__c[] inProcessPayments, Scheduled_Payment__c[] processedPayments){
         if (opportunity.Payment_Schedule_Send_First_Immediately__c) {
-            if (opportunity.Scheduled_Payments__r == null || opportunity.Scheduled_Payments__r.isEmpty()) {
-                Date proposedDate = getPaymentDate(opportunity, 0);
-                return proposedDate == null || !proposedDate.isSameDay(DateUtil.today());
-            }
+            Date proposedDate = getPaymentDate(opportunity, 0);
+            return proposedDate == null || !proposedDate.isSameDay(DateUtil.today());
         }
         return false;
         /*
-        PaymentHelper.recalculatePayments(new Id[]{'0061F000007ryEfQAI'});
+        PaymentHelper.recalculatePayments(new Id[]{'0068A000006JTLFQA4'});
         */
     }
 
@@ -127,9 +142,12 @@ public with sharing class PaymentHelper {
                 Payment_Use_Primary_Bank_Account__c,
                 Payment_Default_Bank_Account__c,
                 Payment_Schedule_Send_First_Immediately__c,
+                Amount_Available_for_Scheduled_Payments__c,
+                Payment_Schedule_Allotted_Amount__c,
+                Amount_sent_from_current_Schedule__c,
                 (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c, Current_Opportunity_Schedule_Version__c
                     FROM Scheduled_Payments__r
-                    WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c != null
+                    WHERE Payment_Type__c = 'Scheduled Facility' AND Drawdown__c != null AND Current_Opportunity_Schedule_Version__c = true
                     ORDER BY Scheduled_Date__c)
                     FROM Opportunity WHERE Id IN: opportunityIds AND Type_of_Loan__c =: Constants.FACILITY_LOAN LIMIT 45000]);
 
@@ -138,7 +156,7 @@ public with sharing class PaymentHelper {
                 Id,
                 (SELECT Id, Amount__c, Scheduled_Date__c, Status__c, Opportunity_Schedule_Version_Number__c, Current_Opportunity_Schedule_Version__c
                     FROM Scheduled_Payments__r
-                    WHERE Payment_Type__c = 'Scheduled Facility'
+                    WHERE Payment_Type__c = 'Scheduled Facility' AND Current_Opportunity_Schedule_Version__c = true
                     ORDER BY Scheduled_Date__c)
                     FROM Opportunity WHERE Id IN: opportunityIds AND Type_of_Loan__c =: Constants.FACILITY_LOAN LIMIT 45000]);
 
@@ -181,6 +199,10 @@ public with sharing class PaymentHelper {
                     calculatedPayments = calculatePaymentsForAmount(opportunity, inProcessPayments, processedPayments);
                 }
 
+                system.debug(calculatedPayments.size());
+                system.debug(calculatedPayments);
+                system.debug(modifiablePayments);
+
                 // How many payments do we need to iterate?
                 for (integer i = 0; i < calculatedPayments.size(); i++) {
                     if (modifiablePayments.size() < i + 1) {
@@ -195,6 +217,7 @@ public with sharing class PaymentHelper {
                             modifiablePayments[i].Send_Cheque__c = calculatedPayments[i].Send_Cheque__c;
                             modifiablePayments[i].Bank_Account__c = calculatedPayments[i].Bank_Account__c;
                             modifiablePayments[i].Opportunity_Schedule_Version_Number__c = calculatedPayments[i].Opportunity_Schedule_Version_Number__c;
+                            modifiablePayments[i].Current_Opportunity_Schedule_Version_Val__c = true;
                         }
                         paymentsToAddAndUpdate.add(modifiablePayments[i]);
                     }
@@ -207,7 +230,12 @@ public with sharing class PaymentHelper {
             }
         }
 
-        if(!paymentsToAddAndUpdate.isEmpty()) upsert paymentsToAddAndUpdate;
+        system.debug(paymentsToAddAndUpdate);
+        system.debug(paymentsToAddAndUpdate.size());
+        if(!paymentsToAddAndUpdate.isEmpty()){
+            upsert paymentsToAddAndUpdate;
+        }
+        system.debug(paymentsToDelete);
         if(!paymentsToDelete.isEmpty()) delete paymentsToDelete;
     }
 
@@ -216,6 +244,7 @@ public with sharing class PaymentHelper {
     * @param opportunity Opportunity
     * @return List<Scheduled_Payment__c> List of payment schedules
     public static void recalculatePayments(Opportunity opportunity, List<Scheduled_Payment__c> paymentsList){
+        PaymentHelper.recalculatePayments(new Id[]{'0068A000006JTLFQA4'});
         // re-calculate payments
         Decimal amountAvailableToDrawdown = opportunity.Payment_Scheduled_Allotment_Remaining__c;
         for(Integer i=0;i<paymentsList.size();i++){
@@ -248,10 +277,13 @@ public with sharing class PaymentHelper {
         // If not and Send_First_Payment_Immediately__c is checked
         //      Check to make sure that today isn't the first day in the normal schedule
         //          Change the way amount and numberOfMonths are calculated
-        if (needsImmediatePayment(opportunity)) {
+        Boolean neededImmediate = false;
+        if (needsImmediatePayment(opportunity, inProcessPayments, processedPayments)) {
+            neededImmediate = true;
             paymentsList.add(
                 new Scheduled_Payment__c(
                     Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
+                    Current_Opportunity_Schedule_Version_Val__c = true,
                     //Amount__c = amountAvailableToDrawdown > opportunity.Drawdown_Amount__c ? opportunity.Drawdown_Amount__c : amountAvailableToDrawdown,
                     Scheduled_Date__c = DateUtil.today(),
                     Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
@@ -278,6 +310,7 @@ public with sharing class PaymentHelper {
             paymentsList.add(
                 new Scheduled_Payment__c(
                     Opportunity_Schedule_Version_Number__c = opportunity.Payment_Schedule_Version_Number__c,
+                    Current_Opportunity_Schedule_Version_Val__c = true,
                     //Amount__c = opportunity.Payment_Scheduled_Allotment_Remaining__c/ numberOfMonths,
                     Scheduled_Date__c = currentDate,
                     Status__c = Constants.PAYMENT_SCHEDULED_STATUS,
@@ -291,6 +324,8 @@ public with sharing class PaymentHelper {
             monthCounter += 1;
             currentDate = getPaymentDate(opportunity, monthCounter);
         }
+        System.debug(paymentsList);
+        System.debug(paymentsList.size());
         Boolean removedImmediate = false;
         if (processedPayments != null) {
             for (Scheduled_Payment__c sp : processedPayments) {
@@ -304,9 +339,14 @@ public with sharing class PaymentHelper {
             }
         }
 
+        
+        Decimal amountRemaining = opportunity.Payment_Scheduled_Allotment_Remaining__c - calculateInProcessAmount(opportunity, inProcessPayments);
+        Decimal allotmentRemaining = amountRemaining;
+
         if (inProcessPayments != null) {
             for (Scheduled_Payment__c sp : inProcessPayments) {
                 if (paymentsList.size() > 0) {
+                    //amountRemaining -= sp.Amount__c;
                     if (opportunity.Payment_Schedule_Send_First_Immediately__c && !removedImmediate) {
                         removedImmediate = true;
                     } else {
@@ -316,8 +356,12 @@ public with sharing class PaymentHelper {
             }
         }
 
+        if (removedImmediate == true && !paymentsList.isEmpty() && neededImmediate) {
+            paymentsList.remove(0);
+        }
+
         if (!paymentsList.isEmpty()) {
-            Decimal amount = opportunity.Payment_Scheduled_Allotment_Remaining__c / paymentsList.size();
+            Decimal amount = amountRemaining / paymentsList.size();
             amount = amount * 100;
             amount = amount.round();
             amount = amount / 100;
@@ -331,8 +375,8 @@ public with sharing class PaymentHelper {
                     sp.Amount__c = amount;
                     sumAmount += amount;
                 }
-                if (sumAmount != opportunity.Payment_Scheduled_Allotment_Remaining__c) {
-                    Decimal missingAmount = opportunity.Payment_Scheduled_Allotment_Remaining__c - sumAmount;
+                if (sumAmount != allotmentRemaining) {
+                    Decimal missingAmount = allotmentRemaining - sumAmount;
                     if (missingAmount > 0) {
                         paymentsList[0].Amount__c += missingAmount;
                     } else {
