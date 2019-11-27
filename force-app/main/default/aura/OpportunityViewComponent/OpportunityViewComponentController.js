@@ -414,12 +414,27 @@
         }, 100);
     },
     hideLookupInput : function(component, event, helper) {	
-        
+        console.log('hideLookupInput');
+        let clickSource = component.get("v.clickSource");
+        console.log('clickSource = ' + clickSource);
         component.set("v.clickSource", "none");   
         var oppObjId = component.get("v.oppObj.Id");
-        if(oppObjId){
+        if(oppObjId && clickSource != 'none'){
+            console.log('call');
             component.set("v.spinner", true);
-            helper.saveOppty(component);
+            helper.saveOppty(component).then(
+                $A.getCallback(function(result) {
+                    helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
+                    helper.getOpportunityInfo(component);
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    }else {
+                        helper.unknownErrorsHandler();
+                    }
+                    
+                }));
         }
     },
     handlePaymentScheduleChange : function(component, event, helper) {  

@@ -5,15 +5,19 @@
         component.set('v.columns', [
             {label: 'Assessment Provider', fieldName: 'linkProvider', type: 'url', typeAttributes: {label: { fieldName: 'Assessment_ProviderName' }, target: '_blank'}, sortable: true},
             {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
-            {label: 'Last Modified Date', fieldName: 'LastModifiedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
-            {label: 'Last Modified By', fieldName: 'LastModifiedByName', type: 'text', sortable: true}
+            {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
+            {label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true}
         ]);
         
         helper.getAssessmentSchedules(component).then(
-            function(result){
-                component.set("v.spinner", false);
+            function(result){                
                 component.set("v.data", result);
+            }
+        ).then(
+            function(){
+                helper.sortData(component,component.get("v.sortBy"),component.get("v.sortDirection"));
                 component.set("v.datatableIsSet", true);
+                component.set("v.spinner", false);
             }
         ).catch(
             function(errors){

@@ -179,6 +179,7 @@
         <members>OpportunityTriggerHandler</members>         
         <members>OpportunityViewComponentCtlr</members>  
         <members>AssessmentProviderScheduleCtlr</members>
+        <members>AssessmentProviderScheduleTriggerHandler</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -256,6 +257,7 @@
         <members>ScheduledPaymentTrigger</members>
         <members>UserTrigger</members>
         <members>OpportunityTrigger</members>
+        <members>AssessmentProviderScheduleTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>

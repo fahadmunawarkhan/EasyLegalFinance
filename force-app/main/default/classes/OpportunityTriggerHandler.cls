@@ -13,7 +13,6 @@ public with sharing class OpportunityTriggerHandler {
                (isInsert || (!isInsert && (opp.Assessment_Provider__c != oldMap.get(opp.Id).Assessment_Provider__c ||
                                            opp.Lawyer__c != oldMap.get(opp.Id).Lawyer__c)))){
                                                
-                                               opp.Discount_Rate__c = 0;
                                                selOpportunities.add(opp);
                                                assessmentProviderIds.add(opp.Assessment_Provider__c);
                                                lawyerIds.add(opp.Lawyer__c);
@@ -25,15 +24,18 @@ public with sharing class OpportunityTriggerHandler {
             for(Assessment_Provider_Schedule__c aps : [Select Id, Lawyer__c, Assessment_Provider__c, Discount__c
                                                        FROM Assessment_Provider_Schedule__c 
                                                        WHERE Assessment_Provider__c in :assessmentProviderIds
-                                                       AND Lawyer__c in :lawyerIds]){
+                                                       AND Lawyer__c in :lawyerIds order by CreatedDate asc]){
                                                            discountscheduleMap.put(aps.Assessment_Provider__c + '-' + aps.Lawyer__c, aps);
                                                        }
             
             
             for(Opportunity opp : selOpportunities){
+                opp.Discount_Rate__c = 0;
+                
                 String key = opp.Assessment_Provider__c + '-' + opp.Lawyer__c;
                 if(discountscheduleMap.containsKey(key)){
                     opp.Discount_Rate__c = discountscheduleMap.get(key).Discount__c;
+                    
                 }else if(opp.Assessment_Provider__c != null && opp.Law_Firm__c != null){
                     assessmentScheduleToInsert.add(
                         new Assessment_Provider_Schedule__c(
@@ -45,7 +47,7 @@ public with sharing class OpportunityTriggerHandler {
                 } 
             }
         }
-        
+
         if(!assessmentScheduleToInsert.isEmpty())
             insert assessmentScheduleToInsert;
     }

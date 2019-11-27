@@ -18,6 +18,7 @@
                             record.Assessment_ProviderName = record.Assessment_Provider__r.Name;
                             record.discount = record.Discount__c / 100;
                             record.LastModifiedByName = record.LastModifiedBy.Name;
+                            record.CreatedByName = record.CreatedBy.Name;
                         });
                         resolve(records);
                     }else if(state == 'ERROR'){

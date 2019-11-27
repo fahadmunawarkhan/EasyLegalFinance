@@ -138,6 +138,10 @@
                                 <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                             </aura:if>
                         </th>
+                        <th>
+                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title=""> DISCOUNT                               
+                            </div>
+                        </th>
                         <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Law_Firm__r.Name" style="cursor: pointer;" >
                             <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWFIRM">LAW FIRM</span>
                             <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Law_Firm__r.Name')}">
@@ -190,7 +194,7 @@
                                     </div>
                                 </td>
                                 
-                                <td Colspan="{!if(v.businessUnitForDesign == 'Consolidated',6,5)}">
+                                <td Colspan="{!if(v.businessUnitForDesign == 'Consolidated',7,6)}">
                                     <lightning:icon iconName="standard:account" size="small" alternativeText="Assessment Provider" />
                                     &nbsp;&nbsp;<b><a href="{!'/'+provider.assessmentProviderId}" target="_blank" >{!provider.assessmentProvider}</a></b>
                                 </td>
@@ -221,6 +225,16 @@
                                 <td>
                                     <div class="slds-truncate">
                                         <a href="{!'/'+data.lawyerId}" >{!data.lawyer}</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!data.discount == 0}">
+                                            0.00 %
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!data.discount}" style="percent" maximumFractionDigits="2"/>
+                                            </aura:set>
+                                        </aura:if>
                                     </div>
                                 </td>
                                 <td>
@@ -348,6 +362,10 @@
                                     </aura:if>
                                 </div>
                             </td>   
+                            <td>
+                                <div class="slds-truncate">
+                                </div>
+                            </td>
                             <td>
                                 <div class="slds-truncate">
                                 </div>

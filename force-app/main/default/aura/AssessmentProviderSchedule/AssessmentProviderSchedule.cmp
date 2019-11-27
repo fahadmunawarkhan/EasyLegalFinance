@@ -20,9 +20,10 @@
     <aura:attribute name="data" type="Assessment_Provider_Schedule__c"/>
     <aura:attribute name="columns" type="List"/>
     
-    <aura:attribute name="sortBy" type="String"/>
-    <aura:attribute name="sortDirection" type="String"/>
-    <aura:attribute name="defaultSortDirection" type="String"/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate"/>
+    <aura:attribute name="sortDirection" type="String" default="desc"/>
+    
+    <aura:attribute name="defaultSortDirection" type="String" default="desc"/>
     
     <lightning:overlayLibrary aura:id="overlayLib"/>
     
@@ -132,6 +133,7 @@
                                                                 hideLookupInputAction="{!c.hideLookupInput}"
                                                                 selectedRecord="{!v.selectedLookUpLawyer}"
                                                                 filter="RecordType.Name='Lawyers' "
+                                                                fieldtoSearchIn = "Name_Formula__c"
                                                                 additionalFields = "MailingCity,MailingState,MailingPostalCode,Province_fm__c" 
                                                                 additionalDisplayFields = "MailingCity,MailingState"/>
                                             </aura:set>                                                    

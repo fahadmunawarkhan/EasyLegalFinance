@@ -21,10 +21,11 @@ public class OpportunityViewComponentCtlr {
     public static Opportunity getOpportunityDetails(String oppId, String accId) {
        system.debug(oppid + '  '  + accId);
         oppInfo = new Opportunity();
+        try{
         if(String.isEmpty(oppId))
         {
             List<Opportunity> lastOppty = [select id, Lawyer__c, Law_Firm__c, Date_Financing_Statement_Done__c ,
-                                           Date_Financing_Statement_Expires__c, Assessment_Provider__c
+                                           Date_Financing_Statement_Expires__c, Assessment_Provider__c, Assessment_Provider__r.Name
                                            from Opportunity
                                            where AccountId = :accId AND Loan_Requests__c != null AND Lawyer__c != null ORDER BY Loan_Requests__c DESC LIMIT 1];
             oppInfo.Name = ''; 
@@ -39,7 +40,7 @@ public class OpportunityViewComponentCtlr {
             oppInfo.OwnerId = currentUser.Id;
             oppInfo.Lawyer__c = (lastOppty.isEmpty() ? null : lastOppty[0].Lawyer__c);
             oppInfo.Law_Firm__c = (lastOppty.isEmpty() ? null : lastOppty[0].Law_Firm__c);
-            oppInfo.Assessment_Provider__c = (lastOppty.isEmpty() ? null : lastOppty[0].Assessment_Provider__c);
+            oppInfo.Assessment_Provider__c = null;
             oppInfo.Date_Financing_Statement_Done__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Done__c);
             oppInfo.Date_Financing_Statement_Expires__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Expires__c);
         }
@@ -66,6 +67,12 @@ public class OpportunityViewComponentCtlr {
             
             // Still need to handle exceptions
             oppInfo = Database.query(strQuery);   
+        }
+        }catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        } catch (Exception e){
+            system.debug(e.getStackTraceString() + ' - ' + e.getLineNumber());
+            throw new AuraHandledException('Error:'+e.getMessage());
         }
         system.debug('## oppInfo: ' + oppInfo);        
         return oppInfo;
@@ -185,6 +192,7 @@ public class OpportunityViewComponentCtlr {
         } catch (DMLException e){
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
+            system.debug(e.getStackTraceString() + ' - ' + e.getLineNumber());
             throw new AuraHandledException('Error:'+e.getMessage());
         }
             
@@ -497,8 +505,22 @@ public class OpportunityViewComponentCtlr {
 
     @AuraEnabled(cacheable=false)
     public static Bank_Account__c[] getBankAccountOptions(Id oppId) {
-        Opportunity opp = [Select AccountId From Opportunity Where Id = :oppId];
-        return [Select Id, Name, Is_Primary_Account__c From Bank_Account__c Where Client__c = :opp.AccountId Order By Is_Primary_Account__c DESC, Name ASC];
+        Opportunity opp = new Opportunity();
+        List<Bank_Account__c> bankAccounts = new List<Bank_Account__c>();
+        try{
+            if(!String.isEmpty(oppId) && oppId != null){
+            opp = [Select AccountId From Opportunity Where Id = :oppId];
+            bankAccounts = [Select Id, Name, Is_Primary_Account__c From Bank_Account__c Where Client__c = :opp.AccountId Order By Is_Primary_Account__c DESC, Name ASC];
+            }
+        }catch (DMLException e){
+            system.debug(e.getStackTraceString() + ' - ' + e.getLineNumber());
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        } catch (Exception e){
+            system.debug(e.getStackTraceString() + ' - ' + e.getLineNumber());
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+        
+        return bankAccounts;
     }
 
     @AuraEnabled(cacheable=false)
@@ -517,10 +539,10 @@ public class OpportunityViewComponentCtlr {
     public static void setLatestDiscountRateLaywer(Id oppId, Id assessmentProviderId, Id lawyerId){
         try{
             If(oppId != null && assessmentProviderId != null && lawyerId != null){
-                List<Assessment_Provider_Schedule__c> discountSchedule = [SELECT Id, Discount__c, Assessment_Provider__c, Lawyer__c
+                List<Assessment_Provider_Schedule__c> discountSchedule = [SELECT Id, Discount__c, Assessment_Provider__c, Lawyer__c, CreatedDate
                                                                           FROM Assessment_Provider_Schedule__c
                                                                           WHERE Assessment_Provider__c = :assessmentProviderId
-                                                                          AND Lawyer__c = :lawyerId];
+                                                                          AND Lawyer__c = :lawyerId order by CreatedDate desc];
                 Opportunity opp = new Opportunity();
                 opp.Id = oppId;
                 if(!discountSchedule.isEmpty()){
