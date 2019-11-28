@@ -539,7 +539,8 @@ public class OpportunityViewComponentCtlr {
     public static void setLatestDiscountRateLaywer(Id oppId, Id assessmentProviderId, Id lawyerId){
         try{
             If(oppId != null && assessmentProviderId != null && lawyerId != null){
-                List<Assessment_Provider_Schedule__c> discountSchedule = [SELECT Id, Discount__c, Assessment_Provider__c, Lawyer__c, CreatedDate
+                List<Assessment_Provider_Schedule__c> discountSchedule = [SELECT Id, Discount__c, Assessment_Provider__c, Lawyer__c, CreatedDate,
+                                                                          Rebate_Discount__c, Rebate_Period__c
                                                                           FROM Assessment_Provider_Schedule__c
                                                                           WHERE Assessment_Provider__c = :assessmentProviderId
                                                                           AND Lawyer__c = :lawyerId order by CreatedDate desc];
@@ -547,10 +548,18 @@ public class OpportunityViewComponentCtlr {
                 opp.Id = oppId;
                 if(!discountSchedule.isEmpty()){
                     opp.Discount_Rate__c = discountSchedule[0].Discount__c;
+                    opp.Rebate_Discount__c = discountSchedule[0].Rebate_Discount__c;
+                    string periodStr = discountSchedule[0].Rebate_Period__c;
+                    List<String> splited = periodStr.split(' ');
+                    opp.Rebate_Period__c = !splited.isEmpty()? Integer.valueOf(splited[0]): null;
                 }else{
+                    opp.Rebate_Discount__c = 0;
+                    opp.Rebate_Period__c = null;
                     opp.Discount_Rate__c = 0;
                     Assessment_Provider_Schedule__c dSchedule = new Assessment_Provider_Schedule__c(
                         Discount__c = 0,
+                        Rebate_Discount__c = 0,
+                        Rebate_Period__c = null,
                         Assessment_Provider__c = assessmentProviderId,
                         Lawyer__c = lawyerId
                     );

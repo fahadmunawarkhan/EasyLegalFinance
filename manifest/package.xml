@@ -1298,11 +1298,15 @@
         <members>Opportunity.Deferred_Revenue__c</members>
         <members>Opportunity.Discount_Rate__c</members>
         <members>Opportunity.Deferred_Revenue__c</members>
-        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Opportunity.Rebate_Period__c</members>
+        <members>Opportunity.Rebate_Discount__c</members>
         <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
         <members>Assessment_Provider_Schedule__c.Discount__c</members>
         <members>Assessment_Provider_Schedule__c.Lawyer__c</members>
         <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
+        <members>Assessment_Provider_Schedule__c.Rebate_Period__c</members>
+        <members>Assessment_Provider_Schedule__c.Rebate_Discount__c</members>
+        <members>Account.Rebate_Allowed__c</members>
         <name>CustomField</name>
     </types>
     <types>

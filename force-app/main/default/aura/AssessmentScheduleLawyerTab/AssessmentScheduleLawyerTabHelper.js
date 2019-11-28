@@ -19,6 +19,7 @@
                             record.discount = record.Discount__c / 100;
                             record.LastModifiedByName = record.LastModifiedBy.Name;
                             record.CreatedByName = record.CreatedBy.Name;
+                            record.rebateDiscount = record.Rebate_Discount__c/100;
                         });
                         resolve(records);
                     }else if(state == 'ERROR'){
@@ -48,7 +49,7 @@
         var key = function(a) { return a[fieldName]; }
         var reverse = sortDirection == 'asc' ? 1: -1;
         
-        if(fieldName == "discount"){
+        if(fieldName == "discount" || fieldName == "rebateDiscount"){
             
             data.sort(function(a,b){ 
                 var a = key(a);

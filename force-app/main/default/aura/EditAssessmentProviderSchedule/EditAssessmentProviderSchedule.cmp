@@ -1,8 +1,15 @@
-<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+<aura:component controller="AssessmentProviderScheduleCtlr" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
     <aura:attribute name="recordIdParam" type="String" />
+    <aura:attribute name="rebateAllowed" type="Boolean" default="false"/>
+    <aura:attribute name="showForm" type="Boolean" default="false"/>
+    <aura:attribute name="spinner" type="Boolean" default="false" />
     <lightning:overlayLibrary aura:id="overlayLib"/>
     <lightning:notificationsLibrary aura:id="notifLib"/>
     
+    <aura:if isTrue="{!v.showForm}">
     <lightning:recordEditForm aura:id="editform"
                               onsubmit="{!c.handleSubmit}"
                               onsuccess="{!c.handleSuccess}"
@@ -27,6 +34,14 @@
             <div class="slds-col slds-size_1-of-2">
             </div>
         </div>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning:inputField fieldName="Rebate_Period__c" disabled="{!not(v.rebateAllowed)}" />
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning:inputField fieldName="Rebate_Discount__c" disabled="{!not(v.rebateAllowed)}" />
+            </div>
+        </div>
         
         <div class="slds-m-top_medium">
             <div class="slds-clearfix">
@@ -36,5 +51,20 @@
             </div>            
         </div>
     </lightning:recordEditForm>
+    </aura:if>
+
+    <!-- <<<<<<<<<< Spinner >>>>>>>>>> -->
+    <aura:if isTrue="{!v.spinner}">
+        <div class="demo-only demo--inverse" style="height: 6rem;">
+            <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- <<<<<<<<<< / Spinner >>>>>>>>>> -->
     
 </aura:component>
