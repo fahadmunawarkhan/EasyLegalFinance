@@ -163,7 +163,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             for(AggregateResult ars : aggResultList){
                 assessmentProviderIdSet.add((String)ars.get('providerId'));
                 lawyerIdSet.add((String)ars.get('lawyerId'));
-                key = ars.get('providerId') + '-' + ars.get('lawyerId') + ars.get('lawfirmId');
+                key = ars.get('providerId') + '-' + ars.get('lawyerId') + '-' + ars.get('lawfirmId');
                 DataWrapper wrapper = null;
                 if(!lawyerAssessmentMap.containsKey(key))
                     lawyerAssessmentMap.put(key, new DataWrapper());
@@ -216,7 +216,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             DataWrapper dataWrapper = null;
             string dataMapKey = '';
             for(AggregateResult ars : aggResultList){
-                dataMapKey = ars.get('providerId') + '-' + ars.get('lawyerId') + ars.get('lawfirmId');
+                dataMapKey = ars.get('providerId') + '-' + ars.get('lawyerId') + '-' + ars.get('lawfirmId');
                 String aProviderId = (String)ars.get('providerId') != null? (String)ars.get('providerId') : '';
                 if(!providerToAssessmentMap.containsKey(aProviderId)){
                     mainWrapper = new AssessmentWrapper();
@@ -231,7 +231,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 
                 Decimal lawyerDiscount = 0;
                 if(providerLawyerDiscountMap.ContainsKey(dataMapKey))
-                    lawyerDiscount = providerLawyerDiscountMap.get(dataMapKey);
+                    lawyerDiscount = providerLawyerDiscountMap.get(dataMapKey)/100;
                 
                 dataWrapper.discount = lawyerDiscount;
                 mainWrapper.dataList.add(dataWrapper);
