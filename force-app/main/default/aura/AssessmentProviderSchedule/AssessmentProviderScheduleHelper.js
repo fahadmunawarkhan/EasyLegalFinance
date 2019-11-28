@@ -27,11 +27,11 @@
                 
                 let selOption = component.get('v.selectedLookupOption');
                 
-                let action = selOption == 'lawFirm'? component.get('c.createAssessmentSchedulesbyLawFirm') : component.get('c.createAssessmentSchedules');
+                let action = selOption == 'Law Firm'? component.get('c.createAssessmentSchedulesbyLawFirm') : component.get('c.createAssessmentSchedules');
                 action.setParams({
                     recordId : component.get('v.recordId'),
-                    lookupId : selOption == 'lawFirm'? lawFirm.Id : lawyer.Id,
-                    discount : component.get('v.discountRate')
+                    lookupId : selOption == 'Law Firm'? lawFirm.Id : lawyer.Id,
+                    assessmentSchedule : component.get('v.assessmentProviderSchedule')
                 });
                 
                 action.setCallback(this, function(response){
@@ -67,6 +67,7 @@
                             record.discount = record.Discount__c / 100;
                             record.LastModifiedByName = record.LastModifiedBy.Name;
                             record.CreatedByName = record.CreatedBy.Name;
+                            record.rebateDiscount = record.Rebate_Discount__c/100;
                         });
                         console.log(records);
                         resolve(records);
@@ -117,7 +118,7 @@
         var key = function(a) { return a[fieldName]; }
         var reverse = sortDirection == 'asc' ? 1: -1;
         
-        if(fieldName == "discount"){
+        if(fieldName == "discount" || fieldName == "rebateDiscount"){
             
             data.sort(function(a,b){ 
                 var a = key(a);
@@ -150,5 +151,71 @@
         setTimeout($A.getCallback(function () {
             doneCallback(actions);
         }), 200);
+    },
+    getPickListValues: function(component, object, field, attributeId)
+    {
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                
+                if (allValues != undefined && allValues.length > 0) {
+                    opts.push({
+                        class: "optionClass",
+                        label: "--- None ---",
+                        value: ""
+                    });
+                }
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i].split('===SEPERATOR===')[0],
+                            value: allValues[i].split('===SEPERATOR===')[1]
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i],
+                            value: allValues[i]
+                        });
+                    }
+                }
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
+
+    isRebateAllowed : function(component, lookUpId){
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let action = component.get("c.rebateIsAllowed");
+                action.setParams({
+                    lookupId : lookUpId,
+                    selectedLookup : component.get("v.selectedLookupOption")
+                });
+
+                action.setCallback(this, function(response){
+                    let state = response.getState();
+                    if(state == 'SUCCESS'){
+                        resolve(response.getReturnValue());
+                    }else if(state == 'ERROR'){
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
     }
 })

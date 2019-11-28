@@ -5,6 +5,8 @@
         component.set('v.columns', [
             {label: 'Assessment Provider', fieldName: 'linkProvider', type: 'url', typeAttributes: {label: { fieldName: 'Assessment_ProviderName' }, target: '_blank'}, sortable: true},
             {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+            {label: 'Rebate Discount', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+            {label: 'Rebate Period', fieldName: 'Rebate_Period__c', type: 'text', sortable: true},
             {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
             {label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true}
         ]);

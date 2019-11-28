@@ -1,10 +1,16 @@
 ({
 	doInit : function(component, event, helper) {
         component.set("v.spinner", true);
+
+        helper.getPickListValues(component, 'Assessment_Provider_Schedule__c','Rebate_Period__c','listRebatePeriodValues');
         
         helper.getAssessmentProviderInfo(component).then($A.getCallback(
             function(result){
                 component.set('v.assessmentProvider',result);
+                component.set('v.assessmentProviderSchedule.Assessment_Provider__c',result.Id);
+                component.set('v.assessmentProviderSchedule.Discount__c', 0);  
+                component.set('v.assessmentProviderSchedule.Rebate_Discount__c', 0);
+                component.set('v.assessmentProviderSchedule.Rebate_Period__c', '');              
                 return helper.getCurrentUserInfo(component);
             }
         )).then(
@@ -25,6 +31,8 @@
                 component.set('v.columns', [
                     {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
                     {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+                    {label: 'Rebate Discount', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+                    {label: 'Rebate Period', fieldName: 'Rebate_Period__c', type: 'text', sortable: true},
                     {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
             		{label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true},
                     {type: 'action', label: 'Action', typeAttributes: {rowActions: rowActions}}
@@ -59,10 +67,8 @@
         
         component.set("v.clickSource", clickSource); 
         var selectedRecVar = event.currentTarget.dataset.recvar;
-        console.log('var:'+selectedRecVar)
         if(selectedRecVar){
             component.set("v."+selectedRecVar,{});
-            console.log('nullfied');
         }
         
         // after the 100 millisecond set focus to input field   
@@ -75,9 +81,32 @@
             catch(e){ }
         }, 100);
     },
-    hideLookupInput : function(component, event, helper) {	
-        
+    hideLookupInput : function(component, event, helper) {
+        let clickSource = component.get("v.clickSource");        
         component.set("v.clickSource", "none");
+
+        let lawFirm = component.get('v.selectedLookUpLawFirm');
+        let lawyer = component.get('v.selectedLookUpLawyer');
+
+        let lookUpId = component.get("v.selectedLookupOption") == 'Law Firm'? lawFirm.Id : lawyer.Id;
+        if(clickSource != 'none' && lookUpId != null && lookUpId != ''){
+            
+            component.set("v.spinner", true);
+            helper.isRebateAllowed(component,lookUpId).then(
+                $A.getCallback(function(result) {
+                    component.set("v.rebateAllowed", result);
+                    component.set("v.showRebateWarning", !result);
+                    component.set("v.spinner", false);
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    }else {
+                        helper.unknownErrorsHandler();
+                    }
+                    
+                }));
+        }
     },
     
     saveLawFirmLawyerRecord : function(component, event, helper){
@@ -88,7 +117,11 @@
                 component.set("v.spinner", false);
                 component.set('v.selectedLookUpLawFirm', null);
                 component.set('v.selectedLookUpLawyer', null);
-                component.set('v.discountRate', 0);
+                component.set('v.assessmentProviderSchedule.Discount__c', 0);
+                component.set('v.assessmentProviderSchedule.Rebate_Discount__c', 0);
+                component.set('v.assessmentProviderSchedule.Rebate_Period__c', '');
+                component.set("v.showRebateWarning", false);
+                component.set("v.rebateAllowed", false);
                 
                 helper.showToast(component, 'SUCCESS', 'Successfully created assessment provider schedule.', 'success');
                 return helper.getAssessmentSchedules(component);
@@ -131,16 +164,17 @@
 			inputField.reportValidity();
         }else{
             
-            if(selOption == 'lawFirm'){
+            if(selOption == 'Law Firm'){
                 if(lawFirm.Id == null || lawFirm.Id == ''){
                     helper.showToast(component, 'EROR', 'Law Firm is missing. Please select a Law Firm.', 'error');
-                }else{
+                }else{                    
                     $A.enqueueAction(component.get("c.saveLawFirmLawyerRecord"));
                 }
-            }else if(selOption == 'lawyer'){
+            }else if(selOption == 'Lawyer'){
                 if(lawyer.Id == null || lawyer.Id == ''){
                     helper.showToast(component, 'EROR', 'Lawyer is missing. Please select a Lawyer.', 'error');
                 }else{
+                    component.set('v.assessmentProviderSchedule.Lawyer__c', lawyer.Id);
                     $A.enqueueAction(component.get("c.saveLawFirmLawyerRecord"));
                 }
             }
@@ -177,6 +211,12 @@
                             helper.getAssessmentSchedules(component).then(
                                 function(result){
                                     component.set('v.data',result);
+                                }
+                            ).then(
+                                function(){
+                                    component.set("v.sortBy", 'CreatedDate');
+                                    component.set("v.sortDirection", 'desc');
+                                    helper.sortData(component,component.get("v.sortBy"),component.get("v.sortDirection"));
                                     component.set("v.datatableIsSet", true);
                                     component.set("v.spinner", false);
                                 }
@@ -194,8 +234,16 @@
         );
     },
     handleLookupToggleRadio : function(component,event, helper){
-        console.log('value --> ' + event.getSource().get('v.value'));
+        component.set("v.spinner", true);
         component.set('v.selectedLookupOption', event.getSource().get('v.value'));
+        component.set("v.rebateAllowed", false);
+        component.set('v.selectedLookUpLawFirm', null);
+        component.set('v.selectedLookUpLawyer', null);
+        component.set('v.assessmentProviderSchedule.Discount__c', 0);
+        component.set('v.assessmentProviderSchedule.Rebate_Discount__c', 0);
+        component.set('v.assessmentProviderSchedule.Rebate_Period__c', '');
+        component.set("v.showRebateWarning", false);
+        component.set("v.spinner", false);
     },
     discountRateChangeValidation :function (component,event, helper){
         var inputField = component.find('discountRateField');

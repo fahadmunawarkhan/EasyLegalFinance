@@ -6,10 +6,15 @@
     <aura:attribute name="selectedLookUpLawFirm" type="sObject" default="{}"/>
     <aura:attribute name="selectedLookUpLawyer" type="sObject" default="{}"/>
     
-    <aura:attribute name="assessmentProvider" type="sObject" default="{}"/>
+    <aura:attribute name="assessmentProviderSchedule" type="Assessment_Provider_Schedule__c" default="{'sobjectType' : 'Assessment_Provider_Schedule__c'}"/>
+    <aura:attribute name="assessmentProvider" type="Object" default="{}"/>
     <aura:attribute name="discountRate" type ="Decimal" default="0" />
     <aura:attribute name="currentUser" type="sObject" default="{}" />
-    <aura:attribute name="selectedLookupOption" type="String" default="lawFirm" />
+    <aura:attribute name="selectedLookupOption" type="String" default="Law Firm" />
+    <aura:attribute name="listRebatePeriodValues" type="List" default="[]" />
+    <aura:attribute name="rebateAllowed" type="Boolean" default="false"/>
+    <aura:attribute name="showRebateWarning" type="Boolean" default="false"/>
+    
     
     <aura:handler name="change" value="{!v.discountRate}" action="{!c.discountRateChangeValidation}"/>
     
@@ -42,7 +47,7 @@
                                 <div class="slds-form-element__control">
                                     <span class="">
                                         <span class="slds-form-element__static">
-                                            <lightning:input type="radio" label="Law Firm" name="options" value="lawFirm" checked="true" onchange="{!c.handleLookupToggleRadio}"/>
+                                            <lightning:input type="radio" label="Law Firm" name="options" value="Law Firm" checked="true" onchange="{!c.handleLookupToggleRadio}"/>
                                         </span>
                                     </span>
                                 </div>
@@ -53,7 +58,7 @@
                                 <div class="slds-form-element__control">
                                     <span class="">
                                         <span class="slds-form-element__static">
-                                            <lightning:input type="radio" label="Lawyer" name="options" value="lawyer" checked="false" onchange="{!c.handleLookupToggleRadio}" />
+                                            <lightning:input type="radio" label="Lawyer" name="options" value="Lawyer" checked="false" onchange="{!c.handleLookupToggleRadio}" />
                                         </span>
                                     </span>
                                 </div>
@@ -79,7 +84,7 @@
                         <div class="slds-form-element__control">
                             <span class="">
                                 <span class="slds-form-element__static">
-                                    <aura:if isTrue="{!v.selectedLookupOption == 'lawFirm'}">
+                                    <aura:if isTrue="{!v.selectedLookupOption == 'Law Firm'}">
                                         <aura:if isTrue="{!notequals(v.clickSource , 'LawFirm')}">
                                             <!-- Show only related record name -->
                                             <lightning:layout>
@@ -91,7 +96,7 @@
                                                             data-recvar="selectedLookUpLawFirm"
                                                             onclick="{!c.inlineEditName}" 
                                                             class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small" 
-                                                            tabindex="3" title="Edit Law Firm">
+                                                            tabindex="10" title="Edit Law Firm">
                                                         <lightning:icon iconName="utility:search" size="xx-small" alternativeText="search"/>
                                                     </button>                                                            
                                                 </lightning:layoutItem>
@@ -120,7 +125,7 @@
                                                             data-recvar="selectedLookUpLawyer"
                                                             onclick="{!c.inlineEditName}" 
                                                             class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small" 
-                                                            tabindex="3" title="Edit Lawyer">
+                                                            tabindex="15" title="Edit Lawyer">
                                                         <lightning:icon iconName="utility:search" size="xx-small" alternativeText="search"/>
                                                     </button>                                                            
                                                 </lightning:layoutItem>
@@ -152,8 +157,8 @@
                     <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
                         <div class="slds-form-element__control">
                             <span class="">
-                                <lightning:input aura:id="discountRateField" type="number" name="discountRate" label="Discount Rate" tabindex="21"
-                                                 value="{!v.discountRate}" formatter="percent-fixed" step="0.01"
+                                <lightning:input aura:id="discountRateField" type="number" name="discountRate" label="Discount Rate" tabindex="20"
+                                                 value="{!v.assessmentProviderSchedule.Discount__c}" formatter="percent-fixed" step="0.01"
                                                  messageWhenBadInput="Discount must be greater than zero." required="true"/>
                             </span>
                         </div>
@@ -162,9 +167,45 @@
                 <div class="slds-col slds-size_1-of-2">
                     <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
                         <div class="slds-form-element__control">
+                            <aura:if isTrue="{!v.showRebateWarning}">
+                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                    <span class="slds-assistive-text">warning</span>
+                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="">
+                                        <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                                    </span>
+                                    <h2>
+                                        Rebate is not allowed for selected {!v.selectedLookupOption}.
+                                    </h2>
+                                </div>
+                            </aura:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-m-around_medium">
+                <div class="slds-col slds-size_1-of-2">                    
+                    <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
+                        <div class="slds-form-element__control">
                             <span class="">
-                                <span class="slds-form-element__static">                                    
-                                </span>
+                                <lightning:select name="rebatePeriodFld"
+                                                  value="{!v.assessmentProviderSchedule.Rebate_Period__c}"
+                                                  label="Rebate Period"
+                                                  tabindex="25" 
+                                                  disabled="{!not(v.rebateAllowed)}">
+                                    <aura:iteration items="{!v.listRebatePeriodValues}" var="val">
+                                        <option value="{!val.value}" selected="{!val == v.assessmentProviderSchedule.Rebate_Period__c}">{!val.label}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="">
+                                <lightning:input aura:id="rebateDiscountField" type="number" name="rebateDiscountRate" label="Rebate Discount" tabindex="30"
+                                                 disabled="{!not(v.rebateAllowed)}" value="{!v.assessmentProviderSchedule.Rebate_Discount__c}" formatter="percent-fixed" step="0.01"/>
                             </span>
                         </div>
                     </div>
