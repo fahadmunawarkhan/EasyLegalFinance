@@ -39,7 +39,7 @@ public with sharing class OpportunityTriggerHandler {
                     opp.Discount_Rate__c = discountscheduleMap.get(key).Discount__c;
                     opp.Rebate_Discount__c = discountscheduleMap.get(key).Rebate_Discount__c;
                     string periodStr = discountscheduleMap.get(key).Rebate_Period__c;
-                    List<String> splited = periodStr.split(' ');
+                    List<String> splited = periodStr != null? periodStr.split(' ') : new List<String>();
                     opp.Rebate_Period__c = !splited.isEmpty()? Integer.valueOf(splited[0]): null;
                     
                 }else if(opp.Assessment_Provider__c != null && opp.Law_Firm__c != null && opp.Lawyer__c != null){

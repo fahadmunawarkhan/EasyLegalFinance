@@ -550,7 +550,7 @@ public class OpportunityViewComponentCtlr {
                     opp.Discount_Rate__c = discountSchedule[0].Discount__c;
                     opp.Rebate_Discount__c = discountSchedule[0].Rebate_Discount__c;
                     string periodStr = discountSchedule[0].Rebate_Period__c;
-                    List<String> splited = periodStr.split(' ');
+                    List<String> splited = periodStr != null? periodStr.split(' ') : new List<String>();
                     opp.Rebate_Period__c = !splited.isEmpty()? Integer.valueOf(splited[0]): null;
                 }else{
                     opp.Rebate_Discount__c = 0;

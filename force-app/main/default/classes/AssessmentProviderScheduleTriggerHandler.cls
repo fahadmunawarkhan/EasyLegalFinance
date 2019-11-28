@@ -48,7 +48,7 @@ public with sharing class AssessmentProviderScheduleTriggerHandler {
                     opp.Discount_Rate__c = apsch.Discount__c;
                     opp.Rebate_Discount__c = apsch.Rebate_Discount__c;
                     String periodStr = apsch.Rebate_Period__c;
-                    List<String> splited = periodStr.split(' ');
+                    List<String> splited = periodStr != null? periodStr.split(' ') : new List<String>();
                     opp.Rebate_Period__c = !splited.isEmpty()? Integer.valueOf(splited[0]): null;
                 }
                     
