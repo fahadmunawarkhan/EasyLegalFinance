@@ -43,6 +43,7 @@
     <aura:attribute name="paymentSearchTypeSelected" type="String" /> 
     <aura:attribute name="paymentPayoutSearch" type="boolean" /> 
     <aura:attribute name="paymentMiscSearch" type="boolean" /> 
+	<aura:attribute name="paymentRefundSearch" type="boolean" />     
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
     <aura:attribute name="calculatedPaymentAmount" type="decimal" />     
@@ -121,6 +122,7 @@
     <aura:attribute name="paymentsSearchTypes" type="List" default="[
                                                                     {'label': 'Payout', 'value': 'Payout'},
                                                                     {'label': 'Misc Income Payment', 'value': 'Misc Income Payment'},
+                                                                    {'label': 'Refund', 'value': 'Refund'},
                                                                     ]"/>    
     
     <aura:attribute name="currentUser" type="User" /> 
@@ -1458,7 +1460,7 @@
                         
                         <hr/>
                         
-                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Payout' &amp;&amp; v.paymentPayoutSearch}">
+                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Payout' &amp;&amp; v.paymentPayoutSearch || v.paymentSearchTypeSelected == 'Refund' &amp;&amp; v.paymentRefundSearch}">
                             <lightning:layout>
                                 <lightning:layoutItem size="4">
                                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">

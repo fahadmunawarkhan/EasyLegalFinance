@@ -52,6 +52,16 @@
             }            
             
         }
+        else if (searchType == 'Refund'){
+            {
+                if (tempPaymentReceived != null && tempPaymentReceived < 0){                    
+                    actions.push({label:'Refund', value:'Refund'});
+                }
+                else{                    
+                    actions.push({label:'No Action', value:'No Action'});
+	            }
+            }                        
+        }        
         component.set('v.actions', actions);                        
     },
     selectSingleOption : function(component){

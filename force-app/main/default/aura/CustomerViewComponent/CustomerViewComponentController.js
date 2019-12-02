@@ -63,6 +63,7 @@
         
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentMiscSearch", false);
+        component.set("v.paymentRefundSearch", false);
         component.set("v.paymentSearchTypeSelected", "Payout");        
         component.set("v.paymentSearchDisabled", false);
     },
@@ -431,25 +432,34 @@
         var paymentDate = component.get("v.paymentDate");
         component.set("v.paymentAmount", null);
 
-        if(paymentDate != null){
+		if(paymentDate != null){
             if(searchType != null){
                 if(searchType == 'Payout'){
                     component.set("v.paymentPayoutSearch", true);
                     component.set("v.paymentMiscSearch", false);
+                    component.set("v.paymentRefundSearch", false);
                 } else if(searchType == 'Misc Income Payment') {
                     component.set("v.paymentMiscSearch", true);
                     component.set("v.paymentPayoutSearch", false);
+                    component.set("v.paymentRefundSearch", false);
+                }
+                else if(searchType == 'Refund') {
+                    component.set("v.paymentRefundSearch", true);
+                    component.set("v.paymentMiscSearch", false);
+                    component.set("v.paymentPayoutSearch", false);                    
                 }
                 helper.runAllOptsPayout(component);      
             } else {
                 component.set("v.paymentPayoutSearch", false);
             	component.set("v.paymentMiscSearch", false);
+                component.set("v.paymentRefundSearch", false);
                 helper.showToast('Error', 'Search type needs to be populated');
                 component.set("v.spinner", false);
             }
         } else {
                 component.set("v.paymentPayoutSearch", false);
             	component.set("v.paymentMiscSearch", false);
+            	component.set("v.paymentRefundSearch", false);
                 helper.showToast('Error', 'Date of payment needs to be populated');
                 component.set("v.spinner", false);            
         }
