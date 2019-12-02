@@ -700,6 +700,8 @@ t.adminFee =  d.Amount__c;
         lstFields.add('Owner.Name');
         lstFields.add('Account.All_Payout_Balance__c');
         lstFields.add('Account.All_Payout_Interest__c');
+        lstFields.add('Account.Total_Rebate_Discount__c');
+        
         
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
@@ -906,6 +908,8 @@ t.adminFee =  d.Amount__c;
         system.debug('##### Payout_Balance__c ' + opp.Payout_Balance__c);
         system.debug('##### Payout_Date__c ' + opp.Payout_Date__c);
         system.debug('##### All_Payout_Balance__c ' + opp.Account.All_Payout_Balance__c);
+        system.debug('##### Total_Rebate_Discount__c ' + opp.Account.Total_Rebate_Discount__c);
+        
         
         
         // Populating loan summary information
@@ -918,6 +922,7 @@ t.adminFee =  d.Amount__c;
         //loanSummary.balanceOtherFees = opp.Simulation_Payout_Other_Fees__c;
         loanSummary.balance = opp.Account.All_Payout_Balance__c;
         loanSummary.payoutDate = opp.Payout_Date__c;
+        loanSummary.rebateDiscount = opp.Account.Total_Rebate_Discount__c;
             
         AggregateResult[] groupedResults = new AggregateResult[]{};
         //if(opp.Type_of_Loan__c == 'Lump-Sum' || opp.Type_of_Loan__c == 'Facility Loan'){
@@ -1156,6 +1161,8 @@ t.adminFee =  d.Amount__c;
         public Date payoutDate {get;set;} 
         @AuraEnabled
         public List<Opportunity> oppsList {get; set;}
+        @AuraEnabled
+        public decimal rebateDiscount {get;set;}
     }
 
     /******************* Wrapper Class for Transactions *********************/    

@@ -1307,6 +1307,9 @@
         <members>Assessment_Provider_Schedule__c.Rebate_Period__c</members>
         <members>Assessment_Provider_Schedule__c.Rebate_Discount__c</members>
         <members>Account.Rebate_Allowed__c</members>
+        <members>Account.Total_Rebate_Discount__c</members>
+        <members>Account.Total_Outstanding__c</members>
+        <members>Opportunity.Rebate_to_Lawyer__c</members>
         <name>CustomField</name>
     </types>
     <types>
