@@ -27,15 +27,15 @@
         
         helper.getAssessmentSchedules(component).then(
             function(result){
-            	var rowActions = helper.getRowActions.bind(this, component);
+            	//var rowActions = helper.getRowActions.bind(this, component);
                 component.set('v.columns', [
                     {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
                     {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
                     {label: 'Rebate Discount', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
                     {label: 'Rebate Period', fieldName: 'Rebate_Period__c', type: 'text', sortable: true},
                     {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
-            		{label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true},
-                    {type: 'action', label: 'Action', typeAttributes: {rowActions: rowActions}}
+            		{label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true}
+                    //{type: 'action', label: 'Action', typeAttributes: {rowActions: rowActions}}
                      ]);
 
                 component.set('v.data',result);

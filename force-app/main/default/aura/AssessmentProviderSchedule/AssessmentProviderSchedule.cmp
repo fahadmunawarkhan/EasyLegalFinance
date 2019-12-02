@@ -249,8 +249,7 @@
                                              sortedBy="{!v.sortBy}"
                                              sortedDirection="{!v.sortDirection}"
                                              defaultSortDirection="{! v.defaultSortDirection }"
-                                             onsort="{!c.handleSort}"
-                                             onrowaction="{! c.handleRowAction }"/>
+                                             onsort="{!c.handleSort}"/>
                     </div>
                 </aura:if>
             </div>
