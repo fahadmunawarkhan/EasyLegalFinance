@@ -8,7 +8,7 @@ import {
     loadGlobalCss,
     //sendScheduledPaymentsChangedEvent,
     //updateFlattenedListFromResult,
-    //updateScheduledPaymentsFromDraftValues,
+    updateScheduledPaymentsFromDraftValues,
     //sendNeedsRefreshEvent,
     PERMISSION_CLASSES,
     combineData,
@@ -303,6 +303,51 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                     }
                 });
         }
+    }
+
+    handleSendBack() {
+        const spList = [];
+        this.getSelectedIds().forEach(id => spList.push({
+            Id: id,
+            Status__c: 'Pre Send Validation',
+            Banking_Verified__c: false,
+            Credit_Verified__c: false,
+            Documents_Verified__c: false,
+            BIA_PPSA_LL_Verified__c: false
+        }));
+
+        this.loading = true;
+        this.errors = undefined;
+        updateScheduledPaymentsFromDraftValues(spList)
+            .then(result => {
+                showToast(this, 
+                    'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
+                    'You may now generate an updated Banking Sheet',
+                    'success'
+                );
+                this.refresh();
+                //sendNeedsRefreshEvent(this);
+            })
+            .catch(error => {
+                this.loading = false;
+                if (error && error.body && error.body.message) {
+                    //this.dataTable.generateErrors(error.body.message);
+                    this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                    showToast(this, 
+                        'Unable to update EFT Number',
+                        this.errors.table.messages.join('\n'),
+                        'error',
+                        'sticky'
+                    );
+                } else {
+                    showToast(this, 
+                        'There was an error',
+                        JSON.stringify(error),
+                        'error',
+                        'sticky'
+                    );
+                }
+            });
     }
 
 }

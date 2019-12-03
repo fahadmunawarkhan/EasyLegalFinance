@@ -44,6 +44,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @track selectedOpportunity;
     @track permissions;
     @track pageSize = 50;
+    @track eftNum;
 
     @wire(fetchCustomPermissions, {permissions: PERMISSION_CLASSES})
     setPermissions(result) {
@@ -156,16 +157,36 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         return spIds
     }
 
+    handleEFTChange(event) {
+        this.eftNum = event.detail.value;
+    }
+
+    handleSetEFTClick(event) {
+        // loop over group components and call setEFT on them
+        let groups = this.template.querySelectorAll('c-funding-details-eft-group');
+        groups.forEach(group => {
+            group.setEFT(this.eftNum);
+        });
+        //this.dt.draftValues = this.draftValues;
+    }
+
     handleSendBack() {
         const spList = [];
-        this.getSelectedIds().forEach(id => spList.push({Id: id, Status__c: 'Scheduled'}));
+        this.getSelectedIds().forEach(id => spList.push({
+            Id: id,
+            Status__c: 'Pre Send Validation',
+            Banking_Verified__c: false,
+            Credit_Verified__c: false,
+            Documents_Verified__c: false,
+            BIA_PPSA_LL_Verified__c: false
+        }));
 
         this.loading = true;
         this.errors = undefined;
         updateScheduledPaymentsFromDraftValues(spList)
             .then(result => {
                 showToast(this, 
-                    'Successfully Reverted Scheduled Payments to \'Scheduled\'',
+                    'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
                     'You may now generate an updated Banking Sheet',
                     'success'
                 );

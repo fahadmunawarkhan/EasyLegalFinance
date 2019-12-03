@@ -14,15 +14,10 @@
 **/
 public with sharing class ScheduledPaymentHelper {
     private static Drawdown__c generateDrawdown(Scheduled_Payment__c sp) {
-        system.debug([Select Id, Has_Been_Rejected__c From Scheduled_Payment__c Where Name = 'PS-1200']);
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
-        if (sp.First_Sent_to_Bank_Date__c == null) {
-            drawdown.Date__c = DateUtil.today();
-        } else {
-            drawdown.Date__c = sp.First_Sent_to_Bank_Date__c.date();
-        }
+        drawdown.Date__c = sp.Calculated_Drawdown_Date__c;
         drawdown.Opportunity__c = sp.Opportunity__c;
         if (sp.Send_Cheque__c) {
             drawdown.Payment_Method__c = 'Cheque';
@@ -36,6 +31,8 @@ public with sharing class ScheduledPaymentHelper {
             drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
         }
 
+        drawdown.Reference_Notes__c = sp.Calculated_Reference_Notes__c;
+        /*
         if (sp.Has_Been_Rejected__c) {
             drawdown.Reference_Notes__c = 'Payment Re-processed';
         } else {
@@ -44,6 +41,7 @@ public with sharing class ScheduledPaymentHelper {
                     // Check if account is opportunity's account
                     // TODO - Should I check if it is a law firm or have some other advanced way to figure this out?
                     if (sp.Opportunity__r.AccountId == sp.Current_Account_Id__c) {
+                        if ()
                         drawdown.Reference_Notes__c = 'Payment to Client';
                     } else {
                         drawdown.Reference_Notes__c = 'Payment to Third-Party';
@@ -64,6 +62,7 @@ public with sharing class ScheduledPaymentHelper {
                 }
             }
         }
+        */
 
 
         return drawdown;
@@ -83,11 +82,14 @@ public with sharing class ScheduledPaymentHelper {
             if (sp.Payment_Type__c == 'Assessment') {
                 reference_note = 'Assessment Fee';
             }
+            if (sp.Opportunity__r.Admin_Fee__c == 0) {
+                reference_note = 'Waived Fee';
+            }
             adminDrawdowns.put(
                 sp.Opportunity__c,
                 new Drawdown__c(
                     Amount__c = sp.Opportunity__r.Admin_Fee__c,
-                    Date__c = DateUtil.today(),
+                    Date__c = sp.Sent_to_Bank_Date__c.date(),
                     Opportunity__c = sp.Opportunity__c,
                     Payment_Method__c = 'Admin Fee',
                     Reference_Notes__c = reference_note
@@ -95,6 +97,11 @@ public with sharing class ScheduledPaymentHelper {
             );
             sp.Triggered_Admin_Fee__c = true;
             sp.Triggered_Admin_Fee_Amount__c = sp.Opportunity__r.Admin_Fee__c;
+        } else if (adminDrawdowns.containsKey(sp.Opportunity__c)) {
+            Drawdown__c adminDrawdown = adminDrawdowns.get(sp.Opportunity__c);
+            if (adminDrawdown.Date__c > sp.Sent_to_Bank_Date__c.date()) {
+                adminDrawdown.Date__c = sp.Sent_to_Bank_Date__c.date();
+            }
         }
         System.debug(adminDrawdowns);
         return adminDrawdowns;
@@ -138,12 +145,6 @@ public with sharing class ScheduledPaymentHelper {
             spMap.put(sp.Id, sp);
         }
         for (Scheduled_Payment__c sp : spMap.values()) {
-            oppIds.add(sp.Opportunity__c);
-            Drawdown__c drawdown = generateDrawdown(sp);
-            drawdownList.add(drawdown);
-            adminDrawdownMap = manageAdminDrawdowns(adminDrawdownMap, sp);
-            sp.Status__c = 'Drawdown Created';
-            sp.Drawdown_Created__c = true;
             if (sp.Sent_to_Bank_Date__c == null) {
                 sp.Sent_to_Bank_Date__c = DateUtil.now();
                 sp.Sent_to_Bank_By__c = UserInfo.getUserId();
@@ -152,6 +153,12 @@ public with sharing class ScheduledPaymentHelper {
                 sp.First_Sent_to_Bank_Date__c = sp.Sent_to_Bank_Date__c;
             }
 
+            oppIds.add(sp.Opportunity__c);
+            Drawdown__c drawdown = generateDrawdown(sp);
+            drawdownList.add(drawdown);
+            adminDrawdownMap = manageAdminDrawdowns(adminDrawdownMap, sp);
+            sp.Status__c = 'Drawdown Created';
+            sp.Drawdown_Created__c = true;
         }
         Map<Id, Opportunity> oppMap = New Map<Id, Opportunity>([
             Select Id, Funding_Details_Status__c, Amount_Paid_to_Borrower__c, First_Drawdown_Amount__c
@@ -204,10 +211,12 @@ public with sharing class ScheduledPaymentHelper {
                 Send_Cheque__c,
                 Sent_to_Bank_Date__c,
                 First_Sent_to_Bank_Date__c,
+                Calculated_Drawdown_Date__c,
                 Has_Been_Rejected__c,
                 Sent_to_Bank_By__c,
                 Cheque_Number__c,
-                EFT_Number__c
+                EFT_Number__c,
+                Calculated_Reference_Notes__c
             From
                 Scheduled_Payment__c
             Where
@@ -234,11 +243,13 @@ public with sharing class ScheduledPaymentHelper {
                     Send_Cheque__c,
                     Sent_to_Bank_Date__c,
                     First_Sent_to_Bank_Date__c,
+                    Calculated_Drawdown_Date__c,
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
                     Opportunity_Service_Provider__c,
-                    EFT_Number__c
+                    EFT_Number__c,
+                    Calculated_Reference_Notes__c
                 From
                     Scheduled_Payment__c
                 Where
@@ -325,6 +336,10 @@ public with sharing class ScheduledPaymentHelper {
 
     public class DeleteWarningException extends Exception {}
 
+    @AuraEnabled(cacheable=false)
+    public static Date getDrawdownDate(Id spId) {
+        return [Select Drawdown_Date__c From Scheduled_Payment__c Where Id = :spId].Drawdown_Date__c;
+    }
 
     /*
     @AuraEnabled

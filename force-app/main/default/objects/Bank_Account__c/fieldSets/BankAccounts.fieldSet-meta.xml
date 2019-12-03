@@ -38,6 +38,11 @@
         <isRequired>false</isRequired>
     </displayedFields>
     <displayedFields>
+        <field>Third_Party__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <displayedFields>
         <field>Is_Primary_Account__c</field>
         <isFieldManaged>false</isFieldManaged>
         <isRequired>false</isRequired>

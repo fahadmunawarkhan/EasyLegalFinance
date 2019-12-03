@@ -20,7 +20,6 @@
         var actions = new Array();
         var searchType = component.get('v.searchType');
         if (searchType == 'Payout'){
-            console.log(tempPaymentReceived);
             if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && tempPaymentReceived != totalPayout && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
                 actions.push({label:'Partial Payment', value:'Partial Payment'});
             }
@@ -53,6 +52,16 @@
             }            
             
         }
+        else if (searchType == 'Refund'){
+            {
+                if (tempPaymentReceived != null && tempPaymentReceived < 0){                    
+                    actions.push({label:'Refund', value:'Refund'});
+                }
+                else{                    
+                    actions.push({label:'No Action', value:'No Action'});
+	            }
+            }                        
+        }        
         component.set('v.actions', actions);                        
     },
     selectSingleOption : function(component){

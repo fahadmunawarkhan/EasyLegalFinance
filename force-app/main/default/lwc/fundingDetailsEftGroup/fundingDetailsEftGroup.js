@@ -56,6 +56,12 @@ export default class FundingDetailsEFTGroup extends LightningElement {
     }
 
     handleSetEFTClick(event) {
+        this.setEFT(this.eftNum)
+        //this.dt.draftValues = this.draftValues;
+    }
+
+    @api setEFT(eftNum) {
+        this.eftNum = eftNum;
         let _draftValues = [...this.dataTable.draftValues] || [];
 
         this.dataTable.selectedRows.forEach(id => {
@@ -67,7 +73,6 @@ export default class FundingDetailsEFTGroup extends LightningElement {
             }
         });
         this.draftValues = _draftValues;
-        //this.dt.draftValues = this.draftValues;
     }
 
     handleEFTChange(event) {

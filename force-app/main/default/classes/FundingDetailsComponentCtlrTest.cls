@@ -271,6 +271,7 @@ public class FundingDetailsComponentCtlrTest {
         //sp.setDefinition('Sent_to_Bank_Date__c', 'random type(datetime) from(2010-1-1) to(2015-12-31 15:13:00)');
         sp.setDefinition('Send_Cheque__c', 'static value(false)');
         sp.setDefinition('EFT_Number__c', 'static value(123)');
+        sp.setDefinition('Account__c', 'random lookup(Account) source(forceea)');
         sp.insertRecords(true);
         Scheduled_Payment__c[] spRecs = ((List<Scheduled_Payment__c>)sp.getRecords());
 
