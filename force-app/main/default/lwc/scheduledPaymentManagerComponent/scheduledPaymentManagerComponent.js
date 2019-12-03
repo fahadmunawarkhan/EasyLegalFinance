@@ -8,8 +8,10 @@ import { reduceErrors } from 'c/ldsUtils';
 import getScheduledPayments from '@salesforce/apex/PaymentController.getScheduledPayments';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
+import deletePayment from '@salesforce/apex/ScheduledPaymentHelper.deletePayment';
 
 const PERMISSION_CLASSES = [
+    'Payment_Admin',
     'Can_Schedule_Payments',
     'Can_Process_Scheduled_Payments'
 ]
@@ -162,13 +164,24 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
 
     getRowActions(row, doneCallback) {
         const actions = [];
-        if (row.Status__c === 'Scheduled' || row.Status__c === 'Rejected' || !row.Status__c || row.Hold__c) {
-            // Don't have access to "this" in this context, so make a callout each time...
-
-            fetchCustomPermissions({permissions: [
-                'Can_Schedule_Payments',
-                'Can_Process_Scheduled_Payments'
-            ]}).then(result => {
+        fetchCustomPermissions({permissions: [
+            'Payment_Admin',
+            'Can_Schedule_Payments',
+            'Can_Process_Scheduled_Payments'
+        ]}).then(result => {
+            if (result.Payment_Admin) {
+                actions.push({
+                    label: 'Edit',
+                    iconName: 'utility:edit',
+                    name: 'edit'
+                });
+                actions.push({
+                    label: 'Delete',
+                    iconName: 'utility:delete',
+                    name: 'delete'
+                });
+                doneCallback(actions);
+            } else if (row.Status__c === 'Scheduled' || row.Status__c === 'Rejected' || !row.Status__c || row.Hold__c) {
                 if (result.Can_Schedule_Payments) {
                     if (row.Payment_Type__c === 'Scheduled Facility') {
                         actions.push({
@@ -196,22 +209,22 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
                     });
                 }
                 doneCallback(actions);
-            }, error => {
+            } else {
                 actions.push({
                     label: 'Can not be edited',
                     name: 'do_not_edit',
                     disabled: true
                 });
                 doneCallback(actions);
-            });
-        } else {
+            }
+        }, error => {
             actions.push({
                 label: 'Can not be edited',
                 name: 'do_not_edit',
                 disabled: true
             });
             doneCallback(actions);
-        }
+        });
     }
 
     handleRowAction(event) {
@@ -237,9 +250,13 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
         }
     }
 
-    deleteRow(row) {
+    deleteRow(row, force) {
         this.loading = true;
-        deleteRecord(row.Id)
+        let forceDelete = !!force;
+        deletePayment({
+            spId: row.Id, 
+            force: forceDelete
+        })
             .then(() => {
                 this.loading = false;
                 this.dispatchEvent(
@@ -259,14 +276,21 @@ export default class ScheduledPaymentManagerComponent extends LightningElement {
                 return this.refresh();
             })
             .catch(error => {
+                if (forceDelete) {
+                    // already tried to override, so there must be a problem
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error deleting record',
+                            message: reduceErrors(error).join(', '),
+                            variant: 'error'
+                        })
+                    );
+                }
                 this.loading = false;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error deleting record',
-                        message: reduceErrors(error).join(', '),
-                        variant: 'error'
-                    })
-                );
+                let message = reduceErrors(error).join(', ') + '\n\nAre you sure you want to delete?';
+                if (confirm(message)) {
+                    this.deleteRow(row, true);
+                }
             });
     }
 
