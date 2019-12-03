@@ -323,6 +323,95 @@ public class ScheduledPaymentHelperTest {
         //System.assertEquals('Loan Setup Check', oppRec.Funding_Details_Status__c, 'Opportunity Funding Details Status should have been set');
     }
 
+    
+    @isTest
+    static void test_deletePayment() {
+        // Test with multiple scheduled payments per opp
+        Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(TestDataFactory.getBankAccountConfig(1), false)[0];
+        bankRec.Mark_as_Primary__c = true;
+        insert bankRec;
+
+        Opportunity opp = TestDataFactory.getOpportunityObjects(TestDataFactory.getOpportunityConfig(1), false)[0];
+        opp.StageName = 'Closed With Loan';
+        opp.Stage_Status__c = 'Approved';
+        opp.Amount = 1475.00;
+        opp.Admin_Fee__c = 475.00;
+        opp.Payout_Date__c = DateUtil.today();
+        opp.Type_of_Loan__c = 'Facility Loan';
+        opp.Minimum_Interest_Period__c = '0 months';
+        opp.Compounding_Interest__c = 'Monthly';
+        opp.Interest_Compounding_Period__c = 'Compounding Interest';
+        opp.Interest_Rate__c = 24.5;
+
+        opp.Payment_Schedule__c = 'Yes';
+        opp.Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
+        opp.Payment_Use_Primary_Bank_Account__c = true;
+        opp.Payment_Default_Bank_Account__c = bankRec.Id;
+        opp.Start_Date__c = DateUtil.today();
+        opp.Day_of_Month__c = 'Last';
+        opp.Payment_Schedule_Allotted_Amount__c = 1000.00;
+        opp.Drawdown_Amount__c = 1000.00;
+        opp.Payment_Schedule_Send_First_Immediately__c = false;
+        opp.CloseDate = DateUtil.today();
+        insert opp;
+        opp = [Select Id, Drawdown_Amount__c, Payment_Schedule__c, Payment_Schedule_Version_Number__c from Opportunity Where Id = :opp.Id];
+        system.debug(opp);
+
+        Scheduled_Payment__c sp = [Select Id From Scheduled_Payment__c Limit 1];
+        sp.Status__c = 'Approved to Send';
+        sp.Current_Opportunity_Schedule_Version_Val__c = true;
+        sp.Drawdown_Created__c = true;
+        update sp;
+        /*
+        new Scheduled_Payment__c(
+            Opportunity__c = opp.Id,
+            Payment_Type__c = 'Scheduled Facility',
+            Amount__c = 0,
+            Status__c = 'Approved to Send',
+            Current_Opportunity_Schedule_Version_Val__c = true,
+            Drawdown_Created__c = true
+        );
+        insert sp;
+        */
+
+        AuraHandledException exc = null;
+        test.startTest();
+        try {
+            ScheduledPaymentHelper.deletePayment(sp.Id, false);
+        } catch (AuraHandledException thrownExc) {
+            system.debug(thrownExc.getMessage());
+            exc = thrownExc;
+        }
+
+        System.assertNotEquals(null, exc, 'An exception should have been thrown');
+        String message = exc.getMessage();
+        System.debug(LoggingLevel.ERROR, message);
+        System.debug(LoggingLevel.ERROR, message.contains('Payment is currently being processed'));
+
+        /*
+        Payment is currently being processed
+        Payment is part of of an active payment schedule
+        Payment has already been processed to drawdown
+        */
+
+        System.assert(message.contains('Payment is currently being processed'), 'Exception should contain message about being processed');
+        System.assert(message.contains('Payment is part of of an active payment schedule'), 'Exception should contain message about being part of active schedule');
+        System.assert(message.contains('Payment has already been processed to drawdown'), 'Exception should contain message Payment has already been processed to drawdown');
+
+        // Try force
+        exc = null;
+        try {
+            ScheduledPaymentHelper.deletePayment(sp.Id, true);
+        } catch (AuraHandledException thrownExc) {
+            system.debug(thrownExc.getMessage());
+            exc = thrownExc;
+        }
+        System.assertEquals(null, exc, 'An exception should not have been thrown');
+        Scheduled_Payment__c[] spList = [Select Id From Scheduled_Payment__c Where Id = :new Id[]{sp.Id}];
+        System.assertEquals(0, spList.size(), 'Scheduled Payment should have been deleted');
+        test.stopTest();
+    }
+
     public static void clearTestData(String[] fileNos) {
         // Method used to clear out test data from orgs
         /*
