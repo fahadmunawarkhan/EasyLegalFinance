@@ -56,6 +56,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Scheduled_Payments_Admin__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Funding_Tab__c</field>
             </layoutItems>
             <layoutItems>
