@@ -972,7 +972,7 @@ t.adminFee =  d.Amount__c;
         // Grab total amount of all drawdowns from all oppts
         AggregateResult[] totalDD = [Select sum(Formula_Amount__c) totalAmount, sum(Total_Accrued_Interest__c) totalInterest from Drawdown__c 
                                      WHERE Opportunity__r.AccountId =: accountId 
-                                     AND Reference_Notes__c NOT IN ('Admin Fee', 'Payment Shortfall', 'Bad Debt', 'Surplus', 'Shortfall', 'Partial Payment', 'Loan Payout')
+                                     AND Reference_Notes__c NOT IN ('Admin Fee', 'Assessment Fee', 'Payment Shortfall', 'Bad Debt', 'Surplus', 'Shortfall', 'Partial Payment', 'Loan Payout')
                                      AND Opportunity__r.Stage_Status__c LIKE 'Active%'];
         system.debug('### totalDD: ' + totalDD[0]);
         
