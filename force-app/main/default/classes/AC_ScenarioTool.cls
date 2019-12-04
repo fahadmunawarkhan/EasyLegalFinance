@@ -23,7 +23,7 @@ public class AC_ScenarioTool {
             // Avoid false positive
             String oProvince = 'zzzzzz';
             String oBusinessUnit = 'zzzzzz';
-            if (o.AccountId != null && !String.isBlank(o.Account.ProvinceResidency__c)){
+            if (o.AccountId != null && !String.isBlank(o.Account.ProvinceResidency__c) && !String.isBlank(o.Account.Business_Unit__c) && o.Account.Business_Unit__c != null){
                 oProvince = o.Account.ProvinceResidency__c;
                 oBusinessUnit = o.Account.Business_Unit__c;
                 system.debug(oBusinessUnit);
