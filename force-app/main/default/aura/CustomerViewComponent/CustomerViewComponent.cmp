@@ -227,7 +227,7 @@
                                     <div class="slds-form-element__control">
                                         <span class="">
                                             <lightning:combobox label="Business Unit" name="BusinessUnit" value="{!v.accountObj.Business_Unit__c}" 
-                                                                placeholder="--None--" options="{! v.businessUnitOptions }" tabindex="2" />                                                      
+                                                                placeholder="--None--" options="{! v.businessUnitOptions }" tabindex="2" required="true" />                                                      
                                         </span>
                                     </div>
                                 </div>

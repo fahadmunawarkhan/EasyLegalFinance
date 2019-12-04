@@ -162,9 +162,15 @@
     },
     
     saveAll : function(component, event, helper){
-        helper.saveAccountOpptyAndContact(component);
-        helper.getAccountInfo(component);
-        helper.getLatestContact(component);
+        
+        let businessUnit = component.get("v.accountObj.Business_Unit__c");
+        
+        if(businessUnit != '' && businessUnit !=null){
+            
+            helper.saveAccountOpptyAndContact(component);
+            helper.getAccountInfo(component);
+            helper.getLatestContact(component);
+        }
         /*
         var contact = component.get('v.conObj');
         var lawyer = component.get('v.lawyerObj');
