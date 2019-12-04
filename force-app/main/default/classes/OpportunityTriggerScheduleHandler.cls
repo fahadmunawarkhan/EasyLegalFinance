@@ -58,6 +58,7 @@ public class OpportunityTriggerScheduleHandler extends TriggerHandler {
     private void detectScheduleVersionChange(Opportunity oldOpp, Opportunity newOpp) {
         if (oldOpp.Payment_Schedule__c == 'No') {
             newOpp.Payment_Schedule_Version_Number__c += 1;
+            newOpp.Amount_sent_from_current_Schedule__c = 0.00; // reset Sent Amount
             return;
         }
         for (String field : this.paymentVersionChangeFields) {
