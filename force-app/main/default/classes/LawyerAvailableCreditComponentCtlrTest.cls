@@ -1,5 +1,5 @@
 @isTest
-public class AssessmentProviderSummaryReportCtlrTest {
+public class LawyerAvailableCreditComponentCtlrTest {
     
     @TestSetup
     static void initailizeTestData(){
@@ -21,13 +21,14 @@ public class AssessmentProviderSummaryReportCtlrTest {
                                      RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Client Contact').getRecordTypeId()));
         contactList.add( new Contact(LastName = 'Test Lawyer Contact', 
                                      AccountId = accountList[1].Id,
+                                     Approved_Credit_Limit__c = 5000,
                                      RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Lawyers').getRecordTypeId(),
                                      Upcoming_Hearings__c='No'));
         insert contactList;
- 
+        
         Attachment attach =new Attachment();   	
-    	attach.Name='List of Clients';
-    	attach.body= Blob.valueOf('Unit Test Attachment Body');
+        attach.Name='List of Clients';
+        attach.body= Blob.valueOf('Unit Test Attachment Body');
         attach.parentId= accountList[3].Id;
         insert attach;
         
@@ -69,43 +70,59 @@ public class AssessmentProviderSummaryReportCtlrTest {
         }
     }
     
-    static testMethod void test_getAssessments(){
+    static testMethod void test_getCurrentUserInfo(){
+        User u = new User(
+            ProfileId = [SELECT Id FROM Profile WHERE Name = 'Standard User'].Id,
+            LastName = 'last',
+            Email = 'test000@easylegal.com',
+            Username = 'test000@easylegal.com' + System.currentTimeMillis(),
+            CompanyName = 'easylegal',
+            Title = 'title',
+            Alias = 'alias',
+            TimeZoneSidKey = 'America/Los_Angeles',
+            EmailEncodingKey = 'UTF-8',
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US',
+            Can_Edit_Approved_Credit_Limit__c = false
+        );
+        
+        insert u;
         Test.startTest();
-        List<String> businessUnitList = AssessmentProviderSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
-        system.assert(businessUnitList.size() > 0);
+        system.runAs(u){
+            User testUser = LawyerAvailableCreditComponentCtlr.getCurrentUserInfo();
+            system.assertEquals(false, testUser.Can_Edit_Approved_Credit_Limit__c);
+        }
+        u.Can_Edit_Approved_Credit_Limit__c = true;
+        update u;
         
-        List<AssessmentProviderSummaryReportCtlr.AssessmentWrapper> assessments = AssessmentProviderSummaryReportCtlr.getAssessmentData('', 'Consolidated', 'Lawyer__r.Name', 'ASC');
-        system.assertEquals(1, assessments.size());
-        
-        Drawdown__c drawdown = AssessmentProviderSummaryReportCtlr.getDrawdown();
+        system.runAs(u){
+            User testUser = LawyerAvailableCreditComponentCtlr.getCurrentUserInfo();
+            system.assertEquals(true, testUser.Can_Edit_Approved_Credit_Limit__c);
+        }
         
         Test.stopTest();
     }
     
-    static testMethod void test_customSettings(){
+    static testMethod void test_mainMethod(){
         Test.startTest();
-        Date dt = Date.today();
-        String providerId = [SELECT Id FROM Account WHERE Name = 'Test Assessment Provider Account' LIMIT 1].Id;
-        AssessmentProviderSummaryReportCtlr.setCustomSetting(new List<string>{providerId}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        Assessment_Provider_Summary_Report__c customSetting = AssessmentProviderSummaryReportCtlr.getCustomSetting();
+        Id lawyerId = [SELECT Id FROM contact WHERE LastName = 'Test Lawyer Contact'].Id;
+        Contact lawyer = LawyerAvailableCreditComponentCtlr.getLawyerRecordData(lawyerId);
         
-        system.assertEquals(dt, customSetting.Payout_Date__c);
-        system.assertEquals(providerId, customSetting.Selected_Ids__c);
+        system.assertEquals(5000, lawyer.Approved_Credit_Limit__c);
+        system.assertEquals(4100, lawyer.Utilized_Credit_Limit__c);
         
-        Test.stopTest();
-    }
-    
-    static testMethod void test_generate(){
+        lawyer.Approved_Credit_Limit__c = 6000;
+        LawyerAvailableCreditComponentCtlr.updateLawyerRecord(lawyer);
         
-        Test.startTest();
-        Date dt = Date.today();
-        String providerId = [SELECT Id FROM Account WHERE Name = 'Test Assessment Provider Account' LIMIT 1].Id;
-        Id conductorId = AssessmentProviderSummaryReportCtlr.generate(new List<string>{'\'' + providerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
+        lawyer = LawyerAvailableCreditComponentCtlr.getLawyerRecordData(lawyerId);
         
-        system.assert(conductorId != null);
+        system.assertEquals(6000, lawyer.Approved_Credit_Limit__c);
+        system.assertEquals(4100, lawyer.Utilized_Credit_Limit__c);
         
-        Id condutorIDTest = AssessmentProviderSummaryReportCtlr.generate(new List<string>{'\'' + providerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        system.assertEquals(conductorId, condutorIDTest);
+        List<ContactHistory> historyList = LawyerAvailableCreditComponentCtlr.CreditHistory(lawyer.Id);
+        
+        List<Opportunity> assessmentOpps = LawyerAvailableCreditComponentCtlr.OpportunityAssessment(lawyer.Id);        
+        system.assert(!assessmentOpps.isEmpty());
         
         Test.stopTest();
     }
