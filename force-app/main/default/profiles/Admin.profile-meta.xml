@@ -912,7 +912,7 @@
         <editable>false</editable>
         <field>Account.Report_Date_Law_Firm_Report__c</field>
         <readable>true</readable>
-    </fieldPermissions>
+    </fieldPermissions>    
     <fieldPermissions>
         <editable>false</editable>
         <field>Account.Reporting_From_Date__c</field>
@@ -2048,6 +2048,11 @@
         <field>Drawdown__c.Reference_Notes__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Drawdown__c.Replicated_Payout_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>        
     <fieldPermissions>
         <editable>false</editable>
         <field>Drawdown__c.Reporting_Days_Outstanding__c</field>
@@ -5430,7 +5435,7 @@
     </tabVisibilities>
     <tabVisibilities>
         <tab>Funding_Details1</tab>
-        <visibility>DefaultOn</visibility>
+        <visibility>DefaultOff</visibility>
     </tabVisibilities>
     <tabVisibilities>
         <tab>Loan_Simulator</tab>
