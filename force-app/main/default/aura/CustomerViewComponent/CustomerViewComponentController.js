@@ -690,5 +690,4 @@ handlePaymentActionSelected : function(component, event, helper) {
             component.set("v.paymentSearchDisabled", false);     
        }*/
     }
-
 })
