@@ -180,6 +180,9 @@
         <members>OpportunityViewComponentCtlr</members>  
         <members>AssessmentProviderScheduleCtlr</members>
         <members>AssessmentProviderScheduleTriggerHandler</members>
+        <members>AssessmentProviderScheduleCtlrTest</members>
+        <members>AssessmentProviderScheduleTriggerTest</members>
+        <members>LawyerAvailableCreditComponentCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>

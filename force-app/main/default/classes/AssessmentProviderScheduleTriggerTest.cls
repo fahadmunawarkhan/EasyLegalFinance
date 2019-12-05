@@ -1,6 +1,5 @@
 @isTest
-public class AssessmentProviderSummaryReportCtlrTest {
-    
+public class AssessmentProviderScheduleTriggerTest {
     @TestSetup
     static void initailizeTestData(){
         List<Account> accountList = new List<Account>();
@@ -24,10 +23,10 @@ public class AssessmentProviderSummaryReportCtlrTest {
                                      RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Lawyers').getRecordTypeId(),
                                      Upcoming_Hearings__c='No'));
         insert contactList;
- 
+        
         Attachment attach =new Attachment();   	
-    	attach.Name='List of Clients';
-    	attach.body= Blob.valueOf('Unit Test Attachment Body');
+        attach.Name='List of Clients';
+        attach.body= Blob.valueOf('Unit Test Attachment Body');
         attach.parentId= accountList[3].Id;
         insert attach;
         
@@ -69,44 +68,26 @@ public class AssessmentProviderSummaryReportCtlrTest {
         }
     }
     
-    static testMethod void test_getAssessments(){
+    static testMethod void test_updateAssessmentScheduleOnOpportunities(){
         Test.startTest();
-        List<String> businessUnitList = AssessmentProviderSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
-        system.assert(businessUnitList.size() > 0);
+        Assessment_Provider_Schedule__c aSchedule = new Assessment_Provider_Schedule__c();
+        Id assessmentProviderId = [SELECT Id FROM Account WHERE Name = 'Test Assessment Provider Account'].Id;
+        Id lawyerId = [SELECT Id FROM contact WHERE LastName = 'Test Lawyer Contact'].Id;
+        aSchedule.Assessment_Provider__c = assessmentProviderId;
         
-        List<AssessmentProviderSummaryReportCtlr.AssessmentWrapper> assessments = AssessmentProviderSummaryReportCtlr.getAssessmentData('', 'Consolidated', 'Lawyer__r.Name', 'ASC');
-        system.assertEquals(1, assessments.size());
+        aSchedule.Discount__c = 5;
+        aSchedule.Rebate_Discount__c = 2;
+        aSchedule.Rebate_Period__c = '12 months';
         
-        Drawdown__c drawdown = AssessmentProviderSummaryReportCtlr.getDrawdown();
+        aSchedule.Lawyer__c = lawyerId;
         
-        Test.stopTest();
-    }
-    
-    static testMethod void test_customSettings(){
-        Test.startTest();
-        Date dt = Date.today();
-        String providerId = [SELECT Id FROM Account WHERE Name = 'Test Assessment Provider Account' LIMIT 1].Id;
-        AssessmentProviderSummaryReportCtlr.setCustomSetting(new List<string>{providerId}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        Assessment_Provider_Summary_Report__c customSetting = AssessmentProviderSummaryReportCtlr.getCustomSetting();
+        AssessmentProviderScheduleCtlr.createAssessmentSchedules(lawyerId, aSchedule);
         
-        system.assertEquals(dt, customSetting.Payout_Date__c);
-        system.assertEquals(providerId, customSetting.Selected_Ids__c);
+        List<Assessment_Provider_Schedule__c> result = AssessmentProviderScheduleCtlr.getAssessmentSchedules(assessmentProviderId);        
+        system.assert(!result.isEmpty()); 
         
-        Test.stopTest();
-    }
-    
-    static testMethod void test_generate(){
-        
-        Test.startTest();
-        Date dt = Date.today();
-        String providerId = [SELECT Id FROM Account WHERE Name = 'Test Assessment Provider Account' LIMIT 1].Id;
-        Id conductorId = AssessmentProviderSummaryReportCtlr.generate(new List<string>{'\'' + providerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        
-        system.assert(conductorId != null);
-        
-        Id condutorIDTest = AssessmentProviderSummaryReportCtlr.generate(new List<string>{'\'' + providerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        system.assertEquals(conductorId, condutorIDTest);
-        
+        aSchedule.Rebate_Discount__c = 1.5;
+		update aSchedule;   
         Test.stopTest();
     }
 }
