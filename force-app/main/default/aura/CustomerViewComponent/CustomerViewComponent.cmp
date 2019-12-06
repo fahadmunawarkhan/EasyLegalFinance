@@ -43,6 +43,7 @@
     <aura:attribute name="paymentSearchTypeSelected" type="String" /> 
     <aura:attribute name="paymentPayoutSearch" type="boolean" /> 
     <aura:attribute name="paymentMiscSearch" type="boolean" /> 
+	<aura:attribute name="paymentRefundSearch" type="boolean" />     
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
     <aura:attribute name="calculatedPaymentAmount" type="decimal" />     
@@ -121,6 +122,7 @@
     <aura:attribute name="paymentsSearchTypes" type="List" default="[
                                                                     {'label': 'Payout', 'value': 'Payout'},
                                                                     {'label': 'Misc Income Payment', 'value': 'Misc Income Payment'},
+                                                                    {'label': 'Refund', 'value': 'Refund'},
                                                                     ]"/>    
     
     <aura:attribute name="currentUser" type="User" /> 
@@ -1149,21 +1151,19 @@
                                             </div>
                                         </div>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="6">
-                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                                            <aura:if isTrue="{!v.currentUser.Financial_Summary__c}">
-                                                <div class="slds-grid slds-gutters">
-                                                    <div class="slds-col slds-size_4-of-12">
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>  
-                                                    </div>
-                                                    <div class="slds-col slds-size_8-of-12">
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" 
-                                                                          variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" /> 
-                                                    </div>
-                                                </div>
-                                            </aura:if>
-                                        </div>                                         
+                                    <lightning:layoutItem size="6" class="slds-m-top_small">
+                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large" style="margin-top:-1%;">
+                                            <span class="slds-form-element__label">
+                                                Rebate Discount
+                                            </span>                                            
+                                            <div class="slds-form-element__control">
+                                                <span class="slds-form-element__static">
+                                                    <ui:outputCurrency value="{!v.LoanSummary.rebateDiscount}"/>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </lightning:layoutItem>
+                                    
                                 </lightning:layout>  
                                 
                                 <lightning:layout>
@@ -1181,7 +1181,22 @@
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="6">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                                            <!--<div class="slds-grid slds-gutters">
+                                            <aura:if isTrue="{!v.currentUser.Financial_Summary__c}">
+                                                <div class="slds-grid slds-gutters">
+                                                    <div class="slds-col slds-size_4-of-12">
+                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>  
+                                                    </div>
+                                                    <div class="slds-col slds-size_8-of-12">
+                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" 
+                                                                          variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" /> 
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                        </div>                                         
+                                    </lightning:layoutItem>
+                                    <!--<lightning:layoutItem size="6">
+                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                            <div class="slds-grid slds-gutters">
                                               <div class="slds-col slds-size_4-of-12">
                                                 <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>  
                                               </div>
@@ -1189,9 +1204,9 @@
                                                 <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" 
                                                                                   variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" /> 
                                               </div>
-                                            </div>-->
+                                            </div>
                                         </div>                                         
-                                    </lightning:layoutItem>
+                                    </lightning:layoutItem>-->
                                 </lightning:layout>
                                 
                                 
@@ -1445,7 +1460,7 @@
                         
                         <hr/>
                         
-                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Payout' &amp;&amp; v.paymentPayoutSearch}">
+                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Payout' &amp;&amp; v.paymentPayoutSearch || v.paymentSearchTypeSelected == 'Refund' &amp;&amp; v.paymentRefundSearch}">
                             <lightning:layout>
                                 <lightning:layoutItem size="4">
                                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">

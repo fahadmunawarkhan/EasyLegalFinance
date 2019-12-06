@@ -57,9 +57,16 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>LawyerAvailableCreditComponent</componentName>
+        </componentInstances>
+        <name>Facet-3873fe6e-ffbb-4b9d-8fa7-d8b680c513b0</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
             <componentName>LawyerLawSocietyPageTab</componentName>
         </componentInstances>
-        <name>Facet-b52f64ae-caef-4bc5-b9a5-3883b91c972b</name>
+        <name>Facet-a65c9891-6e24-4e1e-9b13-914de2f92d2d</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -92,7 +99,18 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-b52f64ae-caef-4bc5-b9a5-3883b91c972b</value>
+                <value>Facet-3873fe6e-ffbb-4b9d-8fa7-d8b680c513b0</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Available Credit</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-a65c9891-6e24-4e1e-9b13-914de2f92d2d</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>

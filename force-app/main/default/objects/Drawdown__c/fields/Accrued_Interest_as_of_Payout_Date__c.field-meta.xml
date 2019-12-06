@@ -4,6 +4,7 @@
     <externalId>false</externalId>
     <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
+	    	ISPICKVAL(Reference_Notes__c,&quot;Refund&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
 IF(  ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),0,(Outstanding_Balance_as_of_Payout_Date__c-Amount_Adjusted_for_Repayments__c)+Interest_up_to_Last_Repayment__c))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

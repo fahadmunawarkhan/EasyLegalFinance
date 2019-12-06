@@ -598,6 +598,22 @@ public class CustomerViewComponentCtlrTest {
         System.assertEquals('Miscellaneous Payment', drawdowns[0].Reference_Notes__c);
         Test.stopTest();
     }
+	
+    public static testMethod void testApplyRefund(){
+        Test.startTest();
+        insertAccount();
+        insertOpps(1);
+        insertDrawdowns();
+        Account account = [select Id from Account where Name='Test Account'];
+        List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1000.0, 'eft', 'chq', 'Refund');
+        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Refund', 'eft', 'chq', opps[0].Id, 'Refund', true);
+        List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Other'];
+        System.assertEquals('Refund', drawdowns[0].Reference_Notes__c);
+        Test.stopTest();
+    }    	
     
     public static testMethod void testTaskDeletion(){
         Test.startTest();

@@ -46,6 +46,9 @@
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule__c', 'Payment_Schedule__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule_Mode__c', 'Payment_Schedule_Mode__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Day_of_Month__c', 'Day_of_Month__c_options');
+        helper.getPickListValues(component, 'Opportunity', 'Invoice_Type__c', 'invoiceTypeOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');        
+        
         helper.getBankAccountOptions(component);
         
         // get the fields API name and pass it to helper function  
@@ -63,54 +66,7 @@
         */
     },
     reInitSomeData:function(component, event, helper) {
-        let initialized = component.get('v.initialized');
-        if (initialized === true) {
-            component.set('v.drawDownList', undefined);
-            helper.getOpportunityInfo(component);
-            helper.getDrawdownList(component, true);
-            helper.getDrawdownPaymentsList(component);
-            helper.getServiceProvidersList(component);
-            //helper.getReAssessmentOpportunitiesList(component);
-            //helper.getCalendarMin(component);
-            //helper.getCalendarMax(component); 
-            //helper.getSingleContactHistory(component);
-            helper.getBankAccountOptions(component);
-            //helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-            //helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
-            /*
-            let loanType = component.get('v.oppObj').Type_of_Loan__c;
-            
-            if(loanType != 'Treatment Loan' && loanType != 'Treatment Loan 2'){
-                let drawDownList = component.get('v.drawDownList');
-                for(let i = 0 ; i < drawDownList.length ; i++)
-                {
-                    let newPaymentMethod = drawDownList[i].Payment_Method__c;
-                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i, true);
-                }
-            } else {
-                let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
-                for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
-                {
-                    let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
-                    helper.fetchRefNotesDepValues(component, newPaymentMethod, i);
-                }                  
-            }
-            */
-            let pubsub = component.find('pubsub');
-            if (pubsub) {
-                pubsub.fireEvent(`drawdownschanged-${component.get('v.recordId')}`);
-                pubsub.fireEvent(`previousloanschanged-${component.get('v.recordId')}`);
-            }
-        } else {
-            component.set('v.initialized', true);
-        }
-        //component.find('pubsub').fireEvent(`scheduledpaymentschanged-${component.get('v.recordId')}`);
-        
-        /*console.log('tab switch');
-        var oldVal = component.get('v.oppObj.Have_you_ever_declared_bankruptcy__c');
-        component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c','');
-        component.set('v.oppObj.Have_you_ever_declared_bankruptcy__c',oldVal);*/
-        
+        helper.reInitSomeData(component, helper);
     },
     
     onControllerFieldChange: function(component, event, helper) { 
@@ -458,12 +414,27 @@
         }, 100);
     },
     hideLookupInput : function(component, event, helper) {	
-        
+        console.log('hideLookupInput');
+        let clickSource = component.get("v.clickSource");
+        console.log('clickSource = ' + clickSource);
         component.set("v.clickSource", "none");   
         var oppObjId = component.get("v.oppObj.Id");
-        if(oppObjId){
+        if(oppObjId && clickSource != 'none'){
+            console.log('call');
             component.set("v.spinner", true);
-            helper.saveOppty(component);
+            helper.saveOppty(component).then(
+                $A.getCallback(function(result) {
+                    helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
+                    helper.getOpportunityInfo(component);
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    }else {
+                        helper.unknownErrorsHandler();
+                    }
+                    
+                }));
         }
     },
     handlePaymentScheduleChange : function(component, event, helper) {  
@@ -525,5 +496,40 @@
     },
     updateAmounts: function(component, event, helper) {
         helper.getUpdatedAmounts(component);
+    },
+    handleReverseClick: function(component, event, helper) {
+        helper.showReverseModal(component, event.getParam("Id"));
+    },
+    handleReverseSuccess : function(component, event, helper) {
+        helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+        //helper.getServiceProvidersList(component);
+    },
+    handleReverseCancel: function(component, event, helper) {
+        //helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+    },
+    refreshDiscountButton : function(component, event, helper){
+        
+        var confirm = window.confirm('Are you sure you want to apply the recent discount rate of lawyer by assessment provider?');
+        if (confirm) {
+            component.set("v.spinner", true);
+            helper.setLatestDiscountRateLaywer(component).then(
+                function(result){
+                    helper.getOpportunityInfo(component);
+                }
+            ).then(
+                function(){
+                    helper.showToast('SUCCESS','New discount rate is applied successfully.','success');
+                    component.set("v.spinner", false);
+                }
+            ).catch(
+                function(errors){
+                    component.set("v.spinner", false);
+                    console.log('error : ' + errors);
+                    helper.errorsHandler(errors);
+                }
+            );
+        }
     }
 })
