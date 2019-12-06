@@ -104,7 +104,7 @@ public with sharing class PaymentController {
                     Amount__c,
                     Scheduled_Date__c,
                     Sent_to_Bank_Date__c
-                FROM Scheduled_Payment__c WHERE Opportunity__c = :opportunityId AND Status__c != 'Closed'];
+                FROM Scheduled_Payment__c WHERE Opportunity__c = :opportunityId];
     }
 
     @AuraEnabled(cacheable=true)
