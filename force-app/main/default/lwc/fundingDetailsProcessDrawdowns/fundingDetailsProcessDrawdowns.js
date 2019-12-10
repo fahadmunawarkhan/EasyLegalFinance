@@ -295,7 +295,17 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
 
         switch(fieldName) {
             case 'Date__c':
-                _data.sort((a, b) => reverse * (new Date(a[fieldName]) - new Date(b[fieldName])));
+                _data.sort((a, b) => {
+                    let diff = reverse * (new Date(a[fieldName]) - new Date(b[fieldName]));
+                    if (diff !== 0) {
+                        return diff
+                    } else if (a.Name < b.Name) {
+                        return reverse * -1;
+                    } else if (a.Name > b.Name) {
+                        return reverse;
+                    }
+                    return 0
+                });
                 break;
             default:
                 _data.sort(function(a, b) {
@@ -303,6 +313,10 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
                         return reverse * -1;
                     } else if (a[fieldName] > b[fieldName]) {
                         return reverse
+                    } else if (a.Name < b.Name) {
+                        return reverse * -1;
+                    } else if (a.Name > b.Name) {
+                        return reverse;
                     }
                     return 0
                 });
