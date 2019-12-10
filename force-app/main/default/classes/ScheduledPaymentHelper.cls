@@ -291,6 +291,54 @@ public with sharing class ScheduledPaymentHelper {
         update sp;
     }
 
+    @AuraEnabled
+    public static void deletePayment(Id spId, Boolean force){
+        try{
+            if (force == true) {
+                delete new Scheduled_Payment__c(Id=spId);
+            }  else {
+                Scheduled_Payment__c sp = [
+                    Select 
+                        Id,
+                        Status__c,
+                        Current_Opportunity_Schedule_Version__c,
+                        Drawdown_Created__c,
+                        Opportunity__r.Payment_Schedule__c
+                    From Scheduled_Payment__c Where Id = : spId
+                ];
+                String[] errorMessages = new String[]{};
+                if (Constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c)) {
+                    errorMessages.add('Payment is currently being processed');
+                }
+                if (sp.Current_Opportunity_Schedule_Version__c == true && sp.Opportunity__r.Payment_Schedule__c == 'Yes') {
+                    errorMessages.add('Payment is part of of an active payment schedule');
+                }
+                if (sp.Drawdown_Created__c == true) {
+                    errorMessages.add('Payment has already been processed to drawdown');
+                }
+                if (errorMessages.isEmpty()) {
+                    delete sp;
+                } else {
+                    system.debug(errorMessages);
+                    throw new DeleteWarningException(String.join(errorMessages, '\n'));
+                }
+            }
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        } catch (DeleteWarningException e){
+            AuraHandledException newExc = new AuraHandledException('Warning: '+e.getMessage());
+            newExc.setMessage('Warning: '+e.getMessage());
+            system.debug(newExc.getMessage());
+            throw newExc;
+        } catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+    }
+
+    public class DeleteWarningException extends Exception {}
+
+
     /*
     @AuraEnabled
     public static void markPaymentRejected(Id spId, String notes){
