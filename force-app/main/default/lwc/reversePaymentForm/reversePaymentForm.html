@@ -8,6 +8,13 @@
             <lightning-input-field field-name="Scheduled_Payment__c" value={scheduledPaymentId} disabled></lightning-input-field>
             <lightning-input-field field-name="Scheduled_Payment_Action__c"></lightning-input-field>
             <lightning-input-field field-name="Reason__c"></lightning-input-field>
+            <lightning-input
+                if:true={showProcessedFields} 
+                type="date"
+                label="Original Date"
+                value={drawdownDate}
+                disabled='disabled'
+            ></lightning-input>
             <lightning-input-field if:true={showProcessedFields} field-name="Use_Original_Sent_Date_for_Interest__c"></lightning-input-field>
             <lightning-layout horizontal-align="end">
                 <lightning-layout-item flexibility="no-grow" padding="around-small">

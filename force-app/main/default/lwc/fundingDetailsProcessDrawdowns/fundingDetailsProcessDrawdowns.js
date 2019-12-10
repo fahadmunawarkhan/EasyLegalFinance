@@ -46,6 +46,8 @@ export default class FundingDetailsProcessDrawdowns extends LightningElement {
         { label: 'Bank Account', fieldName: 'Current_Bank_Account_URL__c', type: 'url', typeAttributes: {target: '_blank', label: {fieldName: 'Current_Bank_Account_Name__c'}} },
         { label: 'Payment Type', fieldName: 'Payment_Type__c' },
         { label: 'Admin Fee', fieldName: 'Expected_Admin_Fee_Amount__c', type: 'currency' },
+        { label: 'Previously Rejected', fieldName: 'Has_Been_Rejected__c', type: 'boolean' },
+        { label: 'Drawdown Date', fieldName: 'Calculated_Drawdown_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'} },
         { label: 'Sent Date', fieldName: 'Sent_to_Bank_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'} },
         //{ label: 'Adming Fee', fieldName: 'Triggered_Admin_Fee_Amount__c', type: 'currency' },
         { label: 'Payment Amount', fieldName: 'Amount__c', type: 'currency' },
