@@ -28,7 +28,7 @@ private class PaymentRejectionTriggerHandlerTest {
         String eftNum = 'abc123';
         Bank_Account__c bankRec = TestDataFactory.getBankAccountObjects(1)[0];
 
-        Opportunity opp = TestDataFactory.getOpportunityObjects(1)[0];
+        Opportunity opp = TestDataFactory.getOpportunityObjects(TestDataFactory.getOpportunityConfig(1), false)[0];
         opp.Payment_Schedule__c = 'Yes';
         opp.Payment_Schedule_Mode__c = Constants.PAYMENT_MODE_AMOUNT;
         opp.Payment_Use_Primary_Bank_Account__c = true;
@@ -51,7 +51,7 @@ private class PaymentRejectionTriggerHandlerTest {
         opp.Compounding_Interest__c = 'Monthly';
         opp.Interest_Compounding_Period__c = 'Compounding Interest';
         opp.Interest_Rate__c = 15.0;
-        update opp;
+        insert opp;
 
         Scheduled_Payment__c sp = [Select Id, Amount__c, Opportunity__c From Scheduled_Payment__c Limit 1];
         sp.Banking_Verified__c = true;
@@ -75,10 +75,6 @@ private class PaymentRejectionTriggerHandlerTest {
         insert dd;
 
         sp.Drawdown__c = dd.Id;
-
-        update sp;
-
-        Id[] spIds = new Id[]{sp.Id};
 
         update sp;
     }
