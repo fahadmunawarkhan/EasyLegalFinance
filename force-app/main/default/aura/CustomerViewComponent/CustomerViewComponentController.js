@@ -129,9 +129,13 @@
     },
     generatePayoutStatement: function(component, event, helper){
         var dateIsSet = component.get("v.payoutDateSet");
+        var oppObj = component.get('v.oppObj');
         if(dateIsSet){
             var accObj = component.get('v.accountObj');
             var baseURL = accObj.Conga_Payouts_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Assessment')
+                baseURL = accObj. Conga_Assessmnet_Payouts_URL__c;
+            
             $A.get("e.force:navigateToURL").setParams({ 
                 "url": baseURL
             }).fire();
@@ -690,4 +694,5 @@ handlePaymentActionSelected : function(component, event, helper) {
             component.set("v.paymentSearchDisabled", false);     
        }*/
     }
+
 })
