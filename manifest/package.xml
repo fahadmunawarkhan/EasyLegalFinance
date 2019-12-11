@@ -442,9 +442,11 @@
         <members>Amendment__c.Renewal_Date_New__c</members>
         <members>Assessment_Provider_Summary_Report__c.Business_Unit__c</members>
         <members>Assessment_Provider_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
-        <members>Assessment_Provider_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Elfi_Print_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Rhino_Print_Template_Id__c</members>
         <members>Assessment_Provider_Summary_Report__c.Conga_View_All_Query_Id__c</members>
-        <members>Assessment_Provider_Summary_Report__c.Conga_View_All_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Elfi_View_All_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Rhino_View_All_Template_Id__c</members>
         <members>Assessment_Provider_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
         <members>Assessment_Provider_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
         <members>Assessment_Provider_Summary_Report__c.Conga_Conductor_Id__c</members>
@@ -453,9 +455,11 @@
         <members>Assessment_Provider_Summary_Report__c.Report_Date__c</members>
         <members>Assessment_Summary_Report__c.Business_Unit__c</members>
         <members>Assessment_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
-        <members>Assessment_Summary_Report__c.Conga_Print_Report_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Elfi_Print_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Rhino_Print_Template_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
-        <members>Assessment_Summary_Report__c.Conga_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Elfi_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Rhino_View_All_Template_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
         <members>Assessment_Summary_Report__c.Search_by_Name__c</members>
@@ -1312,7 +1316,10 @@
         <members>Account.Rebate_Allowed__c</members>
         <members>Account.Total_Rebate_Discount__c</members>
         <members>Account.Total_Outstanding__c</members>
-        <members>Opportunity.Rebate_to_Lawyer__c</members>
+        <members>Account.Conga_Assessmnet_Payouts_URL__c</members>        
+        <members>Drawdown__c.Assessment_Provider_Report_Date__c</members>
+        <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
+        <members>Opportunity.Rebate_to_Lawyer__c</members>        
         <name>CustomField</name>
     </types>
     <types>
