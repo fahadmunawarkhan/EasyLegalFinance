@@ -17,11 +17,7 @@ public with sharing class ScheduledPaymentHelper {
         Drawdown__c drawdown = new Drawdown__c();
         drawdown.Scheduled_Payment__c = sp.Id;
         drawdown.Amount__c = sp.Amount__c;
-        if (sp.First_Sent_to_Bank_Date__c == null) {
-            drawdown.Date__c = DateUtil.today();
-        } else {
-            drawdown.Date__c = sp.First_Sent_to_Bank_Date__c.date();
-        }
+        drawdown.Date__c = sp.Calculated_Drawdown_Date__c;
         drawdown.Opportunity__c = sp.Opportunity__c;
         if (sp.Send_Cheque__c) {
             drawdown.Payment_Method__c = 'Cheque';
@@ -215,6 +211,7 @@ public with sharing class ScheduledPaymentHelper {
                 Send_Cheque__c,
                 Sent_to_Bank_Date__c,
                 First_Sent_to_Bank_Date__c,
+                Calculated_Drawdown_Date__c,
                 Has_Been_Rejected__c,
                 Sent_to_Bank_By__c,
                 Cheque_Number__c,
@@ -246,6 +243,7 @@ public with sharing class ScheduledPaymentHelper {
                     Send_Cheque__c,
                     Sent_to_Bank_Date__c,
                     First_Sent_to_Bank_Date__c,
+                    Calculated_Drawdown_Date__c,
                     Has_Been_Rejected__c,
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
@@ -289,6 +287,58 @@ public with sharing class ScheduledPaymentHelper {
             Verified_Date__c = DateUtil.now()
         );
         update sp;
+    }
+
+    @AuraEnabled
+    public static void deletePayment(Id spId, Boolean force){
+        try{
+            if (force == true) {
+                delete new Scheduled_Payment__c(Id=spId);
+            }  else {
+                Scheduled_Payment__c sp = [
+                    Select 
+                        Id,
+                        Status__c,
+                        Current_Opportunity_Schedule_Version__c,
+                        Drawdown_Created__c,
+                        Opportunity__r.Payment_Schedule__c
+                    From Scheduled_Payment__c Where Id = : spId
+                ];
+                String[] errorMessages = new String[]{};
+                if (Constants.PAYMENT_SCHEDULE_IN_PROCESS_STATUSES.contains(sp.Status__c)) {
+                    errorMessages.add('Payment is currently being processed');
+                }
+                if (sp.Current_Opportunity_Schedule_Version__c == true && sp.Opportunity__r.Payment_Schedule__c == 'Yes') {
+                    errorMessages.add('Payment is part of of an active payment schedule');
+                }
+                if (sp.Drawdown_Created__c == true) {
+                    errorMessages.add('Payment has already been processed to drawdown');
+                }
+                if (errorMessages.isEmpty()) {
+                    delete sp;
+                } else {
+                    system.debug(errorMessages);
+                    throw new DeleteWarningException(String.join(errorMessages, '\n'));
+                }
+            }
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        } catch (DeleteWarningException e){
+            AuraHandledException newExc = new AuraHandledException('Warning: '+e.getMessage());
+            newExc.setMessage('Warning: '+e.getMessage());
+            system.debug(newExc.getMessage());
+            throw newExc;
+        } catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+    }
+
+    public class DeleteWarningException extends Exception {}
+
+    @AuraEnabled(cacheable=false)
+    public static Date getDrawdownDate(Id spId) {
+        return [Select Drawdown_Date__c From Scheduled_Payment__c Where Id = :spId].Drawdown_Date__c;
     }
 
     /*
