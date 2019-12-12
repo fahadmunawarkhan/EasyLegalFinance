@@ -57,13 +57,21 @@ public class OpportunityTriggerScheduleHandler extends TriggerHandler {
 
     private void detectScheduleVersionChange(Opportunity oldOpp, Opportunity newOpp) {
         if (oldOpp.Payment_Schedule__c == 'No') {
-            newOpp.Payment_Schedule_Version_Number__c += 1;
+            if (newOpp.Payment_Schedule_Version_Number__c == null) {
+                newOpp.Payment_Schedule_Version_Number__c = 1;
+            } else {
+                newOpp.Payment_Schedule_Version_Number__c += 1;
+            }
             newOpp.Amount_sent_from_current_Schedule__c = 0.00; // reset Sent Amount
             return;
         }
         for (String field : this.paymentVersionChangeFields) {
             if (oldOpp.get(field) != newOpp.get(field)) {
-                newOpp.Payment_Schedule_Version_Number__c += 1; // Update version number
+                if (newOpp.Payment_Schedule_Version_Number__c == null) {
+                    newOpp.Payment_Schedule_Version_Number__c = 1;
+                } else {
+                    newOpp.Payment_Schedule_Version_Number__c += 1;
+                }
                 newOpp.Amount_sent_from_current_Schedule__c = 0.00; // reset Sent Amount
                 // If this works I can stop watching Current Version manually
                 if (oldOpp.Payment_Schedule__c == 'Yes') // Only update SPs if there was an active schedule to begin with
