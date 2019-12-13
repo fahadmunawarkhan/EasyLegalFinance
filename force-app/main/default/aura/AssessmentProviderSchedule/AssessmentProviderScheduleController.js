@@ -30,7 +30,7 @@
             	//var rowActions = helper.getRowActions.bind(this, component);
                 component.set('v.columns', [
                     {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
-                    {label: 'Discount', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+                    {label: 'Deferred Revenue Rate', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
                     {label: 'Rebate Discount', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
                     {label: 'Rebate Period', fieldName: 'Rebate_Period__c', type: 'text', sortable: true},
                     {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
@@ -156,6 +156,8 @@
         
         var inputField = component.find('discountRateField');
         var value = inputField.get('v.value');
+        inputField.setCustomValidity('');
+        inputField.reportValidity();
         
         console.log('value  ' + value);
         if(value <= 0) {

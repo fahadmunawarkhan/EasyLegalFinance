@@ -139,7 +139,7 @@
                             </aura:if>
                         </th>
                         <th>
-                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title=""> DISCOUNT                               
+                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title=""> Deferred Revenue Rate                               
                             </div>
                         </th>
                         <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Law_Firm__r.Name" style="cursor: pointer;" >
