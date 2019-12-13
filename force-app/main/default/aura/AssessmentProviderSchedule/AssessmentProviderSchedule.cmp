@@ -157,7 +157,7 @@
                     <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
                         <div class="slds-form-element__control">
                             <span class="">
-                                <lightning:input aura:id="discountRateField" type="number" name="discountRate" label="Discount Rate" tabindex="20"
+                                <lightning:input aura:id="discountRateField" type="number" name="discountRate" label="Deferred Revenue Rate" tabindex="20"
                                                  value="{!v.assessmentProviderSchedule.Discount__c}" formatter="percent-fixed" step="0.01"
                                                  messageWhenBadInput="Discount must be greater than zero." required="true"/>
                             </span>
