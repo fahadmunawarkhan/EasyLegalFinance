@@ -309,7 +309,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from Account WHERE Id in ('+ ids +')';
             }else{
-                query = 'SELECT Id FROM Account where id in (SELECT Assessment_Provider__c from opportunity WHERE Type_of_Loan__c = :assessment)';
+                query = 'SELECT Id FROM Account where id in (SELECT Assessment_Provider__c from opportunity WHERE Type_of_Loan__c = \'Assessment\')';
             }
             
             Assessment_Provider_Summary_Report__c customSettings = Assessment_Provider_Summary_Report__c.getInstance(UserInfo.getUserId());        

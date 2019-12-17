@@ -1319,7 +1319,8 @@
         <members>Account.Conga_Assessmnet_Payouts_URL__c</members>        
         <members>Drawdown__c.Assessment_Provider_Report_Date__c</members>
         <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
-        <members>Opportunity.Rebate_to_Lawyer__c</members>        
+        <members>Opportunity.Rebate_to_Lawyer__c</members>  
+        <members>Opportunity.Assessment_Outstanding__c</members>
         <name>CustomField</name>
     </types>
     <types>

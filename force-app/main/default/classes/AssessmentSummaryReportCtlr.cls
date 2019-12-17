@@ -234,7 +234,7 @@ public with sharing class AssessmentSummaryReportCtlr {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from contact WHERE Id in ('+ ids +')';
             }else{
-                query = 'SELECT Id FROM contact where id in (SELECT lawyer__c from opportunity WHERE Type_of_Loan__c = :assessment)';
+                query = 'SELECT Id FROM contact where id in (SELECT lawyer__c from opportunity WHERE Type_of_Loan__c = \'Assessment\')';
             }
             
             Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
