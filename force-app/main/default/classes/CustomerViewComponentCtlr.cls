@@ -232,13 +232,22 @@ public class CustomerViewComponentCtlr {
         for(Opportunity opp : optsList){
             System.debug(searchType + ' '  + opp.Stage_Status__c);
             if ((searchType == 'Payout' && opp.Stage_Status__c != 'Paid Off') ||
-               (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt'))){
+               (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt')) 
+                /*|| (searchType == 'Refund')*/){
                 openOpsList.add(opp);
             }
         }
         
         system.debug('## openOpsList.size() ' + openOpsList.size());
         
+        /*if (searchType == 'Refund'){
+            if (openOpsList.size() > 0){
+                Opportunity opp = openOpsList.get(openOpsList.size() - 1);
+                opp.Temp_Payment_Received__c = -amount;
+                update opp;
+            }
+            return getOpportunities(accountId);
+        } */
         Integer helper = 0;
         Decimal amountRemaining = amount;
         for(Opportunity opp : openOpsList){
@@ -360,7 +369,8 @@ public class CustomerViewComponentCtlr {
         dd.CHQ__c = chq;
         insert dd;
         
-            opp.Temp_Payment_Received__c = 0;   
+        
+        opp.Temp_Payment_Received__c = 0;   
         opp.Stage_Status__c = 'Active - Partial Payment';
         opp.Loan_Status__c = 'Active - Partial Payment';
         update opp;
@@ -408,6 +418,26 @@ public class CustomerViewComponentCtlr {
         update opp;
      
     }    
+    
+   /* @AuraEnabled
+    public static void applyRefund(String oppId, String accountId, String payoutDate, String eft, String chq){            
+        Opportunity opp = getSingleOpportunity(oppId);
+        Drawdown__c dd = new Drawdown__c();
+        
+        dd.Amount__c = -opp.Temp_Payment_Received__c;
+        dd.Payment_Method__c = 'Other';        
+        dd.Reference_Notes__c = 'Refund';        
+        dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
+        dd.Opportunity__c = oppId;        
+        dd.EFT__c = eft;
+        dd.CHQ__c = chq;        
+        insert dd;
+        
+        opp.Temp_Payment_Received__c = 0;
+        update opp;
+     
+    } */   
+    
     
     @AuraEnabled
     public static List<Opportunity> closeMultipleLoans(List<Opportunity> opportunitiesList, String accountId, String searchType, String payoutDate){    
@@ -700,6 +730,8 @@ t.adminFee =  d.Amount__c;
         lstFields.add('Owner.Name');
         lstFields.add('Account.All_Payout_Balance__c');
         lstFields.add('Account.All_Payout_Interest__c');
+        lstFields.add('Account.Total_Rebate_Discount__c');
+        
         
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
@@ -906,6 +938,8 @@ t.adminFee =  d.Amount__c;
         system.debug('##### Payout_Balance__c ' + opp.Payout_Balance__c);
         system.debug('##### Payout_Date__c ' + opp.Payout_Date__c);
         system.debug('##### All_Payout_Balance__c ' + opp.Account.All_Payout_Balance__c);
+        system.debug('##### Total_Rebate_Discount__c ' + opp.Account.Total_Rebate_Discount__c);
+        
         
         
         // Populating loan summary information
@@ -918,6 +952,7 @@ t.adminFee =  d.Amount__c;
         //loanSummary.balanceOtherFees = opp.Simulation_Payout_Other_Fees__c;
         loanSummary.balance = opp.Account.All_Payout_Balance__c;
         loanSummary.payoutDate = opp.Payout_Date__c;
+        loanSummary.rebateDiscount = opp.Account.Total_Rebate_Discount__c;
             
         AggregateResult[] groupedResults = new AggregateResult[]{};
         //if(opp.Type_of_Loan__c == 'Lump-Sum' || opp.Type_of_Loan__c == 'Facility Loan'){
@@ -938,7 +973,7 @@ t.adminFee =  d.Amount__c;
         // Grab total amount of all drawdowns from all oppts
         AggregateResult[] totalDD = [Select sum(Formula_Amount__c) totalAmount, sum(Total_Accrued_Interest__c) totalInterest from Drawdown__c 
                                      WHERE Opportunity__r.AccountId =: accountId 
-                                     AND Reference_Notes__c NOT IN ('Admin Fee', 'Payment Shortfall', 'Bad Debt', 'Surplus', 'Shortfall', 'Partial Payment', 'Loan Payout')
+                                     AND Reference_Notes__c NOT IN ('Admin Fee', 'Assessment Fee', 'Payment Shortfall', 'Bad Debt', 'Surplus', 'Shortfall', 'Partial Payment', 'Loan Payout')
                                      AND Opportunity__r.Stage_Status__c LIKE 'Active%'];
         system.debug('### totalDD: ' + totalDD[0]);
         
@@ -1156,6 +1191,8 @@ t.adminFee =  d.Amount__c;
         public Date payoutDate {get;set;} 
         @AuraEnabled
         public List<Opportunity> oppsList {get; set;}
+        @AuraEnabled
+        public decimal rebateDiscount {get;set;}
     }
 
     /******************* Wrapper Class for Transactions *********************/    
@@ -1293,6 +1330,9 @@ t.adminFee =  d.Amount__c;
             else if (action == 'Misc Income Payment'){
                 applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
             }
+            /*else if (action == 'Refund'){
+                applyRefund(oppId, accountId, payoutDate, eft, chq);
+            }*/
             else if (action == 'Bad Debt'){
                 changeToBadDebtStage(oppId, accountId, payoutDate);
             }
