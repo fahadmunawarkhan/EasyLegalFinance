@@ -32,6 +32,15 @@
                     component.set("v.selectedLookUpOwner.Id", component.get("v.oppObj").OwnerId);
                     component.set("v.selectedLookUpOwner.Name",(component.get("v.oppObj").OwnerId ? 
                                                                 component.get("v.oppObj").Owner.Name : ''));
+
+                    //setting lookups
+                    component.set("v.selectedLookUpAssessmentProvider.Id", component.get("v.oppObj").Assessment_Provider__c);
+                    console.log('-' + component.get("v.oppObj").Assessment_Provider__c + '-');
+                    component.set("v.selectedLookUpAssessmentProvider.Name",(component.get("v.oppObj").Assessment_Provider__c != null && component.get("v.oppObj").Assessment_Provider__c != ''? 
+                                                                         component.get("v.oppObj").Assessment_Provider__r.Name : '')); 
+                    
+
+                                                                
                     
                     
                     self.firePaymentsChangedEvent(component);
@@ -703,6 +712,7 @@
     },
     
     saveOppty : function(component) {
+        console.log('saveOppty');
         var p = new Promise ($A.getCallback( function( resolve, reject){
             
             //setting lookups
@@ -717,7 +727,13 @@
             component.set("v.oppObj.OwnerId",(component.get("v.selectedLookUpOwner.Id") ?
                                                          component.get("v.selectedLookUpOwner.Id"):''));
             
+            //setting lookups
+            component.set("v.oppObj.Assessment_Provider__c",(component.get("v.selectedLookUpAssessmentProvider.Id") ?
+                                                         component.get("v.selectedLookUpAssessmentProvider.Id"):''));
+    
+            
             var oppObj = component.get('v.oppObj');
+            console.log('oppObj ' + oppObj.Discount_Rate__c);
             var action = component.get('c.saveOpportunity');
             action.setParams({ opportunity : oppObj});
             console.log('saving oppty'+ oppObj.Primary_Contact__c);
@@ -957,6 +973,9 @@
         var action = component.get("c.getDependentMap");
         // pass paramerters [object definition , contrller field name ,dependent field name] -
         // to server side function 
+        console.log('objDetails ' + objDetails);
+        console.log('controllerField ' + controllerField);
+        console.log('dependentField ' + dependentField);
         action.setParams({
             'objDetail' : objDetails,
             'contrfieldApiName': controllerField,
@@ -1555,4 +1574,27 @@
             component.set('v.initialized', true);
         }
     },
+    setLatestDiscountRateLaywer : function(component){
+          return new Promise($A.getCallback(
+              function(resolve, reject){
+                  let oppObj = component.get('v.oppObj');
+                  let action = component.get("c.setLatestDiscountRateLaywer");
+                  action.setParams({
+                      oppId : oppObj.Id,
+                      assessmentProviderId : oppObj.Assessment_Provider__c,
+                      lawyerId : oppObj.Lawyer__c
+                  });
+                  
+                  action.setCallback(this, function(response){
+                      let state = response.getState();
+                      if(state == 'SUCCESS'){
+                          resolve(response.getReturnValue());
+                      }else if(state == 'ERROR'){
+                          reject(response.getError());
+                      }
+                  });
+                  $A.enqueueAction(action);
+              }
+          ));  
+    }
 })
