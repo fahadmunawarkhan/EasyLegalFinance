@@ -6,5 +6,6 @@
     <inlineHelpText>Check if you want this contact to appear on prospecting list/campaigns</inlineHelpText>
     <label>Prospecting List</label>
     <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Checkbox</type>
 </CustomField>

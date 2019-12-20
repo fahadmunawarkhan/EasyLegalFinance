@@ -5,6 +5,7 @@
     <formula>HYPERLINK(&quot;/00O0L000003d6BH?pv0=&quot;&amp;Id, &quot;Click Here&quot;, &quot;_blank&quot;)</formula>
     <label>Lawyer Pipeline Report</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>

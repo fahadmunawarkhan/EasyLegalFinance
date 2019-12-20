@@ -8,6 +8,7 @@ IF( ISBLANK( MiddleName ), &#39;&#39; , MiddleName &amp; &#39; &#39; )&amp;
 IF( ISBLANK( LastName ), &#39;&#39; , LastName )</formula>
     <label>Name Formula</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>
