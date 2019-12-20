@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Conga_Finance_Loan_Progression_EndDate__c</fullName>
     <externalId>false</externalId>
-    <formula>TEXT( YEAR( $Setup.FinanceLoanProgression__c.End_Date__c ) ) &amp; &quot;-&quot; &amp; IF( MONTH( $Setup.FinanceLoanProgression__c.End_Date__c ) &lt; 10, &quot;0&quot;, &quot;&quot; ) &amp; TEXT( MONTH( $Setup.FinanceLoanProgression__c.End_Date__c ) ) &amp; &quot;-&quot; &amp; IF( DAY( $Setup.FinanceLoanProgression__c.End_Date__c ) &lt; 10, &quot;0&quot;, &quot;&quot;) &amp; TEXT( DAY( $Setup.FinanceLoanProgression__c.End_Date__c ) )</formula>
+    <formula>TEXT( YEAR( $Setup.FundingDashboard__c.End_Date__c ) ) &amp; &quot;-&quot; &amp; IF( MONTH( $Setup.FundingDashboard__c.End_Date__c ) &lt; 10, &quot;0&quot;, &quot;&quot; ) &amp; TEXT( MONTH( $Setup.FinanceLoanProgression__c.End_Date__c ) ) &amp; &quot;-&quot; &amp; IF( DAY( $Setup.FinanceLoanProgression__c.End_Date__c ) &lt; 10, &quot;0&quot;, &quot;&quot;) &amp; TEXT( DAY( $Setup.FinanceLoanProgression__c.End_Date__c ) )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Conga Finance Loan Progression EndDate</label>
     <required>false</required>
