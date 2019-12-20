@@ -452,12 +452,13 @@ public class CustomerViewComponentCtlrTest {
             
         }
     }
-    
+ 
     public static testmethod void test_Process15(){
         String accId = [select id from account where name = 'account' limit 1].id;
         String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
         test.startTest();
         CustomerViewComponentCtlr.getCurrentUserInfo();
+
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
         CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false);

@@ -7,6 +7,8 @@ public with sharing class ReportingViewComponentCtlr {
                             Drawdowns__c, Financial_Summary__c,Law_Firm_Sales_Summary_Report__c,Lawyer_Sales_Summary__c,
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, Payments_tab__c,
                             Funding_Summary__c,Funding_Dashboard__c,
+                            //Finance_Loan_Progression_Report__c,
+                            Assessment_Summary_Report__c,
                             Bad_Debt_Summary_Report__c, Payout_Details__c FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
