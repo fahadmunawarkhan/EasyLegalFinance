@@ -43,11 +43,7 @@
                 </lightning:tab> 
             </aura:if>
             
-            <aura:if isTrue="{!v.currentUser.Assessment_Summary_Report__c}">  
-                <lightning:tab id="AssessmentSummaryReport" label="Assessment Summary">
-                    <c:AssessmentSummaryReport />
-                </lightning:tab>
-            </aura:if>
+
 
             <!--<aura:if isTrue="{!v.currentUser.Critical_Items_Dates__c}">
                 <lightning:tab id="CriticalDatesReport" label="Critical Items &amp; Dates">

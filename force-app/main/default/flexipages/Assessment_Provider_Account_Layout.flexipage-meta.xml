@@ -64,6 +64,15 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+
+            <componentName>bankAccounts</componentName>
+        </componentInstances>
+        <name>Facet-2cde4b96-b85d-4952-b084-ad045429fa3f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+
             <componentInstanceProperties>
                 <name>active</name>
                 <value>true</value>
@@ -100,6 +109,19 @@
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>
+
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-2cde4b96-b85d-4952-b084-ad045429fa3f</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Bank Accounts</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+
         <mode>Replace</mode>
         <name>maintabs</name>
         <type>Facet</type>

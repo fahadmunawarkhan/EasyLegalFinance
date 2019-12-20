@@ -17,6 +17,7 @@
 &quot;&amp;returnpath=/lightning/n/Custom_Reports?0.source=alohaHeader&quot;</formula>
     <label>Conga Batch Lawyer Summary</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>

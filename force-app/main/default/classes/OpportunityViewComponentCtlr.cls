@@ -292,14 +292,15 @@ public class OpportunityViewComponentCtlr {
     public static List<Drawdown__c> deleteDrawdownRecord(String drawdownId, String oppId){
         try{
             Drawdown__c dd = new Drawdown__c(Id=drawdownId);
-            delete dd; 
+            delete dd;
+            return getDrawdownList(oppId);
         }
         catch (DMLException e){
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
             throw new AuraHandledException('Error:'+e.getMessage());
         }
-        return getDrawdownList(oppId);
+        
     }
     
     @AuraEnabled

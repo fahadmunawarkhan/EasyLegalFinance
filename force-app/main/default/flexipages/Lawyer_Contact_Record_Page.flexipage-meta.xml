@@ -67,6 +67,15 @@
             <componentName>LawyerLawSocietyPageTab</componentName>
         </componentInstances>
         <name>Facet-a65c9891-6e24-4e1e-9b13-914de2f92d2d</name>
+
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentName>AssessmentScheduleLawyerTab</componentName>
+        </componentInstances>
+        <name>Facet-3fe04f66-0fae-4dba-8890-fb6c9c2f87e5</name>
+
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -111,10 +120,23 @@
             <componentInstanceProperties>
                 <name>body</name>
                 <value>Facet-a65c9891-6e24-4e1e-9b13-914de2f92d2d</value>
+
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
-                <value>Law Society Review</value>
+                <value>Law Society</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-3fe04f66-0fae-4dba-8890-fb6c9c2f87e5</value>
+
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Assessment Schedule</value>
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>

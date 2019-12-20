@@ -69,7 +69,9 @@
     openReferenceReport : function(component, event, helper){
         
         let newWin;
-        let url = '/lightning/r/Report/00O1F000000iWziUAE/view';
+
+        let url = '/lightning/r/Report/00O0L000003mxbcUAA/view';
+
         
         try{                       
             newWin = window.open(url + '?fv2=' + component.get("v.recordId"));

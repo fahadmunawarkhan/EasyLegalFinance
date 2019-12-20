@@ -23,7 +23,9 @@
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){ 
                 component.set('v.customSetting', result);
-                component.set("v.businessUnitForDesign", result.Business_Unit__c);
+
+                component.set("v.businessUnitForDesign", result.Business_Unit__c == null ? 'ELFI' : result.Business_Unit__c);
+
                 return helper.getAssessments(component);
             }
         )).then(
@@ -103,7 +105,9 @@
     openLinkReport : function(component, event, helper) { 
         let providerId = event.currentTarget.dataset.attachment;
         let newWin;
-        let url = '/lightning/r/Report/00O1F000000iwrWUAQ/view';
+
+        let url = '/lightning/r/Report/00O0L000003mxbSUAQ/view';
+
         
         try{                       
             newWin = window.open(url + '?fv1=' + providerId);

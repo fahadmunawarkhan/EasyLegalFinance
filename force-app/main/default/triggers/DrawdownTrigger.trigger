@@ -46,7 +46,9 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         // DrawdownTriggerHandler.reCalculateCriticalDatePayout(Trigger.isDelete ? Trigger.old : Trigger.new, 
                                                              // Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);        
         //*/
-    }    
+
+    }
+
     
     /*
     // Replaced with process and InvocableMethod callout to consolidate work
@@ -60,4 +62,6 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
     if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
         dlrs.RollupService.rollup(Trigger.oldMap, Trigger.newMap, Drawdown__c.SObjectType);
     }
+
 }
+

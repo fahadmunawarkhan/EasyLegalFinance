@@ -3,6 +3,11 @@
         <style>
             @page{
                 size: A4 landscape;
+
+            @bottom-left {
+            content: element(footer);
+            }
+
             }
             body {
             font-family: sans-serif;
@@ -30,6 +35,13 @@
             padding: 10px;
             text-align: left;
             }
+
+            div.footer {
+            display: block;
+            padding: 5px;
+            position: running(footer);
+            }
+
         </style>
     </head>
     <body>
@@ -147,6 +159,18 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="footer">
+                <div style="float: right;">
+                    <b>Print Date:</b> 
+                    <span class="pagecount"> 
+                        <apex:outputText value="{0, date, MMMM d ',' yyyy}">
+                            <apex:param value="{!TODAY()}" />
+                        </apex:outputText>
+                    </span>
+                </div>
+          </div>
+
         </apex:pageBlock>
     </body>
 </apex:page>

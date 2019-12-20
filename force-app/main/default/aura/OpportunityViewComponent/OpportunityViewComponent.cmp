@@ -6,7 +6,7 @@
   @Last Modified By   : Seth Boyd
   @Last Modified On   : 5/13/2019, 10:34:52 AM
   @Modification Log   : 
-  ==============================================================================
+  ===============================================================================
   Ver         Date                     Author      		      Modification
   ==============================================================================
   1.0    4/12/2019, 3:30:11 PM   Seth Boyd     Initial Version
@@ -1311,7 +1311,7 @@
                         <lightning:layoutItem size="4" class="slds-m-left_xx-large slds-grid_vertical-stretch">
                             <div class="slds-form-element slds-m-left_xx-large"><span class="slds-form-element__label"></span>
                                 <div class="slds-form-element__control"><span class="">
-                                    <lightning:input type="number" tabindex="40" name="InterestRate" label="Interest Rate" value="{!v.oppObj.Interest_Rate__c}" formatter="percent-fixed" step="0.01" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}" />
+                                    <lightning:input type="number" tabindex="40" name="InterestRate" label="Interest Rate (Annual Rate)" value="{!v.oppObj.Interest_Rate__c}" formatter="percent-fixed" step="0.01" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}" />
                                     <!--<ui:inputCurrency class="field" value="{!v.oppObj.Interest_Rate__c}"/>-->
                                     </span>
                                 </div>

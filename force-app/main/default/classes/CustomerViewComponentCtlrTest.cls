@@ -3,8 +3,6 @@ public class CustomerViewComponentCtlrTest {
     
     @TestSetup
     static void initailizeTestData(){
-        
-        
         // Account
         Id RecordTypeIdAccount = 
             Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();
@@ -220,55 +218,11 @@ public class CustomerViewComponentCtlrTest {
         frm.Opportunity__c = Op.id;
         
         insert frm;
-        
-        // Note insert
-       /* ContentNote cnote = new ContentNote();
-        cnote.Title = 'testt';
-        cnote.Content = Blob.valueOf('Helloworld');
-        insert (cnote);
-        
-        ContentDocumentLink cdl = new ContentDocumentLink();
-        
-        cdl.ContentDocumentId = cnote.id;
-        cdl.LinkedEntityId = acct2.id;
-        cdl.ShareType = 'v';
-        cdl.Visibility = 'AllUsers';
-        
-        insert cdl;*/
-        
     }
     
-    public static testMethod void criticalDateTest() {
-        Test.startTest();
-        Account acc = [SELECT Id FROM Account WHERE Name = 'example account' LIMIT 1];
-        List<Critical_Date__c> critcalDateList = new List<Critical_Date__c>();
+    public static testmethod void test_Process1(){
         
-        for(Integer i = 0; i<5; i++){
-            critcalDateList.add(new Critical_Date__c(Name__c = 'Examination', Account__c = acc.Id, Date__c = Date.today()));
-        }
-        
-        try{
-            CustomerViewComponentCtlr.saveCriticalDateList(critcalDateList);
-            List<Critical_Date__c> result = CustomerViewComponentCtlr.getCriticalDatesList(acc.Id);
-            system.assertEquals(5, result.size());
-            CustomerViewComponentCtlr.deleteCriticalDate(critcalDateList[0].Id);
-        }catch(exception e){
-            
-        }
-        
-        Test.stopTest();
-    }
-    
-    @isTest
-    static void startTestProcess(){
-        
-        String acct2 = [select id from account where name = 'sample account' limit 1].id;
-        String acct = [select id from account where name = 'account' limit 1].id;
-        
-        String OppId = [select id from opportunity where name = 'Test Opportunity' limit 1].id;
-        
-        String OppId2 = [select id from opportunity where name = 'Test Opportunity 3' limit 1].id;
-        
+        Account acc = [select id from account where name = 'sample account' limit 1];        
         test.startTest();
         ContentNote cnote = new ContentNote();
         cnote.Title = 'testt';
@@ -281,403 +235,242 @@ public class CustomerViewComponentCtlrTest {
         ContentDocumentLink cdl = new ContentDocumentLink();
         
         cdl.ContentDocumentId = cnote.id;
-        cdl.LinkedEntityId = acct2;
+        cdl.LinkedEntityId = acc.Id;
         cdl.ShareType = 'v';
         cdl.Visibility = 'AllUsers';
         
         insert cdl;
         
-        CustomerViewComponentCtlr.getAccountInfo(acct2);
+        CustomerViewComponentCtlr.getAccountInfo(acc.Id);
         
         system.assertEquals(null, CustomerViewComponentCtlr.oppInfo);
         system.assertEquals(null, CustomerViewComponentCtlr.oppList);
         
-        //CustomerViewComponentCtlr.NoteWrapper nwrapper = new CustomerViewComponentCtlr.NoteWrapper();
-        
-        //system.assertEquals(null, nwrapper.body);
-        //system.assertEquals(null, nwrapper.note);
-        
-        
-        
-        CustomerViewComponentCtlr.getEnhancedNotes(acct2);
-        
-        CustomerViewComponentCtlr.getOpportunities(acct);
-        
-        CustomerViewComponentCtlr.getOpportunitiesOrderedByDate(acct);
-        
-        CustomerViewComponentCtlr.getSingleOpportunity(oppId);
-        
-        CustomerViewComponentCtlr.changeToShortfallStage(OppId, acct, '2018-01-01');
-        CustomerViewComponentCtlr.applyPartialPayments(OppId, acct, '2018-01-01', 'eft', 'chq');
-        
+        CustomerViewComponentCtlr.getEnhancedNotes(acc.Id);
         CustomerViewComponentCtlr.delContentNote(cnoteId);
+        
+        //exception coverage
+        try{
+            string cId = 'Invalid Id';
+            CustomerViewComponentCtlr.updateContentNote(cId, 'UpdatedNote');
+        }catch(exception e){
+            
+        }
+        
+        try{
+            string cId = 'Invalid Id';
+            CustomerViewComponentCtlr.delContentNote(cId);
+        }catch(exception e){
+            
+        }
+        
+        //update account
+        CustomerViewComponentCtlr.saveAccount(acc);
+        
+        try{
+            CustomerViewComponentCtlr.saveAccount(new Account());
+        }catch(exception e){
+            
+        }
+        Account testAcc = new Account();
+        testAcc.Name = 'Test Acc del';
+        insert testAcc;
+        CustomerViewComponentCtlr.deleteAccount(testAcc.Id);
         test.stopTest();
-        
     }
-    @isTest
-    static void startTestProcess2(){
+    
+    public static testmethod void test_Process2(){
         
-        String acct2 = [select id from account where name = 'sample account' limit 1].id;
-        String acct = [select id from account where name = 'account' limit 1].id;
+        String acct = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity' limit 1].id;
+        test.startTest();        
+        List<Opportunity> opps = CustomerViewComponentCtlr.getOpportunities(acct);
+        CustomerViewComponentCtlr.getOpportunitiesOrderedByDate(acct);        
+        Opportunity opp = CustomerViewComponentCtlr.getSingleOpportunity(oppId);
         
-        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
-        
-        String OppId2 = [select id from opportunity where name = 'Test Opportunity 3'].id;
-        
-        String contactId = [select id from contact where lastname = 'test' limit 1].id;
-        
-        test.startTest();
-        
-        decimal amount = 1;
-        CustomerViewComponentCtlr.calculatePayments(acct, amount, 'Payout');
-        
-        amount = 5;
-        CustomerViewComponentCtlr.calculatePayments(acct, amount, 'Payout');
-        
-        CustomerViewComponentCtlr.changeToBadDebtStage(OppId, acct, '2018-01-01');
-        
-        CustomerViewComponentCtlr.changeToSurplusStage(OppId, acct, '2018-01-01');
-        
-        //CustomerViewComponentCtlr.applyFullPayments(OppId2, acct, 'Payout');
-        
-        CustomerViewComponentCtlr.getTransactions(acct);
-        
-        CustomerViewComponentCtlr.OpportunityTransaction optr = new CustomerViewComponentCtlr.OpportunityTransaction();
-        
-        system.assertEquals(null, optr.Name);
-        system.assertEquals(null, optr.opportunityNumber);
-        system.assertEquals(null, optr.transactions);
-        system.assertEquals(null, optr.paymentAmountSubtotal);
-        system.assertEquals(null, optr.advanceSubtotal);
-        system.assertEquals(null, optr.accruedInterestSubtotal);
-        system.assertEquals(null, optr.outstandingBalanceSubtotal);
-        system.assertEquals(null, optr.perDiemSubtotal);
-        
-        test.stopTest();
-        
-    }
-    @isTest
-    static void startTestProcess3(){
-        
-        Account acct3 = [select id,ShippingState from account where name = 'example account' limit 1];
-        String acct2 = [select id from account where name = 'sample account' limit 1].id;
-        String acct = [select id from account where name = 'account' limit 1].id;
-        
-        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
-        
-        String OppId2 = [select id from opportunity where name = 'Test Opportunity 3'].id;
-        
-        Opportunity Opp4 = [select id,Interest_Rate__c from opportunity where name = 'Test Opportunity 4' limit 1];
-        
-        String contactId = [select id from contact where lastname = 'test' limit 1].id;
-        contact contcts = [select id,email from contact where lastname = 'testt' limit 1];
-        
-        test.startTest();
-        
-        CustomerViewComponentCtlr.getOpptyTransactions(acct);
-        
-        CustomerViewComponentCtlr.getLastOpportunity(acct);
-        
-        CustomerViewComponentCtlr.getLawyerInfo(contactId);
-        
-        CustomerViewComponentCtlr.getLastContact(acct2);
-        
-        CustomerViewComponentCtlr.getFinancingStatementHistory(acct2);
-        
-        CustomerViewComponentCtlr.getFirmHistory(acct2);
-        
-        CustomerViewComponentCtlr.getContactHistorySingle(contactId);
-        
-        CustomerViewComponentCtlr.getContactHistory(acct2);
-        
-        CustomerViewComponentCtlr.runPayoutForAllOpps(acct, String.valueOf(date.today()));
-        
-        CustomerViewComponentCtlr.getLoanSummary(acct);
-        
-        CustomerViewComponentCtlr.getLoanSummary(acct2);
-        
-        //CustomerViewComponentCtlr.generatePayoutBalance(acct3.id, String.valueOf(date.today()));
-        
-        CustomerViewComponentCtlr.getAccountLabelsMap();
-        
-        CustomerViewComponentCtlr.getPickListValues('Opportunity', 'Minimum_Interest_Period__c');
-        
-        acct3.ShippingState = 'Punjab';
-        CustomerViewComponentCtlr.saveAccount(acct3);
-        
-        Opp4.Interest_Rate__c = 2;
-        CustomerViewComponentCtlr.saveOppty(Opp4);
-        
-        contcts.email = 'email@email.com';
-        CustomerViewComponentCtlr.saveContact(contcts);
-        
-        //CustomerViewComponentCtlr.deleteAccount(acct3.id);
-        
+        CustomerViewComponentCtlr.getRecentOpportunity(acct);
         CustomerViewComponentCtlr.getLatestOppty(acct);
         
-        /*ContentNote cn = new ContentNote();
-        cn.Title = 'test';
-        cn.Content = Blob.valueOf('Hello');
-        insert cn;
-        
-        CustomerViewComponentCtlr.createRecord(cn, acct2);*/
-        
-        CustomerViewComponentCtlr.getCurrentUserInfo();
-        
-        test.stopTest();
-        
-    }
-    
-    
-    // ----->>>>> Usama <<<<<------
-    	@isTest
-    	static void Process4(){
-        	test.startTest();
-            	insertAccount();
-            	insertOpps(1);
-            	Account acc = [SELECT id from Account where Name = 'Test Account'];
-            	CustomerViewComponentCtlr.getOpportunitiesToGeneratePayout(acc.Id);
-            test.stopTest();
-    	}
-    // ----------------------------
-    
-    
-    public static void insertAccount(){
-        Id RecordTypeIdAccount = 
-            Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();
-        Account testAccount = new Account();
-        testAccount.Name='Test Account';
-        testAccount.BillingStreet = 'Testtest';
-        testAccount.BillingState = 'CA';
-        testAccount.BillingCity = 'City';
-        testAccount.BillingPostalCode = '10001';
-        testAccount.Billingcountry='Canada';
-        testAccount.ShippingStreet = 'Test';
-        testAccount.ShippingState = 'New York';
-        testAccount.ShippingCountry = 'UNITED STATES';
-        testAccount.ShippingPostalCode = '10001';
-        testAccount.ShippingCity = 'Lake Trees';
-        testAccount.Account_Type__c = 'Client';
-        testAccount.RecordTypeId = RecordTypeIdAccount;
-        insert testAccount;
-
-
-	}
-    
-    public static void insertOpps(Integer oppsCount){        
-        Account account = [select Id from Account where Name='Test Account'];
-        Account acct2 = [select Id from Account where Name='sample account'];
-        Contact contct = [select Id from Contact where lastname='test'];
-        Contact testContact = [select Id from Contact where name='testtest'];
-        system.debug(account);
-        system.debug(acct2);
-        system.debug(contct);
-        system.debug(testContact);
-        List<Opportunity> opps = new List<Opportunity>();
-        for ( Integer i = 0; i < oppsCount; i++) {
-            Opportunity testOpp = new Opportunity();
-            testOpp.Name = 'Test Opportunity_' + i;
-            testOpp.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId();
-            testOpp.AccountId = account.Id;
-            testOpp.Lawyer__c = contct.Id;
-            testOpp.CloseDate = Date.today().addDays(14);
-            testOpp.StageName = 'Closed With Loan';
-            testOpp.Law_Firm__c = acct2.Id;        
-            testOpp.Stage_Status__c = 'Approved';
-            testOpp.Type_of_Loan__c = 'Facility Loan';
-            testOpp.Primary_Contact__c = testContact.Id;
-            testOpp.Interest_Rate__c = 24.0;
-            testOpp.Minimum_Interest_Period__c = '6 months';
-            testOpp.Compounding_Interest__c = 'Semi-Annual';
-            testOpp.Interest_Deferral_Period__c = '0';
-            testOpp.Interest_Compounding_Period__c = 'Compounding Interest';
-            testOpp.Re_Assessed_Loan__c = null;
-            opps.add(testOpp);            
-        }
-        
-        insert opps;
-    }
-    
-    public static void insertDrawdowns(){
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];
-        List<Drawdown__c> drawdowns = new List<Drawdown__c>();
-        for (Opportunity opp : opps){
-            Drawdown__c d = new Drawdown__c();
-        
-            d.Opportunity__c = opp.id;
-            d.Amount__c = 1000;
-            d.Date__c = Date.today().addDays(-30);
-            d.Payment_Method__c = 'e-Transfer';
-            d.Reference_Notes__c = 'Payment to Client';
+        CustomerViewComponentCtlr.saveOppty(opp);
+        try{
+            CustomerViewComponentCtlr.saveOppty(new Opportunity());
+        }catch(exception e){
             
-            drawdowns.add(d);            
         }
-        insert drawdowns;
+        test.stopTest();
     }
     
-    public static testMethod void testCalculatePayments(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(2);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];  
-        List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq', 'Payout');
-        System.assertEquals(oppsAfterCalculation[0].Total_Payout__c, oppsAfterCalculation[0].Temp_Payment_Received__c);
-        System.assertEquals(oppsAfterCalculation[1].Temp_Payment_Received__c, 1500.0-oppsAfterCalculation[0].Total_Payout__c);        
-        Task task = [select Id, Subject, Description from Task LIMIT 1];
-        System.assertEquals('Complete posting payment of $1,500.00 for Test Account', task.Subject);
-        System.assertEquals('Payment of $1,500.00 with EFT # of eft and CHQ # of chq was calculated but not applied to Test Account', task.Description);
-        Test.stopTest();
+    public static testmethod void test_Process3(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;         
+        test.startTest();        
+        List<Opportunity> opps = CustomerViewComponentCtlr.getOpportunitiesToGeneratePayout(accId);        
+        system.assert(!opps.isEmpty());
+        test.stopTest();
     }
     
-    public static testMethod void testApplyPayments1(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(2);
-       // insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Bad Debt', false);
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[1].Id, 'Shortfall', true);        
-        System.assertEquals('Closed - Shortfall', oppsAfterApplying[0].Stage_Status__c);
-        System.assertEquals('Closed - Bad Debt', oppsAfterApplying[1].Stage_Status__c); 
-        Test.stopTest();
+    public static testmethod void test_Process4(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();        
+        decimal amount = 1;
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(accId, amount, 'Payout');        
+        system.assert(!opps.isEmpty());
+        amount = 5;
+        CustomerViewComponentCtlr.calculatePayments(accId, amount, 'Payout');
+        test.stopTest();
     }
     
-    
-    public static testMethod void testApplyPayments(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(2);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Closed Paid', false);
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[1].Id, 'Partial Payment', true);
-        System.assertEquals('Active - Partial Payment', oppsAfterApplying[0].Stage_Status__c);
-        System.assertEquals('Closed - Paid', oppsAfterApplying[1].Stage_Status__c); 
-        List<Task> tasks = [select Id from Task];
-        System.assertEquals(true, tasks.isEmpty());
-        Test.stopTest();
+    public static testmethod void test_Process5(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.changeToBadDebtStage(OppId, accId, '2018-01-01');
+        test.stopTest();
     }
-	public static testMethod void testApplyPayments2(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq');
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Surplus', true);
-        System.assertEquals('Closed - Surplus', oppsAfterApplying[0].Stage_Status__c);        
-        Test.stopTest();
+    public static testmethod void test_Process6(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.changeToSurplusStage(OppId, accId, '2018-01-01');
+        test.stopTest();
+    }
+    public static testmethod void test_Process7(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.changeToShortfallStage(OppId, accId, '2018-01-01');
+        test.stopTest();
     }
     
-    public static testMethod void testApplyMiscPayment(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1000.0, 'eft', 'chq');
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Misc Income Payment', 'eft', 'chq', opps[0].Id, 'Misc Income Payment', true);
-        List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Payment'];
-        System.assertEquals('Miscellaneous Payment', drawdowns[0].Reference_Notes__c);
-        Test.stopTest();
+    public static testmethod void test_Process8(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.applyPartialPayments(OppId, accId, '2018-01-01', 'eft', 'chq');
+        test.stopTest();
     }
-	
-    public static testMethod void testApplyRefund(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1000.0, 'eft', 'chq', 'Refund');
-        List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Refund', 'eft', 'chq', opps[0].Id, 'Refund', true);
-        List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Other'];
-        System.assertEquals('Refund', drawdowns[0].Reference_Notes__c);
-        Test.stopTest();
-    }    	
-    
-    public static testMethod void testTaskDeletion(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq', 'Payout');
-        List<Task> tasks = [select Id from Task];
-        System.assertEquals(false, tasks.isEmpty());        
-        Date payoutDate = Date.today();
-        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Closed Paid', true);
-        tasks = [select Id from Task];
-        System.assertEquals(true, tasks.isEmpty());
-        Test.stopTest();
+    public static testmethod void test_Process9(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.applyFullPayments(OppId, accId, null, '2018-01-01', 'eft', 'chq');
+        test.stopTest();
+    }
+    public static testmethod void test_Process10(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.applyMiscPayments(OppId, accId, '2018-01-01', 'eft', 'chq');
+        CustomerViewComponentCtlr.getTransactions(accId);
+        test.stopTest();
     }
     
-    public static testMethod void testTaskDeletionAmount0(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(account.Id, 1500.0, 'eft', 'chq', 'Payout');
-        List<Task> tasks = [select Id from Task];
-        System.assertEquals(false, tasks.isEmpty());        
-        CustomerViewComponentCtlr.calculatePayments(account.Id, 0.0, 'eft', 'chq', 'Payout');
-        tasks = [select Id from Task];
-        System.assertEquals(true, tasks.isEmpty());
-        Test.stopTest();
+    public static testmethod void test_Process11(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;  
+        List<Opportunity> opps = CustomerViewComponentCtlr.getOpportunities(accId);
+        test.startTest();
+        CustomerViewComponentCtlr.closeMultipleLoans(opps, accId, null, '2018-01-01');
+        CustomerViewComponentCtlr.getOpptyTransactions(accId);
+        test.stopTest();
+    }
+    public static testmethod void test_Process12(){
+        
+        String accId = [select id from account where name = 'account' limit 1].id;
+        String lawyerId = [select id from contact where lastname ='test' limit 1].Id;
+        test.startTest();
+        CustomerViewComponentCtlr.getLastOpportunity(accId);
+        CustomerViewComponentCtlr.getLawyerInfo(lawyerId);
+        Contact con = CustomerViewComponentCtlr.getLastContact(accId);
+        
+        CustomerViewComponentCtlr.saveContact(con);
+        try{
+            CustomerViewComponentCtlr.saveContact(con);
+        }catch(exception e){
+            CustomerViewComponentCtlr.saveContact(new Contact());
+        }
+        test.stopTest();
     }
     
-    public static testMethod void testCreateTaskOnPaymentApplyingError(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = [select Id, Name, Loan_Requests__c from Opportunity];
-        List<Task> tasks = [select Id from Task];
-        System.assertEquals(true, tasks.isEmpty()); 
-        CustomerViewComponentCtlr.createPaymentApplyingErrorTask(account.Id, opps[0].Id);
-        tasks = [select Id, Subject, Description from Task];
-        System.assertEquals(false, tasks.isEmpty());
-        System.assertEquals('Payment allocation failed', tasks[0].Subject);
-        System.assertEquals('Payment was not applied to: ' + opps[0].Name + ' ' + opps[0].Loan_Requests__c + '.', tasks[0].Description);
-        Test.stopTest();
+    public static testmethod void test_Process13(){
+        String acct2 = [select id from account where name = 'sample account' limit 1].id;
+        String contactId = [select id from contact where lastname = 'test' limit 1].id;
+        test.startTest();
+        CustomerViewComponentCtlr.getFinancingStatementHistory(acct2);
+        CustomerViewComponentCtlr.getFirmHistory(acct2);
+        CustomerViewComponentCtlr.getContactHistorySingle(contactId);
+        CustomerViewComponentCtlr.getContactHistory(acct2);
+        test.stopTest();
     }
     
-    public static testMethod void testDeletePaymentApplyingErrorTasks(){
-        Test.startTest();
-        insertAccount();
-        insertOpps(1);
-        insertDrawdowns();
-        Account account = [select Id from Account where Name='Test Account'];
-        List<Opportunity> opps = [select Id, Name, Loan_Requests__c from Opportunity];
-        CustomerViewComponentCtlr.createPaymentApplyingErrorTask(account.Id, opps[0].Id);
-        List<Task> tasks = [select Id from Task];
-        System.assertEquals(false, tasks.isEmpty());
-        CustomerViewComponentCtlr.deletePaymentApplyingErrorTasks(account.Id, opps[0].Id);
-        tasks = [select Id from Task];
-        System.assertEquals(true, tasks.isEmpty());
-        Test.stopTest();
+    public static testmethod void test_Process14(){
+        String accId = [select id from account where name = 'account' limit 1].id;
+        String acct2 = [select id from account where name = 'sample account' limit 1].id;
+        test.startTest();
+        CustomerViewComponentCtlr.runPayoutForAllOpps(accId,'2018-01-01');
+        try{
+            CustomerViewComponentCtlr.generatePayoutBalance(acct2,'2018-01-01');
+        }catch(exception e){
+        }
+        CustomerViewComponentCtlr.getAccountLabelsMap();
+        CustomerViewComponentCtlr.getPickListValues('Opportunity', 'Minimum_Interest_Period__c');
+        
+        CustomerViewComponentCtlr.getLoanSummary(accId);
+        CustomerViewComponentCtlr.getLoanSummary(acct2);
+        try{
+             CustomerViewComponentCtlr.runPayoutForAllOpps(accId,null);
+        }catch(exception e){
+                   }
+        test.stopTest();
     }
+    
+    public static testMethod void criticalDateTest() {
+        
+        Account acc = [SELECT Id FROM Account WHERE Name = 'account' LIMIT 1];
+        List<Critical_Date__c> critcalDateList = new List<Critical_Date__c>();
+        
+        for(Integer i = 0; i<5; i++){
+            critcalDateList.add(new Critical_Date__c(Name__c = 'Examination', Account__c = acc.Id, Date__c = Date.today()));
+        }
+        
+        try{
+            CustomerViewComponentCtlr.saveCriticalDateList(critcalDateList);
+            Test.startTest();
+            List<Critical_Date__c> result = CustomerViewComponentCtlr.getCriticalDatesList(acc.Id);
+            system.assertEquals(5, result.size());
+            CustomerViewComponentCtlr.deleteCriticalDate(critcalDateList[0].Id);
+            Test.stopTest();
+        }catch(exception e){
+            
+        }
+    }
+ 
+    public static testmethod void test_Process15(){
+        String accId = [select id from account where name = 'account' limit 1].id;
+        String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        CustomerViewComponentCtlr.getCurrentUserInfo();
 
+        Date payoutDate = Date.today();
+        String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
+        CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false);
+        test.stopTest();
+    }
+    
+    public static testmethod void test_Process16(){
+        String accId = [select id from account where name = 'account' limit 1].id;
+        test.startTest();
+        CustomerViewComponentCtlr.createPaymentTask(accId, 300.89, 'eft', 'chq');
+        CustomerViewComponentCtlr.deletePaymentTasks(accId);
+        //calculatePayments
+        test.stopTest();
+    }
 }

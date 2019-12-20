@@ -5,6 +5,7 @@
     <label>Date Last worked?attempts to RTW</label>
     <length>32768</length>
     <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>
 </CustomField>
