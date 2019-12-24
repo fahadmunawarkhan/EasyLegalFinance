@@ -662,10 +662,10 @@
                                                 <div class="slds-form-element__control">
                                                                 <span class="">
                                                                     <aura:if isTrue="{!v.oppObj.Discount_Rate__c == null}">
-                                                                        <lightning:input type="number" name="DiscountRate" label="Discount Rate" tabindex="24"
+                                                                        <lightning:input type="number" name="DiscountRate" label="Invoice Discount" tabindex="24"
                                                                                          value="0" formatter="percent-fixed" step="0.01"  disabled="true" />
                                                                         <aura:set attribute="else">
-                                                                            <lightning:input type="number" name="DiscountRate" label="Discount Rate" tabindex="24"
+                                                                            <lightning:input type="number" name="DiscountRate" label="Invoice Discount" tabindex="24"
                                                                                              value="{!v.oppObj.Discount_Rate__c}" formatter="percent-fixed" step="0.01"  disabled="true" />
                                                                         </aura:set>
                                                                     </aura:if>
@@ -734,7 +734,7 @@
                                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                                     <div class="slds-form-element__control">
                                                         <span class="">
-                                                                <lightning:input type="number" name="DiscountRate" label="Rebate Discount" tabindex="24"
+                                                                <lightning:input type="number" name="DiscountRate" label="Lawyer Rebate" tabindex="24"
                                                                 value="{!v.oppObj.Rebate_Discount__c}" formatter="percent-fixed" step="0.01"  disabled="true" />
                                                         </span>
                                                     </div>

@@ -204,7 +204,7 @@
                     <div class="slds-form-element slds-m-bottom_small slds-m-bottom_small slds-m-left_xx-large slds-m-right_xx-large">
                         <div class="slds-form-element__control">
                             <span class="">
-                                <lightning:input aura:id="rebateDiscountField" type="number" name="rebateDiscountRate" label="Rebate Discount" tabindex="30"
+                                <lightning:input aura:id="rebateDiscountField" type="number" name="rebateDiscountRate" label="Lawyer Rebate" tabindex="30"
                                                  disabled="{!not(v.rebateAllowed)}" value="{!v.assessmentProviderSchedule.Rebate_Discount__c}" formatter="percent-fixed" step="0.01"/>
                             </span>
                         </div>
