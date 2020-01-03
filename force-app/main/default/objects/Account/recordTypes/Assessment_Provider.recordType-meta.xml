@@ -78,6 +78,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Assessment Provider</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Client</fullName>
             <default>false</default>
         </values>
