@@ -31,7 +31,7 @@
                 component.set('v.columns', [
                     {label: 'Lawyer', fieldName: 'linkLawyer', type: 'url', typeAttributes: {label: { fieldName: 'LawyerName' }, target: '_blank'}, sortable: true},            
                     {label: 'Deferred Revenue Rate', fieldName: 'discount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
-                    {label: 'Lawyer Rebate', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
+                    {label: 'Client Rebate', fieldName: 'rebateDiscount', type: 'percent', typeAttributes:{minimumFractionDigits : '2'}, sortable: true},
                     {label: 'Rebate Period', fieldName: 'Rebate_Period__c', type: 'text', sortable: true},
                     {label: 'Created Date', fieldName: 'CreatedDate', type: 'date', cellAttributes: { alignment: 'right' }, typeAttributes:{ year : "numeric", month: "long", day:"2-digit"} ,sortable: true},
             		{label: 'Created By', fieldName: 'CreatedByName', type: 'text', sortable: true}

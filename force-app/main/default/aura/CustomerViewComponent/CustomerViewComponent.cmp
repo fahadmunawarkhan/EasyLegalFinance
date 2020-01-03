@@ -1154,7 +1154,7 @@
                                     <lightning:layoutItem size="6" class="slds-m-top_small">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large" style="margin-top:-1%;">
                                             <span class="slds-form-element__label">
-                                                Lawyer Rebate
+                                                Client Rebate
                                             </span>                                            
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">

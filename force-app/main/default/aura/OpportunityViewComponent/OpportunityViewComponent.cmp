@@ -734,7 +734,7 @@
                                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                                     <div class="slds-form-element__control">
                                                         <span class="">
-                                                                <lightning:input type="number" name="DiscountRate" label="Lawyer Rebate" tabindex="24"
+                                                                <lightning:input type="number" name="DiscountRate" label="Client Rebate" tabindex="24"
                                                                 value="{!v.oppObj.Rebate_Discount__c}" formatter="percent-fixed" step="0.01"  disabled="true" />
                                                         </span>
                                                     </div>
