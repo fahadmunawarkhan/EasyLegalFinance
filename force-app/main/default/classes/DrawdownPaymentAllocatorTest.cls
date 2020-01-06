@@ -1,7 +1,7 @@
 @isTest
 public class DrawdownPaymentAllocatorTest {
 @TestSetup
-    static void initailizeTestData(){
+    static void initailizeTestData(){        
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
         
@@ -21,7 +21,7 @@ public class DrawdownPaymentAllocatorTest {
         insert contactList;
         
         List<Opportunity> oppList = new List<Opportunity>();        
-        for(Integer i=0; i < 3; i++){
+        for(Integer i=0; i < 1; i++){
             oppList.add(new Opportunity(AccountId = accountList[0].Id,
                                         Name = 'Test Opportunity ' + i,
                                         Lawyer__c = contactList[1].Id,
@@ -39,9 +39,8 @@ public class DrawdownPaymentAllocatorTest {
                                         RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId()
                                        ));
             
-        }
-        
-        insert oppList;
+        }                
+        insert oppList;        
         insertDrawdowns(oppList);
     }
     public static void insertDrawdowns(List<Opportunity> oppList){
@@ -68,7 +67,9 @@ public class DrawdownPaymentAllocatorTest {
         List<Opportunity> opps = [select Id from Opportunity];
         List<Drawdown__c> drawdowns = new List<Drawdown__c>();
         Date dt = Date.newInstance(2019,01,01);
-        for (Opportunity opp : opps){
+        Opportunity opp = opps[0];
+        //for (Opportunity opp : opps)
+        {
             Drawdown__c drawdown = new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = dt, Opportunity__c = opp.Id,
                                              Amount__c = 2000, Payment_Method__c ='Payment', Payout_Date__c = Date.newInstance(2018,01,01),
                                              Reference_Notes__c = 'Partial Payment');
@@ -77,7 +78,9 @@ public class DrawdownPaymentAllocatorTest {
         insert drawdowns;
         opps = [select Id, Payout_Date__c from Opportunity];        
         System.assertEquals(false, opps.isEmpty() );
-        for (Opportunity opp : opps){
+    	opp = opps[0];
+        //for (Opportunity opp : opps)
+        {
             System.assertEquals(dt, opp.Payout_Date__c);
         }
         Test.stopTest();
