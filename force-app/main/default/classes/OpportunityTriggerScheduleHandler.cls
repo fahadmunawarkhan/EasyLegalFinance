@@ -81,7 +81,9 @@ public class OpportunityTriggerScheduleHandler extends TriggerHandler {
         }
     }
 
-    private void setOutOfDatePayments() {
+    private void setOutOfDatePayments() {        
+        if (this.updatePaymentVersion.isEmpty())
+            return;
         Scheduled_Payment__c[] spList = [Select Id From Scheduled_Payment__c Where Opportunity__c in :this.updatePaymentVersion and Current_Opportunity_Schedule_Version_Val__c = true and Status__c not in :Constants.PAYMENT_SCHEDULE_MODIFIABLE_STATUSES];
         System.debug(spList);
         for (Scheduled_Payment__c sp : spList) {

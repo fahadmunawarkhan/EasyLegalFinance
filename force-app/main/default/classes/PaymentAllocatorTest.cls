@@ -21,7 +21,7 @@ public class PaymentAllocatorTest {
         insert contactList;
         
         List<Opportunity> oppList = new List<Opportunity>();        
-        for(Integer i=0; i < 5; i++){
+        for(Integer i=0; i < 1; i++){
             oppList.add(new Opportunity(AccountId = accountList[0].Id,
                                         Name = 'Test Opportunity ' + i,
                                         Lawyer__c = contactList[1].Id,
