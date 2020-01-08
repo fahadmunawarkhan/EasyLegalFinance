@@ -43,6 +43,11 @@
                 <label>CAA</label>
             </value>
             <value>
+                <fullName>Cayuga Mutual Insurance Company</fullName>
+                <default>false</default>
+                <label>Cayuga Mutual Insurance Company</label>
+            </value>
+            <value>
                 <fullName>Certas</fullName>
                 <default>false</default>
                 <label>Certas</label>
@@ -108,6 +113,11 @@
                 <label>Federal</label>
             </value>
             <value>
+                <fullName>Federated</fullName>
+                <default>false</default>
+                <label>Federated</label>
+            </value>
+            <value>
                 <fullName>Gore</fullName>
                 <default>false</default>
                 <label>Gore</label>
@@ -161,6 +171,11 @@
                 <fullName>Optimum</fullName>
                 <default>false</default>
                 <label>Optimum</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
             </value>
             <value>
                 <fullName>Pafco</fullName>
@@ -256,11 +271,6 @@
                 <fullName>ZENITH</fullName>
                 <default>false</default>
                 <label>ZENITH</label>
-            </value>
-            <value>
-                <fullName>Other</fullName>
-                <default>false</default>
-                <label>Other</label>
             </value>
         </valueSetDefinition>
     </valueSet>
