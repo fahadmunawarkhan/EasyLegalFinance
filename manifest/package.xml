@@ -1304,6 +1304,8 @@
         <members>Opportunity.Amount_Paid_to_Assessment_Provider__c</members>
         <members>Opportunity.Deferred_Revenue__c</members>
         <members>Opportunity.Discount_Rate__c</members>
+        <members>Opportunity.Invoice_Discount__c</members>
+        <members>Opportunity.Client_Rebate__c</members>
         <members>Opportunity.Deferred_Revenue__c</members>
         <members>Opportunity.Rebate_Period__c</members>
         <members>Opportunity.Rebate_Discount__c</members>
