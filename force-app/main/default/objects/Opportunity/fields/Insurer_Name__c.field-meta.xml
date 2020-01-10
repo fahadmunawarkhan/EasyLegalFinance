@@ -272,6 +272,16 @@
                 <default>false</default>
                 <label>ZENITH</label>
             </value>
+            <value>
+                <fullName>MVACF</fullName>
+                <default>false</default>
+                <label>MVACF</label>
+            </value>
+            <value>
+                <fullName>Desjardins Financial Security</fullName>
+                <default>false</default>
+                <label>Desjardins Financial Security</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

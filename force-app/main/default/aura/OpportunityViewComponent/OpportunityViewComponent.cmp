@@ -573,7 +573,7 @@
                                             </div>
                                         </lightning:layoutItem>
                                     </lightning:layout>                        
-                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan 2'}">
+                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lawyer Loan' || v.oppObj.Type_of_Loan__c == 'Facility Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan 2'}">
                                         <lightning:layout class="slds-m-left_xx-large">
                                         <lightning:layoutItem size="8" class="slds-m-left_xx-large">
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -872,12 +872,12 @@
                                         <lightning:layoutItem size="8" >     
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                                 <span class="slds-form-element__label">
-                                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">Credit Available after Drawdowns</aura:if>
+                                                    <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lawyer Loan' || v.oppObj.Type_of_Loan__c == 'Facility Loan'}">Credit Available after Drawdowns</aura:if>
                                                     <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Treatment Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan 2'}">Total Allowance Allocated</aura:if>
                                                 </span>
                                                 <div class="slds-form-element__control" style="color: #32CD32">
                                                     <span class="" style="{!v.oppObj.Loan_Available_to_Drawdown__c >= 0 ? '':'color: #ff0000'}">
-                                                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
+                                                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lawyer Loan' || v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
                                                             <lightning:input type="Number" formatter="currency" tabindex="0" value="{!v.oppObj.Loan_Available_to_Drawdown__c}" disabled="true" />
                                                         </aura:if>
                                                         <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Treatment Loan' || v.oppObj.Type_of_Loan__c == 'Treatment Loan 2'}">
@@ -949,7 +949,7 @@
                         <aura:if isTrue="{!v.oppObj.StageName == 'Loan Approved' || v.oppObj.StageName == 'Closed With Loan' || v.oppObj.StageName == 'Re-Assessment'}">
 
                         <!-- <<<<<<<<<< Facility Payment Schedule >>>>>>>>>> -->
-                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
+                        <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lawyer Loan' || v.oppObj.Type_of_Loan__c == 'Facility Loan'}">
                             <div class="slds-grid slds-wrap " style="height: 100%;">
                                 <div class="slds-col">
                                     <lightning:card title="Facility Payment Scheduling" iconName="standard:event" variant="base" >
@@ -1429,7 +1429,7 @@
                         <div class="date-in-table">
                             <!-- <<<<<<<<<< Lump-Sum Loan Drawdowns >>>>>>>>>> -->
                             <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lump-Sum'}"> 
-                                <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Lump-Sum', 'Lump-Sum Loan Drawdowns', 'Facility Loan Drawdowns')}" iconName="standard:case" variant="base" >
+                                <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Lump-Sum', 'Lump-Sum Loan Drawdowns', if(v.oppObj.Type_of_Loan__c == 'Lawyer Loan', 'Lawyer Loan Drawdowns', 'Facility Loan Drawdowns'))}" iconName="standard:case" variant="base" >
                                     <aura:set attribute="actions">
                                         <aura:if isTrue="{!v.currentUser.Lump_Sum_drawdowns__c}">
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
@@ -1518,8 +1518,8 @@
                                 </lightning:card>
                             </aura:if>
                             <!-- <<<<<<<<<< Facility Loan Drawdowns >>>>>>>>>> -->
-                            <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Facility Loan' || v.oppObj.Type_of_Loan__c == 'Assessment'}">
-                                <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Assessment', 'Assessment Loan Drawdowns', 'Facility Loan Drawdowns')}" iconName="standard:case" variant="base" >
+                            <aura:if isTrue="{! v.oppObj.Type_of_Loan__c == 'Lawyer Loan' || v.oppObj.Type_of_Loan__c == 'Facility Loan' || v.oppObj.Type_of_Loan__c == 'Assessment'}">
+                                <lightning:card title="{! if(v.oppObj.Type_of_Loan__c == 'Assessment', 'Assessment Loan Drawdowns', if(v.oppObj.Type_of_Loan__c == 'Lawyer Loan', 'Lawyer Loan Drawdowns', 'Facility Loan Drawdowns'))}" iconName="standard:case" variant="base" >
                                     <aura:set attribute="actions">
                                         <aura:if isTrue="{!v.currentUser.Drawdowns__c}">
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
