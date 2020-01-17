@@ -60,6 +60,16 @@
                 <default>false</default>
                 <label>Settled Claim</label>
             </value>
+            <value>
+                <fullName>Trial Decision Date</fullName>
+                <default>false</default>
+                <label>Trial Decision Date</label>
+            </value>
+            <value>
+                <fullName>Other - see notes</fullName>
+                <default>false</default>
+                <label>Other - see notes</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
