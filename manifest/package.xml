@@ -727,6 +727,8 @@
         <members>Drawdown__c.Type__c</members>
         <members>Drawdown__c.Year_Target__c</members>
 		<members>Drawdown__c.Year__c</members>
+        <members>Drawdown__c.Yearly_Assessment_Target__c</members>
+        <members>Drawdown__c.Yearly_Lawyer_Target__c</members>
         <members>Drawdown__c.Conga_Assessment_Summary_Report_Print__c</members>  
         <members>Drawdown__c.Conga_Assessment_Summary_Report_View_All__c</members>
         <members>Drawdown_Payment_Allocation__c.Amount__c</members>
