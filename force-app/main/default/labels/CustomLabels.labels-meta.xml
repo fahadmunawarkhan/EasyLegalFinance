@@ -61,7 +61,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Law Count Firm Template Id</shortDescription>
-        <value>a0x190000013nCTAAY</value>
+        <value>a0x0L00000PEZxw</value>
     </labels>
     <labels>
         <fullName>Law_Firm_Count_Query_Id</fullName>
@@ -69,7 +69,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Law Firm Count Query Id</shortDescription>
-        <value>a0p19000002OxShAAK</value>
+        <value>a0p0L00000J06Nl</value>
     </labels>
     <labels>
         <fullName>Lawyer_Count_Query_Id</fullName>
@@ -77,7 +77,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Lawyer Count Query Id</shortDescription>
-        <value>a0p19000002Osw3AAC</value>
+        <value>a0p0L00000Jq0Ia</value>
     </labels>
     <labels>
         <fullName>Lawyer_Count_Template_Id</fullName>
@@ -85,7 +85,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Lawyer Count Template Id</shortDescription>
-        <value>a0x190000013kUgAAI</value>
+        <value>a0x0L00000PYPbs</value>
     </labels>
     <labels>
         <fullName>Loan_Amount_is_Blank</fullName>
@@ -109,7 +109,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Partner API Server Url</shortDescription>
-        <value>https://easylegalfinance--QA.cs24.my.salesforce.com/services/Soap/u/37.0/00D19000000F0aj</value>
+        <value>https://easylegalfinance.my.salesforce.com/services/Soap/u/37.0/00DE0000000b47J</value>
     </labels>
     <labels>
         <fullName>Payout_Date_is_Blank</fullName>
@@ -126,5 +126,21 @@
         <protected>false</protected>
         <shortDescription>Rhino Replacement Counsel Document</shortDescription>
         <value>a0x190000013wyQAAQ</value>
+    </labels>
+    <labels>
+        <fullName>Showing_Page</fullName>
+        <categories>Paginator</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Message to show what page is currently viewing on the paginator</shortDescription>
+        <value>Page {0} Of {1}</value>
+    </labels>
+    <labels>
+        <fullName>Showing_Records</fullName>
+        <categories>Paginator</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Message to show what records are currently viewing on the paginator</shortDescription>
+        <value>Showing {0} To {1} Of {2} Records</value>
     </labels>
 </CustomLabels>
