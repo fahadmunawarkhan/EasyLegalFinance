@@ -88,6 +88,11 @@
                 <label>CUMIS</label>
             </value>
             <value>
+                <fullName>Desjardins Financial Security</fullName>
+                <default>false</default>
+                <label>Desjardins Financial Security</label>
+            </value>
+            <value>
                 <fullName>Dominion</fullName>
                 <default>false</default>
                 <label>Dominion</label>
@@ -156,6 +161,11 @@
                 <fullName>Middlesex Mutual</fullName>
                 <default>false</default>
                 <label>Middlesex Mutual</label>
+            </value>
+            <value>
+                <fullName>MVACF</fullName>
+                <default>false</default>
+                <label>MVACF</label>
             </value>
             <value>
                 <fullName>Nordic</fullName>
@@ -243,6 +253,11 @@
                 <label>Trafalgar</label>
             </value>
             <value>
+                <fullName>Travelers</fullName>
+                <default>false</default>
+                <label>Travelers</label>
+            </value>
+            <value>
                 <fullName>TTC</fullName>
                 <default>false</default>
                 <label>TTC</label>
@@ -271,16 +286,6 @@
                 <fullName>ZENITH</fullName>
                 <default>false</default>
                 <label>ZENITH</label>
-            </value>
-            <value>
-                <fullName>MVACF</fullName>
-                <default>false</default>
-                <label>MVACF</label>
-            </value>
-            <value>
-                <fullName>Desjardins Financial Security</fullName>
-                <default>false</default>
-                <label>Desjardins Financial Security</label>
             </value>
         </valueSetDefinition>
     </valueSet>
