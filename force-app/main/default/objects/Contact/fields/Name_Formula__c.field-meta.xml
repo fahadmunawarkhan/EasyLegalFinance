@@ -3,7 +3,8 @@
     <fullName>Name_Formula__c</fullName>
     <description>contacts having middle name cannot be queried using name like&#39;%Patricia Jean Shroeder%&#39; This field is desgned to be used in where clause of contact query in custom lookup LEX component.</description>
     <externalId>false</externalId>
-    <formula>IF( ISBLANK( FirstName ), &#39;&#39; , FirstName &amp; &#39; &#39; )&amp;
+    <formula>IF( ISBLANK( TEXT(Salutation )), &#39;&#39; , TEXT(Salutation ) &amp; &#39; &#39; )&amp;
+IF( ISBLANK( FirstName ), &#39;&#39; , FirstName &amp; &#39; &#39; )&amp;
 IF( ISBLANK( MiddleName ), &#39;&#39; , MiddleName &amp; &#39; &#39; )&amp;
 IF( ISBLANK( LastName ), &#39;&#39; , LastName )</formula>
     <label>Name Formula</label>
