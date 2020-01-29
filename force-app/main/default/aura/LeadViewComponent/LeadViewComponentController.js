@@ -2,7 +2,8 @@
 	doInit : function(component, event, helper) {	        
 		helper.getLeadInfo(component);	
         helper.getCalendarMin(component);
-        helper.getCalendarMax(component);         
+        helper.getCalendarMax(component);
+        helper.getPickListValuesHelper(component, 'Account','ProvinceResidency__c','provinceResidencyOptions');
 	},
     
     hideLookupInput : function(component, event, helper) {	

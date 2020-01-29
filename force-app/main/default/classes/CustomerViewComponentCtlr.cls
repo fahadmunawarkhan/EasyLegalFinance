@@ -232,28 +232,22 @@ public class CustomerViewComponentCtlr {
         for(Opportunity opp : optsList){
             System.debug(searchType + ' '  + opp.Stage_Status__c);
             if ((searchType == 'Payout' && opp.Stage_Status__c != 'Paid Off') ||
-
                (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt')) ||
                (searchType == 'Refund')){
-
                 openOpsList.add(opp);
             }
         }
         
         system.debug('## openOpsList.size() ' + openOpsList.size());
         
-
         if (searchType == 'Refund'){
-
             if (openOpsList.size() > 0){
                 Opportunity opp = openOpsList.get(openOpsList.size() - 1);
                 opp.Temp_Payment_Received__c = -amount;
                 update opp;
             }
             return getOpportunities(accountId);
-
         }        
-
         Integer helper = 0;
         Decimal amountRemaining = amount;
         for(Opportunity opp : openOpsList){
@@ -375,8 +369,7 @@ public class CustomerViewComponentCtlr {
         dd.CHQ__c = chq;
         insert dd;
         
-        
-        opp.Temp_Payment_Received__c = 0;   
+            opp.Temp_Payment_Received__c = 0;   
         opp.Stage_Status__c = 'Active - Partial Payment';
         opp.Loan_Status__c = 'Active - Partial Payment';
         update opp;
@@ -424,26 +417,6 @@ public class CustomerViewComponentCtlr {
         update opp;
      
     }    
-    
-   /* @AuraEnabled
-    public static void applyRefund(String oppId, String accountId, String payoutDate, String eft, String chq){            
-        Opportunity opp = getSingleOpportunity(oppId);
-        Drawdown__c dd = new Drawdown__c();
-        
-        dd.Amount__c = -opp.Temp_Payment_Received__c;
-        dd.Payment_Method__c = 'Other';        
-        dd.Reference_Notes__c = 'Refund';        
-        dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
-        dd.Opportunity__c = oppId;        
-        dd.EFT__c = eft;
-        dd.CHQ__c = chq;        
-        insert dd;
-        
-        opp.Temp_Payment_Received__c = 0;
-        update opp;
-     
-    } */   
-    
     
     @AuraEnabled
     public static void applyRefund(String oppId, String accountId, String payoutDate, String eft, String chq){            
@@ -1356,11 +1329,9 @@ t.adminFee =  d.Amount__c;
             else if (action == 'Misc Income Payment'){
                 applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
             }
-
             else if (action == 'Refund'){
                 applyRefund(oppId, accountId, payoutDate, eft, chq);
             }   
-
             else if (action == 'Bad Debt'){
                 changeToBadDebtStage(oppId, accountId, payoutDate);
             }
