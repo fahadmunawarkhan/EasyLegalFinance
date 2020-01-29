@@ -532,6 +532,7 @@
                                                                             hideLookupInputAction="{!c.hideLookupInput}"
                                                                             label="Lawyer Name" 
                                                                             selectedRecord="{!v.selectedLookUpLawyer}"
+                                                                            fieldtoSearchIn = "Name_Formula__c"
                                                                             filter="{!'AccountId = \'' + v.selectedLookUpLawFirm.Id + '\'' }"
                                                                             additionalFields = "MailingCity,MailingState,MailingPostalCode,Province_fm__c" 
                                                                             additionalDisplayFields = "MailingCity,MailingState"/>
