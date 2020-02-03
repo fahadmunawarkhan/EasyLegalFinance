@@ -23,9 +23,8 @@
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){ 
                 component.set('v.customSetting', result);
-
-                component.set("v.businessUnitForDesign", result.Business_Unit__c == null ? 'ELFI' : result.Business_Unit__c);
-
+                component.set("v.businessUnitForDesign", result.Business_Unit__c);
+                component.set('v.conductorId', result.Conga_Conductor_Id__c);
                 return helper.getAssessments(component);
             }
         )).then(
@@ -33,6 +32,13 @@
                 component.set("v.data", result);
                 helper.setDefaultDates(component);
                 component.set("v.spinner", false);
+                
+                let intervalId = window.setInterval(
+                    $A.getCallback(function() { 
+                        helper.pingBatchJobStatus(component, helper);
+                        //self.getBatchJobStatus(component);
+                    }), 2000
+                );        
             }
         ).catch(
             function(errors){
@@ -103,9 +109,7 @@
     openLinkReport : function(component, event, helper) { 
         let lawyerId = event.currentTarget.dataset.attachment;
         let newWin;
-
-        let url = '/lightning/r/Report/00O0L000003mxbcUAA/view';
-
+        let url = '/lightning/r/Report/00O1F000000iWziUAE/view';
         
         try{                       
             newWin = window.open(url + '?fv2=' + lawyerId);
@@ -202,19 +206,32 @@
         });
         
     },
-    generateForSelected : function(component, event, helper){
+    generatePayoutBalanceForSelected : function(component, event, helper){
         if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
-            helper.generateForSelected(component);
+            helper.generatePayoutBalanceForSelected(component);
         }else{
             alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
         }
                 
     },
-    GenerateForAll : function(component, event, helper){
+    GeneratePayoutBalanceForAll : function(component, event, helper){
         if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
-            helper.GenerateForAll(component);
+            helper.GeneratePayoutBalanceForAll(component);
         }else{
             alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
+        }
+    },
+    generateFuckingPDF:function (component){
+        var newWin;
+        try{
+            newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + component.get('v.conductorId') + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
+        }
+        catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
+        { 
+            //alert();
+            this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
+            //POPUP BLOCKED
         }
     },
     downloadAttachment : function(component, event, helper){

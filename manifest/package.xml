@@ -183,6 +183,7 @@
         <members>AssessmentProviderScheduleCtlrTest</members>
         <members>AssessmentProviderScheduleTriggerTest</members>
         <members>LawyerAvailableCreditComponentCtlrTest</members>
+        <members>Batch_UpdatePayoutDateOnOppty</members>
         <name>ApexClass</name>
     </types>
     <types>

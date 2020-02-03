@@ -207,15 +207,17 @@ public with sharing class AssessmentSummaryReportCtlr {
             if(!String.isEmpty(ids))
                 strQueryOpportunity += ' AND Lawyer__c in (' + ids +')';
 
-            List<Opportunity> opportunities = Database.query(strQueryOpportunity);
+            Map<Id, Opportunity> opportunities = new Map<Id, Opportunity>((List<Opportunity>)Database.query(strQueryOpportunity));
 
+            /*
             for(Opportunity opp : opportunities){
                 opp.Payout_Date__c = payoutDate;
             }
             
             if(!opportunities.isEmpty())
                 update opportunities;
-
+*/
+            Database.executeBatch(new Batch_UpdatePayoutDateOnOppty(opportunities.keySet(), payoutDate), 50);
         }catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
@@ -267,5 +269,16 @@ public with sharing class AssessmentSummaryReportCtlr {
         catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
+    }
+    @AuraEnabled
+    public static AsyncApexJob getBatchJobStatus(){
+        List<AsyncApexJob> aaj = null;
+        try{
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+                   WHERE ApexClass.Name = 'Batch_UpdatePayoutDateOnOppty' order by CreatedDate DESC LIMIT 1];
+        }catch(Exception e){
+            throw new AuraHandledException(e.getMessage());
+        }        
+        return (aaj.size() > 0 )? aaj[0] : null;
     }
 }

@@ -2,9 +2,7 @@
     
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
     <aura:attribute name="spinner" type="Boolean" default="false" />
-
     <aura:attribute name="customSetting" type="Object" default="{'Business_Unit__c': 'ELFI'}"/>
-
     <aura:attribute name="data" type="List" />
     <aura:attribute name="drawdown" type="Drawdown__c" />
     <aura:attribute name="searchByName" type="String" />
@@ -16,6 +14,14 @@
     <aura:attribute name="reportDate" type="date" />
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" /> 
+    <aura:attribute name="conductorId" type="String" />
+    
+    <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
+    <aura:attribute name="batchJobStatus" type="String" default="" />
+    <aura:attribute name="batchJobItems" type="String" default="" />
+    <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
+    <aura:attribute name="intervalId" type="Integer"/>
+    
     
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
@@ -111,12 +117,31 @@
                     variant="neutral" type="button" label="Print Report (PDF)" />
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for Selected" onclick="{!c.generateForSelected}" />
+                &nbsp;&nbsp;&nbsp;
+                [<lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for Selected [Job]" onclick="{!c.generatePayoutBalanceForSelected}" />
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout PDF" onclick="{!c.generateFuckingPDF}" />]
+                &nbsp;&nbsp;&nbsp;
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for All" onclick="{!c.GenerateForAll}" />
+                [<lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for All [Job]" onclick="{!c.GeneratePayoutBalanceForAll}" />
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout PDF" onclick="{!c.generateFuckingPDF}" />]
             </lightning:layoutItem>
         </lightning:layout>
+    </lightning:card>
+    
+    <lightning:card>
+        <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="9">
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div style="margin-right:20px;">
+                        <span style="margin-left:5px;">{!v.batchJobItems}</span>
+                        <lightning:progressBar value="{!v.batchJobProgress}" />
+                    </div>                  
+                </lightning:layoutItem>              
+            </lightning:layout>
+        </div>
     </lightning:card>
     
     <div class="">

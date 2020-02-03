@@ -2,9 +2,7 @@
 public class AssessmentSummaryReportCtlrTest {
     
     @TestSetup
-
     public static void initailizeTestData(){
-
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
         
@@ -24,12 +22,10 @@ public class AssessmentSummaryReportCtlrTest {
                                      RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Lawyers').getRecordTypeId(),
                                      Upcoming_Hearings__c='No'));
         insert contactList;
-
         
         Attachment attach =new Attachment();   	
         attach.Name='List of Clients';
         attach.body= Blob.valueOf('Unit Test Attachment Body');
-
         attach.parentId= contactList[1].Id;
         insert attach;
         
@@ -73,7 +69,6 @@ public class AssessmentSummaryReportCtlrTest {
         }
     }
     
-
     public static testMethod void test_getAssessments(){
         Test.startTest();
         List<String> businessUnitList = AssessmentSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
@@ -81,45 +76,36 @@ public class AssessmentSummaryReportCtlrTest {
         
         List<AssessmentSummaryReportCtlr.AssessmentWrapper> assessments = AssessmentSummaryReportCtlr.getAssessmentData('', 'Consolidated', 'Lawyer__r.Name', 'ASC');
         //system.assertEquals(1, assessments.size());
-
         
         Drawdown__c drawdown = AssessmentSummaryReportCtlr.getDrawdown();
         
         Test.stopTest();
     }
     
-
     public static testMethod void test_customSettings(){
-
         Test.startTest();
         Date dt = Date.today();
         String lawyerId = [SELECT Id FROM Contact WHERE Name = 'Test Lawyer Contact' LIMIT 1].Id;
         AssessmentSummaryReportCtlr.setCustomSetting(new List<string>{lawyerId}, dt + '', dt.addDays(5) + '', 'Consolidated');
         Assessment_Summary_Report__c customSetting = AssessmentSummaryReportCtlr.getCustomSetting();
         
-
         //system.assertEquals(dt, customSetting.Payout_Date__c);
         //system.assertEquals(lawyerId, customSetting.Selected_Ids__c);
-
         
         Test.stopTest();
     }
     
-
     public static testMethod void test_generate(){
-
         
         Test.startTest();
         Date dt = Date.today();
         String lawyerId = [SELECT Id FROM Contact WHERE Name = 'Test Lawyer Contact' LIMIT 1].Id;
         Id conductorId = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
         
-
         //system.assert(conductorId != null);
         
-        Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
+        Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'ELFI');
         //system.assertEquals(conductorId, condutorIDTest);
-
         
         Test.stopTest();
     }

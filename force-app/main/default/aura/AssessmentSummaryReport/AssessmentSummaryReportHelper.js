@@ -121,7 +121,7 @@
             $A.enqueueAction(action);
         }));
     },
-    generateForSelected: function (component){
+    generatePayoutBalanceForSelected: function (component){
         component.set('v.spinner', true);
         let assessmentOpps = component.get("v.data");
         let payoutDate = component.get("v.payoutDate");
@@ -154,6 +154,7 @@
                 
                 if (state === 'SUCCESS') {
                     
+                    /*
                     var newWin;
                     try{
                     newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + response.getReturnValue() + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
@@ -164,7 +165,8 @@
                         //alert();
                         this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
                         //POPUP BLOCKED
-                    }
+                    */
+                    component.set('v.conductorId', response.getReturnValue());
                     //window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&&ReportId=&QueryId=a0p21000003rhuC&RecordId=&UrlFieldName=Conga_Batch_Lawyer_Summary__c&Id=a1T21000000osQc');
                 } else if (state === 'ERROR') {
                     var errors = response.getError();
@@ -184,7 +186,7 @@
         }
         
     },
-    GenerateForAll: function (component){
+    GeneratePayoutBalanceForAll: function (component){
         component.set('v.spinner', true);
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");
@@ -203,6 +205,7 @@
                 
             if (state === 'SUCCESS') {
                 component.set('v.spinner', false);
+                /*
                 var newWin;
                 try{
                     newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + response.getReturnValue() + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
@@ -213,7 +216,8 @@
                     //alert();
                     this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
                     //POPUP BLOCKED
-                }
+                }*/
+                component.set('v.conductorId', response.getReturnValue());
                 
             } else if (state === 'ERROR') {
                 var errors = response.getError();
@@ -228,6 +232,64 @@
         });
         $A.enqueueAction(action);
         
+    },
+    pingBatchJobStatus : function (component, helper){ 
+        console.log('pinging..');
+        helper.getBatchJobStatus(component).then(
+            function(result){
+                component.set('v.apexBatchJobOBJ', result);
+                helper.updateProgress(component);
+                //component.set("v.data", result);
+                //helper.setDefaultDates(component);
+                component.set("v.spinner", false);
+                //return helper.getBatchJobStatus(component);
+            }
+        ).catch(
+            function(errors){
+                console.log(errors);
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
+    },
+    updateProgress : function (component){
+        return new Promise(function(resolve, reject){
+            let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
+            if(apexBatchJobOBJ != null){
+                component.set('v.batchJobStatus',apexBatchJobOBJ.Status);
+                component.set('v.batchJobProgress',0);
+                component.set('v.batchJobItems', ' '+ 0 + '%'); 
+                if(apexBatchJobOBJ.Status == 'Processing' || apexBatchJobOBJ.Status == 'Completed'){
+                    component.set('v.batchJobProgress',(apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100);
+                component.set('v.batchJobItems', ' '+ parseFloat((apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100).toFixed(0) + '%');
+                }                               
+            }
+            if(apexBatchJobOBJ != null && apexBatchJobOBJ.Status == 'Completed'){
+                //$A.enqueueAction(component.get('c.getRecords'));                  
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+            
+        });
+    },
+    getBatchJobStatus : function (component){        
+        return new Promise($A.getCallback(
+            function(resolve,reject){                
+                let action = component.get('c.getBatchJobStatus');
+                action.setCallback(this,function(response){
+                    let state = response.getState();
+                    if(state === 'SUCCESS'){
+                        //component.set('v.apexBatchJobOBJ', response.getReturnValue());
+                        //self.updateProgress(component);
+                        resolve(response.getReturnValue());
+                    }else if(state === 'ERROR'){
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
     },
     setCustomSettings : function(component){
         return new Promise($A.getCallback(
