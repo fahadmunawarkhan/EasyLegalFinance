@@ -21,6 +21,8 @@ public with sharing class AssessmentSummaryReportCtlr {
         public Boolean checked {get; set;}
         @AuraEnabled
         public String attachmentId{get; set;}
+        @AuraEnabled
+        public String excelAttachmentId{get; set;}
 
         public AssessmentWrapper(){
             lawyer = '';
@@ -33,6 +35,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             availableCredit = 0;
             checked = false;
             attachmentId = '';
+            excelAttachmentId = '';
 
         }
     }
@@ -87,6 +90,7 @@ public with sharing class AssessmentSummaryReportCtlr {
         Set<Id> lawyersIdSet = new Set<Id>();
         Map<String, AssessmentWrapper> lawyerAssessmentMap = new Map<String, AssessmentWrapper>();
         Map<String,String> lawyersAttachmentsMap = new Map<String,String>();
+        Map<String,String> lawyersExcelAttachmentsMap = new Map<String,String>();        
 
         try{
             
@@ -127,11 +131,21 @@ public with sharing class AssessmentSummaryReportCtlr {
             //query to retrive attached payout attachements
             if(!lawyersIdSet.isEmpty()){
                 for(Attachment attach : [SELECT Id, ParentId FROM Attachment Where ParentId In :lawyersIdSet
-                                        AND name like '%List of Clients%' 
+                                        AND name like '%List of Clients [Assessment Loans] %pdf' 
                                         AND createddate = today order by createddate desc]){
                     if(!lawyersAttachmentsMap.containsKey(attach.ParentId))
                         lawyersAttachmentsMap.put(attach.ParentId, attach.Id);
                 }
+                
+                for(Attachment attach : [SELECT Id, ParentId, ContentType
+                                         FROM Attachment 
+                                         WHERE ParentId In :lawyersIdSet
+                                         AND name like '%List of Clients [Assessment Loans] %xlsx' 
+                                         AND createddate = today
+                                         order by createdDate desc]){
+                                             if(!lawyersExcelAttachmentsMap.containsKey(attach.ParentId))
+                                                 lawyersExcelAttachmentsMap.put(attach.ParentId, attach.Id);
+                                         }
             }            
             
 
@@ -149,9 +163,13 @@ public with sharing class AssessmentSummaryReportCtlr {
                     wrapper = lawyerAssessmentMap.get(key);
 
                     wrapper.attachmentId = '';
+                    wrapper.excelAttachmentId = '';
 
                     if(lawyersAttachmentsMap.containsKey(opp.Lawyer__c))
                         wrapper.attachmentId = '' + lawyersAttachmentsMap.get(opp.Lawyer__c);
+                    
+                    if(lawyersExcelAttachmentsMap.containsKey(opp.Lawyer__c))
+                        wrapper.excelAttachmentId = '' + lawyersExcelAttachmentsMap.get(opp.Lawyer__c);
                     
                     wrapper.lawyerId =  opp.Lawyer__c;
                     wrapper.lawyer = opp.Lawyer__r.Name;
@@ -226,6 +244,13 @@ public with sharing class AssessmentSummaryReportCtlr {
     @AuraEnabled
     public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
         try{
+            String filterByBusinessUnit = '';
+            if(businessUnitFilter == 'ELFI'){                
+                filterByBusinessUnit = 'ELFI';
+            }else if(businessUnitFilter == 'Rhino'){                
+                filterByBusinessUnit = 'Rhino';
+            }
+            
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
             String ids = '';
@@ -236,7 +261,9 @@ public with sharing class AssessmentSummaryReportCtlr {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from contact WHERE Id in ('+ ids +')';
             }else{
-                query = 'SELECT Id FROM contact where id in (SELECT lawyer__c from opportunity WHERE Type_of_Loan__c = \'Assessment\')';
+                query = 'SELECT Id FROM contact where id in (SELECT lawyer__c from opportunity WHERE Type_of_Loan__c = \'Assessment\'';
+                query += (filterByBusinessUnit == 'ELFI') ? ' AND Account.Business_Unit__c =\'ELFI\')' : 
+                (filterByBusinessUnit == 'Rhino') ? ' AND Account.Business_Unit__c =\'Rhino\')' : ')';
             }
             
             Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
@@ -270,6 +297,22 @@ public with sharing class AssessmentSummaryReportCtlr {
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
     }
+    
+    @AuraEnabled
+    public static void setConductorURLfield(Id conductorId, Boolean setPDFfield){
+        try{
+            APXT_BPM__Conductor__c conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:conductorId];
+            conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Loans_Lawyer__c';
+            if(setPDFfield)
+                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Loans_Lawyer_PDF__c';
+            
+            update conductor;
+            
+        }catch(Exception e){
+            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+        }
+    }
+    
     @AuraEnabled
     public static AsyncApexJob getBatchJobStatus(){
         List<AsyncApexJob> aaj = null;

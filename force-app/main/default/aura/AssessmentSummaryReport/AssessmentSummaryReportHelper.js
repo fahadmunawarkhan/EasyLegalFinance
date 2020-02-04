@@ -122,116 +122,95 @@
         }));
     },
     generatePayoutBalanceForSelected: function (component){
-        component.set('v.spinner', true);
-        let assessmentOpps = component.get("v.data");
-        let payoutDate = component.get("v.payoutDate");
-        let reportDate = component.get("v.reportDate");
-        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
-        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
-        
-        let selectedIds = [];
-        let oppList = [];
-        for(let i=0; i<assessmentOpps.length; i++){
-            if(assessmentOpps[i].checked == true){
-                selectedIds.push("'" + assessmentOpps[i].lawyerId + "'");
-                oppList.push(assessmentOpps[i]);
-            }
-        }
-        if(selectedIds.length == 0){
-            component.set('v.spinner', false);
-            alert("Please select records.");
-        }else{
-            //alert("Total " + selectedIds.length);
-            var action = component.get('c.generate');
-            action.setParams({
-                selectedIds : selectedIds, 
-                payoutDate : payoutDate, 
-                reportDate : reportDate,
-                businessUnitFilter: businessUnitFilterValue
-            });
-            action.setCallback(this, function (response) {
-                var state = response.getState();
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let assessmentOpps = component.get("v.data");
+                let payoutDate = component.get("v.payoutDate");
+                let reportDate = component.get("v.reportDate");
+                let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+                businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
                 
-                if (state === 'SUCCESS') {
-                    
-                    /*
-                    var newWin;
-                    try{
-                    newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + response.getReturnValue() + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
-                    }
-                    catch(e){}
-                    if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
-                    { 
-                        //alert();
-                        this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
-                        //POPUP BLOCKED
-                    */
-                    component.set('v.conductorId', response.getReturnValue());
-                    //window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&&ReportId=&QueryId=a0p21000003rhuC&RecordId=&UrlFieldName=Conga_Batch_Lawyer_Summary__c&Id=a1T21000000osQc');
-                } else if (state === 'ERROR') {
-                    var errors = response.getError();
-                    console.log(JSON.stringify(errors[0]));
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            this.errorsHandler(errors)
-                        }
-                    } else {
-                        this.unknownErrorsHandler();
+                let selectedIds = [];
+                let oppList = [];
+                for(let i=0; i<assessmentOpps.length; i++){
+                    if(assessmentOpps[i].checked == true){
+                        selectedIds.push("'" + assessmentOpps[i].lawyerId + "'");
+                        oppList.push(assessmentOpps[i]);
                     }
                 }
-                component.set('v.spinner', false);
-            });
-            $A.enqueueAction(action);
-            
-        }
-        
+                if(selectedIds.length == 0){
+                    component.set('v.spinner', false);
+                    alert("Please select records.");
+                }else{
+                    //alert("Total " + selectedIds.length);
+                    var action = component.get('c.generate');
+                    action.setParams({
+                        selectedIds : selectedIds, 
+                        payoutDate : payoutDate, 
+                        reportDate : reportDate,
+                        businessUnitFilter: businessUnitFilterValue
+                    });
+                    action.setCallback(this, function (response) {
+                        var state = response.getState();
+                        
+                        if (state === 'SUCCESS') {
+                            component.set('v.conductorId', response.getReturnValue());
+                            resolve(response.getReturnValue());
+                        } else if (state === 'ERROR') {
+                            reject(response.getError());
+                        }                        
+                    });
+                    $A.enqueueAction(action);                    
+                }
+            }));
     },
     GeneratePayoutBalanceForAll: function (component){
-        component.set('v.spinner', true);
-        let payoutDate = component.get("v.payoutDate");
-        let reportDate = component.get("v.reportDate");
-        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
-        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
-        
-        var action = component.get('c.generate');
-        action.setParams({ 
-            selectedIds : [], 
-            payoutDate : payoutDate, 
-            reportDate : reportDate,
-            businessUnitFilter: businessUnitFilterValue
-        });
-        action.setCallback(this, function (response) {
-            var state = response.getState();
+        return new Promise($A.getCallback(
+            function(resolve,reject){
+                component.set('v.spinner', true);
+                let payoutDate = component.get("v.payoutDate");
+                let reportDate = component.get("v.reportDate");
+                let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+                businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
                 
-            if (state === 'SUCCESS') {
-                component.set('v.spinner', false);
-                /*
-                var newWin;
-                try{
-                    newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + response.getReturnValue() + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
-                }
-                catch(e){}
-                if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
-                { 
-                    //alert();
-                    this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
-                    //POPUP BLOCKED
-                }*/
-                component.set('v.conductorId', response.getReturnValue());
-                
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
+                var action = component.get('c.generate');
+                action.setParams({ 
+                    selectedIds : [], 
+                    payoutDate : payoutDate, 
+                    reportDate : reportDate,
+                    businessUnitFilter: businessUnitFilterValue
+                });
+                action.setCallback(this, function (response) {
+                    var state = response.getState();
+                    
+                    if (state === 'SUCCESS') {                        
+                        component.set('v.conductorId', response.getReturnValue());
+                        resolve(response.getReturnValue());
+                        
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());                        
                     }
-                } else {
-                    this.unknownErrorsHandler();
+                });
+                $A.enqueueAction(action);
+            }));
+    },
+    setConductorURLfield : function (component, generatePDF){
+        return new Promise($A.getCallback(function(resolve, reject){
+            let action = component.get('c.setConductorURLfield');
+            action.setParams({
+                conductorId : component.get('v.conductorId'),
+                setPDFfield : generatePDF
+            });
+            action.setCallback(this,function(response){
+                let state = response.getState();
+                if(state === 'SUCCESS'){
+                    resolve(response.getReturnValue());
+                }else if(state === 'ERROR'){
+                    reject(response.getError());
                 }
-            }
-        });
-        $A.enqueueAction(action);
-        
+            });
+            $A.enqueueAction(action);
+        }));
     },
     pingBatchJobStatus : function (component, helper){ 
         console.log('pinging..');
@@ -265,6 +244,8 @@
                 }                               
             }
             if(apexBatchJobOBJ != null && apexBatchJobOBJ.Status == 'Completed'){
+                window.clearInterval(component.get('v.intervalId'));
+                component.set("v.disablePrintButtn", false);
                 //$A.enqueueAction(component.get('c.getRecords'));                  
                 resolve(true);
             }else{

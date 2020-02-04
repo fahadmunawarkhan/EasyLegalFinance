@@ -106,6 +106,7 @@ public class AssessmentSummaryReportCtlrTest {
         
         Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'ELFI');
         //system.assertEquals(conductorId, condutorIDTest);
+        AssessmentSummaryReportCtlr.setConductorURLfield(condutorIDTest, true);
         
         Test.stopTest();
     }

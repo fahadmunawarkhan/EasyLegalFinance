@@ -38,7 +38,8 @@
                         helper.pingBatchJobStatus(component, helper);
                         //self.getBatchJobStatus(component);
                     }), 2000
-                );        
+                ); 
+                component.set('v.intervalId', intervalId);
             }
         ).catch(
             function(errors){
@@ -184,9 +185,9 @@
         )).then(function(result){            
             component.set('v.drawdown',result);
             let url = result.Conga_Assessment_Summary_Report_View_All__c;
-            let target = event.getSource();
+            var selectedMenuItemValue = event.getParam("value");
 
-            if(target.get('v.label') == 'View All (PDF)'){
+            if(selectedMenuItemValue == 'ViewAllPDF'){
                 url += '%26'+'DefaultPDF=1';
             }
             let newWin;
@@ -205,34 +206,82 @@
             helper.errorsHandler(errors);
         });
         
-    },
-    generatePayoutBalanceForSelected : function(component, event, helper){
-        if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
-            helper.generatePayoutBalanceForSelected(component);
+    },    
+    generatePayoutBalanceButtnClick : function(component, event, helper){ 
+    	var selectedMenuItemValue = event.getParam("value");
+        component.set('v.spinner', true);
+        if(component.get("v.selectedBusinessUnitFilter") != "Consolidated" && selectedMenuItemValue == 'generatePayoutBalanceForAll'){
+            helper.GeneratePayoutBalanceForAll(component).then($A.getCallback(
+                function(result){
+                    component.set('v.spinner', false);
+                    component.set("v.disablePrintButtn", true);
+                    let intervalId = window.setInterval(
+                        $A.getCallback(function() { 
+                            helper.pingBatchJobStatus(component, helper);
+                            //self.getBatchJobStatus(component);
+                        }), 2000
+                    ); 
+                    component.set('v.intervalId', intervalId);
+                }
+            )).catch(
+                function(errors){
+                    console.log('Error ' + errors);
+                    component.set("v.spinner", false);
+                    helper.errorsHandler(errors);
+                }
+            );
+        }else if(component.get("v.selectedBusinessUnitFilter") != "Consolidated" && selectedMenuItemValue == 'generatePayoutBalanceForSelected'){
+            helper.generatePayoutBalanceForSelected(component).then($A.getCallback(
+                function(result){
+                    component.set('v.spinner', false);
+                    component.set("v.disablePrintButtn", true);
+                    let intervalId = window.setInterval(
+                        $A.getCallback(function() { 
+                            helper.pingBatchJobStatus(component, helper);
+                            //self.getBatchJobStatus(component);
+                        }), 2000
+                    ); 
+                    component.set('v.intervalId', intervalId);
+                }
+            )).catch(
+                function(errors){
+                    console.log('Error ' + errors);
+                    component.set("v.spinner", false);
+                    helper.errorsHandler(errors);
+                }
+            );
         }else{
+            component.set('v.spinner', false);
             alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
         }
+    },
+    generatePayoutDocumentButtnClick : function(component, event, helper){
+        component.set("v.spinner", true);
+        
+        let generatePDF = event.getParam("value") == 'generatePayoutPDF' ? true : false;
+        helper.setConductorURLfield(component, generatePDF).then($A.getCallback(
+            function(result){
+                component.set("v.spinner", false);
+                let url = '/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + component.get('v.conductorId');
                 
-    },
-    GeneratePayoutBalanceForAll : function(component, event, helper){
-        if(component.get("v.selectedBusinessUnitFilter") != "Consolidated"){
-            helper.GeneratePayoutBalanceForAll(component);
-        }else{
-            alert("Can not generate payouts for selected business unit. Please select ELFI or Rhino from dropdown.");
-        }
-    },
-    generateFuckingPDF:function (component){
-        var newWin;
-        try{
-            newWin = window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&myconductorid=' + component.get('v.conductorId') + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
-        }
-        catch(e){}
-        if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
-        { 
-            //alert();
-            this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
-            //POPUP BLOCKED
-        }
+                var newWin;
+                try{
+                    newWin = window.open( url + '&ReturnPath=/lightning/n/Assessment_Loans?0.source=alohaHeader');
+                }
+                catch(e){}
+                if(!newWin || newWin.closed || typeof newWin.closed=='undefined') 
+                { 
+                    //alert();
+                    this.showToast('Error', 'Pop-up is blocked please click allow in the top right corner of browser in address bar!');
+                    //POPUP BLOCKED
+                }
+            }
+        )).catch(function(errors){
+            console.log('Error ' + errors);
+            component.set("v.spinner", false);
+            helper.errorsHandler(errors);
+        });
+        
     },
     downloadAttachment : function(component, event, helper){
         let attachmentId = event.currentTarget.dataset.attachment;

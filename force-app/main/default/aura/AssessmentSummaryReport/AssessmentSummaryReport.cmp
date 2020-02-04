@@ -22,12 +22,34 @@
     <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
     <aura:attribute name="intervalId" type="Integer"/>
     
+    <aura:attribute name="disablePrintButtn" type="Boolean" default="true"/>
     
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" /> 
 
     
+    <lightning:card>
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem size="12">                                
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                        <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                    </span>
+                    <h2>Please Rerun the job before generating payout documents to get precise results.
+                    </h2>
+                    <!--
+                        <div class="slds-notify__close">                            
+                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.closeWarning}" >
+                                <lightning:icon iconName="utility:close" alternativeText="close" size="xx-small" />
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>-->
+                </div>                
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
     
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
@@ -80,7 +102,8 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"
+                                                        onchange="{!c.searchButton}"/>
                                 </div>
                             </span>
                         </div>
@@ -105,26 +128,26 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
-                    variant="neutral" type="button" label="View All (Excel)" />
-            </lightning:layoutItem>
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
-                    variant="neutral" type="button" label="View All (PDF)" />                
+                <lightning:buttonMenu aura:id="menu" onselect="{! c.viewAllButtnClick }" label="View All" alternativeText="View All">
+                    <lightning:menuItem value="ViewAll" label="View All (Excel)" />
+                    <lightning:menuItem value="ViewAllPDF" label="View All (PDF)" />
+                </lightning:buttonMenu>
             </lightning:layoutItem>
             <lightning:layoutItem >
                 <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printReportButtnClick}"
                     variant="neutral" type="button" label="Print Report (PDF)" />
             </lightning:layoutItem>
             <lightning:layoutItem >
-                &nbsp;&nbsp;&nbsp;
-                [<lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for Selected [Job]" onclick="{!c.generatePayoutBalanceForSelected}" />
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout PDF" onclick="{!c.generateFuckingPDF}" />]
-                &nbsp;&nbsp;&nbsp;
+                <lightning:buttonMenu aura:id="payoutMenu" onselect="{! c.generatePayoutBalanceButtnClick }" label="Generate Payout Balance" alternativeText="Generate Payout Balance">
+                    <lightning:menuItem value="generatePayoutBalanceForSelected"  label="Generate Payout Balance for Selected" />
+                    <lightning:menuItem  value="generatePayoutBalanceForAll" label="Generate Payout for All" />
+                </lightning:buttonMenu>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                [<lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for All [Job]" onclick="{!c.GeneratePayoutBalanceForAll}" />
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout PDF" onclick="{!c.generateFuckingPDF}" />]
+                <lightning:buttonMenu aura:id="generatePayoutMenu" onselect="{! c.generatePayoutDocumentButtnClick }" label="Generate Payout Document" alternativeText="Generate Payout Document">
+                    <lightning:menuItem disabled="{!v.disablePrintButtn}" value="generatePayoutExcel"  label="Generate Payout (Excel)" />
+                    <lightning:menuItem disabled="{!v.disablePrintButtn}" value="generatePayoutPDF" label="Generate Payout (PDF)" />
+                </lightning:buttonMenu>
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>
@@ -278,12 +301,17 @@
                             <td>
                                 <div class="slds-truncate">
                                     <lightning:layout pullToBoundary="small" >
-                                        <lightning:layoutItem size="6" padding="horizontal-small">
-                                            <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
+                                        <lightning:layoutItem size="4" padding="horizontal-small">
+                                            <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="small" alternativeText="file"/></a></span>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="6" padding="horizontal-small">
+                                        <lightning:layoutItem size="4" padding="horizontal-small">
                                             <aura:if isTrue="{!item.attachmentId != ''}">
-                                                <span Title= "Preview" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
+                                                <span Title= "Preview pdf" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
+                                            </aura:if>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="4" padding="horizontal-small">
+                                            <aura:if isTrue="{!item.excelAttachmentId != ''}">
+                                                <span Title= "Preview excel" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.excelAttachmentId}"><lightning:icon class="icn" iconName="doctype:excel" size="small" alternativeText="file"/></a></span>
                                             </aura:if>
                                         </lightning:layoutItem>
                                     </lightning:layout>
