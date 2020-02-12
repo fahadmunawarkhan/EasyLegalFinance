@@ -123,7 +123,7 @@
     
     saveDrawdowns : function(component, event, helper){
         component.set("v.spinner", true);
-        helper.saveDrawdowns(component);
+        helper.saveDrawdownsAndUpdateList(component);
     },
     
     savePaymentDrawdowns : function(component, event, helper){
@@ -509,6 +509,15 @@
         //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
     },
+	handleRejectSuccess : function(component, event, helper) {
+        helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+        //helper.getServiceProvidersList(component);
+    },
+    handleRejectCancel: function(component, event, helper) {
+        //helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+    },      
     refreshDiscountButton : function(component, event, helper){
         
         var confirm = window.confirm('Are you sure you want to apply the recent discount rate of lawyer by assessment provider?');

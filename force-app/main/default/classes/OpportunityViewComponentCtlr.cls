@@ -151,7 +151,7 @@ public class OpportunityViewComponentCtlr {
 
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Drawdown__c WHERE Opportunity__c =: oppId order by Date__c ASC, Id ASC';
+        strQuery += ' FROM Drawdown__c WHERE Opportunity__c =: oppId order by Date__c ASC, Name ASC';
         
         // Still need to handle exceptions
         drawDownList = Database.query(strQuery);        
@@ -243,7 +243,7 @@ public class OpportunityViewComponentCtlr {
         try{
             Drawdown__c drawdown = new Drawdown__c(Opportunity__c=oppId);            
             insert drawdown;
-            DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(new Set<Id>{oppId});
+            DrawdownTriggerHandler.mergeAdminFees(new Set<Id>{oppId});
         } catch (DMLException e){
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
@@ -257,7 +257,7 @@ public class OpportunityViewComponentCtlr {
         try{
             Drawdown__c drawdown = new Drawdown__c(Opportunity__c=oppId, Payment_Method__c='Payment');            
             insert drawdown;
-            DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(new Set<Id>{oppId});
+            DrawdownTriggerHandler.mergeAdminFees(new Set<Id>{oppId});
         } catch (DMLException e){
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
@@ -390,7 +390,7 @@ public class OpportunityViewComponentCtlr {
         
         strQuery += ', (SELECT Id, Name, Amount__c, Date__c, CreatedDate, Payment_Method__c, Reference_Notes__c, CHQ__c, EFT__c, Scheduled_Payment__c, Can_Be_Reversed__c'+
                      ' FROM Drawdowns__r' +
-                     ' ORDER BY Date__c ASC, Id ASC)';
+                     ' ORDER BY Date__c ASC, Name ASC)';
         strQuery += ', (SELECT Id, Name, Date_Received__c, Provider_Invoice_Number__c, Amount__c, Amount_Paid__c, CreatedDate, Paid__c, Paid_Date__c, Payment_Amount_Available__c, Payment_Requested__c, Status__c, Scheduled_Payment__c'+
                      ' FROM Opportunity_Service_Provider_Invoices__r' +
                      ' ORDER BY Paid__c ASC, Paid_Date__c DESC, CreatedDate DESC)';

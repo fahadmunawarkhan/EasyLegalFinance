@@ -9,7 +9,9 @@
     ISPICKVAL(Reference_Notes__c, &#39;Loan Payout&#39;) , 
     ISPICKVAL(Reference_Notes__c, &#39;Miscellaneous Payment&#39;),
     ISPICKVAL(Reference_Notes__c, &#39;Payment Shortfall&#39;),
-    ISPICKVAL(Reference_Notes__c, &#39;Bad Debt&#39;)
+    ISPICKVAL(Reference_Notes__c, &#39;Bad Debt&#39;),
+    ISPICKVAL(Reference_Notes__c, &#39;Payment Rejected&#39;),
+    ISPICKVAL(Reference_Notes__c, &#39;Payment Halted&#39;)
   ), ( Total_Amount__c * -1) , Total_Amount__c )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Formula Amount</label>

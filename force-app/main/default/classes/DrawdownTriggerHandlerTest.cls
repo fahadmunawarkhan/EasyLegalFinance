@@ -38,11 +38,12 @@ public with sharing class DrawdownTriggerHandlerTest {
         insert Opp;
         Date dt = Date.today();
         Critical_Date__c cd = new Critical_Date__c(Date__c = dt.addDays(1), Account__c = accountList[0].Id, Name__c = 'Examination');
-        insert cd;
-        insertDrawdown(Opp.Id);
+        insert cd;        
     }
     
-    public static void insertDrawdown(String OppId){
+    public static void insertDrawdown(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        String OppId = clientOpportunity.Id;
         List<Drawdown__c> drawdownList = new List<Drawdown__c>();
         for(Integer i=0; i < 2; i++){
             drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = OppId,
@@ -54,13 +55,15 @@ public with sharing class DrawdownTriggerHandlerTest {
         }
     }
     public static testMethod void validatePaymentChangeInsertTest(){
+        insertDrawdown();        
         Test.startTest();
         Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
-        insertDrawdown(clientOpportunity.Id);
+        insertDrawdown();
         Test.stopTest();
     }
     
     public static testMethod void validatePaymentChangeUpdateTest(){
+        insertDrawdown();
         Test.startTest();
         Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         List<Drawdown__c> dlist = [SELECT Id, Date__c, Amount__c, Payment_Method__c FROM Drawdown__c];
@@ -73,6 +76,7 @@ public with sharing class DrawdownTriggerHandlerTest {
     }
 
     public static testMethod void validatePaymentDeleteTest(){
+        insertDrawdown();
         Test.startTest();
         Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
@@ -91,6 +95,37 @@ public with sharing class DrawdownTriggerHandlerTest {
         system.assertEquals(0, dlistUpdated[0].Sum_of_Repayments__c,'Payments Allocated should again be zero.');
 
         delete dlistUpdated; // for good measure make sure the original drawdown can be deleted too.
+
+        Test.stopTest();
+    }
+    
+    public static testMethod void createAdminFeeRejectionsTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today(),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 475, Payment_Method__c ='Admin Fee', Payout_Date__c = Date.today(),
+                                            Reference_Notes__c = 'Admin Fee'));
+        
+        insert dlistOriginal;        
+        Test.startTest();        
+        List<Drawdown__c> dlistUpdated = [SELECT Id, Date__c, Amount__c, Admin_Fee__c, Payment_Method__c,Sum_of_Repayments__c  FROM Drawdown__c where Admin_Fee__c != NULL];
+        System.debug('Updated ' + dlistUpdated.get(0).Id + ' ' + dlistUpdated.get(0).Amount__c + ' ' + dlistUpdated.get(0).Admin_Fee__c);
+        Drawdown__c rejectionDrawdown = new Drawdown__c();
+        rejectionDrawdown.Opportunity__c = dlistOriginal.get(0).Opportunity__c;        
+        rejectionDrawdown.Payment_Method__c = 'Payment';  
+        rejectionDrawdown.Reference_Notes__c = 'Payment Rejected';
+        rejectionDrawdown.Reason_to_Reverse_Payment__c = 'Client Error';
+        rejectionDrawdown.Amount__c = dlistOriginal.get(0).Amount__c;
+        rejectionDrawdown.Principal_Reversed__c = dlistOriginal.get(0).Amount__c;
+        rejectionDrawdown.Date__c = dlistOriginal.get(0).Date__c;
+        rejectionDrawdown.Payment_To_Reverse__c = dlistUpdated.get(0).Id;
+        insert rejectionDrawdown;        
+        List<Drawdown__c> adminFeeRejections = [SELECT Id, Date__c, Amount__c, Payment_Method__c, Payment_To_Reverse__c  FROM Drawdown__c where Reference_Notes__c='Payment Rejected' and Payment_To_Reverse__c=:dlistOriginal.get(1).Id];        
+        System.assertEquals(1, adminFeeRejections.size());
+        System.assertEquals(dlistOriginal.get(1).Amount__c, adminFeeRejections.get(0).Amount__c);
 
         Test.stopTest();
     }

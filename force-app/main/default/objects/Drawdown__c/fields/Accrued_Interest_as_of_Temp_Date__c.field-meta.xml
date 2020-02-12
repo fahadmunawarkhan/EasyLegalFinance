@@ -3,7 +3,6 @@
     <fullName>Accrued_Interest_as_of_Temp_Date__c</fullName>
     <externalId>false</externalId>
     <formula>IF (OR( ISPICKVAL(Reference_Notes__c,&quot;Referral Fee&quot;),
-		ISPICKVAL(Reference_Notes__c,&quot;Payment Rejected&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Refund&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
 IF( ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),0,(Outstanding_Balance_as_of_Temp_Date__c-Amount_Adjusted_for_Payments_b4_Temp_Dt__c)+Interest_up_to_Last_Repayment_b4_Temp_Dt__c))</formula>

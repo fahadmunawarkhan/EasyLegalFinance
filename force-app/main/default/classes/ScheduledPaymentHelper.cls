@@ -190,7 +190,7 @@ public with sharing class ScheduledPaymentHelper {
         //update oppMap.values();
         */
 
-        DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(oppIds);
+        DrawdownTriggerHandler.mergeAdminFees(oppIds);
 
         return spList;
     }

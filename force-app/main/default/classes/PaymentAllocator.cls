@@ -20,13 +20,18 @@ History
 
 	// Define custom exception
 	public class PayoutDateInconsistentException extends Exception {} // Throws this if Payout date on Drawdown not consistent with Transaction Date on Payment. 
+    public class PaymentToReverseIsNotSetException extends Exception {}     
 
 	@InvocableMethod(label='Allocate Payments' description='Create Drawdown Payment Allocation records to associate Payment Drawdown with Advance Drawdown')
 	public static void AllocatePayments (List<ID> paymentIds) {
-
 		// Get the Payments
-		list<Drawdown__c> payments = [select name, Outstanding_Balance_as_of_Payout_Date__c,Date__c,Id,Opportunity__c,Opportunity__r.Payout_Date__c 
+		list<Drawdown__c> pmts = [select name, Outstanding_Balance_as_of_Payout_Date__c,Date__c,Reference_Notes__c, Id,Opportunity__c,Opportunity__r.Payout_Date__c 
 									  from Drawdown__c where id in :paymentIds];
+        list<Drawdown__c> payments = new list<Drawdown__c>();
+        for (Drawdown__c p : pmts){
+            if (p.Reference_Notes__c != 'Payment Rejected' && p.Reference_Notes__c != 'Payment Halted')
+                payments.add(p);
+		}
 
 		// Get all Opportunities
 		list<ID> opportunityIds = new List<ID>();
@@ -59,7 +64,7 @@ History
                 Drawdown__c singleAdvance = [select Name,date__c,Outstanding_Balance_as_of_Payout_Date__c,Id, Opportunity__c, Payout_Date__c, Temp_Payout_Date__c, 
 									  				Interest_End_Date__c, Accrued_Interest_as_of_Payout_Date__c,Amount__c, Interest_repaid__c, Principal_repaid__c, 
                                              		Opportunity__r.Interest_Accrued_as_of_Payout_Date__c, Opportunity__r.Drawdown_Total_wo_Payment__c, 
-                                             		Opportunity__r.Sum_of_Principal_Repayments__c
+                                             		Opportunity__r.Sum_of_Principal_Repayments__c, Opportunity__r.Interest_Reversed__c
 									  		from Drawdown__c
 									  		where Id = : a.Id ];
                 
@@ -90,6 +95,8 @@ History
                     
                     if(SumPrincipalRepaymentsAux == 0 && singleAdvance.Opportunity__r.Sum_of_Principal_Repayments__c != null){
                     	SumPrincipalRepaymentsAux = singleAdvance.Opportunity__r.Sum_of_Principal_Repayments__c;
+                        if (singleAdvance.Opportunity__r.Interest_Reversed__c != null)
+                            SumPrincipalRepaymentsAux -= singleAdvance.Opportunity__r.Interest_Reversed__c;
                     } else if (SumPrincipalRepaymentsAux == 0 && singleAdvance.Opportunity__r.Sum_of_Principal_Repayments__c == null){
                         SumPrincipalRepaymentsAux = 0;
                     }
@@ -138,5 +145,51 @@ History
 		//system.debug('xxxxxxxxxxxxxxxxxx Payments Allocations created=>'+allocations.size());
 		//system.debug('xxxxxxxxxxxxxxxxxx END Allocate Payments xxxxxxxxxxxxxxxxxx');
 		return;
-	} 
+	}     
+    
+    public static void allocateRejectionDrawdowns(List<Id> rejectionDrawdownIds){
+        List<Drawdown__c> rejectionDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, Opportunity__c,Opportunity__r.Payout_Date__c 
+									  from Drawdown__c where id in :rejectionDrawdownIds];
+        List<Id> drawdownToReverseIds = new List<Id>();
+        for (Drawdown__c rejectionDrawdown : rejectionDrawdowns){
+			drawdownToReverseIds.add(rejectionDrawdown.Payment_To_Reverse__c);            
+        }
+        List<Drawdown__c> drawdownsToReverse = [select Id, Name, Payout_Date__c, temp_payout_date__c, Opportunity__c, Outstanding_Balance_as_of_Payout_Date__c,
+                                                Accrued_Interest_as_of_Payout_Date__c, Interest_End_Date__c
+                                                from Drawdown__c where Id in :drawdownToReverseIds];
+        List<Drawdown_Payment_Allocation__c> allocations = new List<Drawdown_Payment_Allocation__c>();
+        for (Drawdown__c rejectionDrawdown : rejectionDrawdowns){
+            Decimal paymentBalance = 0.00 - rejectionDrawdown.Outstanding_Balance_as_of_Payout_Date__c;  
+            if (paymentBalance > 0){
+                Drawdown__c drawdownToReverse = null;            
+                for (Drawdown__c d : drawdownsToReverse){
+                    if (rejectionDrawdown.Payment_To_Reverse__c == d.Id)
+                        drawdownToReverse = d;
+                }
+                if (drawdownToReverse == null){
+                    throw new PaymentToReverseIsNotSetException('Payment to reverse is not set');
+                }
+                if (drawdownToReverse.Payout_Date__c <> rejectionDrawdown.date__c && drawdownToReverse.opportunity__c == rejectionDrawdown.opportunity__c){
+                    throw new PayoutDateInconsistentException('Drawdown ' + drawdownToReverse.name + ', with a Payout Date of:' + drawdownToReverse.Payout_Date__c + ' is not consistent with Payment date on ' + rejectionDrawdown.name+ ' of '+ rejectionDrawdown.date__c +'. Payments cannot be allocated.');
+                }
+                Drawdown_Payment_Allocation__c newAllocation = 
+                            new Drawdown_Payment_Allocation__c (Amount__c=rejectionDrawdown.Amount__c, drawdown__c=drawdownToReverse.id,payment__c=rejectionDrawdown.id, 
+                                                                payout_date__c=drawdownToReverse.payout_date__c, temp_payout_date__c=drawdownToReverse.temp_payout_date__c, 
+                                                                Transaction_Date__c=rejectionDrawdown.date__c, opportunity__c=rejectionDrawdown.opportunity__c,
+                                                                Interest_Accrued_to_Transaction_Date__c = drawdownToReverse.Accrued_Interest_as_of_Payout_Date__c,
+                                                                Interest_End_Date__c = drawdownToReverse.Interest_End_Date__c);
+                //System.debug('allocateRejectionDrawdowns ' + newAllocation.Amount__c  + ' ' + drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c + ' ' + rejectionDrawdown.Principal_Reversed__c);
+                if (newAllocation.Amount__c < drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c ){
+                    newAllocation.Principal_Repaid__c = newAllocation.Amount__c;
+                    newAllocation.Interest_Repaid__c = 0.0;                    
+                }
+                else{
+                    newAllocation.Principal_Repaid__c = rejectionDrawdown.Principal_Reversed__c;
+					newAllocation.Interest_Repaid__c = drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c - rejectionDrawdown.Principal_Reversed__c;                    
+                }
+                allocations.add(newAllocation);
+            }
+        }
+        insert allocations;
+    }
 }

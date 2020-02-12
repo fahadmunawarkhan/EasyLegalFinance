@@ -7,7 +7,7 @@ global class Batch_MergeAdminFeeWithOpptyDrawdown implements Database.Batchable<
     
     global void execute(Database.BatchableContext BC,List<Opportunity> scope)
     {
-        DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(new Map<Id,Opportunity>(scope).keySet());
+        DrawdownTriggerHandler.mergeAdminFees(new Map<Id,Opportunity>(scope).keySet());
     }
     
     global void finish(Database.BatchableContext BC)

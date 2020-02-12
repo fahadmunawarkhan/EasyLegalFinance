@@ -568,10 +568,10 @@ public class CustomerViewComponentCtlr {
             Set<Id> oppSet = oppsIds.keyset();
             
             // Building the query
-            String strQuery = 'SELECT EFT__c, CHQ__c, Amount__c, Total_Amount__c, Admin_Fee__c, Reference_Notes__c, Date__c, Opportunity__c, Opportunity__r.Interest_Rate__c, Opportunity__r.Amount, Opportunity__r.Loan_Requests__c,';
+            String strQuery = 'SELECT Name, EFT__c, CHQ__c, Amount__c, Total_Amount__c, Admin_Fee__c, Reference_Notes__c, Date__c, Opportunity__c, Opportunity__r.Interest_Rate__c, Opportunity__r.Amount, Opportunity__r.Loan_Requests__c,';
             strQuery += ' Total_Outstanding_Balance__c, Total_Accrued_Interest__c, Total_Per_Diem__c, Admin_Outstanding_Balance__c, Admin_Accrued_Interest__c, Admin_Per_Diem__c, Accrued_Interest_as_of_Payout_Date__c,';
-            strQuery += ' Outstanding_Balance_as_of_Payout_Date__c, Per_Diem_as_of_Payout_Date__c, Payment_Method__c, Principal_Repaid__c, Payout_Date__c, Formula_Amount__c, Interest_Repaid__c'; 
-            strQuery += ' FROM Drawdown__c where reference_notes__c!=\'Referral Fee\' and reference_notes__c!=\'Assessment Fee\' and reference_notes__c!=\'Admin Fee\' and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc ';
+            strQuery += ' Outstanding_Balance_as_of_Payout_Date__c, Per_Diem_as_of_Payout_Date__c, Payment_Method__c, Principal_Repaid__c, Payout_Date__c, Formula_Amount__c, Interest_Repaid__c, Principal_Reversed__c, Payment_To_Reverse__r.Payment_Method__c'; 
+            strQuery += ' FROM Drawdown__c where reference_notes__c!=\'Referral Fee\' and reference_notes__c!=\'Assessment Fee\' and reference_notes__c!=\'Admin Fee\' and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc, Name asc ';
             // and reference_notes__c!=\'Admin Fee\'
             // *** Still need to handle exceptions ***
             // Executing the query to retrieve the list
@@ -608,15 +608,31 @@ t.adminFee =  d.Amount__c;
                 t.paymentDate = d.Date__c;
                 
                 if(t.paymentMethod != 'Payment'){
+                    if(t.referenceNotes == 'Refund'){                        
+                        t.paymentAmount = 0;    
+                        t.accruedInterest = -d.Total_Amount__c;
+                    } 
+                    else{
                     t.paymentAmount = d.Formula_Amount__c;
                     t.accruedInterest = d.Total_Accrued_Interest__c;
+                    }
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
                 } else {                    
 					if(t.referenceNotes == 'Payment Surplus' || t.referenceNotes == 'Miscellaneous Payment' ){
                         t.paymentAmount = 0;    
                         t.accruedInterest = d.Total_Amount__c;
-                    } else{                    
+                    } 
+                    else if(t.referenceNotes == 'Payment Rejected' || t.referenceNotes == 'Payment Halted' ){
+                        if (d.Payment_To_Reverse__r.Payment_Method__c != null && d.Payment_To_Reverse__r.Payment_Method__c == 'Admin Fee'){
+                            t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                            t.adminFee = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                        }
+                        else
+                            t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
+                        t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
+                    }
+                    else{                    
                         t.paymentAmount = 0 - ( d.Principal_Repaid__c != null ? d.Principal_Repaid__c : 0 );
                         t.accruedInterest = 0 - ( d.Interest_Repaid__c != null ? d.Interest_Repaid__c : 0 );
                     }                    
@@ -645,7 +661,8 @@ t.adminFee =  d.Amount__c;
                 double outstandingBalanceSubtotal = 0.0;
                 double perDiemSubtotal = 0.0;
                 for(TransactionsWrapper w : ot.transactions){
-                    if(w.paymentMethod != 'Admin Fee'){
+                    //if(w.paymentMethod != 'Admin Fee')
+                    {
                         paymentSubtotal += w.paymentAmount;
                     }
                     //advanceSubtotal += w.totalPerOpportunity;
@@ -976,6 +993,10 @@ t.adminFee =  d.Amount__c;
                                      AND Opportunity__r.Stage_Status__c LIKE 'Active%'];
         system.debug('### totalDD: ' + totalDD[0]);
         
+            AggregateResult[] totalReversed = [Select sum(Interest_Reversed__c) interestReversed from Opportunity
+                                               WHERE AccountId =: accountId 
+                                               AND (Stage_Status__c LIKE 'Active%')];
+            
         // Grab total amount of all drawdowns from all oppts
         //AggregateResult[] totalDDtreatment = [    Select sum(Amount__c) totalAmount from Service_Provider_Drawdown__c 
         //                                          where Opportunity_Service_Provider_MD__r.Opportunity__c IN :oppsIds];
@@ -1012,6 +1033,14 @@ t.adminFee =  d.Amount__c;
             }
         }
         
+            if(totalReversed[0] != null){
+                if(totalReversed[0].get('interestReversed') != null){
+                    loanSummary.balancePrincipal += Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
+                    loanSummary.balanceInterest -= Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
+                }        
+            }
+            
+            
         /* Verifying if the totalDDtreatment list is not empty
         if(totalDDtreatment[0] != null){
             if(totalDDtreatment[0].get('totalAmount') != null){

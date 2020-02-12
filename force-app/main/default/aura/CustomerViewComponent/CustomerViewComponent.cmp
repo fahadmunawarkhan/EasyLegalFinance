@@ -1606,7 +1606,7 @@
                                                                                opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
                                                                                opp.Stage_Status__c != 'Closed - Bad Debt' }">
                                                                 <td class="slds-border_top">
-                                                                    <ui:outputCurrency value="{!opp.Drawdown_Total__c}" />       
+                                                                    <ui:outputCurrency value="{!opp.Drawdown_Principal_Total__c}" />       
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr>                
@@ -1658,7 +1658,7 @@
                                                                                opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
                                                                                opp.Stage_Status__c != 'Closed - Bad Debt' }">
                                                                 <td class="slds-border_top">
-                                                                    <ui:outputCurrency value="{!opp.Payout_Interest__c}" />
+                                                                    <ui:outputCurrency value="{!opp.Drawdown_Total_Interest__c}" />
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr>
@@ -1671,7 +1671,7 @@
                                                                                opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
                                                                                opp.Stage_Status__c != 'Closed - Bad Debt' }">
                                                                 <td class="slds-border_top">
-                                                                    <ui:outputCurrency value="{!opp.Admin_Fee_Roll_up__c}" />
+                                                                    <ui:outputCurrency value="{!opp.Drawdown_Admin_Fee_Total__c}" />
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr> 

@@ -61,14 +61,13 @@
             hide-checkbox-column="true"
         ></c-funding-details-datatable-wrapper>
     </div>
-
     <c-modal header="Reverse Payment" class="reverseModal">
-        <c-reverse-payment-form
+        <c-rejected-payment-form
             if:true={showReverseForm}
             onsuccess={handleReverseSuccess}
             oncancel={hideReverseModal}
-            show-processed-fields="true"
-            scheduled-payment-id={selectedScheduledPaymentId}
-        ></c-reverse-payment-form>
+            show-processed-fields="true"            
+            drawdown-to-reverse-id={drawdownId}
+        ></c-rejected-payment-form>      
     </c-modal>
 </template>
