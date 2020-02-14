@@ -19,15 +19,31 @@
     <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
     <aura:attribute name="batchJobStatus" type="String" default="" />
     <aura:attribute name="batchJobItems" type="String" default="" />
-    <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
+    <aura:attribute name="apexBatchProgressResult" type="Decimal" default="0.0" />
     <aura:attribute name="intervalId" type="Integer"/>
     
     <aura:attribute name="disablePrintButtn" type="Boolean" default="true"/>
+    <aura:attribute name="showRecordSelectModal" type="Boolean" default="false" />
     
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" /> 
 
+	 <!-- attributes -->
+    <aura:attribute name="accData" type="List"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="selection" type="List" access="PRIVATE"/>
+    <aura:attribute name="rowKeys" type="List" access="PRIVATE"/>
+    <aura:attribute name="selectedRows" type="List" access="PRIVATE"/>
+    <aura:attribute name="selectedLawyer" type="String" access="PRIVATE" default=""/>
+    <aura:attribute name="tempSelectedRows" type="List" access="PRIVATE"/>
+    <aura:attribute name="selectedRowsMap" type="Map" default="{}"/>
+    
+    <aura:attribute name="filteredData" type="List" />
+    <aura:attribute name="timer" type="Integer"/>
+    
+    <!--<aura:method name="OnTabActive" action="{!c.doInit}" access="global"/>-->
     
     <lightning:card>
         <lightning:layout horizontalAlign="center">
@@ -169,6 +185,9 @@
     
     <div class="">
         <lightning:card title="Assessment Summary" iconName="standard:case" variant="base">
+            <p class="slds-m-left_medium slds-m-bottom_medium">
+                <b>Selected: {!v.selectedRowsCount}</b>
+            </p>
             <aura:set attribute="actions">
                     <lightning:buttonIcon iconName="utility:refresh"  onclick="{! c.searchButton }" size="large" alternativeText="Refresh" />                
             </aura:set>
@@ -234,10 +253,15 @@
                 <tbody>
                     <aura:iteration items="{!v.data}" var="item" >
                         <tr>
-                            <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox value="{!item.checked}" change="{!c.check}"/></div></td>
+                            <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox class="check-box" disabled="true" value="{!item.checked}" change="{!c.check}"/></div></td>
                             <td>
-                                <div class="slds-truncate">
+                                <div class="slds-truncate">                                    
                                     <a href="{!'/'+item.lawyerId}" >{!item.lawyer}</a>
+                                    <span class="slds-clearfix">
+                                        <span class="slds-float_right" onclick="{!c.openRecordSelectModal}"  data-value="{!item.lawyerId}" style="cursor: pointer;">
+                                            <lightning:icon iconName="utility:new_window" size="x-small"/>
+                                        </span>
+                                    </span>
                                 </div>
                             </td>
                             <td>
@@ -301,15 +325,20 @@
                             <td>
                                 <div class="slds-truncate">
                                     <lightning:layout pullToBoundary="small" >
-                                        <lightning:layoutItem size="4" padding="horizontal-small">
+                                        <lightning:layoutItem size="3" padding="horizontal-small">
                                             <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="small" alternativeText="file"/></a></span>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="4" padding="horizontal-small">
+                                        <lightning:layoutItem size="3" padding="horizontal-small">
+                                            <aura:if isTrue="{!not(v.disablePrintButtn)}">
+                                                <span Title= "Consolidate Payouts" class="attach-icon" ><a  onclick="{!c.openConsolidatedPayoutAttachment}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
+                                            </aura:if>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem size="3" padding="horizontal-small">
                                             <aura:if isTrue="{!item.attachmentId != ''}">
                                                 <span Title= "Preview pdf" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
                                             </aura:if>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="4" padding="horizontal-small">
+                                        <lightning:layoutItem size="3" padding="horizontal-small">
                                             <aura:if isTrue="{!item.excelAttachmentId != ''}">
                                                 <span Title= "Preview excel" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.excelAttachmentId}"><lightning:icon class="icn" iconName="doctype:excel" size="small" alternativeText="file"/></a></span>
                                             </aura:if>
@@ -324,6 +353,61 @@
             </table>
         </lightning:card>
     </div>
+    
+    <!-- <<<<<<<<<< POPUP MODAL >>>>>>>>>> -->
+    <aura:if isTrue="{!v.showRecordSelectModal==true}" >
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon size="medium" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" onclick="{! c.closeRecordSelectModal }" alternativeText="Close" />
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Select Records</h2>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div>
+                        <div>
+                            <lightning:layout>
+                                <lightning:layoutItem size="3" >
+                                    <div></div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="6">
+                                    <div class="slds-m-bottom_small" >
+                                        <lightning:input
+                                                         aura:id="enter-search"
+                                                         name="enter-search"
+                                                         label="Search by File Number or Name"
+                                                         type="search"
+                                                         onchange="{!c.searchClientRecords}"
+                                                         />
+                                    </div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="3">
+                                    <div></div>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </div>
+                        
+                        <div style="height: 300px">
+                            <lightning:datatable
+                                                 columns="{! v.columns }"
+                                                 data="{! v.filteredData }"
+                                                 keyField="Id"
+                                                 selectedRows="{! v.selectedRows }"
+                                                 onrowselection="{! c.updateSelectedRows }"/>
+                            
+                        </div>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Cancel" title="Cancel" onclick="{! c.closeRecordSelectModal }"/>
+                    <lightning:button variant="brand" label="Save" title="Save" onclick="{! c.saveSelectedRows }"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        
+        
+    </aura:if>
     
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">

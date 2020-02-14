@@ -14,7 +14,6 @@
     setDefaultDates : function(component){
 
         let customSettings = component.get('v.customSetting');
-        console.log('customSettings ' + JSON.stringify(customSettings));
         let dt = new Date();
         
         let defaultPayoutDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate() + '';
@@ -127,6 +126,7 @@
                 let assessmentOpps = component.get("v.data");
                 let payoutDate = component.get("v.payoutDate");
                 let reportDate = component.get("v.reportDate");
+                let selectedRowsMap = component.get("v.selectedRowsMap");
                 let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
                 businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
                 
@@ -138,7 +138,7 @@
                         oppList.push(assessmentOpps[i]);
                     }
                 }
-                if(selectedIds.length == 0){
+                if(selectedIds.length == 0 && component.get("v.selectedRowsCount") == 0){
                     component.set('v.spinner', false);
                     alert("Please select records.");
                 }else{
@@ -148,7 +148,8 @@
                         selectedIds : selectedIds, 
                         payoutDate : payoutDate, 
                         reportDate : reportDate,
-                        businessUnitFilter: businessUnitFilterValue
+                        businessUnitFilter: businessUnitFilterValue,
+                        selectedIdsMap : selectedRowsMap
                     });
                     action.setCallback(this, function (response) {
                         var state = response.getState();
@@ -178,7 +179,8 @@
                     selectedIds : [], 
                     payoutDate : payoutDate, 
                     reportDate : reportDate,
-                    businessUnitFilter: businessUnitFilterValue
+                    businessUnitFilter: businessUnitFilterValue,
+                    selectedIdsMap : {}
                 });
                 action.setCallback(this, function (response) {
                     var state = response.getState();
@@ -213,19 +215,17 @@
         }));
     },
     pingBatchJobStatus : function (component, helper){ 
-        console.log('pinging..');
-        helper.getBatchJobStatus(component).then(
+        console.log('Is pinging..');
+        helper.getBatchJobStatus(component).then($A.getCallback(
             function(result){
-                component.set('v.apexBatchJobOBJ', result);
+                console.log('result ' + result);
+                component.set('v.apexBatchProgressResult', result);
                 helper.updateProgress(component);
-                //component.set("v.data", result);
-                //helper.setDefaultDates(component);
                 component.set("v.spinner", false);
-                //return helper.getBatchJobStatus(component);
             }
-        ).catch(
+        )).catch(
             function(errors){
-                console.log(errors);
+                console.log('ERROR --> ' + JSON.stringify(errors))
                 component.set("v.spinner", false);
                 helper.errorsHandler(errors);
             }
@@ -233,20 +233,13 @@
     },
     updateProgress : function (component){
         return new Promise(function(resolve, reject){
-            let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
-            if(apexBatchJobOBJ != null){
-                component.set('v.batchJobStatus',apexBatchJobOBJ.Status);
-                component.set('v.batchJobProgress',0);
-                component.set('v.batchJobItems', ' '+ 0 + '%'); 
-                if(apexBatchJobOBJ.Status == 'Processing' || apexBatchJobOBJ.Status == 'Completed'){
-                    component.set('v.batchJobProgress',(apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100);
-                component.set('v.batchJobItems', ' '+ parseFloat((apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100).toFixed(0) + '%');
-                }                               
-            }
-            if(apexBatchJobOBJ != null && apexBatchJobOBJ.Status == 'Completed'){
+            let apexBatchProgressResult = component.get('v.apexBatchProgressResult');
+                component.set('v.batchJobProgress',apexBatchProgressResult);
+                component.set('v.batchJobItems', ' '+ parseFloat(apexBatchProgressResult).toFixed(0) + '%');
+            
+            if(parseFloat(apexBatchProgressResult).toFixed(0) == 100){
                 window.clearInterval(component.get('v.intervalId'));
-                component.set("v.disablePrintButtn", false);
-                //$A.enqueueAction(component.get('c.getRecords'));                  
+                component.set("v.disablePrintButtn", false);   
                 resolve(true);
             }else{
                 resolve(false);
@@ -254,17 +247,17 @@
             
         });
     },
-    getBatchJobStatus : function (component){        
+    getBatchJobStatus : function (component){
         return new Promise($A.getCallback(
             function(resolve,reject){                
                 let action = component.get('c.getBatchJobStatus');
                 action.setCallback(this,function(response){
                     let state = response.getState();
                     if(state === 'SUCCESS'){
-                        //component.set('v.apexBatchJobOBJ', response.getReturnValue());
-                        //self.updateProgress(component);
+                        console.log('rr ' + response.getReturnValue());
                         resolve(response.getReturnValue());
                     }else if(state === 'ERROR'){
+                        console.log('ERROR --- ' + JSON.stringify(response.getError()));
                         reject(response.getError());
                     }
                 });
@@ -328,6 +321,51 @@
             "type": type
         });
         toastEvent.fire();
+    },
+    getClientAccounts : function(component, lawyerIdParam){
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let action = component.get("c.getClientAccounts");
+                let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+                businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+                action.setParams({
+                    lawyerId : lawyerIdParam,
+                    businessUnitFilter: businessUnitFilterValue
+                });
+                
+                action.setCallback(this, function(response){
+                    let state = response.getState();
+                    if(state === 'SUCCESS'){
+                        resolve(response.getReturnValue());
+                    }else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));        
+    },
+    resetAttributes : function(component){
+        component.set("v.tempSelectedRows", []);
+        component.set("v.selectedRowsMap", {});
+        component.set("v.selectedLawyer", "");
+        component.set("v.selectedRowsCount", 0);
+        component.set("v.selectedRows", []);
+    },
+    filterRecords: function(component, filter) {
+        component.set("v.spinner", true);
+        var accData = component.get("v.accData"),
+            term = filter,
+            results = accData, regex;
+        try {
+            regex = new RegExp(term, "i");
+            // filter checks each row, constructs new array where function returns true
+            results = accData.filter(row=>regex.test(row.AccountNumber) || regex.test(row.Name_Formula__c));
+        } catch(e) {
+            // invalid regex, use full list
+        }
+        component.set("v.filteredData", results);
+        component.set("v.spinner", false);
     }
     
 })
