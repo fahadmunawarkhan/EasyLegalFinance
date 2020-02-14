@@ -22,8 +22,8 @@ public with sharing class AssessmentSummaryReportCtlr {
         @AuraEnabled
         public String attachmentId{get; set;}
         @AuraEnabled
-        public String excelAttachmentId{get; set;}
-
+        public String excelAttachmentId{get; set;}   
+        
         public AssessmentWrapper(){
             lawyer = '';
             lawyerId = '';
@@ -36,7 +36,6 @@ public with sharing class AssessmentSummaryReportCtlr {
             checked = false;
             attachmentId = '';
             excelAttachmentId = '';
-
         }
     }
     
@@ -157,7 +156,6 @@ public with sharing class AssessmentSummaryReportCtlr {
                     AssessmentWrapper wrapper = null;
                     if(!lawyerAssessmentMap.containsKey(key))
                         lawyerAssessmentMap.put(key, new AssessmentWrapper());
-
                     
                     
                     wrapper = lawyerAssessmentMap.get(key);
@@ -206,9 +204,56 @@ public with sharing class AssessmentSummaryReportCtlr {
         setBusinessUnitCustomSetting(BusinessUnit);
         return lawyerAssessmentMap.values();
     }
-
+    
+    @AuraEnabled
+    public static List<Account> getClientAccounts(String lawyerId, String businessUnitFilter){
+        
+        String filterByBusinessUnit = '';
+        if(businessUnitFilter == 'ELFI'){                
+            filterByBusinessUnit = 'ELFI';
+        }else if(businessUnitFilter == 'Rhino'){                
+            filterByBusinessUnit = 'Rhino';
+        }else{
+            filterByBusinessUnit = 'Consolidated';
+        }
+        
+        String query = '';
+        query += 'SELECT Id, AccountNumber, Name_Formula__c, Date_of_Advance__c, Total_Client_Rebate__c,';
+        query += ' Total_Amount_Loaned__c, All_Payout_Balance__c';
+        query += ' FROM Account';
+        query += ' WHERE Id in (SELECT AccountId FROM Opportunity WHERE Lawyer__c = :lawyerId';
+        query += ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'';
+        query += filterByBusinessUnit != 'Consolidated'? ' AND Account.Business_Unit__c =:filterByBusinessUnit' : '';
+        query += ' AND Type_of_Loan__c = \'Assessment\')';
+        
+        return Database.query(query);
+    }
+    
+    public static void updateSelectedForAssessmentField(Set<Id> accIds){
+        system.debug('accIds size ' + accIds.size());
+        system.debug('accIds ' + accIds);
+        
+        if(!accIds.isEmpty())
+            Database.executeBatch(new Batch_UpdateSelectedForAssessmentPayout(accIds, false), 50);
+        Database.executeBatch(new Batch_UpdateSelectedForAssessmentPayout(accIds, true), 50);
+        
+    }
+    
+    public static void abortExistingJobs(){
+        for ( AsyncApexJob aJob : [ SELECT Id ,Status, ApexClass.Name 
+                                   FROM AsyncApexJob
+                                   WHERE Status!='Aborted'
+                                   AND (ApexClass.Name = 'Batch_UpdatePayoutDateOnOppty'
+                                        OR ApexClass.Name = 'Batch_UpdateSelectedForAssessmentPayout')
+                                   and Status!='Completed' ] ){
+                                       
+                                       System.AbortJob(aJob.Id);
+                                       
+                                   }
+    }
+    
      /******************* Method to generate the payout balance *********************/
-    public static void generatePayoutBalance(Date payoutDate, String businessUnitFilter, String ids){
+    public static void generatePayoutBalance(Date payoutDate, String businessUnitFilter, String ids, Set<Id> accountIds){
         try{
 
             String assessment = 'Assessment';
@@ -224,9 +269,11 @@ public with sharing class AssessmentSummaryReportCtlr {
                 ' AND Account.Business_Unit__c =:businessUnitFilter': '';
             if(!String.isEmpty(ids))
                 strQueryOpportunity += ' AND Lawyer__c in (' + ids +')';
+            strQueryOpportunity += !accountIds.isEmpty()? ' AND AccountId IN :accountIds' : '';
 
             Map<Id, Opportunity> opportunities = new Map<Id, Opportunity>((List<Opportunity>)Database.query(strQueryOpportunity));
-
+            
+            //Selected_for_Assessment_Payout__c
             /*
             for(Opportunity opp : opportunities){
                 opp.Payout_Date__c = payoutDate;
@@ -235,6 +282,8 @@ public with sharing class AssessmentSummaryReportCtlr {
             if(!opportunities.isEmpty())
                 update opportunities;
 */
+            abortExistingJobs();
+            updateSelectedForAssessmentField(accountIds);
             Database.executeBatch(new Batch_UpdatePayoutDateOnOppty(opportunities.keySet(), payoutDate), 50);
         }catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
@@ -242,8 +291,15 @@ public with sharing class AssessmentSummaryReportCtlr {
     }
 
     @AuraEnabled
-    public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
-        try{
+    public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter, Map<String,List<Id>> selectedIdsMap){
+        Set<Id> accountIds = new Set<Id>();
+        try{            
+            system.debug('selectedOppIdsMap ' + selectedIdsMap);
+            system.debug(JSON.serialize(selectedIdsMap));
+            
+            for(String key : selectedIdsMap.keySet())
+                accountIds.addAll(selectedIdsMap.get(key));
+            
             String filterByBusinessUnit = '';
             if(businessUnitFilter == 'ELFI'){                
                 filterByBusinessUnit = 'ELFI';
@@ -271,7 +327,7 @@ public with sharing class AssessmentSummaryReportCtlr {
             customSettings.Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date__c;
             customSettings.Business_Unit__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
 
-            generatePayoutBalance(customSettings.Payout_Date__c, customSettings.Business_Unit__c, ids);
+            generatePayoutBalance(customSettings.Payout_Date__c, customSettings.Business_Unit__c, ids, accountIds);
             
             if(String.isEmpty(customSettings.Conga_Conductor_Id__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Assessment Lawyer query - ' + UserInfo.getName(),
@@ -314,14 +370,49 @@ public with sharing class AssessmentSummaryReportCtlr {
     }
     
     @AuraEnabled
-    public static AsyncApexJob getBatchJobStatus(){
+    public static Decimal getBatchJobStatus(){
         List<AsyncApexJob> aaj = null;
+        Decimal batchJobProgress = 0.0;
+        Decimal jobItemsProcessed = 0.0;
+        Decimal totalJobItems = 0.0;
+        Integer count = 0;
+        
         try{
+            //Batch_UpdateSelectedForAssessmentPayout
+            for(AsyncApexJob apexBatchJob : [SELECT Id, ApexClassId, Status, NumberOfErrors, 
+                                             TotalJobItems, JobItemsProcessed, createdDate 
+                                             FROM AsyncApexJob
+                                             WHERE ApexClass.Name = 'Batch_UpdateSelectedForAssessmentPayout'
+                                             AND Status != 'Aborted'
+                                             order by CreatedDate DESC LIMIT 2]){
+                                                 if(apexBatchJob.Status == 'Processing' || apexBatchJob.Status == 'Completed' ||
+                                                    apexBatchJob.Status == 'Holding'){
+                                                     jobItemsProcessed += apexBatchJob.JobItemsProcessed;
+                                                     totalJobItems += apexBatchJob.TotalJobItems;
+                                                 }
+                                                 count++;
+                                             }
+            
             aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
-                   WHERE ApexClass.Name = 'Batch_UpdatePayoutDateOnOppty' order by CreatedDate DESC LIMIT 1];
+                   WHERE ApexClass.Name = 'Batch_UpdatePayoutDateOnOppty' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
+            
+            if(!aaj.isEmpty() && (aaj[0].Status == 'Processing' || aaj[0].Status == 'Completed' || aaj[0].Status == 'Holding')){
+                jobItemsProcessed += aaj[0].JobItemsProcessed;
+                totalJobItems += aaj[0].TotalJobItems;
+                count++;
+            }
+            if(totalJobItems == 0)
+                totalJobItems++;
+            batchJobProgress = ((jobItemsProcessed/totalJobItems) * 100);
+            
+            if(count == 0)
+                batchJobProgress = 100;
+            
+            
+            system.debug('batchJobProgress ' + batchJobProgress);
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());
         }        
-        return (aaj.size() > 0 )? aaj[0] : null;
+        return batchJobProgress;
     }
 }

@@ -1,10 +1,19 @@
 ({
 	doInit : function(component, event, helper) {
-		
+		        
         component.set("v.spinner", true);
         component.set("v.countSelected",0);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
+        
+        component.set('v.columns', [
+            {label: 'File No.', fieldName: 'AccountNumber', type: 'text'},
+            {label: 'Name', fieldName: 'Name_Formula__c', type: 'text'},
+            {label: 'Date of Advance', fieldName: 'Date_of_Advance__c', type: 'date'},
+            {label: 'Client Rebate', fieldName: 'Total_Client_Rebate__c', type: 'currency'},
+            {label: 'Principal Borrowed', fieldName: 'Total_Amount_Loaned__c', type: 'currency'},
+            {label: 'Outstanding Balance', fieldName: 'All_Payout_Balance__c', type: 'currency'}
+        ]);
 
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
 
@@ -36,7 +45,6 @@
                 let intervalId = window.setInterval(
                     $A.getCallback(function() { 
                         helper.pingBatchJobStatus(component, helper);
-                        //self.getBatchJobStatus(component);
                     }), 2000
                 ); 
                 component.set('v.intervalId', intervalId);
@@ -48,16 +56,13 @@
                 helper.errorsHandler(errors);
             }
         );
-        
-        
 	},
     searchButton : function(component, event, helper){
         component.set("v.spinner", true);
         component.set("v.countSelected",0);
+        helper.resetAttributes(component);
         helper.getAssessments(component).then($A.getCallback(
             function(result){
-                console.log('--DATA--');
-                console.log(result[0]);
                 component.set("v.data", result);
                 component.set("v.businessUnitForDesign", component.get("v.selectedBusinessUnitFilter"));
                 return helper.getDrawdown(component);
@@ -85,7 +90,7 @@
         let field = selectedItem.dataset.field;
         let sortOrder = component.get('v.sortOrder');
         let oldField = component.get('v.sortField');
-        
+        helper.resetAttributes(component);
         sortOrder = (sortOrder == 'DESC' && oldField == field) ? 'ASC' : 'DESC';
         
         component.set('v.sortField',field);   
@@ -215,6 +220,7 @@
                 function(result){
                     component.set('v.spinner', false);
                     component.set("v.disablePrintButtn", true);
+                    window.clearInterval(component.get('v.intervalId'));
                     let intervalId = window.setInterval(
                         $A.getCallback(function() { 
                             helper.pingBatchJobStatus(component, helper);
@@ -235,6 +241,7 @@
                 function(result){
                     component.set('v.spinner', false);
                     component.set("v.disablePrintButtn", true);
+                    window.clearInterval(component.get('v.intervalId'));
                     let intervalId = window.setInterval(
                         $A.getCallback(function() { 
                             helper.pingBatchJobStatus(component, helper);
@@ -286,5 +293,93 @@
     downloadAttachment : function(component, event, helper){
         let attachmentId = event.currentTarget.dataset.attachment;
         window.open('/servlet/servlet.FileDownload?file=' + attachmentId + '');
+    },
+    openRecordSelectModal : function(component, event, helper){
+        component.set("v.spinner", true);
+        let selectedItem = event.currentTarget;
+        let lawyerId = selectedItem.dataset.value;
+        component.set("v.selectedLawyer", lawyerId);
+        let data = component.get("v.data");
+        
+        let selectedRowsMap =  component.get("v.selectedRowsMap");
+        component.set("v.selectedRows", []);
+        if(selectedRowsMap[lawyerId] != undefined && selectedRowsMap[lawyerId] != null){
+            component.set("v.selectedRows", selectedRowsMap[lawyerId]);
+        }
+        
+        helper.getClientAccounts(component, lawyerId).then(
+            function(result){                
+                component.set("v.accData", result);
+                component.set("v.filteredData", result);                
+                component.set("v.spinner", false);
+                component.set("v.showRecordSelectModal", true);
+            }
+        ).catch(function(errors){
+            console.log('Error ' + errors);
+            component.set("v.spinner", false);
+            helper.errorsHandler(errors);
+        });
+    },
+    saveSelectedRows : function(component, event, helper){
+        component.set("v.spinner", true);
+        
+        let data = component.get("v.data");
+        let lawyerId = component.get("v.selectedLawyer");
+        let selectedRowsMap =  component.get("v.selectedRowsMap");        
+        let selectedRows = component.get("v.tempSelectedRows");
+        
+        let selectedIds = [];
+        for(let i=0; i< selectedRows.length; i++)
+            selectedIds.push(selectedRows[i].Id);
+        
+        selectedRowsMap[lawyerId] = selectedIds;
+        
+        //mark parent checkbox
+       	
+        for(let i = 0; i < data.length; i++){
+            if(data[i].lawyerId == lawyerId){
+                data[i].checked = selectedRowsMap[lawyerId].length > 0? true : false;
+                break;
+            }                
+        }
+        component.set("v.data", data);
+        
+        let count = 0;
+        for(let key in selectedRowsMap){
+            count += selectedRowsMap[key].length;
+        }
+        
+        component.set("v.selectedRowsCount", count);
+        
+        component.set("v.selectedRows", selectedRowsMap);
+        component.set("v.spinner", false);
+        component.set("v.showRecordSelectModal", false);
+    },
+    closeRecordSelectModal : function(component, event, helper){        
+        component.set("v.spinner", false);
+        component.set("v.showRecordSelectModal", false);
+    },
+    updateSelectedRows : function(component, event, helper){
+        var selectedRows = event.getParam('selectedRows');
+        component.set("v.tempSelectedRows", selectedRows);
+    },
+    searchClientRecords : function (component, event, helper) {
+        
+        var timer = component.get('v.timer');
+        clearTimeout(timer);
+        
+        var timer = setTimeout(function(){
+            var queryTerm = component.find('enter-search').get('v.value');
+            helper.filterRecords(component, queryTerm);
+            component.set('v.timer', null);
+        }, 300);
+        
+        component.set('v.timer', timer);
+        
+       
+    },
+    openConsolidatedPayoutAttachment : function(component, event, helper){
+        let lawyerId = event.currentTarget.dataset.attachment;
+        window.open('/apex/GenerateConsolidatedAssessmentPayout?lawyerId=' + lawyerId + '&businessUnit='+ component.get("v.selectedBusinessUnitFilter"), '_blank');
     }
 })

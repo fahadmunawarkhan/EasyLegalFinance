@@ -1,12 +1,11 @@
-@isTest
-public class AssessmentSummaryReportCtlrTest {
+@isTest public class GenerateConsolidatedAssessmentPayoutTest {
     
     @TestSetup
     public static void initailizeTestData(){
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
         
-        accountList.add( new Account(Name = 'Test Client Account', Authorization_Clause__c = 'No', Business_unit__c='ELFI', 
+        accountList.add( new Account(Name = 'Test Client Account', Authorization_Clause__c = 'No', Business_unit__c='ELFI', Selected_for_Assessment_Payout__c = true,
                                      RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Client').getRecordTypeId()));
         accountList.add( new Account(Name = 'Test LawFirm Account', Authorization_Clause__c = 'No', 
                                      RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Law Firm').getRecordTypeId()));
@@ -69,50 +68,17 @@ public class AssessmentSummaryReportCtlrTest {
         }
     }
     
-    public static testMethod void test_getAssessments(){
-        Test.startTest();
-        List<String> businessUnitList = AssessmentSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
-        //system.assert(businessUnitList.size() > 0);
+    public static testMethod void test_MainMethod(){
+        Contact lawyer = [Select Id from Contact WHERE Name = 'Test Lawyer Contact'];
         
-        List<AssessmentSummaryReportCtlr.AssessmentWrapper> assessments = AssessmentSummaryReportCtlr.getAssessmentData('', 'Consolidated', 'Lawyer__r.Name', 'ASC');
-        //system.assertEquals(1, assessments.size());
+        Test.StartTest(); 
         
-        Drawdown__c drawdown = AssessmentSummaryReportCtlr.getDrawdown();
+        ApexPages.currentPage().getParameters().put('lawyerId', String.valueOf(lawyer.Id));
+        ApexPages.currentPage().getParameters().put('businessUnit', 'ELFI');
+        GenerateConsolidatedAssessmentPayoutCtlr  ctlr = new GenerateConsolidatedAssessmentPayoutCtlr();
         
-        Contact lawyer = [SELECT Id FROM Contact WHERE Name = 'Test Lawyer Contact'];
-        AssessmentSummaryReportCtlr.getClientAccounts(lawyer.Id, 'ELFI');
+        ctlr.getPayOutData();
         
-        Test.stopTest();
-    }
-    
-    public static testMethod void test_customSettings(){
-        Test.startTest();
-        Date dt = Date.today();
-        String lawyerId = [SELECT Id FROM Contact WHERE Name = 'Test Lawyer Contact' LIMIT 1].Id;
-        AssessmentSummaryReportCtlr.setCustomSetting(new List<string>{lawyerId}, dt + '', dt.addDays(5) + '', 'Consolidated');
-        Assessment_Summary_Report__c customSetting = AssessmentSummaryReportCtlr.getCustomSetting();
-        
-        //system.assertEquals(dt, customSetting.Payout_Date__c);
-        //system.assertEquals(lawyerId, customSetting.Selected_Ids__c);
-        
-        Test.stopTest();
-    }
-    
-    public static testMethod void test_generate(){
-        
-        Test.startTest();
-        Date dt = Date.today();
-        String lawyerId = [SELECT Id FROM Contact WHERE Name = 'Test Lawyer Contact' LIMIT 1].Id;
-        Id conductorId = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated', new Map<String,List<Id>>());
-        
-        //system.assert(conductorId != null);
-        
-        Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'ELFI', new Map<String,List<Id>>());
-        //system.assertEquals(conductorId, condutorIDTest);
-        AssessmentSummaryReportCtlr.setConductorURLfield(condutorIDTest, true);
-        
-        AssessmentSummaryReportCtlr.getBatchJobStatus();
-        
-        Test.stopTest();
+        Test.StopTest();
     }
 }
