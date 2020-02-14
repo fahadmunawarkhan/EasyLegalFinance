@@ -9,3 +9,6 @@
 .THIS .attach-icon .icn svg {
     fill: green !important;
 }
+.THIS input[type=checkbox]:checked.check-box{
+    background-color: blue !important;
+}

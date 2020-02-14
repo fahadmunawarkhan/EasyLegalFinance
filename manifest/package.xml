@@ -184,6 +184,9 @@
         <members>AssessmentProviderScheduleTriggerTest</members>
         <members>LawyerAvailableCreditComponentCtlrTest</members>
         <members>Batch_UpdatePayoutDateOnOppty</members>
+        <members>Batch_UpdateSelectedForAssessmentPayout</members>
+        <members>GenerateConsolidatedAssessmentPayoutCtlr</members>
+        <members>GenerateConsolidatedAssessmentPayoutTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -238,6 +241,7 @@
         <members>Template_MassEditCustomObject</members>
         <members>Template_MassUpdateCustomObject</members>
         <members>LawSocietyReviewPrint</members>
+        <memebers>GenerateConsolidatedAssessmentPayout</memebers>
         <name>ApexPage</name>
     </types>
     <types>
@@ -1326,6 +1330,9 @@
         <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
         <members>Opportunity.Rebate_to_Lawyer__c</members>  
         <members>Opportunity.Assessment_Outstanding__c</members>
+        <members>Opportunity.Client_Rebate_Amount__c</members>
+        <members>Account.Selected_for_Assessment_Payout__c</members>
+        <members>Account.Total_Client_Rebate__c</members>
         <name>CustomField</name>
     </types>
     <types>
