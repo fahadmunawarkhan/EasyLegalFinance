@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-({
+({    
     doInit : function(component, event, helper) {
         helper.getOpportunityInfo(component);
         /*helper.getCriticalDatesList(component).then(
@@ -499,7 +499,7 @@
     },
     handleReverseClick: function(component, event, helper) {
         helper.showReverseModal(component, event.getParam("Id"));
-    },
+    },    
     handleReverseSuccess : function(component, event, helper) {
         helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
@@ -540,5 +540,16 @@
                 }
             );
         }
+    },
+    
+    setSendToGoogleReview : function(component, event, helper) {
+        
+        let oppObj = component.get("v.oppObj");
+        if(event.getSource().get("v.label") == 'Yes'){
+			oppObj.Restrict_Communication__c = true;           
+        }else{
+            oppObj.Restrict_Communication__c = false;
+        }
+        component.set("v.oppObj", oppObj);
     }
 })

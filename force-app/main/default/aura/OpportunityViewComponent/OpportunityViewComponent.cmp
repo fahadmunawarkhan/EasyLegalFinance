@@ -106,6 +106,13 @@
     <aura:attribute name="insurerNameOptions" type="List" default="[]" />
     <aura:attribute name="selectedLookUpAssessmentProvider" type="sObject" default="{}"/>
     
+    <aura:attribute name="googleReviewOptions" type="List" default="[
+    {'label': 'Yes', 'value': 'Yes'},
+    {'label': 'No', 'value': 'No'}
+    ]"/>
+    
+    <aura:attribute name="restrictCommunication" type="String" default="" />
+    
     <aura:attribute name="currentUser" type="User" /> 
 
     <!-- OVERLAY -->
@@ -339,11 +346,11 @@
                         </div>
                     </lightning:layoutItem>  
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
-                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Do not send google review</span>
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Send Google Review</span>
                             <div class="slds-form-element__control">
-                                <span class=""> 
-                                    <lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />
-                                </span>
+                                <lightning:button variant="{!if(v.oppObj.Restrict_Communication__c, 'success', 'Neutral' )}" label="Yes" onclick="{! c.setSendToGoogleReview }" class="bttn-yes" disabled="{!!v.currentUser.Can_Send_for_Google_Review__c}" />
+                                <lightning:button variant="{!if(v.oppObj.Restrict_Communication__c, 'Neutral', 'destructive' )}" label="No" onclick="{! c.setSendToGoogleReview }" class="bttn-no" disabled="{!!v.currentUser.Can_Send_for_Google_Review__c}" />
+                                <!--<lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />-->
                             </div>
                         </div>
                     </lightning:layoutItem>

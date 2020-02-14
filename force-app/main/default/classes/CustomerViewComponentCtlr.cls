@@ -1299,7 +1299,7 @@ t.adminFee =  d.Amount__c;
         User currentUser = [SELECT Id,isActive,ProfileId, Custom_Reports__c, Drawdowns__c, Financial_Summary__c,
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, 
                             Treatment_Providers__c,Payments_tab__c, Schedule_Payments__c,
-                            Modify_Notes__c, Payout_Details__c FROM User Where Id = :UserInfo.getUserId()];
+                            Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
     

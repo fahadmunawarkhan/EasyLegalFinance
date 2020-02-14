@@ -1326,6 +1326,7 @@
         <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
         <members>Opportunity.Rebate_to_Lawyer__c</members>  
         <members>Opportunity.Assessment_Outstanding__c</members>
+        <members>User.Can_Send_for_Google_Review__c</members>
         <name>CustomField</name>
     </types>
     <types>

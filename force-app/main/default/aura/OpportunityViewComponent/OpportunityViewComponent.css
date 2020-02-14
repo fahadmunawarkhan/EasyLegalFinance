@@ -46,3 +46,12 @@
 .THIS .bankruptcy-style{
     width: 50%;
 }
+.THIS .bttn-yes{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.THIS .bttn-no{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    margin-left: 0px;
+}

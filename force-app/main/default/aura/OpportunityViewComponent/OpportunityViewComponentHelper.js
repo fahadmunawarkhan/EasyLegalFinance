@@ -41,7 +41,8 @@
                     
 
                                                                 
-                    
+                   //set restrictCommunication
+                    component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No'); 
                     
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
