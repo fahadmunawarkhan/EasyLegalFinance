@@ -177,7 +177,7 @@ public class CustomerViewComponentCtlr {
 
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Opportunity WHERE AccountId =: accountId AND Re_Assessed_Loan__c = null order by Date_of_advance__c ASC';
+        strQuery += ' FROM Opportunity WHERE AccountId =: accountId AND Re_Assessed_Loan__c = null order by Date_of_advance__c ASC, Loan_Requests__c ASC';
 
         // *** Still need to handle exceptions ***
         // Executing the query to retrieve the opportunities list

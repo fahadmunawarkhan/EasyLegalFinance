@@ -1150,7 +1150,7 @@
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputText value="{!p.Service_Provider_Phone__c}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputText value="{!p.Service_Provider_Email__c}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right currency"><ui:inputCurrency value="{!p.Allowance__c}" class="small-input currency" disabled="{!if(v.currentUser.Treatment_Providers__c, false, true)}" /></td>
-                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right currency"><ui:outputCurrency value="{!p.Total_Paid__c}" class="small-input currency"/></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right currency"><ui:outputCurrency value="{!p.Total_Paid_Non_Rejected__c}" class="small-input currency"/></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right currency"><ui:outputCurrency value="{!p.Allowance_Balance__c}" class="small-input currency"/></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                                         <ui:outputRichText value="{!p.Send_Schedule__c}" />

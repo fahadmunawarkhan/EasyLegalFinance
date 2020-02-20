@@ -240,7 +240,7 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
             for (Drawdown__c d : drawdownsToReverse){
                 drawdownsToReverseMap.put(d.Id, d);
             }
-            List<Drawdown__c> adminFeeDrawdowns = [select Id, Opportunity__c, Date__c, Payment_Method__c, Amount__c,Outstanding_Balance_as_of_Payout_Date__c,Rejections_Count__c   from Drawdown__c where Payment_Method__c='Admin Fee' and Opportunity__c in :oppIds and (Rejections_Count__c=NULL OR Rejections_Count__c=0)];            
+            List<Drawdown__c> adminFeeDrawdowns = [select Id, Opportunity__c, Date__c, CHQ__c, EFT__c, Opportunity_Service_Provider__c, Payment_Method__c, Amount__c,Outstanding_Balance_as_of_Payout_Date__c,Rejections_Count__c   from Drawdown__c where (Reference_Notes__c = 'Admin Fee' OR Reference_Notes__c = 'Assessment Fee') and Opportunity__c in :oppIds and (Rejections_Count__c=NULL OR Rejections_Count__c=0)];            
             Map<Id, List<Drawdown__c>> oppToAdminFeeDrawdownsMap = new Map<Id, List<Drawdown__c>>();
             for (Id oppId : oppIds){
                 oppToAdminFeeDrawdownsMap.put(oppId, new List<Drawdown__c>());
@@ -257,11 +257,10 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
                     for (Drawdown__c adminFeeDrawdown : adminFees){
                         if (adminFeeDrawdown.Date__c > rejectionDrawdown.Date__c)
                             continue;
-                        Drawdown__c adminFeeRejectionDrawdown = new Drawdown__c();
-                        adminFeeRejectionDrawdown.Is_Admin_Fee_Rejection__c = true;
+                        Drawdown__c adminFeeRejectionDrawdown = new Drawdown__c();                        
                         adminFeeRejectionDrawdown.Opportunity__c = rejectionDrawdown.Opportunity__c;        
-                        adminFeeRejectionDrawdown.CHQ__c = rejectionDrawdown.CHQ__c;        
-                        adminFeeRejectionDrawdown.EFT__c = rejectionDrawdown.EFT__c;        
+                        adminFeeRejectionDrawdown.CHQ__c = adminFeeDrawdown.CHQ__c;        
+                        adminFeeRejectionDrawdown.EFT__c = adminFeeDrawdown.EFT__c;        
                         adminFeeRejectionDrawdown.Payment_Method__c = 'Payment';  
                         adminFeeRejectionDrawdown.Reference_Notes__c = rejectionDrawdown.Reference_Notes__c;
                         adminFeeRejectionDrawdown.Reason_to_Reverse_Payment__c = rejectionDrawdown.Reason_to_Reverse_Payment__c;
@@ -274,6 +273,7 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
                         adminFeeRejectionDrawdown.Date__c = rejectionDrawdown.Date__c;
                         adminFeeRejectionDrawdown.Rejection_Notes__c = rejectionDrawdown.Rejection_Notes__c;
                         adminFeeRejectionDrawdown.Payment_To_Reverse__c = adminFeeDrawdown.Id;
+                        adminFeeRejectionDrawdown.Opportunity_Service_Provider__c = adminFeeDrawdown.Opportunity_Service_Provider__c;
                         adminFeeRejectionDrawdowns.add(adminFeeRejectionDrawdown);
                     }
                 }

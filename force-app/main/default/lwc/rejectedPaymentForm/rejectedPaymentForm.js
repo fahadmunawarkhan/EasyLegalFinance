@@ -63,6 +63,7 @@ export default class RejectedPaymentForm extends LightningElement {
         fields.Date__c = drawdownDateInput.value;
         var rejectionNotesInput = this.template.querySelector(".rejection-notes-input");
         fields.Rejection_Notes__c = rejectionNotesInput.value;
+        fields.Opportunity_Service_Provider__c = this.drawdown.Opportunity_Service_Provider__c;        
         this.template.querySelector('lightning-record-edit-form').submit(fields);
     }
 

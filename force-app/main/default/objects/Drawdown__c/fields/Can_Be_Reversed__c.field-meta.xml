@@ -7,7 +7,11 @@
 		ISPICKVAL(Reference_Notes__c,&quot;Payment to Client&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment to Lawyer&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment to other lender&quot;),
-		ISPICKVAL(Reference_Notes__c,&quot;Payment to Third-Party&quot;)),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment to Treatment - Service Provider&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;),
+		ISPICKVAL(Reference_Notes__c,&quot;Payment to Third-Party&quot;),
+		ISPICKVAL(Payment_Method__c,&quot;Admin Fee&quot;)),
+
 	Amount__c &gt; 0,
 	OR(ISNULL(Rejections_Count__c), Rejections_Count__c=0)
 )</formula>

@@ -41,8 +41,8 @@
                     
 
                                                                 
-                   //set restrictCommunication
-                    component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No'); 
+                    //set restrictCommunication
+                    component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No');
                     
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
@@ -151,7 +151,7 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             
-            if (state === 'SUCCESS') {
+            if (state === 'SUCCESS') {                
                 let drawDownList = response.getReturnValue();
                 let loanType = component.get("v.oppObj").Type_of_Loan__c;
                 if (loanType && loanType.startsWith('Treatment')) {
@@ -253,7 +253,7 @@
         var drawDowns = component.get("v.drawDownList");
         this.saveDrawdownsCallout(component, drawDowns);
     },
-    
+
     saveDrawdownsAndUpdateList : function(component) {
         var drawDowns = component.get("v.drawDownList");
         this.saveDrawdownsCallout(component, drawDowns, true);
@@ -268,15 +268,15 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
+                this.getOpportunityInfo(component);  
                 if (updateListNeeded)
                 	this.updateDrawdownList(component);
                 else
-                component.set("v.spinner", false);                
+                    component.set("v.spinner", false);                
                 //component.set("v.drawDownList", []); 
                 //this.getDrawdownList(component, true);                                
                 //component.set("v.spinner", false);                
-                this.showToast('SUCCESS','Your changes were successfully saved!','SUCCESS');	                
+                this.showToast('SUCCESS','Your changes were successfully saved!','SUCCESS');                
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -488,9 +488,7 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
-                this.getDrawdownPaymentsList(component);
-                component.set("v.drawDownList", response.getReturnValue());                 
+                this.reInitSomeData(component);                 
                 component.set("v.spinner", false);      
                 this.showToast('SUCCESS','Drawdown was successfully deleted!','SUCCESS');
             } else if (state === 'ERROR') {
@@ -518,9 +516,10 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
+                this.reInitSomeData(component); 
+                //this.getOpportunityInfo(component);
                 component.set("v.spinner", false); 
-                component.set("v.serviceProviderList", response.getReturnValue()); 
+                //component.set("v.serviceProviderList", response.getReturnValue()); 
                 this.showToast('SUCCESS','Drawdown was successfully deleted!','SUCCESS');
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
@@ -1320,12 +1319,12 @@
                         this.fetchRefNotesDepValues(component, newPaymentMethod, i);
                     }
                     if (loanType && loanType.startsWith('Treatment Loan')) {
-                        let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
+                        /*let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
                         for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
                         {
                             let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
                             this.fetchRefNotesDepValues(component, newPaymentMethod, i);
-                        }                  
+                        }          */        
                     }
                 }
                 component.set("v.AsyncSpinner", false);
@@ -1564,7 +1563,7 @@
     },
     showReverseModal: function(component, drawdownId) {       
         console.log('Drawdwon Id: ' + drawdownId);
-            $A.createComponent(
+        $A.createComponent(
                 "c:rejectedPaymentForm",
                 {
                     drawdownToReverseId: drawdownId,
@@ -1588,7 +1587,7 @@
                 } else {
                     console.error(errorMessage);
                 }
-            });
+            });        
     },
     hideReverseModal: function(component) {
         component.get("v.reverseModalPromise").then(
