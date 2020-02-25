@@ -1334,6 +1334,9 @@
         <members>Opportunity.Client_Rebate_Amount__c</members>
         <members>Account.Selected_for_Assessment_Payout__c</members>
         <members>Account.Total_Client_Rebate__c</members>
+        <members>Integration_Log__c.Body__c</members>
+        <members>Integration_Log__c.Class__c</members>
+        <members>Integration_Log__c.Identifier__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1430,6 +1433,7 @@
         <members>Service_Provider_Drawdown__c</members>
         <members>System_Monitoring__c</members>
         <members>Assessment_Provider_Schedule__c</members>
+        <members>Integration_Log__c</members>
         <name>CustomObject</name>
     </types>
     <types>
