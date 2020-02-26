@@ -51,7 +51,7 @@
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                             <div class="slds-form-element__control">
                                 <span class=""> 
-                                    <lightning:input disabled="true" label="Utilized Credit Limit" tabindex="1" type="Number" formatter="currency" class="field" value="{!v.Lawyer.Utilized_Credit_Limit__c}" step="0.01"/>
+                                    <lightning:input disabled="true" label="Pre-approved Amount" tabindex="1" type="Number" formatter="currency" class="field" value="{!v.Lawyer.Pre_approved_Amount_Roll_Up__c}" step="0.01"/>
                                 </span>
                             </div>
                         </div>
@@ -59,6 +59,15 @@
                 </lightning:layout>
                 
                 <lightning:layout>
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                                <span class=""> 
+                                    <lightning:input disabled="true" label="Utilized Credit Limit" tabindex="1" type="Number" formatter="currency" class="field" value="{!v.Lawyer.Utilized_Credit_Limit__c}" step="0.01"/>
+                                </span>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
                     <lightning:layoutItem size="6" padding="around-small">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                             <div class="slds-form-element__control">

@@ -23,6 +23,14 @@ public with sharing class AssessmentSummaryReportCtlr {
         public String attachmentId{get; set;}
         @AuraEnabled
         public String excelAttachmentId{get; set;}   
+        @AuraEnabled
+        public decimal preApprovedAmountRhino{get;set;}
+        @AuraEnabled
+        public decimal preApprovedAmountElfi{get;set;}
+        @AuraEnabled
+        public decimal approvedLoanRhino{get;set;}
+        @AuraEnabled
+        public decimal approvedLoanElfi{get;set;}
         
         public AssessmentWrapper(){
             lawyer = '';
@@ -33,6 +41,10 @@ public with sharing class AssessmentSummaryReportCtlr {
             utilizedCreditElfi = 0;
             utilizedCreditRhino = 0;
             availableCredit = 0;
+            preApprovedAmountRhino = 0;
+            preApprovedAmountElfi = 0;
+            approvedLoanRhino = 0;
+            approvedLoanElfi = 0;
             checked = false;
             attachmentId = '';
             excelAttachmentId = '';
@@ -107,10 +119,13 @@ public with sharing class AssessmentSummaryReportCtlr {
             }
             
             String strQuery = '';            
-            strQuery = 'SELECT Id, Lawyer__c, Lawyer__r.Name, Law_Firm__c, Law_Firm__r.Name, Lawyer__r.Approved_Credit_Limit__c, Lawyer__r.Available_Credit__c,';
-            strQuery += ' Drawdown_Total_wo_Payment__c, Account.Business_Unit__c, Principal_Repaid_Roll_up__c, Admin_Fee_Roll_up__c';
+            strQuery = 'SELECT Id, Lawyer__c, Lawyer__r.Name, Law_Firm__c, Law_Firm__r.Name, Lawyer__r.Approved_Credit_Limit__c, Lawyer__r.Available_Credit__c, Lawyer__r.Utilized_Credit_Limit__c,';
+            strQuery += ' Lawyer__r.Pre_approved_Amount_Roll_Up__c, Drawdown_Total_wo_Payment__c, Account.Business_Unit__c, Principal_Repaid_Roll_up__c, Admin_Fee_Roll_up__c, Stage_Status__c';
             strQuery += ' FROM Opportunity';
             strQuery += ' WHERE Type_of_Loan__c =:assessment';
+            strQuery += ' AND ((StageName = \'Closed With Loan\'';
+            strQuery += ' AND Stage_Status__c = \'Active\')';
+            strQuery += ' OR Stage_Status__c = \'Invoice Pre-Approved\')';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
                 ' AND (Account.Business_Unit__c =:Elfi OR Account.Business_Unit__c =:Rhino)':
             ' AND Account.Business_Unit__c =:filterByBusinessUnit';            
@@ -175,9 +190,17 @@ public with sharing class AssessmentSummaryReportCtlr {
                     wrapper.firmId = opp.Law_Firm__c;
                     wrapper.approvedCredit = opp.Lawyer__r.Approved_Credit_Limit__c != null? opp.Lawyer__r.Approved_Credit_Limit__c : 0;
                     
+                    
+                    
                     Decimal principalRepaidAmnt = opp.Principal_Repaid_Roll_up__c;
                     Decimal drawdownTotalAmntWoPymnt = opp.Drawdown_Total_wo_Payment__c;
                     //Drawdown_Total_wo_Payment__c
+                    
+                    wrapper.preApprovedAmountRhino += opp.Account.Business_Unit__c == 'Rhino' && opp.Stage_Status__c !=null && opp.Stage_Status__c == 'Invoice Pre-Approved'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0 : 0;
+                    wrapper.preApprovedAmountElfi += opp.Account.Business_Unit__c == 'ELFI'  && opp.Stage_Status__c !=null && opp.Stage_Status__c == 'Invoice Pre-Approved'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0 : 0;
+                    
+                    wrapper.approvedLoanElfi += opp.Account.Business_Unit__c == 'ELFI' && opp.Stage_Status__c !=null && opp.Stage_Status__c != 'Invoice Pre-Approved'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0  : 0;
+                    wrapper.approvedLoanRhino += opp.Account.Business_Unit__c == 'Rhino' && opp.Stage_Status__c !=null && opp.Stage_Status__c != 'Invoice Pre-Approved'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0  : 0;
                     
                     wrapper.utilizedCreditElfi += opp.Account.Business_Unit__c == 'ELFI'? drawdownTotalAmntWoPymnt != null? drawdownTotalAmntWoPymnt : 0  : 0;
                     //wrapper.utilizedCreditElfi += opp.Account.Business_Unit__c == 'ELFI'? opp.Admin_Fee_Roll_up__c !=null? opp.Admin_Fee_Roll_up__c :0 : 0;
@@ -219,7 +242,7 @@ public with sharing class AssessmentSummaryReportCtlr {
         
         String query = '';
         query += 'SELECT Id, AccountNumber, Name_Formula__c, Date_of_Advance__c, Total_Client_Rebate__c,';
-        query += ' Total_Amount_Loaned__c, All_Payout_Balance__c';
+        query += ' Total_Amount_Loaned__c, All_Payout_Balance__c, Total_Rebate_Discount__c';
         query += ' FROM Account';
         query += ' WHERE Id in (SELECT AccountId FROM Opportunity WHERE Lawyer__c = :lawyerId';
         query += ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'';
@@ -233,8 +256,8 @@ public with sharing class AssessmentSummaryReportCtlr {
         system.debug('accIds size ' + accIds.size());
         system.debug('accIds ' + accIds);
         
-        if(!accIds.isEmpty())
-            Database.executeBatch(new Batch_UpdateSelectedForAssessmentPayout(accIds, false), 50);
+        if(!accIds.isEmpty()) Database.executeBatch(new Batch_UpdateSelectedForAssessmentPayout(accIds, false), 50);
+        
         Database.executeBatch(new Batch_UpdateSelectedForAssessmentPayout(accIds, true), 50);
         
     }
