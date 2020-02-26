@@ -12,7 +12,8 @@ public with sharing class LawyerAvailableCreditComponentCtlr {
     @AuraEnabled
     public static Contact getLawyerRecordData(String recordId){
         Contact lawyerContact = [SELECT Id, Approved_Credit_Limit__c, 
-                                 Utilized_Credit_Limit__c, Available_Credit__c
+                                 Utilized_Credit_Limit__c, Available_Credit__c,
+                                 Pre_approved_Amount_Roll_Up__c
                                  FROM Contact 
                                  WHERE Id =: recordId];
         return lawyerContact;

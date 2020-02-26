@@ -36,7 +36,7 @@ public class AssessmentSummaryReportCtlrTest {
         opp.Date_Applied__c = Date.today();
         Opp.StageName = 'Closed With Loan';
         Opp.Law_Firm__c = accountList[1].Id;        
-        Opp.Stage_Status__c = 'Approved';
+        Opp.Stage_Status__c = 'Active';
         Opp.Payout_Date__c = Date.today();
         Opp.Type_of_Loan__c = 'Assessment';
         Opp.Primary_Contact__c = contactList[0].Id;

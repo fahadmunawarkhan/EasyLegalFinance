@@ -31,13 +31,10 @@
 
 	 <!-- attributes -->
     <aura:attribute name="accData" type="List"/>
-    <aura:attribute name="columns" type="List"/>
     <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
     <aura:attribute name="selection" type="List" access="PRIVATE"/>
     <aura:attribute name="rowKeys" type="List" access="PRIVATE"/>
-    <aura:attribute name="selectedRows" type="List" access="PRIVATE"/>
     <aura:attribute name="selectedLawyer" type="String" access="PRIVATE" default=""/>
-    <aura:attribute name="tempSelectedRows" type="List" access="PRIVATE"/>
     <aura:attribute name="selectedRowsMap" type="Map" default="{}"/>
     
     <aura:attribute name="filteredData" type="List" />
@@ -189,168 +186,274 @@
                 <b>Selected: {!v.selectedRowsCount}</b>
             </p>
             <aura:set attribute="actions">
-                    <lightning:buttonIcon iconName="utility:refresh"  onclick="{! c.searchButton }" size="large" alternativeText="Refresh" />                
+                <lightning:buttonIcon iconName="utility:refresh"  onclick="{! c.searchButton }" size="large" alternativeText="Refresh" />                
             </aura:set>
-            <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
-                <thead>
-                    <tr class="slds-line-height_reset">
-                        <th>
-                            <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title="">
-                                <!--<ui:inputCheckbox aura:id="selectAllcheckbox" change="{!c.checkAll}"/>-->
-                            </div>
-                        </th>
-                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Name" style="cursor: pointer;" >
-                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWYER">LAWYER</span>
-                            <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Name')}">
+            <div style="overflow-x:auto;">
+                <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered" style="width:100%;">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th style="">
+                                <div class="slds-truncate slds-cell-buffer_left slds-cell-buffer_right" title="">
+                                    <!--<ui:inputCheckbox aura:id="selectAllcheckbox" change="{!c.checkAll}"/>-->
+                                </div>
+                            </th>
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Name" style="cursor: pointer;" >
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWYER">LAWYER</span>
+                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Name')}">
+                                    <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Name')}">
+                                    <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                </aura:if>
+                            </th>
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Law_Firm__r.Name" style="cursor: pointer;" >
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWFIRM">LAW FIRM</span>
+                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Law_Firm__r.Name')}">
+                                    <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Law_Firm__r.Name')}">
+                                    <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                </aura:if>
+                            </th>
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Approved_Credit_Limit__c" style="cursor: pointer;" >
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="APPROVED CREDIT">APPROVED CREDIT</span>
+                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Approved_Credit_Limit__c')}">
+                                    <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Approved_Credit_Limit__c')}">
+                                    <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                </aura:if>
+                            </th>
+                            <!--<th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Pre_approved_Amount_Roll_Up__c" style="cursor: pointer;" >
+                            <span class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-wrap" title="PRE-APPROVED AMOUNT">PRE-APPROVED AMOUNT</span>
+                            <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Pre_approved_Amount_Roll_Up__c')}">
                                 <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
                             </aura:if>
-                            <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Name')}">
+                            <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Pre_approved_Amount_Roll_Up__c')}">
                                 <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                             </aura:if>
-                        </th>
-                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Law_Firm__r.Name" style="cursor: pointer;" >
-                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAWFIRM">LAW FIRM</span>
-                            <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Law_Firm__r.Name')}">
-                                <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                        </th>-->
+                            <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">  
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="PRE-APPROVED AMOUNT">PRE-APPROVED AMOUNT (ELFI)</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="PRE-APPROVED AMOUNT">PRE-APPROVED AMOUNT (RHINO)</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="APPROVED LOAN">APPROVED LOAN (ELFI)</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="APPROVED LOAN">APPROVED LOAN (RHINO)</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="UTILIZED CREDIT">UTILIZED CREDIT (ELFI)</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate slds-cell-wrap" title="UTILIZED CREDIT">UTILIZED CREDIT (RHINO)</div>
+                                </th>                            
+                                <aura:set attribute="else">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="PRE-APPROVED AMOUNT">PRE-APPROVED AMOUNT</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="APPROVED LOAN">APPROVED LOAN</div>
+                                    </th>                                
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="UTILIZED CREDIT">UTILIZED CREDIT</div>
+                                    </th>                                
+                                </aura:set>
                             </aura:if>
-                            <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Law_Firm__r.Name')}">
-                                <lightning:icon iconName="utility:arrowup" size="xx-small"/>
-                            </aura:if>
-                        </th>
-                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Approved_Credit_Limit__c" style="cursor: pointer;" >
-                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="APPROVED CREDIT">APPROVED CREDIT</span>
-                            <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Approved_Credit_Limit__c')}">
-                                <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
-                            </aura:if>
-                            <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Approved_Credit_Limit__c')}">
-                                <lightning:icon iconName="utility:arrowup" size="xx-small"/>
-                            </aura:if>
-                        </th>
-                        <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">                            
-                            <th class="" scope="col">
-                                <div class="slds-truncate" title="UTILIZED CREDIT">UTILIZED CREDIT (ELFI)</div>
+                            
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Available_Credit__c" style="cursor: pointer;" >
+                                <div class="slds-truncate" style="float:left;width:75%;" title="AVAILABLE CREDIT">AVAILABLE CREDIT</div>
+                                <div title="Available Credit = Approved Credit - Combined Utilized Credit (Elfi and Rhino)" style="float:right;width:25%;">
+                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                </div>  
+                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Available_Credit__c')}">
+                                    <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer__r.Available_Credit__c')}">
+                                    <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                </aura:if>
                             </th>
                             <th class="" scope="col">
-                                <div class="slds-truncate" title="UTILIZED CREDIT">UTILIZED CREDIT (RHINO)</div>
-                            </th>                            
-                            <aura:set attribute="else">
-                                <th class="" scope="col">
-                                    <div class="slds-truncate" title="UTILIZED CREDIT">UTILIZED CREDIT</div>
-                                </th>                                
-                            </aura:set>
-                        </aura:if>
-                        <th class="" scope="col">
-                            <div class="slds-truncate" style="float:left;width:75%;" title="AVAILABLE CREDIT">AVAILABLE CREDIT</div>
-                            <div title="Available Credit = Approved Credit - Combined Utilized Credit (Elfi and Rhino)" style="float:right;width:25%;">
-                                <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                            </div>  
-                        </th>
-                        <th class="" scope="col">
-                            <div class="slds-truncate" title="LINK TO CLIENT DATA">LINK TO CLIENT DATA</div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <aura:iteration items="{!v.data}" var="item" >
-                        <tr>
-                            <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox class="check-box" disabled="true" value="{!item.checked}" change="{!c.check}"/></div></td>
-                            <td>
-                                <div class="slds-truncate">                                    
-                                    <a href="{!'/'+item.lawyerId}" >{!item.lawyer}</a>
-                                    <span class="slds-clearfix">
-                                        <span class="slds-float_right" onclick="{!c.openRecordSelectModal}"  data-value="{!item.lawyerId}" style="cursor: pointer;">
-                                            <lightning:icon iconName="utility:new_window" size="x-small"/>
-                                        </span>
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="slds-truncate">
-                                    <a href="{!'/'+item.firmId}" >{!item.firm}</a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="slds-truncate">
-                                    <aura:if isTrue="{!item.approvedCredit == 0.00}">
-                                        $0.00
-                                        <aura:set attribute="else">
-                                            <lightning:formattedNumber 
-                                                                       value="{!item.approvedCredit}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </td>                            
-                            <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
-                                <td>
-                                    <div class="slds-truncate">
-                                        <aura:if isTrue="{!item.utilizedCreditElfi == 0.00}">
-                                            $0.00
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.utilizedCreditElfi}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </aura:set>
-                                        </aura:if>
-                                    </div>
-                                </td>
-                            </aura:if>
-                            <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
-                                
-                                <td>
-                                    <div class="slds-truncate">
-                                        <aura:if isTrue="{!item.utilizedCreditRhino == 0.00}">
-                                            $0.00
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.utilizedCreditRhino}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </aura:set>
-                                        </aura:if>
-                                    </div>
-                                </td>
-                            </aura:if>
-                            <td>
-                                <div class="slds-truncate">
-                                    <aura:if isTrue="{!item.availableCredit == 0.00}">
-                                        $0.00
-                                        <aura:set attribute="else">
-                                            <lightning:formattedNumber 
-                                                                       value="{!item.availableCredit}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </td> 
-                            <td>
-                                <div class="slds-truncate">
-                                    <lightning:layout pullToBoundary="small" >
-                                        <lightning:layoutItem size="3" padding="horizontal-small">
-                                            <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="small" alternativeText="file"/></a></span>
-                                        </lightning:layoutItem>
-                                        <lightning:layoutItem size="3" padding="horizontal-small">
-                                            <aura:if isTrue="{!not(v.disablePrintButtn)}">
-                                                <span Title= "Consolidate Payouts" class="attach-icon" ><a  onclick="{!c.openConsolidatedPayoutAttachment}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
-                                            </aura:if>
-                                        </lightning:layoutItem>
-                                        <lightning:layoutItem size="3" padding="horizontal-small">
-                                            <aura:if isTrue="{!item.attachmentId != ''}">
-                                                <span Title= "Preview pdf" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
-                                            </aura:if>
-                                        </lightning:layoutItem>
-                                        <lightning:layoutItem size="3" padding="horizontal-small">
-                                            <aura:if isTrue="{!item.excelAttachmentId != ''}">
-                                                <span Title= "Preview excel" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.excelAttachmentId}"><lightning:icon class="icn" iconName="doctype:excel" size="small" alternativeText="file"/></a></span>
-                                            </aura:if>
-                                        </lightning:layoutItem>
-                                    </lightning:layout>
-                                        
-                                </div>
-                            </td>
+                                <div class="" title="LINK TO CLIENT DATA">LINK TO CLIENT DATA</div>
+                            </th>
                         </tr>
-                    </aura:iteration>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.data}" var="item" >
+                            <tr>
+                                <td ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox class="check-box" disabled="true" value="{!item.checked}" change="{!c.check}"/></div></td>
+                                <td>
+                                    <div class="slds-truncate" title="{!item.lawyer}">                                    
+                                        <a href="{!'/'+item.lawyerId}" >{!item.lawyer}</a>
+                                        <span class="slds-clearfix">
+                                            <span class="slds-float_right" onclick="{!c.openRecordSelectModal}"  data-value="{!item.lawyerId}" style="cursor: pointer;">
+                                                <lightning:icon iconName="utility:new_window" size="x-small"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate" title="{!item.firm}">
+                                        <a href="{!'/'+item.firmId}" >{!item.firm}</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.approvedCredit == 0.00}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!item.approvedCredit}" style="currency" 
+                                                                           maximumFractionDigits="2"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <!--<td>
+                                <div class="slds-truncate">
+                                    <aura:if isTrue="{!item.preApprovedAmount == 0.00}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber 
+                                                                       value="{!item.preApprovedAmount}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td> -->     
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.preApprovedAmountElfi == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.preApprovedAmountElfi}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                                    
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.preApprovedAmountRhino == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.preApprovedAmountRhino}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.approvedLoanElfi == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.approvedLoanElfi}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                                    
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.approvedLoanRhino == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.approvedLoanRhino}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.utilizedCreditElfi == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.utilizedCreditElfi}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{!or(v.businessUnitForDesign == 'Rhino', v.businessUnitForDesign == 'Consolidated')}">
+                                    
+                                    <td>
+                                        <div class="slds-truncate">
+                                            <aura:if isTrue="{!item.utilizedCreditRhino == 0.00}">
+                                                $0.00
+                                                <aura:set attribute="else">
+                                                    <lightning:formattedNumber 
+                                                                               value="{!item.utilizedCreditRhino}" style="currency" 
+                                                                               maximumFractionDigits="2"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </div>
+                                    </td>
+                                </aura:if>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.availableCredit == 0.00}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!item.availableCredit}" style="currency" 
+                                                                           maximumFractionDigits="2"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td> 
+                                <td>
+                                    <div class="">
+                                        <lightning:layout pullToBoundary="small" >
+                                            <lightning:layoutItem size="3" padding="horizontal-small">
+                                                <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="utility:file" size="small" alternativeText="file"/></a></span>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem size="3" padding="horizontal-small">
+                                                <aura:if isTrue="{!not(v.disablePrintButtn)}">
+                                                    <span Title= "Consolidate Payouts" class="attach-icon" ><a  onclick="{!c.openConsolidatedPayoutAttachment}" data-attachment="{!item.lawyerId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
+                                                </aura:if>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem size="3" padding="horizontal-small">
+                                                <aura:if isTrue="{!item.attachmentId != ''}">
+                                                    <span Title= "Preview pdf" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.attachmentId}"><lightning:icon class="icn" iconName="doctype:pdf" size="small" alternativeText="file"/></a></span>
+                                                </aura:if>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem size="3" padding="horizontal-small">
+                                                <aura:if isTrue="{!item.excelAttachmentId != ''}">
+                                                    <span Title= "Preview excel" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!item.excelAttachmentId}"><lightning:icon class="icn" iconName="doctype:excel" size="small" alternativeText="file"/></a></span>
+                                                </aura:if>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
         </lightning:card>
     </div>
     
@@ -388,12 +491,70 @@
                         </div>
                         
                         <div style="height: 300px">
-                            <lightning:datatable
+                            <div style="overflow: auto; ">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th style="padding-left: 10px !important;padding-right: 10px !important;" >
+                                                <div class="" title="Select All">
+                                                    <ui:inputCheckbox aura:id="selectAllClientCheckbox" change="{!c.checkAll}"/>
+                                                </div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="File No.">File No</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Name">Name</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Date of Advance">Date of Advance</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Client Rebate">Client Rebate</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Principal Borrowed">Principal Borrowed</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Outstanding Balance">Outstanding Balance</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.filteredData}" var="item">
+                                            <tr>
+                                                <td style="padding-left: 10px !important;padding-right: 10px !important;" ><div class=""><ui:inputCheckbox value="{!item.checked}" change="{!c.check}"/></div></td>
+                                                <td data-label="File No">
+                                                    <div class="slds-truncate" title="{!item.AccountNumber}"><a href="{!'/'+item.Id}" target="_blank">{!item.AccountNumber}</a></div>
+                                                </td>
+                                                <td data-label="Account Name">
+                                                    <div class="slds-truncate" title="{!item.Name_Formula__c}"><a href="{!'/'+item.Id}" target="_blank">{!item.Name_Formula__c}</a></div>
+                                                </td>
+                                                <td data-label="Date of Advance">
+                                                    <div class="slds-truncate" title="{!item.Date_of_Advance__c}"><lightning:formattedDateTime value="{!item.Date_of_Advance__c}"/></div>
+                                                </td>
+                                                <td data-label="Client Rebate">
+                                                    <div class="slds-truncate" title="{!item.Total_Rebate_Discount__c}"><ui:outputCurrency value="{!item.Total_Rebate_Discount__c}"/></div>
+                                                </td>
+                                                <td data-label="Principal Borrowed">
+                                                    <div class="slds-truncate" title="{!item.Total_Amount_Loaned__c}"><ui:outputCurrency value="{!item.Total_Amount_Loaned__c}"/></div>
+                                                </td>
+                                                <td data-label="Outstanding Balance">
+                                                    <div class="slds-truncate" title="{!item.All_Payout_Balance__c}"><ui:outputCurrency value="{!item.All_Payout_Balance__c}"/></div>
+                                                </td>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!--<lightning:datatable
+                                                 aura:Id="clientDataTable"
                                                  columns="{! v.columns }"
                                                  data="{! v.filteredData }"
                                                  keyField="Id"
                                                  selectedRows="{! v.selectedRows }"
-                                                 onrowselection="{! c.updateSelectedRows }"/>
+                                                 onrowselection="{! c.updateSelectedRows }"/>-->
                             
                         </div>
                     </div>
