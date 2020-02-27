@@ -427,8 +427,9 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
+                this.getServiceProvidersList(component);
                 component.set("v.spinner", false);
-                component.set("v.serviceProviderList", response.getReturnValue()); 
+                //component.set("v.serviceProviderList", response.getReturnValue()); 
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
