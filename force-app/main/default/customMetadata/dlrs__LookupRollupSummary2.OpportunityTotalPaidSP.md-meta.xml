@@ -40,7 +40,7 @@
     </values>
     <values>
         <field>dlrs__FieldToAggregate__c</field>
-        <value xsi:type="xsd:string">Total_Paid_Factored__c</value>
+        <value xsi:type="xsd:string">Total_Paid_Non_Rejected__c</value>
     </values>
     <values>
         <field>dlrs__FieldToOrderBy__c</field>
