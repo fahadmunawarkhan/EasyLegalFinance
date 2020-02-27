@@ -21,7 +21,36 @@
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" /> 
     
+    <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
+    <aura:attribute name="batchJobStatus" type="String" default="" />
+    <aura:attribute name="batchJobItems" type="String" default="" />
+    <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
+    <aura:attribute name="intervalId" type="Integer"/>
+    <aura:attribute name="conductorId" type="String" />
     
+    <aura:attribute name="disablePrintButtn" type="Boolean" default="true"/>
+    
+    <!--<lightning:card>
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem size="12">                                
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                    <span class="slds-assistive-text">warning</span>
+                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                        <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                    </span>
+                    <h2>Please Rerun the job before generating payout documents to get precise results.
+                    </h2>
+                    
+                        <div class="slds-notify__close">                            
+                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.closeWarning}" >
+                                <lightning:icon iconName="utility:close" alternativeText="close" size="xx-small" />
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                </div>                
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>-->
     
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
@@ -74,7 +103,8 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"
+                                                        onchange="{!c.searchButton}"/>
                                 </div>
                             </span>
                         </div>
@@ -99,25 +129,44 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
-                                  variant="neutral" type="button" label="View All (Excel)" />
-            </lightning:layoutItem>
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllButtnClick}"
-                                  variant="neutral" type="button" label="View All (PDF)" />                
+                <lightning:buttonMenu aura:id="menu" onselect="{! c.viewAllButtnClick }" label="View All" alternativeText="View All">
+                    <lightning:menuItem value="ViewAll" label="View All (Excel)" />
+                    <lightning:menuItem value="ViewAllPDF" label="View All (PDF)" />
+                </lightning:buttonMenu>                
             </lightning:layoutItem>
             <lightning:layoutItem >
                 <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printReportButtnClick}"
                                   variant="neutral" type="button" label="Print Report (PDF)" />
             </lightning:layoutItem>
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for Selected" onclick="{!c.generateForSelected}" />
+            <!--<lightning:layoutItem >
+                <lightning:buttonMenu aura:id="payoutMenu" onselect="{! c.generatePayoutBalanceButtnClick }" label="Generate Payout Balance" alternativeText="Generate Payout Balance">
+                    <lightning:menuItem value="generatePayoutBalanceForSelected"  label="Generate Payout Balance for Selected" />
+                    <lightning:menuItem  value="generatePayoutBalanceForAll" label="Generate Payout for All" />
+                </lightning:buttonMenu>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout for All" onclick="{!c.GenerateForAll}" />
-            </lightning:layoutItem>
+                <lightning:buttonMenu aura:id="generatePayoutMenu" onselect="{! c.generatePayoutDocumentButtnClick }" label="Generate Payout Document" alternativeText="Generate Payout Document">
+                    <lightning:menuItem disabled="{!v.disablePrintButtn}" value="generatePayoutExcel"  label="Generate Payout (Excel)" />
+                    <lightning:menuItem disabled="{!v.disablePrintButtn}" value="generatePayoutPDF" label="Generate Payout (PDF)" />
+                </lightning:buttonMenu>
+            </lightning:layoutItem>-->
         </lightning:layout>
     </lightning:card>
+    
+    <!--<lightning:card>
+        <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="9">
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div style="margin-right:20px;">
+                        <span style="margin-left:5px;">{!v.batchJobItems}</span>
+                        <lightning:progressBar value="{!v.batchJobProgress}" />
+                    </div>                  
+                </lightning:layoutItem>              
+            </lightning:layout>
+        </div>
+    </lightning:card>-->
     
     <div class="">
         <lightning:card title="Assessment Provider Summary" iconName="standard:case" variant="base">
@@ -162,6 +211,15 @@
                                 <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                             </aura:if>
                         </th>
+                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Max(Lawyer__r.Pre_approved_Amount_Roll_Up__c)" style="cursor: pointer;" >
+                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PRE-APPROVED AMOUNT">PRE-APPROVED AMOUNT</span>
+                            <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Max(Lawyer__r.Pre_approved_Amount_Roll_Up__c)')}">
+                                <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                            </aura:if>
+                            <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Max(Lawyer__r.Pre_approved_Amount_Roll_Up__c)')}">
+                                <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                            </aura:if>
+                        </th>
                         <aura:if isTrue="{!v.businessUnitForDesign == 'Consolidated'}">                            
                             <th class="" scope="col">
                                 <div class="slds-truncate" title="UTILIZED CREDIT">UTILIZED CREDIT (ELFI)</div>
@@ -196,19 +254,24 @@
                                     </div>
                                 </td>
                                 
-                                <td Colspan="{!if(v.businessUnitForDesign == 'Consolidated',7,6)}">
+                                <td Colspan="{!if(v.businessUnitForDesign == 'Consolidated',8,7)}">
                                     <lightning:icon iconName="standard:account" size="small" alternativeText="Assessment Provider" />
                                     &nbsp;&nbsp;<b><a href="{!'/'+provider.assessmentProviderId}" target="_blank" >{!provider.assessmentProvider}</a></b>
                                 </td>
                                 <td>
                                     <div class="slds-truncate">
                                         <lightning:layout pullToBoundary="small" >
-                                            <lightning:layoutItem size="6" padding="horizontal-small">
-                                                <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!provider.assessmentProviderId}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
+                                            <lightning:layoutItem size="4" padding="horizontal-small">
+                                                <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-attachment="{!provider.assessmentProviderId}"><lightning:icon class="icn" iconName="utility:file" size="small" alternativeText="file"/></a></span>
                                             </lightning:layoutItem>
-                                            <lightning:layoutItem size="6" padding="horizontal-small">
+                                            <lightning:layoutItem size="4" padding="horizontal-small">
                                                 <aura:if isTrue="{!provider.attachmentId != ''}">
-                                                    <span Title= "Preview" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!provider.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
+                                                    <span Title= "Preview" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!provider.attachmentId}"><lightning:icon class="icn" iconName="utility:download" size="small" alternativeText="file"/></a></span>
+                                                </aura:if>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem size="4" padding="horizontal-small">
+                                                <aura:if isTrue="{!provider.excelAttachmentId != ''}">
+                                                    <span Title= "Preview excel" class="attach-icon" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!provider.excelAttachmentId}"><lightning:icon class="icn" iconName="doctype:excel" size="small" alternativeText="file"/></a></span>
                                                 </aura:if>
                                             </lightning:layoutItem>
                                         </lightning:layout>
@@ -255,7 +318,19 @@
                                             </aura:set>
                                         </aura:if>
                                     </div>
-                                </td>                            
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!data.preApprovedAmount == 0.00}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!data.preApprovedAmount}" style="currency" 
+                                                                           maximumFractionDigits="2"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
                                 <aura:if isTrue="{!or(v.businessUnitForDesign == 'ELFI', v.businessUnitForDesign == 'Consolidated')}">
                                     <td>
                                         <div class="slds-truncate">
@@ -308,7 +383,7 @@
                                     Sub-Total:
                                 </div>
                             </td>
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div class="slds-truncate">
                                 </div>
                             </td>
@@ -319,6 +394,18 @@
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber 
                                                                        value="{!provider.totalApprovedCredit}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate">
+                                    <aura:if isTrue="{!provider.totalPreApprovedAmount == 0.00}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber 
+                                                                       value="{!provider.totalPreApprovedAmount}" style="currency" 
                                                                        maximumFractionDigits="2"/>
                                         </aura:set>
                                     </aura:if>
