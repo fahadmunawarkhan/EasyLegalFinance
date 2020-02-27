@@ -35,10 +35,14 @@ public with sharing class SendCustomerDataToBirdEye {
                                                                  );
                         
                         log.Body__c = String.format(
-                            '{0}\n{1}',
+                            '{0}\n{1}\n{2}\n{3}\n{4}\n{5}',
                             new List<String>{
-                                'Request Body: ' + requestBody,
-                                    'Response: ' + response.getBody()
+                                'Request Body:',
+                                    '' + requestBody,
+                                    ' ',
+                                    'Response:',
+                                    '' + response.toString(),
+                                    '' + response.getBody()
                                     }
                         );
                         
