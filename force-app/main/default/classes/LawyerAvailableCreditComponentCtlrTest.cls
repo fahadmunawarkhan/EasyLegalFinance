@@ -90,18 +90,12 @@ public class LawyerAvailableCreditComponentCtlrTest {
         Test.startTest();
         system.runAs(u){
             User testUser = LawyerAvailableCreditComponentCtlr.getCurrentUserInfo();
-
-            //system.assertEquals(false, testUser.Can_Edit_Approved_Credit_Limit__c);
-
         }
         u.Can_Edit_Approved_Credit_Limit__c = true;
         update u;
         
         system.runAs(u){
             User testUser = LawyerAvailableCreditComponentCtlr.getCurrentUserInfo();
-
-            //system.assertEquals(true, testUser.Can_Edit_Approved_Credit_Limit__c);
-
         }
         
         Test.stopTest();
@@ -112,28 +106,14 @@ public class LawyerAvailableCreditComponentCtlrTest {
         Id lawyerId = [SELECT Id FROM contact WHERE LastName = 'Test Lawyer Contact'].Id;
         Contact lawyer = LawyerAvailableCreditComponentCtlr.getLawyerRecordData(lawyerId);
         
-
-        //system.assertEquals(5000, lawyer.Approved_Credit_Limit__c);
-        //system.assertEquals(4100, lawyer.Utilized_Credit_Limit__c);
-       
         lawyer.Approved_Credit_Limit__c = 6000;
         LawyerAvailableCreditComponentCtlr.updateLawyerRecord(lawyer);
         
         lawyer = LawyerAvailableCreditComponentCtlr.getLawyerRecordData(lawyerId);
         
-
-        //system.assertEquals(6000, lawyer.Approved_Credit_Limit__c);
-        //system.assertEquals(4100, lawyer.Utilized_Credit_Limit__c);
-        
-        //List<ContactHistory> historyList = LawyerAvailableCreditComponentCtlr.CreditHistory(lawyer.Id);
-        
-        //List<Opportunity> assessmentOpps = LawyerAvailableCreditComponentCtlr.OpportunityAssessment(lawyer.Id);        
-        //system.assert(!assessmentOpps.isEmpty());
-
         List<ContactHistory> historyList = LawyerAvailableCreditComponentCtlr.CreditHistory(lawyer.Id);
         
         List<Opportunity> assessmentOpps = LawyerAvailableCreditComponentCtlr.OpportunityAssessment(lawyer.Id);
-
         
         Test.stopTest();
     }

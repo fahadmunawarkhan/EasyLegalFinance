@@ -1337,6 +1337,8 @@
         <members>Integration_Log__c.Body__c</members>
         <members>Integration_Log__c.Class__c</members>
         <members>Integration_Log__c.Identifier__c</members>
+        <members>Contact.Pre_approved_Amount_Roll_Up__c</members>
+        <members>Contact.Pre_Approved_Loan_Formula__c</members>
         <name>CustomField</name>
     </types>
     <types>

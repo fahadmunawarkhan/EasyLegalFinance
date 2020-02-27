@@ -8,7 +8,7 @@ trigger dlrs_OpportunityTrigger on Opportunity(before delete, before insert, bef
         dlrs.RollupService.triggerHandler();
     }
     
-    if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
+    /*if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
         dlrs.RollupService.rollup(Trigger.oldMap, Trigger.newMap, Opportunity.SObjectType);
-    }
+    }*/
 }

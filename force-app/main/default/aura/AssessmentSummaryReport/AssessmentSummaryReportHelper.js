@@ -285,6 +285,8 @@
                         }
                     }
                 }
+                
+                console.log('selectedIds ' + selectedIds);
 
                 let action = component.get('c.setCustomSetting');
                 action.setParams({
@@ -336,7 +338,19 @@
                 action.setCallback(this, function(response){
                     let state = response.getState();
                     if(state === 'SUCCESS'){
-                        resolve(response.getReturnValue());
+                        let selectedIds = [];
+                        let selectedRowsMap =  component.get("v.selectedRowsMap");
+                        if(selectedRowsMap[lawyerIdParam] != undefined && selectedRowsMap[lawyerIdParam] != null){
+                            selectedIds = selectedRowsMap[lawyerIdParam];
+                        }
+                        let result = response.getReturnValue();
+                        result.forEach(function (element) {
+                            element.checked = false;
+                            if(selectedIds.indexOf(element.Id) > -1)
+                                element.checked = true;
+                            
+                        });
+                        resolve(result);
                     }else if (state === 'ERROR') {
                         reject(response.getError());
                     }
@@ -354,6 +368,8 @@
     },
     filterRecords: function(component, filter) {
         component.set("v.spinner", true);
+        let selectedIds = component.get("v.tempSelectedRows");
+        component.set("v.selectedRows", selectedIds);
         var accData = component.get("v.accData"),
             term = filter,
             results = accData, regex;
@@ -365,7 +381,24 @@
             // invalid regex, use full list
         }
         component.set("v.filteredData", results);
+        this.setClientCheckBox(component);
         component.set("v.spinner", false);
+    },
+    setClientCheckBox : function(component){
+        let filteredData = component.get("v.filteredData");
+        var comp = component.find("selectAllClientCheckbox");
+        let value = false; 
+        let count = 0;
+        for(let i=0; i<filteredData.length; i++){
+            if(filteredData[i].checked == true){
+                count++;
+            }
+        }
+        
+        if(count == filteredData.length){
+            value = true;
+        }
+        comp.set("v.value", value);
     }
     
 })

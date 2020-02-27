@@ -6,15 +6,6 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         
-        component.set('v.columns', [
-            {label: 'File No.', fieldName: 'AccountNumber', type: 'text'},
-            {label: 'Name', fieldName: 'Name_Formula__c', type: 'text'},
-            {label: 'Date of Advance', fieldName: 'Date_of_Advance__c', type: 'date'},
-            {label: 'Client Rebate', fieldName: 'Total_Client_Rebate__c', type: 'currency'},
-            {label: 'Principal Borrowed', fieldName: 'Total_Amount_Loaned__c', type: 'currency'},
-            {label: 'Outstanding Balance', fieldName: 'All_Payout_Balance__c', type: 'currency'}
-        ]);
-
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
 
         helper.getDrawdown(component).then(
@@ -301,18 +292,21 @@
         component.set("v.selectedLawyer", lawyerId);
         let data = component.get("v.data");
         
-        let selectedRowsMap =  component.get("v.selectedRowsMap");
-        component.set("v.selectedRows", []);
-        if(selectedRowsMap[lawyerId] != undefined && selectedRowsMap[lawyerId] != null){
-            component.set("v.selectedRows", selectedRowsMap[lawyerId]);
-        }
+        
         
         helper.getClientAccounts(component, lawyerId).then(
             function(result){                
                 component.set("v.accData", result);
-                component.set("v.filteredData", result);                
-                component.set("v.spinner", false);
+                component.set("v.filteredData", result); 
+                let selectedRowsMap =  component.get("v.selectedRowsMap");
+                let size = 0;
+                if(selectedRowsMap[lawyerId] != undefined && selectedRowsMap[lawyerId] != null){
+                    size = selectedRowsMap[lawyerId].length;
+                }
                 component.set("v.showRecordSelectModal", true);
+                if(size > 0 && size == result.length)
+                    component.find("selectAllClientCheckbox").set("v.value", true);
+                component.set("v.spinner", false);
             }
         ).catch(function(errors){
             console.log('Error ' + errors);
@@ -326,12 +320,13 @@
         let data = component.get("v.data");
         let lawyerId = component.get("v.selectedLawyer");
         let selectedRowsMap =  component.get("v.selectedRowsMap");        
-        let selectedRows = component.get("v.tempSelectedRows");
+        let accData = component.get("v.accData");
         
         let selectedIds = [];
-        for(let i=0; i< selectedRows.length; i++)
-            selectedIds.push(selectedRows[i].Id);
-        
+        accData.forEach(function (element){
+            if(element.checked)
+                selectedIds.push(element.Id)
+        });
         selectedRowsMap[lawyerId] = selectedIds;
         
         //mark parent checkbox
@@ -345,23 +340,23 @@
         component.set("v.data", data);
         
         let count = 0;
+        let lawyerSelectedCount = 0; 
         for(let key in selectedRowsMap){
             count += selectedRowsMap[key].length;
+            lawyerSelectedCount++;
         }
+        
+        component.set("v.countSelected", lawyerSelectedCount);
         
         component.set("v.selectedRowsCount", count);
         
-        component.set("v.selectedRows", selectedRowsMap);
+        component.set("v.selectedRowsMap", selectedRowsMap);
         component.set("v.spinner", false);
         component.set("v.showRecordSelectModal", false);
     },
     closeRecordSelectModal : function(component, event, helper){        
         component.set("v.spinner", false);
         component.set("v.showRecordSelectModal", false);
-    },
-    updateSelectedRows : function(component, event, helper){
-        var selectedRows = event.getParam('selectedRows');
-        component.set("v.tempSelectedRows", selectedRows);
     },
     searchClientRecords : function (component, event, helper) {
         
@@ -381,5 +376,19 @@
     openConsolidatedPayoutAttachment : function(component, event, helper){
         let lawyerId = event.currentTarget.dataset.attachment;
         window.open('/apex/GenerateConsolidatedAssessmentPayout?lawyerId=' + lawyerId + '&businessUnit='+ component.get("v.selectedBusinessUnitFilter"), '_blank');
+    },
+    checkAll : function(component, event, helper){
+        var comp = component.find("selectAllClientCheckbox");
+        let value = comp.get("v.value");
+        let filteredData = component.get("v.filteredData");
+        for(let i=0; i<filteredData.length; i++){
+            filteredData[i].checked = value;            
+        }
+        
+        component.set("v.filteredData", filteredData);
+        comp.set("v.value", value);
+    },
+    check : function(component, event, helper){
+        helper.setClientCheckBox(component);
     }
 })
