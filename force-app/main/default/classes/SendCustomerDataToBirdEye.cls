@@ -14,6 +14,7 @@ public with sharing class SendCustomerDataToBirdEye {
 	**/
 	@future(callout=true)
 	private static void sendData(List<Id> opportunityIds){
+        List<Integration_Log__c> logs = new List<Integration_Log__c>();
         List<Contact> contactsListToUpdate = new List<Contact>();
 		Map<Id,Account> accountsMap = getAccountsMap(opportunityIds); 
 		Bird_Eye_Settings__mdt birdEyeSettings = getBirdEyeSettings();
@@ -21,16 +22,33 @@ public with sharing class SendCustomerDataToBirdEye {
 			for(Account account : accountsMap.values()){
 				for(Contact contact : account.Contacts){
                     if(contact.Review_Last_Sent__c == null || (contact.Review_Last_Sent__c != null && contact.Review_Last_Sent__c.addYears(1) >= System.today())){
+                        
+                        String requestBody = JSON.serialize(new BirdEyeData.CustomerCheckIn(contact,Integer.valueOf(birdEyeSettings.Campaign_Id__c)));
+                        Integration_Log__c log = new Integration_Log__c(
+                            Class__c = 'SendCustomerDataToBirdEye',
+                            Identifier__c = 'BirdEye'                            
+                        );
                         HttpResponse response = HttpRestClient.sendRequest(birdEyeSettings.Customer_Check_In_Base_Url__c+'bid='+(account.Business_Unit__c == Constants.RHINO_BUSINESS_UNIT ? birdEyeSettings.Rhino_Location_Id__c : birdEyeSettings.ELFI_Location_Id__c)+'&api_key='+birdEyeSettings.API_Key__c,
-                                                                    JSON.serialize(new BirdEyeData.CustomerCheckIn(contact,Integer.valueOf(birdEyeSettings.Campaign_Id__c))),
+                                                                    requestBody,
                                                                     Constants.HTTP_POST,
                                                                     new Map<String, String>{'Content-Type' => 'application/json','Accept' => 'application/json'}
                                                                  );
+                        
+                        log.Body__c = String.format(
+                            '{0}\n{1}',
+                            new List<String>{
+                                'Request Body: ' + requestBody,
+                                    'Response: ' + response.getBody()
+                                    }
+                        );
+                        
+                        logs.add(log);
                         contact.Review_Last_Sent__c = System.today();
                         contactsListToUpdate.add(contact);
                     }
 				}
 			}
+            if(!logs.isEmpty()) insert logs;
             if(!contactsListToUpdate.isEmpty()) update contactsListToUpdate;
 		}
 	}
@@ -53,7 +71,7 @@ public with sharing class SendCustomerDataToBirdEye {
 		for(Opportunity opportunity : [SELECT AccountId FROM Opportunity WHERE Id IN: opportunityIds LIMIT 40000]){
 			accountIds.add(opportunity.AccountId);
 		}
-		return new Map<Id,Account>([SELECT Id,Business_Unit__c, (SELECT Id, FirstName, LastName, Email, MobilePhone, Review_Last_Sent__c  FROM Contacts) FROM Account
+		return new Map<Id,Account>([SELECT Id,Business_Unit__c, (SELECT Id, FirstName, LastName, Email, MobilePhone, Phone, Review_Last_Sent__c  FROM Contacts) FROM Account
 										WHERE Id IN: accountIds LIMIT 40000]);
 	}
 }
