@@ -340,9 +340,13 @@
         component.set("v.data", data);
         
         let count = 0;
+        let lawyerSelectedCount = 0; 
         for(let key in selectedRowsMap){
             count += selectedRowsMap[key].length;
+            lawyerSelectedCount++;
         }
+        
+        component.set("v.countSelected", lawyerSelectedCount);
         
         component.set("v.selectedRowsCount", count);
         

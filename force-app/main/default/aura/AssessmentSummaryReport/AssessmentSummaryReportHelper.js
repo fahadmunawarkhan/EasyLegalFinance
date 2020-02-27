@@ -285,6 +285,8 @@
                         }
                     }
                 }
+                
+                console.log('selectedIds ' + selectedIds);
 
                 let action = component.get('c.setCustomSetting');
                 action.setParams({
