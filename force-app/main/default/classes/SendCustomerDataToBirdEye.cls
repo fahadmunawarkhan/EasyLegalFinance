@@ -48,6 +48,7 @@ public with sharing class SendCustomerDataToBirdEye {
                     }
 				}
 			}
+            if(!logs.isEmpty()) insert logs;
             if(!contactsListToUpdate.isEmpty()) update contactsListToUpdate;
 		}
 	}
