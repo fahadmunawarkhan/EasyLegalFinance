@@ -19,6 +19,10 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         public Boolean checked {get; set;}
         @AuraEnabled
         public String attachmentId{get; set;}
+        @AuraEnabled
+        public String excelAttachmentId{get; set;}        
+        @AuraEnabled
+        public decimal totalPreApprovedAmount{get;set;}
 
         public AssessmentWrapper(){
             assessmentProvider = '';
@@ -29,7 +33,9 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             totalAvailableCredit = 0;
             checked = false;
             attachmentId = '';
+            excelAttachmentId = '';
             dataList = new List<dataWrapper>();
+            totalPreApprovedAmount = 0;
         }
     }
     
@@ -52,6 +58,8 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         public decimal availableCredit {get; set;}
         @AuraEnabled
         public decimal discount {get; set;}
+        @AuraEnabled
+        public decimal preApprovedAmount{get;set;}
         
         public DataWrapper(){
             lawyer = '';
@@ -63,6 +71,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             utilizedCreditRhino = 0;
             availableCredit = 0;
             discount = 0;
+            preApprovedAmount = 0;
         }
     }
     
@@ -123,6 +132,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         
         Map<String, DataWrapper> lawyerAssessmentMap = new Map<String, DataWrapper>();
         Map<String,String> providerAttachmentsMap = new Map<String,String>();
+        Map<String,String> providerExcelAttachmentsMap = new Map<String,String>();
         Map<String,Decimal> providerLawyerDiscountMap = new Map<String,Decimal>();
 
         try{
@@ -144,9 +154,11 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             strQuery += 'SELECT Assessment_Provider__c providerId, Assessment_Provider__r.Name providerName,Account.Business_Unit__c businessUnit,';
             strQuery += ' Lawyer__c lawyerId, Lawyer__r.Name lawyerName, Law_Firm__c lawfirmId, Law_Firm__r.Name lawfirmName,';
             strQuery += ' Max(Lawyer__r.Approved_Credit_Limit__c) approvedCredit, Max(Lawyer__r.Available_Credit__c) availableCredit,';
+            strQuery += ' Max(Lawyer__r.Pre_approved_Amount_Roll_Up__c) preApprovedAmount,';
             strQuery += ' Sum(Drawdown_Total_wo_Payment__c) invoice, Sum(Principal_Repaid_Roll_up__c) paid, Sum(Admin_Fee_Roll_up__c) adminFee';
             strQuery += ' FROM Opportunity';
             strQuery += ' WHERE Type_of_Loan__c =:assessment';
+            strQuery += ' AND StageName != \'Closed No Loan\'';
             strQuery += ' AND Assessment_Provider__c !=null';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
                 ' AND (Account.Business_Unit__c =:Elfi OR Account.Business_Unit__c =:Rhino)':
@@ -175,6 +187,7 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 wrapper.firm = (String)ars.get('lawfirmName');
                 wrapper.firmId = (String)ars.get('lawfirmId');
                 wrapper.approvedCredit = ars.get('approvedCredit') != null? (Decimal)ars.get('approvedCredit') : 0;
+                wrapper.preApprovedAmount = ars.get('preApprovedAmount') != null? (Decimal)ars.get('preApprovedAmount') : 0;
                 
                 Decimal principalRepaidAmnt = ars.get('paid') != null? (Decimal)ars.get('paid') : 0;
                 Decimal drawdownTotalAmntWoPymnt = ars.get('invoice') != null? (Decimal)ars.get('invoice') : 0;
@@ -206,10 +219,17 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             //query to retrive attached payout attachements
             if(!assessmentProviderIdSet.isEmpty()){
                 for(Attachment attach : [SELECT Id, ParentId FROM Attachment Where ParentId In :assessmentProviderIdSet
-                                        AND name like '%List of Clients%' 
+                                        AND name like '%List of Clients [Assessment Provider] %pdf' 
                                         AND createddate = today order by createddate desc]){
                     if(!providerAttachmentsMap.containsKey(attach.ParentId))
                         providerAttachmentsMap.put(attach.ParentId, attach.Id);
+                }
+                
+                for(Attachment attach : [SELECT Id, ParentId FROM Attachment Where ParentId In :assessmentProviderIdSet
+                                        AND name like '%List of Clients [Assessment Provider] %xlsx' 
+                                        AND createddate = today order by createddate desc]){
+                    if(!providerExcelAttachmentsMap.containsKey(attach.ParentId))
+                        providerExcelAttachmentsMap.put(attach.ParentId, attach.Id);
                 }
             }
             AssessmentWrapper mainWrapper = null;
@@ -240,8 +260,15 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 if(providerAttachmentsMap.containsKey(aProviderId))
                 	mainWrapper.attachmentId = providerAttachmentsMap.get(aProviderId);
                 
+                mainWrapper.excelAttachmentId = '';
+                if(providerExcelAttachmentsMap.containsKey(aProviderId))
+                	mainWrapper.excelAttachmentId = providerExcelAttachmentsMap.get(aProviderId);
+                
+                
                 mainWrapper.totalApprovedCredit += dataWrapper.approvedCredit;
                 mainWrapper.totalUtilizedCreditElfi += dataWrapper.utilizedCreditElfi;
+                
+                mainWrapper.totalPreApprovedAmount +=  dataWrapper.preApprovedAmount;
                 
                 mainWrapper.totalUtilizedCreditRhino += dataWrapper.utilizedCreditRhino;
                 mainWrapper.totalAvailableCredit += dataWrapper.availableCredit;
@@ -282,15 +309,15 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
             if(!String.isEmpty(ids))
                 strQueryOpportunity += ' AND Assessment_Provider__c in (' + ids +')';
 
-            List<Opportunity> opportunities = Database.query(strQueryOpportunity);
+            Map<Id, Opportunity> opportunities = new Map<Id, Opportunity>((List<Opportunity>)Database.query(strQueryOpportunity));
 
-            for(Opportunity opp : opportunities){
+           /* for(Opportunity opp : opportunities){
                 opp.Payout_Date__c = payoutDate;
             }
             
             if(!opportunities.isEmpty())
-                update opportunities;
-
+                update opportunities;*/
+            Database.executeBatch(new Batch_UpdatePayoutDateOnOppty(opportunities.keySet(), payoutDate), 50);
         }catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
@@ -299,6 +326,12 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
     @AuraEnabled
     public static Id generate(List<String> selectedIds, String payoutDate, String reportDate, String businessUnitFilter){
         try{
+            String filterByBusinessUnit = '';
+            if(businessUnitFilter == 'ELFI'){                
+                filterByBusinessUnit = 'ELFI';
+            }else if(businessUnitFilter == 'Rhino'){                
+                filterByBusinessUnit = 'Rhino';
+            }
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
             String ids = '';
@@ -309,7 +342,9 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from Account WHERE Id in ('+ ids +')';
             }else{
-                query = 'SELECT Id FROM Account where id in (SELECT Assessment_Provider__c from opportunity WHERE Type_of_Loan__c = \'Assessment\')';
+                query = 'SELECT Id FROM Account where id in (SELECT Assessment_Provider__c from opportunity WHERE Type_of_Loan__c = \'Assessment\'';
+                query += (filterByBusinessUnit == 'ELFI') ? ' AND Account.Business_Unit__c =\'ELFI\')' : 
+                (filterByBusinessUnit == 'Rhino') ? ' AND Account.Business_Unit__c =\'Rhino\')' : ')';
             }
             
             Assessment_Provider_Summary_Report__c customSettings = Assessment_Provider_Summary_Report__c.getInstance(UserInfo.getUserId());        
@@ -342,5 +377,32 @@ public with sharing class AssessmentProviderSummaryReportCtlr {
         catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
+    }
+    
+    @AuraEnabled
+    public static void setConductorURLfield(Id conductorId, Boolean setPDFfield){
+        try{
+            APXT_BPM__Conductor__c conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:conductorId];
+            conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Provider__c';
+            if(setPDFfield)
+                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Assessment_Provider_PDF__c';
+            
+            update conductor;
+            
+        }catch(Exception e){
+            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+        }
+    }
+    
+    @AuraEnabled
+    public static AsyncApexJob getBatchJobStatus(){
+        List<AsyncApexJob> aaj = null;
+        try{
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+                   WHERE ApexClass.Name = 'Batch_UpdatePayoutDateOnOppty' order by CreatedDate DESC LIMIT 1];
+        }catch(Exception e){
+            throw new AuraHandledException(e.getMessage());
+        }        
+        return (aaj.size() > 0 )? aaj[0] : null;
     }
 }

@@ -106,6 +106,8 @@ public class AssessmentProviderSummaryReportCtlrTest {
         
         Id condutorIDTest = AssessmentProviderSummaryReportCtlr.generate(new List<string>{'\'' + providerId + '\''}, dt + '', dt.addDays(5) + '', 'Consolidated');
         system.assertEquals(conductorId, condutorIDTest);
+        AssessmentProviderSummaryReportCtlr.setConductorURLfield(conductorId, true);
+        AssessmentProviderSummaryReportCtlr.getBatchJobStatus();
         
         Test.stopTest();
     }
