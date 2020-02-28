@@ -6,6 +6,7 @@ trigger OpportunityTrigger on Opportunity (before insert, before update, after i
     
     if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
         //Lawyer Avalible Credit Roll ups.
-        OpportunityTriggerHandler.LawyerAvailableCreditRollUps(Trigger.new, Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);
+        OpportunityTriggerHandler.LawyerAvailableCreditRollUps(Trigger.isDelete ? Trigger.old : Trigger.new, 
+                                                               Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);
     }
 }
