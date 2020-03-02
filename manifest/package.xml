@@ -187,6 +187,8 @@
         <members>Batch_UpdateSelectedForAssessmentPayout</members>
         <members>GenerateConsolidatedAssessmentPayoutCtlr</members>
         <members>GenerateConsolidatedAssessmentPayoutTest</members>
+        <members>PreApprovedInvoiceCtlr</members>
+        <members>PreApprovedInvoiceCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -328,6 +330,7 @@
         <members>AssessmentProviderSchedule</members>
         <members>AssessmentScheduleLawyerTab</members>
         <members>EditAssessmentProviderSchedule</members>
+        <members>PreApprovedInvoices</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
