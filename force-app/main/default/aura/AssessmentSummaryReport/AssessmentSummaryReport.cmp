@@ -52,8 +52,8 @@
                     </span>
                     <h2>Please Rerun the job before generating payout documents to get precise results.
                     </h2>
-                    <!--
-                        <div class="slds-notify__close">                            
+                    
+                        <!--<div class="slds-notify__close">                            
                             <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.closeWarning}" >
                                 <lightning:icon iconName="utility:close" alternativeText="close" size="xx-small" />
                                 <span class="slds-assistive-text">Close</span>
@@ -216,7 +216,7 @@
                                 </aura:if>
                             </th>
                             <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer__r.Approved_Credit_Limit__c" style="cursor: pointer;" >
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="APPROVED CREDIT">APPROVED CREDIT</span>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="CREDIT LIMIT">CREDIT LIMIT</span>
                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer__r.Approved_Credit_Limit__c')}">
                                     <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
                                 </aura:if>

@@ -21,6 +21,7 @@
         </columns>
         <columns>
             <checkedByDefault>true</checkedByDefault>
+            <displayNameOverride>Assessment Provider Name</displayNameOverride>
             <field>Name</field>
             <table>Account</table>
         </columns>
@@ -1857,6 +1858,11 @@
             <field>Account.Business_Unit__c</field>
             <table>Account.Opportunities__r</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Contact.Lawyer_Available_Credit_Info__c</field>
+            <table>Account.Opportunities__r</table>
+        </columns>
         <masterLabel>Assessment Provider Referred Cases</masterLabel>
     </sections>
     <sections>
@@ -2556,6 +2562,21 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Lawyer__c.Approved_Credit_Limit__c</field>
+            <table>Account.Opportunities__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lawyer__c.Lawyer_Available_Credit_Info__c</field>
+            <table>Account.Opportunities__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lawyer__c.Pre_Approved_Loan_Formula__c</field>
+            <table>Account.Opportunities__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Lawyer__c.Pre_approved_Amount_Roll_Up__c</field>
             <table>Account.Opportunities__r</table>
         </columns>
         <masterLabel>Lawyer</masterLabel>

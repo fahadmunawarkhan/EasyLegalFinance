@@ -203,7 +203,7 @@
                             </aura:if>
                         </th>
                         <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Max(Lawyer__r.Approved_Credit_Limit__c)" style="cursor: pointer;" >
-                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="APPROVED CREDIT">APPROVED CREDIT</span>
+                            <span class="slds-truncate makeBold slds-m-right_xxx-small" title="CREDIT LIMIT">CREDIT LIMIT</span>
                             <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Max(Lawyer__r.Approved_Credit_Limit__c)')}">
                                 <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
                             </aura:if>

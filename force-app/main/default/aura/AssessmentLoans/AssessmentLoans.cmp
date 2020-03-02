@@ -18,11 +18,14 @@
             
             <lightning:tabset variant="default" selectedTabId="">
                 <lightning:tab id="lawyersAssessmentLoans" label="Lawyers Assessment Loans">
-                    <c:AssessmentSummaryReport />
+                    <c:AssessmentSummaryReport aura:Id="assessmentSummaryReport" />
                 </lightning:tab>
                 <lightning:tab id="assessmentProvidersLoans" label="Assessment Providers Loans">
                     <c:AssessmentProviderSummaryReport />                    
                 </lightning:tab>
+                <lightning:tab id="preApprovedInvoices" label="Pre-Approved Invoices">
+                    <c:PreApprovedInvoices />                  
+                </lightning:tab>                
             </lightning:tabset>
         </body>
 </aura:component>
