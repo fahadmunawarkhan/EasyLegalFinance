@@ -110,7 +110,7 @@
         let providerId = event.currentTarget.dataset.attachment;
         let newWin;
 
-        let url = '/lightning/r/Report/00O1F000000iwrWUAQ/view';
+        let url = '/lightning/r/Report/00O0L000003mxbSUAQ/view';
 
         
         try{                       
