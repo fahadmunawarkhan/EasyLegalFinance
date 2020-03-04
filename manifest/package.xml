@@ -189,6 +189,9 @@
         <members>GenerateConsolidatedAssessmentPayoutTest</members>
         <members>PreApprovedInvoiceCtlr</members>
         <members>PreApprovedInvoiceCtlrTest</members>
+        <members>ApprovelProcessUnlock</members>
+        <members>ApprovelProcessUnlockTest</members>
+        <members>RecallApprovalProcess</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1333,7 +1336,12 @@
         <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
         <members>Opportunity.Rebate_to_Lawyer__c</members>  
         <members>Opportunity.Assessment_Outstanding__c</members>
+        <members>Account.Old_Projected_Loan_Value__c</members>
         <members>User.Can_Send_for_Google_Review__c</members>
+        <members>Custom_Approval_History__c.Account__c</members>
+        <members>Custom_Approval_History__c.Process_Instance_Id__c</members>
+        <members>Custom_Approval_History__c.Value_to_Approve__c</members>
+		<members>Custom_Approval_History__c.Loan_To_Value__c</members>
         <members>Opportunity.Client_Rebate_Amount__c</members>
         <members>Account.Selected_for_Assessment_Payout__c</members>
         <members>Account.Total_Client_Rebate__c</members>
@@ -1342,6 +1350,8 @@
         <members>Integration_Log__c.Identifier__c</members>
         <members>Contact.Pre_approved_Amount_Roll_Up__c</members>
         <members>Contact.Pre_Approved_Loan_Formula__c</members>
+        <members>Account.Conga_Send_Payout_Email_URL__c</members>
+        <members>Account.Conga_Send_Assessment_Payout_Email_URL__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1439,6 +1449,7 @@
         <members>System_Monitoring__c</members>
         <members>Assessment_Provider_Schedule__c</members>
         <members>Integration_Log__c</members>
+        <members>Custom_Approval_History__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -1539,6 +1550,7 @@
         <members>Send_Review_Request_via_Bird_Eye</members>
         <members>Task_Handler</members>
         <members>Update_Sent_to_EFT_Date_information</members>
+        <members>Submit_for_Approval</members>
         <name>Flow</name>
     </types>
     <types>
@@ -1563,6 +1575,7 @@
         <members>Send_Review_Request_via_Bird_Eye</members>
         <members>Task_Handler</members>
         <members>Update_Sent_to_EFT_Date_information</members>
+        <members>Submit_for_Approval</members>
         <name>FlowDefinition</name>
     </types>
     <types>
@@ -2340,6 +2353,10 @@
     <types>
         <name>WorkflowRule</name>
         <members>*</members>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApprovalProcess</name>
     </types>
     <version>46.0</version>
 </Package>

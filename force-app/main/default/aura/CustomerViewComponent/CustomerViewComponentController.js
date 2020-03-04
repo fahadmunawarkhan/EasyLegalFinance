@@ -11,6 +11,18 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         
+        helper.getApprovalProcessHistoryInfo(component).then(
+            function(result){
+                component.set("v.approvalHistory", result);
+                console.log("v.approvalHistory " + JSON.stringify(result));
+            }
+        ).catch(
+            function(errors){
+                console.log(errors);
+                helper.errorsHandler(errors);
+            }
+        );
+        
         helper.getCriticalDatesList(component).then(
             $A.getCallback(function(result) {                
             }),
@@ -127,6 +139,30 @@
             "url": baseURL
         }).fire();
     },
+    
+    sendPayoutStatement: function(component, event, helper){
+
+        var dateIsSet = component.get("v.payoutDateSet");
+        var oppObj = component.get('v.oppObj');
+        if(dateIsSet){
+            var accObj = component.get('v.accountObj');
+            
+            var baseURL = accObj.Conga_Send_Payout_Email_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Assessment')
+                baseURL = accObj. Conga_Send_Assessment_Payout_Email_URL__c;
+            
+            baseURL += "&Id=" + oppObj.Primary_Contact__c + "&EmailToId=" + oppObj.Primary_Contact__c;
+            baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
+            baseURL += "&ReturnPath=/lightning/r/Account/" + accObj.Id  +"/view%23/LOAN_OVERVIEW";
+            console.log('baseURL');
+            console.log(baseURL);
+            
+            
+            $A.get("e.force:navigateToURL").setParams({ 
+                "url": baseURL
+            }).fire();
+        }
+    },
     generatePayoutStatement: function(component, event, helper){
         var dateIsSet = component.get("v.payoutDateSet");
         var oppObj = component.get('v.oppObj');
@@ -167,14 +203,41 @@
     
     saveAll : function(component, event, helper){
         
+        
+        
         let businessUnit = component.get("v.accountObj.Business_Unit__c");
         
         if(businessUnit != '' && businessUnit !=null){
             
-            helper.saveAccountOpptyAndContact(component);
-            helper.getAccountInfo(component);
-            helper.getLatestContact(component);
+            helper.validateLTV(component).then(
+                function(isValid){
+                    if(isValid){
+                        let accountObj = component.get("v.accountObj");
+                        accountObj.Reason_for_LTV__c = component.get("v.selectedReasonForLTV");
+                        component.set("v.accountObj", accountObj);
+                        
+                        helper.saveAccountOpptyAndContact(component);
+                        helper.getAccountInfo(component);
+                        helper.getLatestContact(component);
+                        
+                        helper.getApprovalProcessHistoryInfo(component).then(
+                            function(result){
+                                component.set("v.approvalHistory", result);
+                            }
+                        ).catch(
+                            function(errors){
+                                console.log(errors);
+                                helper.errorsHandler(errors);
+                            }
+                        );
+                    }else{
+                        helper.showToast('ERROR','Please select a reason for LTV.','Error');
+                    }
+                }
+            );
         }
+            
+            
         /*
         var contact = component.get('v.conObj');
         var lawyer = component.get('v.lawyerObj');
@@ -693,6 +756,9 @@ handlePaymentActionSelected : function(component, event, helper) {
        /*else{
             component.set("v.paymentSearchDisabled", false);     
        }*/
+    },
+    projectedLoanValueChanged : function(component, event, helper){
+    	helper.setReasonForLTVOptions(component);
     }
 
 })

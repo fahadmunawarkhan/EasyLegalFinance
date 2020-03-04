@@ -25,3 +25,7 @@
     display: block;
     top: 5px;
 }
+
+.THIS .customRadioCls .slds-form-element__control .slds-radio{
+    display : inline-block !important;
+}

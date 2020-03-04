@@ -26,7 +26,7 @@
     <aura:attribute name="selectedNoteId" type="String" default="" />
     <aura:attribute name="criticalDateList" type="Critical_Date__c[]" />
     <aura:attribute name="criticalDateName" type="List" default="[]"/>
-	<aura:attribute name="oppIdList" type="Id[]" />    
+    <aura:attribute name="oppIdList" type="Id[]" />
     
     
     <aura:attribute name="notes" type="Object[]" />
@@ -80,6 +80,12 @@
     <aura:attribute name="accruedInterestTotal" type="Double" default="0.0"/>
     <aura:attribute name="outstandingBalanceTotal" type="Double" default="0.0"/>
     <aura:attribute name="perDiemTotal" type="Double" default="0.0"/>
+    
+    <aura:attribute name="approvalHistory" type="List" default="[]"/>
+    <aura:attribute name="ReasonForLTV" type="List" default="[{'label': 'Business Development', 'value': 'Business Development'},
+    {'label': 'Lawyer Relationship', 'value': 'Lawyer Relationship'},{'label': 'Assessment Loan', 'value': 'Assessment Loan'}]"/>
+    <aura:attribute name="selectedReasonForLTV" type="String" default="" />
+    
     <!--
     <aura:attribute name="businessUnitOptions" type="List" default="[
     {'label': 'ELFI', 'value': 'ELFI'},
@@ -361,7 +367,7 @@
                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input class="field" value="{!v.conObj.Phone}" label="Phone" tabindex="11" />
+                                            <lightning:input class="field" value="{!v.conObj.Phone}" label="Mobile Phone" tabindex="11" />
                                         </span>
                                     </div>
                                 </div>
@@ -610,7 +616,7 @@
                                         </div>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="5" class="slds-m-left_xx-large">
-                                        <lightning:input type="number" name="input7" label="Projected Loan Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01"/>
+                                        <lightning:input type="number" name="input7" label="Projected Loan Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01" onchange="{!c.projectedLoanValueChanged}"/>
                                     </lightning:layoutItem>
                                 </lightning:layout>
                                 <!--<lightning:layout class="slds-m-left_xx-large">
@@ -702,7 +708,75 @@
                                                 </div>
                                             </div>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="6" class="slds-m-left_xx-large">
+                                        <lightning:layoutItem size="5" class="slds-m-left_xx-large">
+                                            <lightning:card title="Reason:" variant="base">
+                                                <lightning:layout class="">
+                                                    <lightning:layoutItem size="12" class="slds-m-left_xx-large">
+                                                        <lightning:radioGroup aura:id="reasonForLTVRadioGroup"
+                                                                              name="radioGroup"
+                                                                              variant="label-hidden"
+                                                                              label=""
+                                                                              class="customRadioCls"
+                                                                              options="{! v.ReasonForLTV }"
+                                                                              value="{! v.selectedReasonForLTV}"
+                                                                              type="radio"/>
+                                                    </lightning:layoutItem>
+                                                </lightning:layout>
+                                            </lightning:card>
+                                            <lightning:card title="Approvals:" iconName="standard:approval" variant="base">
+                                                <div style="max-height:200px;overflow:auto;">
+                                                    <table class="slds-table slds-table_bordered slds-table_col-bordered" style="width:90%">
+                                                        <thead>
+                                                            <tr class="slds-text-title_caps">
+                                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:20%">
+                                                                    <div class="slds-truncate slds-cell-wrap" title="Projected Value to Approve">Projected Value to Approve</div>
+                                                                </th>
+                                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:10%">
+                                                                    <div class="slds-truncate" title="Loan To Value">LTV</div>
+                                                                </th>
+                                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:20%">
+                                                                    <div class="slds-truncate" title="Name">Status</div>
+                                                                </th>
+                                                                <th class="" style="width:20%">
+                                                                    <div class="slds-truncate slds-cell-wrap" title="Date">Approved/Rejected By</div>
+                                                                </th>
+                                                                <th class="" style="width:15%">
+                                                                    <div class="slds-truncate" title="Date">Requested By</div>
+                                                                </th>
+                                                                <th class="slds-cell-buffer_left slds-cell-buffer_right" style="width:15%">
+                                                                    <div class="slds-truncate" title="Date">Date</div>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <aura:iteration items="{!v.approvalHistory}" var="item" indexVar="i">
+                                                                <tr class="slds-hint-parent">     
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" >
+                                                                        <lightning:formattedNumber value="{!item.ValueToApprove}" style="currency" />
+                                                                    </td>
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" >
+                                                                        <lightning:formattedNumber value="{!item.LTV}" style="percent" maximumFractionDigits="2"/>
+                                                                    </td>
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" >
+                                                                        {!item.Status}
+                                                                    </td>
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                                        <aura:if isTrue="{!item.LastActorName != null}">
+                                                                            {!item.LastActorName}
+                                                                        </aura:if>
+                                                                    </td>
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" >
+                                                                        {!item.RequestedBy}
+                                                                    </td>
+                                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                                        <ui:outputDate aura:id="oDate" value="{!item.CompletedDate}" />
+                                                                    </td>
+                                                                </tr>
+                                                            </aura:iteration>                                    
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </lightning:card>
                                         </lightning:layoutItem>
                                     </lightning:layout>
                                 </div>
@@ -980,11 +1054,25 @@
                         </aura:if>
                     </ul>
                     <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show customClassForTabData" role="tabpanel" aria-labelledby="tab-default-1" aura:id="loanSummaryTabDataId">
-                        
-                        
                         <!-- <<<<<<<<<< LOAN SUMMARY >>>>>>>>>> -->
                         <lightning:card title="" variant="base">
                             <div class="slds-card__body_inner">
+                                <aura:if isTrue="{!!v.currentUser.Financial_Summary__c}">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="12">  
+                                            <div class="slds-m-bottom_x-large">
+                                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                                    <span class="slds-assistive-text">warning</span>
+                                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                                                        <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                                                    </span>
+                                                    <h2>You don't have permission to generate payouts/balance. Please contact administrator for more information.
+                                                    </h2>
+                                                </div>   
+                                            </div>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </aura:if>
                                 <lightning:layout>
                                     <lightning:layoutItem size="6">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -1183,15 +1271,19 @@
                                     <lightning:layoutItem size="6">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                             <aura:if isTrue="{!v.currentUser.Financial_Summary__c}">
-                                                <div class="slds-grid slds-gutters">
-                                                    <div class="slds-col slds-size_4-of-12">
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>  
-                                                    </div>
-                                                    <div class="slds-col slds-size_8-of-12">
+                                                <lightning:layout horizontalAlign="center" >
+                                                    <!--<lightning:layoutItem >
+                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Email Payout Statement" onclick="{!c.sendPayoutStatement}"></lightning:button>
+                                                    </lightning:layoutItem>-->
+                                                    
+                                                    <lightning:layoutItem >
+                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>
+                                                    </lightning:layoutItem>
+                                                    <lightning:layoutItem >
                                                         <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" 
-                                                                          variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" /> 
-                                                    </div>
-                                                </div>
+                                                                          variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" />
+                                                    </lightning:layoutItem>
+                                                </lightning:layout>
                                             </aura:if>
                                         </div>                                         
                                     </lightning:layoutItem>
@@ -3403,10 +3495,7 @@
                 </lightning:card>
             </lightning:tab>
             
-        </lightning:tabset>    
-
-
-        
+        </lightning:tabset>   
         
         <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
         <aura:if isTrue="{!v.spinner}">

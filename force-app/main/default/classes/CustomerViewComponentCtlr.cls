@@ -707,6 +707,8 @@ t.adminFee =  d.Amount__c;
         lstFields.add('Account.All_Payout_Balance__c');
         lstFields.add('Account.All_Payout_Interest__c');
         
+		lstFields.add('Primary_Contact__r.Email');
+		
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
         strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' order by CreatedDate DESC limit 1';
@@ -1480,5 +1482,73 @@ t.adminFee =  d.Amount__c;
         }
         if (!tasksToDelete.isEmpty())
         	delete tasksToDelete;
+    }
+	@AuraEnabled
+    public static List<ApprovalHistoryWrapper> getApprovalProcessHistoryInfo(String recordId){
+        
+        List<ApprovalHistoryWrapper> result = new List<ApprovalHistoryWrapper>();
+        Map<Id,Custom_Approval_History__c> processInstanceToCustApprovalMap = new Map<Id,Custom_Approval_History__c>();
+        Map<Id, ProcessInstance> processInstanceMap = new Map<Id, ProcessInstance>([SELECT Id, Status, CompletedDate, 
+                                                                                    LastActor.Name, SubmittedById 
+                                                                                    FROM ProcessInstance 
+                                                                                    Where TargetObjectId =:recordId
+                                                                                    AND Status != 'Removed'
+                                                                                    order by LastModifiedDate desc]);
+        
+        
+        for(Custom_Approval_History__c cah : [SELECT Id, Process_Instance_Id__c, Owner.Name,
+                                              Value_to_Approve__c, Account__c, Loan_To_Value__c
+                                              FROM Custom_Approval_History__c
+                                              WHERE Process_Instance_Id__c in :processInstanceMap.keySet()]){
+                                                  processInstanceToCustApprovalMap.put(cah.Process_Instance_Id__c, cah);
+                                              }
+        
+        for(ProcessInstance pi : processInstanceMap.values()){
+            result.add(
+                new ApprovalHistoryWrapper(
+                    pi.Status, 
+                    pi.LastActor.Name, 
+                    processInstanceToCustApprovalMap.containsKey(pi.Id)? processInstanceToCustApprovalMap.get(pi.id).Value_to_Approve__c : '',
+                    pi.CompletedDate,
+                    processInstanceToCustApprovalMap.containsKey(pi.Id)? processInstanceToCustApprovalMap.get(pi.id).Loan_To_Value__c : 0,
+                    processInstanceToCustApprovalMap.containsKey(pi.Id)? processInstanceToCustApprovalMap.get(pi.id). Owner.Name : ''
+                )
+            );
+        }
+        system.debug('--------');
+        system.debug(result);
+        return result;
+    }
+	
+    public Class ApprovalHistoryWrapper{
+        
+        @AuraEnabled
+        public String Status;
+        
+        @AuraEnabled
+        public DateTime CompletedDate;
+        
+        @AuraEnabled
+        public String LastActorName;
+        
+        @AuraEnabled
+        public String ValueToApprove;
+        
+        @AuraEnabled
+        public Decimal LTV;
+        
+        @AuraEnabled
+        Public String RequestedBy;
+        
+        public ApprovalHistoryWrapper(String statusParam, String actorName, String value, DateTime completedDateParam, Decimal loanToValue, String reqBy){
+            Status = statusParam;
+            LastActorName = actorName;
+            ValueToApprove = value;
+            CompletedDate = completedDateParam;
+            LTV = loanToValue/100;
+            RequestedBy = reqBy;
+            
+        }
+        
     }    
 }

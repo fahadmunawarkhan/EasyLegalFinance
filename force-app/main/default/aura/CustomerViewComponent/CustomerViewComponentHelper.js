@@ -32,7 +32,9 @@
             var state = response.getState();            
             if (state === 'SUCCESS') {
                 component.set("v.spinner", false);
-				component.set("v.accountObj", response.getReturnValue());   
+				component.set("v.accountObj", response.getReturnValue()); 
+                component.set("v.selectedReasonForLTV", response.getReturnValue().Reason_for_LTV__c);
+                this.setReasonForLTVOptions(component);
                 
                 component.set("v.selectedLookUpAccOwner.Id", component.get("v.accountObj").OwnerId);
                 component.set("v.selectedLookUpAccOwner.Name",(component.get("v.accountObj").Owner.Name ? 
@@ -1325,5 +1327,88 @@
                 	return true;
         }
         return false;
-    }
+    },
+    
+    saveAccountPromise : function(component) {
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                var action = component.get('c.saveAccount');
+                var accountObj = component.get('v.accountObj');
+        
+                action.setParams({ account : accountObj});
+                action.setCallback(this, function (response) {
+                    var state = response.getState();
+                    
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());               
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));                
+    },
+        setReasonForLTVOptions : function(component){
+            let accountObj = component.get("v.accountObj");
+            
+            let options = [];
+            options.push({'label' : 'Business Development', 'value' : 'Business Development'});
+            if(accountObj.Projected_Loan_Value__c > 0 && accountObj.Total_Amount_Loaned__c > 0){
+                if(accountObj.Total_Amount_Loaned__c/accountObj.Projected_Loan_Value__c == 0){
+                    options.push({'label' : 'Lawyer Relationship', 'value' : 'Lawyer Relationship'});
+                }
+            }else{
+                options.push({'label' : 'Lawyer Relationship', 'value' : 'Lawyer Relationship'});
+            }
+            options.push({'label' : 'Assessment Loan', 'value' : 'Assessment Loan'});
+            
+            let selectedReason = '';
+            for(let i=0; i< options.length; i++){
+                if(options[i].value == accountObj.Reason_for_LTV__c){
+                    selectedReason = accountObj.Reason_for_LTV__c;
+                }
+            }
+            
+            component.set("v.selectedReasonForLTV", selectedReason);
+            
+            component.set("v.ReasonForLTV", options);
+        },
+            getApprovalProcessHistoryInfo : function(component){
+                return new Promise($A.getCallback(
+                    function(resolve, reject){
+                        let action = component.get("c.getApprovalProcessHistoryInfo");
+                        action.setParams({
+                            recordId : component.get("v.recordId")
+                        });
+                        
+                        action.setCallback(this, function(response){
+                            let state = response.getState();
+                            
+                            if(state === 'SUCCESS'){
+                                resolve(response.getReturnValue());
+                            }else if(state === 'ERROR'){
+                                reject(response.getError());
+                            }
+                            
+                        });
+                        $A.enqueueAction(action);
+                    }
+                ));
+            },
+                validateLTV : function(component){
+                    return new Promise(
+                        function(resolve, reject){
+                            let accountObj = component.get("v.accountObj");
+                            let selectedReasonForLTV = component.get("v.selectedReasonForLTV");
+                            if(accountObj.Projected_Loan_Value__c > 0 && accountObj.Total_Amount_Loaned__c > 0){
+                                if(accountObj.Total_Amount_Loaned__c/accountObj.Projected_Loan_Value__c >= 0.15 && (selectedReasonForLTV == null || selectedReasonForLTV == '')){
+                                    resolve(false);
+                                }
+                                else
+                                    resolve(true);
+                            }else
+                                resolve(true);
+                        });
+                }
 })
