@@ -125,7 +125,7 @@ public class FundingDashboardCtrl {
                                        and Opportunity__r.Date_Applied__c <= :endDt and
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Admin Fee'
-                                       and reference_notes__c = 'Admin Fee'
+                                       AND (reference_notes__c = 'Admin Fee' OR reference_notes__c = 'Assessment Fee')
                                        AND (Opportunity__r.Stage_Status__C = 'Closed - Paid' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
@@ -216,7 +216,7 @@ public class FundingDashboardCtrl {
                                        and Opportunity__r.Date_Applied__c <= :endDt and
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Admin Fee'
-                                       and reference_notes__c = 'Admin Fee'
+                                       AND (reference_notes__c = 'Admin Fee' OR reference_notes__c = 'Assessment Fee')
                                        AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        Group by opportunity__r.AccountId])
