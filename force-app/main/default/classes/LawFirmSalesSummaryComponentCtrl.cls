@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawFirmSalesSummaryComponentCtrl.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 3/6/2020, 5:42:35 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
+**/
 public with sharing class LawFirmSalesSummaryComponentCtrl {
     public class Wrapper {
         @AuraEnabled
@@ -102,6 +113,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
             strQuery += ' OR (Payment_Method__c =:Cheque)';
             strQuery += ' OR (Payment_Method__c =:AdminFee))';
+            strQuery += ' AND Is_Rejected__c = false';            
             strQuery += ' AND Opportunity__r.Law_firm__c != \'\''; 
             strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';            
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
