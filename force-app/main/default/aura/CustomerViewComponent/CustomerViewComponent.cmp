@@ -1057,7 +1057,7 @@
                         <!-- <<<<<<<<<< LOAN SUMMARY >>>>>>>>>> -->
                         <lightning:card title="" variant="base">
                             <div class="slds-card__body_inner">
-                                <aura:if isTrue="{!!v.currentUser.Financial_Summary__c}">
+                                <aura:if isTrue="{!!v.currentUser.Loan_Overview_Edit__c}">
                                     <lightning:layout>
                                         <lightning:layoutItem size="12">  
                                             <div class="slds-m-bottom_x-large">
@@ -1196,7 +1196,7 @@
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
                                                     <lightning:input class="slds-align_absolute-center" label="Payout Date" 
-                                                                     type="date" variant="standard" value="{!v.LoanSummary.payoutDate}" disabled="{!if(v.currentUser.Financial_Summary__c, false , true)}" />
+                                                                     type="date" variant="standard" value="{!v.LoanSummary.payoutDate}" disabled="{!if(v.currentUser.Loan_Overview_Edit__c, false , true)}" />
                                                 </span>
                                             </div>
                                         </div>
@@ -1270,11 +1270,11 @@
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="6">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                                            <aura:if isTrue="{!v.currentUser.Financial_Summary__c}">
+                                            <aura:if isTrue="{!v.currentUser.Loan_Overview_Edit__c}">
                                                 <lightning:layout horizontalAlign="center" >
-                                                    <!--<lightning:layoutItem >
+                                                    <lightning:layoutItem >
                                                         <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Email Payout Statement" onclick="{!c.sendPayoutStatement}"></lightning:button>
-                                                    </lightning:layoutItem>-->
+                                                    </lightning:layoutItem>
                                                     
                                                     <lightning:layoutItem >
                                                         <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>
