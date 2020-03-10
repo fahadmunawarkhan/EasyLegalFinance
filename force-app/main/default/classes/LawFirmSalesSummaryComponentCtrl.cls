@@ -151,6 +151,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedShortfall';
                 closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus)';
                 closedWLoanQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
+                closedWLoanQuery += ' AND Is_Rejected__c = false'; 
                 closedWLoanQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
                 closedWLoanQuery += ' Group by Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
                 //lawfirm in set of lawfirm
