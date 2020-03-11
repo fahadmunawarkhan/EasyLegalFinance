@@ -102,6 +102,7 @@ public with sharing class PreApprovedInvoiceCtlr {
             strQuery += ' Sum(Amount__c) amt FROM Drawdown__c';
             strQuery += ' WHERE Opportunity__r.Stage_Status__c = \'Invoice Pre-Approved\'';
             strQuery += ' AND Opportunity__r.Type_of_Loan__c = \'Assessment\'';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
                 ' AND (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
             ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';

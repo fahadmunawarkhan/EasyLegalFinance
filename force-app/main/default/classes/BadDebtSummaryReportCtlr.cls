@@ -38,6 +38,7 @@ public with sharing class BadDebtSummaryReportCtlr {
                 ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
             ' Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Reference_Notes__c =:badDebt';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c,Opportunity__r.Account.Business_Unit__c';
             strQuery += ' Order by SUM(Amount__c) desc NULLS LAST';
             

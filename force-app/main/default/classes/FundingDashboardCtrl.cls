@@ -54,6 +54,7 @@ public class FundingDashboardCtrl {
                                        and Opportunity__r.Date_Applied__c <= :endDt
                                        AND Opportunity__r.StageName = 'Closed With Loan'
                                        AND (Payment_Method__c = 'e-Transfer' OR Payment_Method__c = 'Cheque')
+                                       AND Is_Rejected__c = false
                                        AND (Opportunity__r.Stage_Status__C like '%Active%' OR 
                                             Opportunity__r.Stage_Status__c = null)
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
@@ -90,6 +91,7 @@ public class FundingDashboardCtrl {
                                        AND (Opportunity__r.Stage_Status__C = 'Closed - Paid' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
+                                       AND Is_Rejected__c = false
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        Group by opportunity__r.AccountId])
             {
@@ -106,9 +108,11 @@ public class FundingDashboardCtrl {
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Payment' AND
                                        Reference_Notes__c != 'Bad Debt'
+                                       AND Reference_Notes__c != 'Payment Rejected'
                                        AND (Opportunity__r.Stage_Status__C = 'Closed - Paid' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
+                                       AND Is_Rejected__c = false
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        Group by opportunity__r.AccountId])
             {
@@ -126,6 +130,7 @@ public class FundingDashboardCtrl {
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Admin Fee'
                                        AND (reference_notes__c = 'Admin Fee' OR reference_notes__c = 'Assessment Fee')
+                                       AND Is_Rejected__c = false
                                        AND (Opportunity__r.Stage_Status__C = 'Closed - Paid' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
@@ -145,7 +150,9 @@ public class FundingDashboardCtrl {
                                                        Opportunity__r.StageName = 'Closed With Loan'
                                                        AND Interest_Repaid__c != null
                                                        AND Payment_Method__c = 'Payment' 
-                                                       AND Payment_Method__c != 'Bad Debt' 
+                                                       AND Payment_Method__c != 'Bad Debt'
+                                                       AND Reference_Notes__c != 'Payment Rejected'
+                                                       AND Is_Rejected__c = false
                                                        AND Opportunity__r.Stage_Status__c like '%Closed%'
                                                        AND Opportunity__r.Stage_Status__c != 'Closed - Bad Debt'
                                                        And Opportunity__r.Account.business_unit__c like:Businessunit
@@ -164,6 +171,8 @@ public class FundingDashboardCtrl {
                                                       Opportunity__r.StageName = 'Closed With Loan'
                                                       AND Payment_Method__c = 'Payment'
                                                       AND Reference_Notes__c != 'Bad Debt'
+                                                      AND Reference_Notes__c != 'Payment Rejected'
+                                                      AND Is_Rejected__c = false
                                                       AND (Opportunity__r.Stage_Status__C = 'Closed - Paid' OR 
                                                            Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                                            Opportunity__r.Stage_Status__c = 'Closed - Surplus')
@@ -199,6 +208,7 @@ public class FundingDashboardCtrl {
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Payment' AND
                                        Reference_Notes__c = 'Bad Debt'
+                                       AND Is_Rejected__c = false
                                        //AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        Group by opportunity__r.AccountId])
@@ -217,6 +227,7 @@ public class FundingDashboardCtrl {
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Payment_Method__c = 'Admin Fee'
                                        AND (reference_notes__c = 'Admin Fee' OR reference_notes__c = 'Assessment Fee')
+                                       AND Is_Rejected__c = false
                                        AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        Group by opportunity__r.AccountId])
@@ -233,6 +244,8 @@ public class FundingDashboardCtrl {
                                                              and Opportunity__r.Date_Applied__c <= :endDt and 
                                                              Opportunity__r.StageName = 'Closed With Loan'
                                                              AND Payment_Method__c = 'Payment'
+                                                             AND Reference_Notes__c != 'Payment Rejected'
+                                                             AND Is_Rejected__c = false
                                                              //AND Reference_Notes__c = 'Bad Debt'
                                                              AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                                              And Opportunity__r.Account.business_unit__c like:Businessunit
@@ -252,6 +265,8 @@ public class FundingDashboardCtrl {
                                        Opportunity__r.StageName = 'Closed With Loan'
                                        AND Interest_Repaid__c != null
                                        AND Payment_Method__c = 'Payment' 
+                                       AND Reference_Notes__c != 'Payment Rejected'
+                                       AND Is_Rejected__c = false
                                        //AND Payment_Method__c = 'Bad Debt'
                                        AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit

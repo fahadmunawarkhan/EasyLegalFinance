@@ -62,6 +62,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += (filterByBusinessUnit == 'Consolidated') ?
                 ' AND (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
             ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
@@ -139,7 +140,8 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' FROM Drawdown__c';
             strQuery += ' WHERE (temp_payout_date__c != :endDt)';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan'; 
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';      
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             dList = Database.query(strQuery);
             if(!dList.isEmpty()){
                 return false;
@@ -205,6 +207,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)'; 
             
             //strQuery += ' AND (Reference_Notes__c !=:adminFee and Reference_Notes__c !=:otherFee)';			
@@ -222,6 +225,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:payment AND Reference_Notes__c =:partialPayment)'; 
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';            
             
             aggResult = Database.query(strQuery); 
@@ -233,7 +237,8 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery = 'SELECT SUM(Accrued_Interest_In_Reporting_Period__c) accruedInterest';
             strQuery += ' FROM Drawdown__c'; 
             strQuery += ' WHERE Opportunity__r.StageName =:closedWithLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)'; 	
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)'; 
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
             
             aggResult = Database.query(strQuery);
