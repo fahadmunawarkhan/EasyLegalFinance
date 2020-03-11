@@ -25,7 +25,11 @@ public class OpportunityViewComponentCtlr {
         if(String.isEmpty(oppId))
         {
             List<Opportunity> lastOppty = [select id, Lawyer__c, Law_Firm__c, Date_Financing_Statement_Done__c ,
-                                           Date_Financing_Statement_Expires__c, Assessment_Provider__c, Assessment_Provider__r.Name
+                                           Date_Financing_Statement_Expires__c, Assessment_Provider__c, Assessment_Provider__r.Name,
+                                           Date_Applied__c, Have_you_ever_declared_bankruptcy__c, Bankruptcy_Details__c,
+                                           Other_Lawyer_Law_Firm_that_acted__c, NOTE_For_Paralegals__c, Date_of_Loss__c,
+                                           What_Happened_from_W2L__c, Nature_of_Injury_from_W2L__c, Existing_Litigation_Loans__c,
+                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c
                                            from Opportunity
                                            where AccountId = :accId AND Loan_Requests__c != null AND Lawyer__c != null ORDER BY Loan_Requests__c DESC LIMIT 1];
             oppInfo.Name = ''; 
@@ -43,6 +47,19 @@ public class OpportunityViewComponentCtlr {
             oppInfo.Assessment_Provider__c = null;
             oppInfo.Date_Financing_Statement_Done__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Done__c);
             oppInfo.Date_Financing_Statement_Expires__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Financing_Statement_Expires__c);
+            
+            oppInfo.Date_Applied__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_Applied__c);
+            oppInfo.Have_you_ever_declared_bankruptcy__c = (lastOppty.isEmpty() ? null : lastOppty[0].Have_you_ever_declared_bankruptcy__c);
+            oppInfo.Bankruptcy_Details__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Bankruptcy_Details__c);
+            oppInfo.Other_Lawyer_Law_Firm_that_acted__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Other_Lawyer_Law_Firm_that_acted__c);
+            oppInfo.NOTE_For_Paralegals__c = (lastOppty.isEmpty() ? '' : lastOppty[0].NOTE_For_Paralegals__c);
+            oppInfo.Date_of_Loss__c = (lastOppty.isEmpty() ? null : lastOppty[0].Date_of_Loss__c);
+            oppInfo.What_Happened_from_W2L__c = (lastOppty.isEmpty() ? '' : lastOppty[0].What_Happened_from_W2L__c);
+            oppInfo.Nature_of_Injury_from_W2L__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Nature_of_Injury_from_W2L__c);
+            oppInfo.Existing_Litigation_Loans__c = (lastOppty.isEmpty() ? null : lastOppty[0].Existing_Litigation_Loans__c);
+            oppInfo.Funding_Requested__c = (lastOppty.isEmpty() ? null : lastOppty[0].Funding_Requested__c);
+            oppInfo.Pre_Existing_Loan_Amount__c = (lastOppty.isEmpty() ? null : lastOppty[0].Pre_Existing_Loan_Amount__c);
+            oppInfo.Name_of_Lender__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Name_of_Lender__c);
         }
         else
         {
