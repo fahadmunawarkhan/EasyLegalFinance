@@ -51,6 +51,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
             strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c, Opportunity__r.Account.Business_Unit__c ';
             strQuery += ' Order by SUM(Amount__c) desc NULLS LAST';
             
@@ -121,6 +122,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
             strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultPayouts = Database.query(strQuery); 
@@ -134,6 +136,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' AND Payment_Method__c =:payment';
             strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout))';
             strQuery += ' group by Account.Business_Unit__c ';
@@ -150,6 +153,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) principalPaid, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:eTransfer OR Payment_Method__c =:Cheque)';
@@ -170,6 +174,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) adminFee, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:AdminFee)';
@@ -190,6 +195,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:Other)';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             // strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
             
@@ -207,6 +213,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Shortfall';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultShortfall = Database.query(strQuery); 
@@ -223,6 +230,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Surplus';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultSurplus = Database.query(strQuery);
@@ -239,6 +247,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Misc';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultMisc = Database.query(strQuery);
