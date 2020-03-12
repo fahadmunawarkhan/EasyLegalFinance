@@ -71,6 +71,7 @@
     onLoanOverviewTabClick : function (component,event,helper){
         component.set("v.spinner", true);
         helper.getLoanSummaryInfo(component); 
+        helper.getLatestOpportunity(component);
         helper.getOpportunityTransactions(component);
         
         component.set("v.paymentPayoutSearch", false);
@@ -145,12 +146,18 @@
         var dateIsSet = component.get("v.payoutDateSet");
         var oppObj = component.get('v.oppObj');
         if(dateIsSet){
-            var accObj = component.get('v.accountObj');
+            var accObj = component.get('v.accountObj');          
+            let loanOverView = component.get("v.LoanSummary");
+            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
+            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
             
             var baseURL = accObj.Conga_Send_Payout_Email_URL__c;
             if(oppObj.Type_of_Loan__c == 'Assessment')
                 baseURL = accObj. Conga_Send_Assessment_Payout_Email_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Lawyer Loan')
+                baseURL = accObj. Conga_Send_Lawyer_Payout_Email_URL__c;
             
+            baseURL += ofn;
             baseURL += "&Id=" + oppObj.Primary_Contact__c + "&EmailToId=" + oppObj.Primary_Contact__c;
             baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
             baseURL += "&ReturnPath=/lightning/r/Account/" + accObj.Id  +"/view%23/LOAN_OVERVIEW";
@@ -166,12 +173,19 @@
     generatePayoutStatement: function(component, event, helper){
         var dateIsSet = component.get("v.payoutDateSet");
         var oppObj = component.get('v.oppObj');
-        if(dateIsSet){
-            var accObj = component.get('v.accountObj');
+        if(dateIsSet){  
+            var accObj = component.get('v.accountObj');            
+            let loanOverView = component.get("v.LoanSummary");
+            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
+            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
+            
             var baseURL = accObj.Conga_Payouts_URL__c;
             if(oppObj.Type_of_Loan__c == 'Assessment')
                 baseURL = accObj. Conga_Assessmnet_Payouts_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Lawyer Loan')
+                baseURL = accObj. Conga_Lawyer_Loan_Payout_URL__c;
             
+            baseURL += ofn;
             $A.get("e.force:navigateToURL").setParams({ 
                 "url": baseURL
             }).fire();
