@@ -22,6 +22,21 @@ public class CustomerViewComponentCtlrTest {
         generalBusinessAcc.ShippingCity = 'Lake Trees';
         generalBusinessAcc.Account_Type__c = 'Treatment Provider Firm';
         generalBusinessAcc.RecordTypeId = RecordTypeIdAccount;
+        
+        Account generalBusinessAcc1 = new Account();
+        generalBusinessAcc1.Name='account1';
+        generalBusinessAcc1.BillingStreet = 'Testtest';
+        generalBusinessAcc1.BillingState = 'CA';
+        generalBusinessAcc1.BillingCity = 'City';
+        generalBusinessAcc1.BillingPostalCode = '10001';
+        generalBusinessAcc1.Billingcountry='Canada';
+        generalBusinessAcc1.ShippingStreet = 'Test';
+        generalBusinessAcc1.ShippingState = 'New York';
+        generalBusinessAcc1.ShippingCountry = 'UNITED STATES';
+        generalBusinessAcc1.ShippingPostalCode = '10001';
+        generalBusinessAcc1.ShippingCity = 'Lake Trees';
+        generalBusinessAcc1.Account_Type__c = 'Treatment Provider Firm';
+        generalBusinessAcc1.RecordTypeId = RecordTypeIdAccount;
         //insert generalBusinessAcc;
         
         // Account # 2
@@ -58,8 +73,16 @@ public class CustomerViewComponentCtlrTest {
         lawfirm2.Account_Type__c = 'Treatment Provider Firm';
         lawfirm2.RecordTypeId = RecordTypeIdAccount2;
         //insert lawfirm2;
+        //
+        Id RecordTypeIdAccount3 = 
+            Schema.SObjectType.Account.getRecordTypeInfosByName().get('Assessment Provider').getRecordTypeId();
         
-        insert (new SObject[]{generalBusinessAcc, lawfirm, lawfirm2});
+        
+        Account assessmentProviderAcc = new Account();
+        assessmentProviderAcc.Name='Test Assessment Provider';        
+        assessmentProviderAcc.RecordTypeId = RecordTypeIdAccount3;
+        
+        insert (new SObject[]{generalBusinessAcc, generalBusinessAcc1, assessmentProviderAcc, lawfirm, lawfirm2});          
         
         // Contact
         Id RecordTypeIdContact = 
@@ -98,6 +121,13 @@ public class CustomerViewComponentCtlrTest {
         
         insert (new SObject[]{primaryContct, lawyerContact, lawyerContact2});
         
+                
+        Assessment_Provider_Schedule__c assessmentProviderSchedule = new Assessment_Provider_Schedule__c();
+        assessmentProviderSchedule.Assessment_Provider__c = assessmentProviderAcc.Id;
+        assessmentProviderSchedule.Rebate_Discount__c = 20;
+        assessmentProviderSchedule.Rebate_Period__c = '12 months';
+        assessmentProviderSchedule.Lawyer__c = lawyerContact.Id;
+        insert assessmentProviderSchedule;
         
         // Opportunity 
         Opportunity Opp = new Opportunity();
@@ -139,7 +169,28 @@ public class CustomerViewComponentCtlrTest {
         Opp2.Interest_Compounding_Period__c = 'Compounding Interest';
         Opp2.Re_Assessed_Loan__c = null;
         
-        insert (new SObject[]{Opp, Opp2});
+        Opportunity Opp3 = new Opportunity();
+        Opp3.Name = 'Test Opportunity 3';
+        Opp3.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId();
+        Opp3.AccountId = generalBusinessAcc1.Id;
+        Opp3.Lawyer__c = lawyerContact.Id;
+        Opp3.CloseDate = Date.today().addDays(20);
+        Opp3.StageName = 'Closed With Loan';
+        Opp3.Law_Firm__c = lawfirm.Id;        
+        Opp3.Stage_Status__c = 'Approved';
+        Opp3.Type_of_Loan__c = 'Assessment';
+        Opp3.Primary_Contact__c = primaryContct.Id;
+        Opp3.Interest_Rate__c = 24.0;
+        Opp3.Minimum_Interest_Period__c = '0 months';
+        Opp3.Compounding_Interest__c = 'Semi-Annual';
+        Opp3.Interest_Deferral_Period__c = '18';
+        Opp3.Interest_Compounding_Period__c = 'Compounding Interest';
+        Opp3.Assessment_Provider__c = assessmentProviderAcc.Id;
+        Opp3.Re_Assessed_Loan__c = null;
+        Opp3.Effective_Date__c = Date.today().addDays(20);
+
+        
+        insert (new SObject[]{Opp, Opp2, Opp3});
                 
         // Drawdown
         Drawdown__c drw = new Drawdown__c();
@@ -160,8 +211,16 @@ public class CustomerViewComponentCtlrTest {
         drw2.Payment_Method__c = 'e-Transfer';
         drw2.Reference_Notes__c = 'Payment to Client';
         
+        Drawdown__c drw3 = new Drawdown__c();
+        
+        drw3.Opportunity__c = Opp3.id;
+        drw3.Amount__c = 1000;
+        drw3.Date__c = Date.today().addDays(-30);
+        drw3.Payment_Method__c = 'e-Transfer';
+        drw3.Reference_Notes__c = 'Payment to Client';
+        
         //insert drw2;
-        insert (new SObject[]{drw, drw2});
+        insert (new SObject[]{drw, drw2, drw3});
         
         Opportunity_Service_Provider__c sp = new Opportunity_Service_Provider__c();
         
@@ -599,5 +658,58 @@ public class CustomerViewComponentCtlrTest {
         tasks = [select Id from Task];
         System.assertEquals(true, tasks.isEmpty());
         Test.stopTest();
+    }
+    
+	public static testmethod void test_ClientRebateCalculation(){                
+        Opportunity opp = [select id, Payout_Date__c, AccountId from opportunity where name = 'Test Opportunity 3'];
+        opp.Payout_Date__c = Date.today().addDays(90);
+        update opp;
+        test.startTest();        
+        decimal amount = 900;
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(opp.AccountId, amount, 'Payout');  
+        System.assertEquals(opps[0].Client_Rebate_Amount__c, 200);
+        test.stopTest();
+    }
+    
+    public static testmethod void test_ClientRebatePartialPayment(){                
+        Opportunity opp = [select id, Payout_Date__c, AccountId from opportunity where name = 'Test Opportunity 3'];
+        opp.Payout_Date__c = Date.today().addDays(90);
+        update opp;
+        test.startTest();        
+        decimal amount = 900;
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(opp.AccountId, amount, 'Payout');  
+        CustomerViewComponentCtlr.applyPartialPayments(opp.Id, opp.AccountId, Datetime.newInstance(opp.Payout_Date__c, Time.newInstance(0,0,0,0)).format('yyyy-MM-dd'), '', '');
+        Drawdown__c paymentDrawdown = [select Id, Amount__c, Surplus__c from Drawdown__c where Payment_Method__c = 'Payment' and Reference_Notes__c = 'Partial Payment'];
+        System.assertEquals(paymentDrawdown.Amount__c, 800);
+        System.assertEquals(paymentDrawdown.Surplus__c, 100);
+        Drawdown__c clientRebateDrawdown = [select Id, Amount__c from Drawdown__c where Payment_Method__c = 'Payment' and Reference_Notes__c = 'Client Rebate'];
+        System.assertEquals(clientRebateDrawdown.Amount__c, 200);
+        test.stopTest();
+    }
+    
+    public static testmethod void test_ClientRebateClosedPaid(){                
+        Opportunity opp = [select id, Payout_Date__c, AccountId from opportunity where name = 'Test Opportunity 3'];
+        opp.Payout_Date__c = Date.today().addDays(90);
+        update opp;
+        test.startTest();        
+        decimal amount = 800;
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(opp.AccountId, amount, 'Payout');  
+        CustomerViewComponentCtlr.applyFullPayments(opp.Id, opp.AccountId, 'Payout', Datetime.newInstance(opp.Payout_Date__c, Time.newInstance(0,0,0,0)).format('yyyy-MM-dd'), '', '');
+        Drawdown__c paymentDrawdown = [select Id, Amount__c, Surplus__c from Drawdown__c where Payment_Method__c = 'Payment' and Reference_Notes__c = 'Loan Payout'];
+        System.assertEquals(paymentDrawdown.Amount__c, 800);
+        Drawdown__c clientRebateDrawdown = [select Id, Amount__c from Drawdown__c where Payment_Method__c = 'Payment' and Reference_Notes__c = 'Client Rebate'];
+        System.assertEquals(clientRebateDrawdown.Amount__c, 200);
+        test.stopTest();
+    }
+    
+    public static testmethod void test_ClientRebatePeriod(){                
+        Opportunity opp = [select id, Payout_Date__c, AccountId from opportunity where name = 'Test Opportunity 3'];
+        opp.Payout_Date__c = Date.today().addDays(400);
+        update opp;
+        test.startTest();        
+        decimal amount = 900;
+        List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(opp.AccountId, amount, 'Payout');  
+        System.assertEquals(opps[0].Client_Rebate_Amount__c, 0);
+        test.stopTest();
     }
 }

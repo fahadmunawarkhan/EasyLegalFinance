@@ -259,21 +259,24 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             system.debug('TOTAL PAYOUT BEFORE PAYMENT >> ' + opp.Total_Payout__c);
             
             
+            Decimal totalPayout = opp.Total_Payout__c;
+            if (amountRemaining + opp.Potential_Client_Rebate_Amount__c >= totalPayout)
+                totalPayout -= opp.Potential_Client_Rebate_Amount__c;
             
             // This for the last opty in case we have more payment than expected
             if(amountRemaining > 0 && helper == openOpsList.size()){
                 opp.Temp_Payment_Received__c = amountRemaining;
                 amountRemaining = 0;
             } else 
-                // This is the full payment, when we have enough for the payout
-                if(amountRemaining > 0 && opp.Total_Payout__c > 0 && amountRemaining >= opp.Total_Payout__c){
-                    opp.Temp_Payment_Received__c = opp.Total_Payout__c;    
-                    amountRemaining = amountRemaining - opp.Total_Payout__c;
+                // This is the full payment, when we have enough for the payout                
+                if(amountRemaining > 0 && totalPayout > 0 && amountRemaining >= totalPayout){
+                    opp.Temp_Payment_Received__c = totalPayout;    
+                    amountRemaining = amountRemaining - totalPayout;
                 } else 
                     // This is the partial payment, when we don't have enough for the payout
-                    if(amountRemaining > 0 && amountRemaining < opp.Total_Payout__c) {
+                    if(amountRemaining > 0 && amountRemaining < totalPayout) {
                         opp.Temp_Payment_Received__c = amountRemaining;    
-                        amountRemaining = amountRemaining - opp.Total_Payout__c;                    
+                        amountRemaining = amountRemaining - totalPayout;                    
                     }           
             
             system.debug('AMOUNT REMAINING AFTER PAYMENT >> ' + amountRemaining);            
@@ -326,7 +329,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Surplus';
         opp.Loan_Status__c = 'Closed - Surplus';
-        update opp;        
+        update opp;       
     }
     
     /******************* Method to change an opportunity to shortfall stage *********************/
@@ -355,9 +358,9 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
-        if(opp.Temp_Payment_Received__c > opp.Total_Payout__c){
-            dd.Amount__c = opp.Total_Payout__c;
-            dd.Surplus__c = opp.Temp_Payment_Received__c - opp.Total_Payout__c;
+        if((opp.Temp_Payment_Received__c != null) && opp.Temp_Payment_Received__c + opp.Client_Rebate_Amount__c > opp.Total_Payout__c){
+            dd.Amount__c = opp.Total_Payout__c - opp.Client_Rebate_Amount__c;
+            dd.Surplus__c = opp.Temp_Payment_Received__c - dd.Amount__c;
         } else {
             dd.Amount__c = opp.Temp_Payment_Received__c;        
         }
@@ -367,6 +370,10 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;
+        if (opp.Client_Rebate_Amount__c > 0){
+            Drawdown__c clientRebateDrawdown = createClientRebateDrawdown(opp, payoutDate);
+            insert clientRebateDrawdown;
+        }
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;   
@@ -376,10 +383,23 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
     }
     
+    public static Drawdown__c createClientRebateDrawdown(Opportunity opp, String payoutDate){
+        Drawdown__c dd = new Drawdown__c();
+        
+        dd.Amount__c = opp.Client_Rebate_Amount__c;
+        dd.Payment_Method__c = 'Payment';        
+        dd.Reference_Notes__c = 'Client Rebate';        
+        dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
+        dd.Opportunity__c = opp.Id;        
+        
+        return dd;
+    }
+    
     /******************* Method to save a full payment *********************/
     @AuraEnabled
     public static void applyFullPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq){            
         Opportunity opp = getSingleOpportunity(oppId);
+        List<Drawdown__c> drawdowns = new List<Drawdown__c>();
         Drawdown__c dd = new Drawdown__c();
         
         dd.Amount__c = opp.Temp_Payment_Received__c;
@@ -388,8 +408,11 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
-        dd.CHQ__c = chq;        
-        insert dd;
+        dd.CHQ__c = chq;    
+        drawdowns.add(dd);
+        if ((searchType == 'Payout') && (opp.Client_Rebate_Amount__c > 0))
+            drawdowns.add(createClientRebateDrawdown(opp, payoutDate));
+        insert drawdowns;
         
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Paid';

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Client_Rebate_Amount__c</fullName>
+    <fullName>Potential_Client_Rebate_Amount__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(Surplus__c + Potential_Client_Rebate_Amount__c &gt;= 0.0, Potential_Client_Rebate_Amount__c, 0)</formula>
+    <formula>IF(AND(Total_Payout__c &gt; 0,Payout_Date__c &gt;= Effective_Date__c, Payout_Date__c &lt;= ADDMONTHS(Effective_Date__c, Rebate_Period__c)),
+ROUND(Drawdown_Principal_Total__c * Rebate_Discount__c, 2),0)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Client Rebate Amount</label>
+    <label>Potential Client Rebate Amount</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>
