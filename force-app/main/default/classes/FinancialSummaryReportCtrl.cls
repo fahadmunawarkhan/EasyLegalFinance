@@ -207,7 +207,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
-            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)'; 
             
             //strQuery += ' AND (Reference_Notes__c !=:adminFee and Reference_Notes__c !=:otherFee)';			
