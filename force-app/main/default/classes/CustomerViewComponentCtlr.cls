@@ -393,6 +393,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = opp.Id;        
         
         return dd;
+
     }
     
     /******************* Method to save a full payment *********************/
@@ -730,10 +731,11 @@ t.adminFee =  d.Amount__c;
         lstFields.add('Account.All_Payout_Balance__c');
         lstFields.add('Account.All_Payout_Interest__c');
         lstFields.add('Primary_Contact__r.Email');
+
         
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' order by CreatedDate DESC limit 1';
+        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' order by Loan_Requests__c DESC limit 1';
         
         // *** Still need to handle exceptions ***
         // Executing the query to retrieve the latest opportunity
@@ -775,7 +777,9 @@ t.adminFee =  d.Amount__c;
         
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' and (StageName = \'Closed With Loan\' OR StageName = \'Re-Assessment\') order by StageName ASC, CreatedDate DESC limit 1';
+
+        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' and (StageName = \'Closed With Loan\' OR StageName = \'Re-Assessment\') order by StageName ASC, Loan_Requests__c DESC limit 1';
+
         
         // *** Still need to handle exceptions ***
         // Executing the query to retrieve the latest opportunity
@@ -980,9 +984,11 @@ t.adminFee =  d.Amount__c;
             system.debug('##### Payout_Date__c ' + opp.Payout_Date__c);
             system.debug('##### All_Payout_Balance__c ' + opp.Account.All_Payout_Balance__c);
             system.debug('##### Total_Rebate_Discount__c ' + opp.Account.Total_Rebate_Discount__c);
+
             
             
             
+
             // Populating loan summary information
             loanSummary.loanType = opp.Type_of_Loan__c;
             loanSummary.interestRate = opp.Interest_Rate__c;
@@ -1049,6 +1055,7 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 } else {
                     loanSummary.balanceFees = 0;
                 }
+
             }
             
             // Verifying if the totalDD list is not empty
@@ -1067,6 +1074,7 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 }        
             }
             
+
             
             /* Verifying if the totalDDtreatment list is not empty
 if(totalDDtreatment[0] != null){
