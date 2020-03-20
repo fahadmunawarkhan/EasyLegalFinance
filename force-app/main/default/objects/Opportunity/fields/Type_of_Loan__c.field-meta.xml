@@ -38,6 +38,11 @@
                 <label>Assessment</label>
             </value>
             <value>
+                <fullName>Lawyer Loan</fullName>
+                <default>false</default>
+                <label>Lawyer Loan</label>
+            </value>
+            <value>
                 <fullName>Lawyer Loans</fullName>
                 <default>false</default>
                 <isActive>false</isActive>

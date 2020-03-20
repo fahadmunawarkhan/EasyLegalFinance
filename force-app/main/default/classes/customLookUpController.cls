@@ -4,7 +4,7 @@ public class customLookUpController {
         system.debug('ObjectName-->' + ObjectName);
         
         if(String.isEmpty(fieldtoSearchIn))		fieldtoSearchIn = 'Name';
-        String searchKey = searchKeyWord + '%';
+        String searchKey = '%' + searchKeyWord + '%';
         
         List < sObject > returnList = new List < sObject > ();
         String filterString = String.isEmpty(filter) ? '' : ' and '+filter;

@@ -3,7 +3,7 @@
     <apiVersion>32.0</apiVersion>
     <packageVersions>
         <majorNumber>2</majorNumber>
-        <minorNumber>5</minorNumber>
+        <minorNumber>11</minorNumber>
         <namespace>dlrs</namespace>
     </packageVersions>
     <status>Active</status>

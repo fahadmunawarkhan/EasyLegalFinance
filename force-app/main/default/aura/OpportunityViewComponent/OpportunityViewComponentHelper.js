@@ -32,7 +32,17 @@
                     component.set("v.selectedLookUpOwner.Id", component.get("v.oppObj").OwnerId);
                     component.set("v.selectedLookUpOwner.Name",(component.get("v.oppObj").OwnerId ? 
                                                                 component.get("v.oppObj").Owner.Name : ''));
+
+                    //setting lookups
+                    component.set("v.selectedLookUpAssessmentProvider.Id", component.get("v.oppObj").Assessment_Provider__c);
+                    console.log('-' + component.get("v.oppObj").Assessment_Provider__c + '-');
+                    component.set("v.selectedLookUpAssessmentProvider.Name",(component.get("v.oppObj").Assessment_Provider__c != null && component.get("v.oppObj").Assessment_Provider__c != ''? 
+                                                                         component.get("v.oppObj").Assessment_Provider__r.Name : '')); 
                     
+
+                                                                
+                    //set restrictCommunication
+                    component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No');
                     
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
@@ -141,7 +151,7 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             
-            if (state === 'SUCCESS') {
+            if (state === 'SUCCESS') {                
                 let drawDownList = response.getReturnValue();
                 let loanType = component.get("v.oppObj").Type_of_Loan__c;
                 if (loanType && loanType.startsWith('Treatment')) {
@@ -202,12 +212,54 @@
         $A.enqueueAction(action);        
     },    
     
+    updateDrawdownList : function(component) {
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.getDrawdownList');             
+        action.setParams({ oppId : recordId});
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            
+            if (state === 'SUCCESS') {                             
+                let drawdowns = component.get("v.drawDownList");
+                let updatedDrawdowns = response.getReturnValue();
+                drawdowns.forEach(dd => {
+                    console.log(dd.Id);
+					const selectedDrawdowns = updatedDrawdowns.filter(updatedDrawdown => updatedDrawdown.Id == dd.Id);
+                    console.log(selectedDrawdowns);  
+                    if (selectedDrawdowns.length == 1 ){                                                          
+                    	dd.Can_Be_Reversed__c = selectedDrawdowns[0].Can_Be_Reversed__c;
+                    	console.log(selectedDrawdowns[0].Can_Be_Reversed__c);
+                	}                
+                });
+                component.set("v.drawDownList", drawdowns);
+                component.set("v.spinner", false);    
+            } else if (state === 'ERROR') {
+                component.set("v.spinner", false);                
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action);        
+    },
+    
     saveDrawdowns : function(component) {
         var drawDowns = component.get("v.drawDownList");
         this.saveDrawdownsCallout(component, drawDowns);
     },
+
+    saveDrawdownsAndUpdateList : function(component) {
+        var drawDowns = component.get("v.drawDownList");
+        this.saveDrawdownsCallout(component, drawDowns, true);
+    },                    
     
-    saveDrawdownsCallout : function(component, drawDowns) {
+    saveDrawdownsCallout : function(component, drawDowns, updateListNeeded) {
         var drawDowns = component.get("v.drawDownList");
         var action = component.get('c.saveNewDrawdownList');             
         action.setParams({ drawDownNewList : drawDowns});
@@ -216,9 +268,15 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
-                component.set("v.spinner", false);                
-                this.showToast('SUCCESS','Your changes were successfully saved!','SUCCESS');	                
+                this.getOpportunityInfo(component);  
+                if (updateListNeeded)
+                	this.updateDrawdownList(component);
+                else
+                    component.set("v.spinner", false);                
+                //component.set("v.drawDownList", []); 
+                //this.getDrawdownList(component, true);                                
+                //component.set("v.spinner", false);                
+                this.showToast('SUCCESS','Your changes were successfully saved!','SUCCESS');                
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -369,8 +427,9 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
+                this.getServiceProvidersList(component);
                 component.set("v.spinner", false);
-                component.set("v.serviceProviderList", response.getReturnValue()); 
+                //component.set("v.serviceProviderList", response.getReturnValue()); 
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
                 var errors = response.getError();
@@ -430,9 +489,7 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
-                this.getDrawdownPaymentsList(component);
-                component.set("v.drawDownList", response.getReturnValue());                 
+                this.reInitSomeData(component);                 
                 component.set("v.spinner", false);      
                 this.showToast('SUCCESS','Drawdown was successfully deleted!','SUCCESS');
             } else if (state === 'ERROR') {
@@ -460,9 +517,10 @@
             var state = response.getState();
             
             if (state === 'SUCCESS') {
-                this.getOpportunityInfo(component);
+                this.reInitSomeData(component); 
+                //this.getOpportunityInfo(component);
                 component.set("v.spinner", false); 
-                component.set("v.serviceProviderList", response.getReturnValue()); 
+                //component.set("v.serviceProviderList", response.getReturnValue()); 
                 this.showToast('SUCCESS','Drawdown was successfully deleted!','SUCCESS');
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
@@ -703,6 +761,7 @@
     },
     
     saveOppty : function(component) {
+        console.log('saveOppty');
         var p = new Promise ($A.getCallback( function( resolve, reject){
             
             //setting lookups
@@ -717,7 +776,13 @@
             component.set("v.oppObj.OwnerId",(component.get("v.selectedLookUpOwner.Id") ?
                                                          component.get("v.selectedLookUpOwner.Id"):''));
             
+            //setting lookups
+            component.set("v.oppObj.Assessment_Provider__c",(component.get("v.selectedLookUpAssessmentProvider.Id") ?
+                                                         component.get("v.selectedLookUpAssessmentProvider.Id"):''));
+    
+            
             var oppObj = component.get('v.oppObj');
+            console.log('oppObj ' + oppObj.Discount_Rate__c);
             var action = component.get('c.saveOpportunity');
             action.setParams({ opportunity : oppObj});
             console.log('saving oppty'+ oppObj.Primary_Contact__c);
@@ -957,6 +1022,9 @@
         var action = component.get("c.getDependentMap");
         // pass paramerters [object definition , contrller field name ,dependent field name] -
         // to server side function 
+        console.log('objDetails ' + objDetails);
+        console.log('controllerField ' + controllerField);
+        console.log('dependentField ' + dependentField);
         action.setParams({
             'objDetail' : objDetails,
             'contrfieldApiName': controllerField,
@@ -1252,12 +1320,12 @@
                         this.fetchRefNotesDepValues(component, newPaymentMethod, i);
                     }
                     if (loanType && loanType.startsWith('Treatment Loan')) {
-                        let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
+                        /*let drawDownPaymentsList = component.get('v.drawDownPaymentsList');                    
                         for(let i = 0 ; i < drawDownPaymentsList.length ; i++)
                         {
                             let newPaymentMethod = drawDownPaymentsList[i].Payment_Method__c;
                             this.fetchRefNotesDepValues(component, newPaymentMethod, i);
-                        }                  
+                        }          */        
                     }
                 }
                 component.set("v.AsyncSpinner", false);
@@ -1494,16 +1562,14 @@
     getReverseModalElement: function(component) {
         return component.find("reverseModal")
     },
-    showReverseModal: function(component, scheduledPaymentId) {
-        if (scheduledPaymentId) {
-            component.set("v.reverseScheduledPaymentId", scheduledPaymentId);
-            $A.createComponent(
-                "c:reversePaymentForm",
+    showReverseModal: function(component, drawdownId) {       
+        console.log('Drawdwon Id: ' + drawdownId);
+        $A.createComponent(
+                "c:rejectedPaymentForm",
                 {
-                    scheduledPaymentId: component.get("v.reverseScheduledPaymentId"),
-                    showProcessedFields: true,
-                    onsuccess: component.getReference("c.handleReverseSuccess"),
-                    oncancel: component.getReference("c.handleReverseCancel")
+                    drawdownToReverseId: drawdownId,
+                    onsuccess: component.getReference("c.handleRejectSuccess"),
+                    oncancel: component.getReference("c.handleRejectCancel")
                 }
             ,
             function(formComponent, status, errorMessage){
@@ -1514,16 +1580,15 @@
                         closeCallback: function() {}
                     });
                     component.set("v.reverseModalPromise", modalPromise);
-                    /*
-                    .then(function(overlay){
+                    
+                    //.then(function(overlay){
                         // we need to set the modal instance in an attribute to call its methods
-                        component.set("v.overlayPanel",overlay);
-                    */
+                      //  component.set("v.overlayPanel",overlay);
+                    
                 } else {
                     console.error(errorMessage);
                 }
-            });
-        }
+            });        
     },
     hideReverseModal: function(component) {
         component.get("v.reverseModalPromise").then(
@@ -1555,4 +1620,27 @@
             component.set('v.initialized', true);
         }
     },
+    setLatestDiscountRateLaywer : function(component){
+          return new Promise($A.getCallback(
+              function(resolve, reject){
+                  let oppObj = component.get('v.oppObj');
+                  let action = component.get("c.setLatestDiscountRateLaywer");
+                  action.setParams({
+                      oppId : oppObj.Id,
+                      assessmentProviderId : oppObj.Assessment_Provider__c,
+                      lawyerId : oppObj.Lawyer__c
+                  });
+                  
+                  action.setCallback(this, function(response){
+                      let state = response.getState();
+                      if(state == 'SUCCESS'){
+                          resolve(response.getReturnValue());
+                      }else if(state == 'ERROR'){
+                          reject(response.getError());
+                      }
+                  });
+                  $A.enqueueAction(action);
+              }
+          ));  
+    }
 })

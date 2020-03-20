@@ -215,5 +215,52 @@
             }
         });
         $A.enqueueAction(getRecordTypeMapAction); 
-    }
+    },
+    
+    getPickListValuesHelper: function(component, object, field, attributeId)
+    {
+        console.log("here");
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        
+        
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+ 
+                if (allValues != undefined && allValues.length > 0) {
+                    opts.push({
+                        class: "optionClass",
+                        label: "--- None ---",
+                        value: ""
+                    });
+                }
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i].split('===SEPERATOR===')[0],
+                            value: allValues[i].split('===SEPERATOR===')[1]
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i],
+                            value: allValues[i]
+                        });
+                    }
+                }
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
 })

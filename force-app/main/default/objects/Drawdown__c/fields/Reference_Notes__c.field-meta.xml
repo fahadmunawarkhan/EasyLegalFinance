@@ -141,6 +141,16 @@
                 <default>false</default>
                 <label>Refund</label>
             </value>
+            <value>
+                <fullName>Payment Halted</fullName>
+                <default>false</default>
+                <label>Payment Halted</label>
+            </value>
+            <value>
+                <fullName>Client Rebate</fullName>
+                <default>false</default>
+                <label>Client Rebate</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -154,12 +164,6 @@
             <controllingFieldValue>e-Transfer</controllingFieldValue>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
             <valueName>Other Fee</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Cheque</controllingFieldValue>
-            <controllingFieldValue>e-Transfer</controllingFieldValue>
-            <controllingFieldValue>Admin Fee</controllingFieldValue>
-            <valueName>Payment Rejected</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -239,6 +243,10 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
+            <valueName>Payment Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Payment</controllingFieldValue>
             <valueName>Payment Shortfall</valueName>
         </valueSettings>
         <valueSettings>
@@ -248,6 +256,14 @@
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
             <valueName>Miscellaneous Payment</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Payment</controllingFieldValue>
+            <valueName>Payment Halted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Payment</controllingFieldValue>
+            <valueName>Client Rebate</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

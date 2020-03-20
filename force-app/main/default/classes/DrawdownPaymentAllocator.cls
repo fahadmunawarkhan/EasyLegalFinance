@@ -8,7 +8,7 @@ public class DrawdownPaymentAllocator {
         clearPaymentAllocationFlag(newDrawdowns);
         allocateAnotherPayments(isInsert, oldDrawdownsMap, newDrawdowns);
     }
-    
+        
     public static void updatePayoutDate(Boolean isInsert,  Map<Id, Drawdown__c> oldDrawdownsMap, List<Drawdown__c> newDrawdowns){
         Map<Id, Drawdown__c> selectedOppToDrawdownMap = new Map<Id, Drawdown__c>();
         for (Drawdown__c newDrawdown : newDrawdowns){
@@ -93,14 +93,20 @@ public class DrawdownPaymentAllocator {
     
     public static void allocatePayments(Boolean isInsert, List<Drawdown__c> newDrawdowns, Map<Id, Drawdown__c> oldDrawdownsMap){
         List<Id> selectedDrawdownIds = new List<Id>();
+        List<Id> rejectionDrawdownIds = new List<Id>();
         for (Drawdown__c newDrawdown : newDrawdowns){
-            {
-                Drawdown__c oldDrawdown = null;
-                if (!isInsert)
-                    oldDrawdown = oldDrawdownsMap.get(newDrawdown.Id);                
-                if (checkDrawdown(isInsert, newDrawdown, oldDrawdown))            
+            Drawdown__c oldDrawdown = null;
+            if (!isInsert)
+                oldDrawdown = oldDrawdownsMap.get(newDrawdown.Id);                
+            if (checkDrawdown(isInsert, newDrawdown, oldDrawdown)){            
+                if (newDrawdown.Reference_Notes__c == 'Payment Rejected' || newDrawdown.Reference_Notes__c == 'Payment Halted')
+                    rejectionDrawdownIds.add(newDrawdown.Id);
+                else
                     selectedDrawdownIds.add(newDrawdown.Id);
-            }
+            }            
+        }
+        if (!rejectionDrawdownIds.isEmpty()){
+            PaymentAllocator.allocateRejectionDrawdowns(rejectionDrawdownIds);
         }
         if (!selectedDrawdownIds.isEmpty()){
             PaymentAllocator.AllocatePayments(selectedDrawdownIds);        

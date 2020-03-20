@@ -55,6 +55,7 @@ private with sharing class SendCustomerDataToBirdEyeTest {
         Test.setMock(HttpCalloutMock.class,new SendCustomerDataToBirdEyeMock());
         List<Opportunity> opportunityList = [SELECT Id, Stage_Status__c FROM Opportunity LIMIT 1];
         opportunityList[0].Stage_Status__c = 'Active';
+        opportunityList[0].Restrict_Communication__c = true;
         update opportunityList;
     	Test.stopTest();
     }

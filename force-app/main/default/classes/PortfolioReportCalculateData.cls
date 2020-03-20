@@ -74,7 +74,7 @@ global class PortfolioReportCalculateData implements Database.Batchable<sObject>
         
         // get all of the drawdown allocations associated with the scope record and update Temp_Payout_Date on them first
         // this will trigger the DLRS to update the Drawdown records
-        List<Drawdown_Payment_Allocation__c> allocations = [Select id,temp_payout_date__c,drawdown__r.date__c from Drawdown_Payment_Allocation__c where drawdown__c in: dmap.keySet()];
+        List<Drawdown_Payment_Allocation__c> allocations = [Select id,temp_payout_date__c,Reporting_To_Date__c,drawdown__r.date__c from Drawdown_Payment_Allocation__c where drawdown__c in: dmap.keySet()];
         list<Drawdown_Payment_Allocation__c> updatedAllocations = new List <Drawdown_Payment_Allocation__c> (); 
         for (Drawdown_Payment_Allocation__c a : allocations){
             if (sinceInception){
@@ -123,6 +123,7 @@ global class PortfolioReportCalculateData implements Database.Batchable<sObject>
         // update temp date on allocations with to date
         for (Drawdown_Payment_Allocation__c a : allocations){
             a.temp_payout_date__c = toDate;
+            a.Reporting_To_Date__c = toDate;
         }
         //system.debug('xxxxxxxx update allocations with to date. updatedAllocations='+updatedAllocations);
         update updatedAllocations;

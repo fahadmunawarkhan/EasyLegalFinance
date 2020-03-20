@@ -1,5 +1,11 @@
-public class LeadViewComponentCtlr {
+public with sharing class LeadViewComponentCtlr {
     public static Lead leadInfo {get;set;}
+    
+    @AuraEnabled
+    public static List<String> getPickListValues(String objectType, String field)
+    {
+        return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
+    }
     
     @AuraEnabled
     public static Lead getLeadInfo(String leadId) {

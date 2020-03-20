@@ -60,6 +60,11 @@
                 <default>false</default>
                 <label>Litigation Lender</label>
             </value>
+            <value>
+                <fullName>Assessment Provider</fullName>
+                <default>false</default>
+                <label>Assessment Provider</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

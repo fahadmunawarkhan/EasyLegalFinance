@@ -11,6 +11,18 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         
+        helper.getApprovalProcessHistoryInfo(component).then(
+            function(result){
+                component.set("v.approvalHistory", result);
+                console.log("v.approvalHistory " + JSON.stringify(result));
+            }
+        ).catch(
+            function(errors){
+                console.log(errors);
+                helper.errorsHandler(errors);
+            }
+        );
+        
         helper.getCriticalDatesList(component).then(
             $A.getCallback(function(result) {                
             }),
@@ -59,10 +71,12 @@
     onLoanOverviewTabClick : function (component,event,helper){
         component.set("v.spinner", true);
         helper.getLoanSummaryInfo(component); 
+        helper.getLatestOpportunity(component);
         helper.getOpportunityTransactions(component);
         
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentMiscSearch", false);
+        component.set("v.paymentRefundSearch", false);
         component.set("v.paymentSearchTypeSelected", "Payout");        
         component.set("v.paymentSearchDisabled", false);
     },
@@ -126,11 +140,52 @@
             "url": baseURL
         }).fire();
     },
+    
+    sendPayoutStatement: function(component, event, helper){
+
+        var dateIsSet = component.get("v.payoutDateSet");
+        var oppObj = component.get('v.oppObj');
+        if(dateIsSet){
+            var accObj = component.get('v.accountObj');          
+            let loanOverView = component.get("v.LoanSummary");
+            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
+            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
+            
+            var baseURL = accObj.Conga_Send_Payout_Email_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Assessment')
+                baseURL = accObj. Conga_Send_Assessment_Payout_Email_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Lawyer Loan')
+                baseURL = accObj. Conga_Send_Lawyer_Payout_Email_URL__c;
+            
+            baseURL += ofn;
+            baseURL += "&Id=" + oppObj.Primary_Contact__c + "&EmailToId=" + oppObj.Primary_Contact__c;
+            baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
+            baseURL += "&ReturnPath=/lightning/r/Account/" + accObj.Id  +"/view%23/LOAN_OVERVIEW";
+            console.log('baseURL');
+            console.log(baseURL);
+            
+            
+            $A.get("e.force:navigateToURL").setParams({ 
+                "url": baseURL
+            }).fire();
+        }
+    },
     generatePayoutStatement: function(component, event, helper){
         var dateIsSet = component.get("v.payoutDateSet");
-        if(dateIsSet){
-            var accObj = component.get('v.accountObj');
+        var oppObj = component.get('v.oppObj');
+        if(dateIsSet){  
+            var accObj = component.get('v.accountObj');            
+            let loanOverView = component.get("v.LoanSummary");
+            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
+            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
+            
             var baseURL = accObj.Conga_Payouts_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Assessment')
+                baseURL = accObj. Conga_Assessmnet_Payouts_URL__c;
+            if(oppObj.Type_of_Loan__c == 'Lawyer Loan')
+                baseURL = accObj. Conga_Lawyer_Loan_Payout_URL__c;
+            
+            baseURL += ofn;
             $A.get("e.force:navigateToURL").setParams({ 
                 "url": baseURL
             }).fire();
@@ -162,14 +217,41 @@
     
     saveAll : function(component, event, helper){
         
+        
+        
         let businessUnit = component.get("v.accountObj.Business_Unit__c");
         
         if(businessUnit != '' && businessUnit !=null){
             
-            helper.saveAccountOpptyAndContact(component);
-            helper.getAccountInfo(component);
-            helper.getLatestContact(component);
+            helper.validateLTV(component).then(
+                function(isValid){
+                    if(isValid){
+                        let accountObj = component.get("v.accountObj");
+                        accountObj.Reason_for_LTV__c = component.get("v.selectedReasonForLTV");
+                        component.set("v.accountObj", accountObj);
+                        
+                        helper.saveAccountOpptyAndContact(component);
+                        helper.getAccountInfo(component);
+                        helper.getLatestContact(component);
+                        
+                        helper.getApprovalProcessHistoryInfo(component).then(
+                            function(result){
+                                component.set("v.approvalHistory", result);
+                            }
+                        ).catch(
+                            function(errors){
+                                console.log(errors);
+                                helper.errorsHandler(errors);
+                            }
+                        );
+                    }else{
+                        helper.showToast('ERROR','Please select a reason for LTV.','Error');
+                    }
+                }
+            );
         }
+            
+            
         /*
         var contact = component.get('v.conObj');
         var lawyer = component.get('v.lawyerObj');
@@ -437,25 +519,34 @@
         var paymentDate = component.get("v.paymentDate");
         component.set("v.paymentAmount", null);
 
-        if(paymentDate != null){
+		if(paymentDate != null){
             if(searchType != null){
                 if(searchType == 'Payout'){
                     component.set("v.paymentPayoutSearch", true);
                     component.set("v.paymentMiscSearch", false);
+                    component.set("v.paymentRefundSearch", false);
                 } else if(searchType == 'Misc Income Payment') {
                     component.set("v.paymentMiscSearch", true);
                     component.set("v.paymentPayoutSearch", false);
+                    component.set("v.paymentRefundSearch", false);
+                }
+                else if(searchType == 'Refund') {
+                    component.set("v.paymentRefundSearch", true);
+                    component.set("v.paymentMiscSearch", false);
+                    component.set("v.paymentPayoutSearch", false);                    
                 }
                 helper.runAllOptsPayout(component);      
             } else {
                 component.set("v.paymentPayoutSearch", false);
             	component.set("v.paymentMiscSearch", false);
+                component.set("v.paymentRefundSearch", false);
                 helper.showToast('Error', 'Search type needs to be populated');
                 component.set("v.spinner", false);
             }
         } else {
                 component.set("v.paymentPayoutSearch", false);
             	component.set("v.paymentMiscSearch", false);
+            	component.set("v.paymentRefundSearch", false);
                 helper.showToast('Error', 'Date of payment needs to be populated');
                 component.set("v.spinner", false);            
         }
@@ -680,4 +771,8 @@ handlePaymentActionSelected : function(component, event, helper) {
             component.set("v.paymentSearchDisabled", false);     
        }*/
     },
+    projectedLoanValueChanged : function(component, event, helper){
+    	helper.setReasonForLTVOptions(component);
+    }
+
 })

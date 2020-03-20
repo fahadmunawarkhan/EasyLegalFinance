@@ -67,6 +67,26 @@ private with sharing class DrawdownHelperTest {
         DrawdownHelper.getDrawdowns('all', null, null);
         Test.stopTest();
     }
+    public static testMethod void getDrawdownTest(){
+        List<Opportunity> opps = [select Id from Opportunity];
+        insertDrawdown(opps.get(0).Id, 1);
+        List<Drawdown__c> drs = [select Id from Drawdown__c];
+        Test.startTest();
+        Drawdown__c d = DrawdownHelper.getDrawdown(drs.get(0).Id);
+        System.assertEquals(drs.get(0).Id, d.Id);
+        Test.stopTest();
+    }
+    
+    public static testMethod void updateOpportunityPayoutDateTest(){        
+        Test.startTest();
+		List<Opportunity> opps = [select Id, Payout_Date__c from Opportunity];
+        Date dt = opps.get(0).Payout_Date__c.addDays(30);
+        DrawdownHelper.updateOpportunityPayoutDate(opps.get(0).Id, dt);
+        opps = [select Id, Payout_Date__c from Opportunity];
+        System.assertEquals(dt, opps.get(0).Payout_Date__c);        
+        Test.stopTest();
+    }
+
      /**
     *    @description : Test recalculate payments 
 	// Replaced with process and InvocableMethod callout to consolidate work

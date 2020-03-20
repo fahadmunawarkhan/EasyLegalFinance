@@ -17,24 +17,34 @@
         <field>CUST_NAME</field>
     </columns>
     <filter>
-        <booleanFilter>1 AND 2 AND 3</booleanFilter>
+        <booleanFilter>1 AND 2 AND 3 AND 4</booleanFilter>
         <criteriaItems>
             <column>STAGE_NAME</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Admin Fee,Cheque,e-Transfer</value>
         </criteriaItems>
         <criteriaItems>
             <column>Account.Business_Unit__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Rhino</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Drawdown__c.Is_Rejected__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

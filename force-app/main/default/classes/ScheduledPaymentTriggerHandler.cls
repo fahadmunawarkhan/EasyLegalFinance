@@ -28,6 +28,19 @@ public class ScheduledPaymentTriggerHandler extends TriggerHandler {
         this.newSPMap = (Map<Id, Scheduled_Payment__c>) Trigger.newMap;
         this.oldSPMap = (Map<Id, Scheduled_Payment__c>) Trigger.oldMap;
     }
+    
+    public override void beforeInsert() {        
+        validateSPs();
+    }
+    
+    public void validateSPs(){
+        List<Scheduled_Payment__c> spList = Trigger.new;
+        for (Scheduled_Payment__c sp : spList) {
+            if (sp.Calculated_Payment_Type__c == null || sp.Calculated_Payment_Type__c == 'None'){
+                sp.addError('Loan type is not specified or incorrect');
+            }
+        }        
+    }
 
     public override void afterInsert() {
         System.debug('In After Insert');

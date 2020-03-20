@@ -43,6 +43,8 @@
                 </lightning:tab> 
             </aura:if>
             
+
+
             <!--<aura:if isTrue="{!v.currentUser.Critical_Items_Dates__c}">
                 <lightning:tab id="CriticalDatesReport" label="Critical Items &amp; Dates">
                     <c:CriticalDateComponent />
@@ -53,6 +55,11 @@
                     <c:FinancialSummaryComponent />
                 </lightning:tab> 
             </aura:if>
+            <!--<aura:if isTrue="{!v.currentUser.Finance_Loan_Progression_Report__c}">               
+                <lightning:tab id="FinanceLoanProgression" label="Finance Loan Progression">
+                    <c:LoanProgressionReport />
+                </lightning:tab>
+            </aura:if>-->
             <!-- Actual Financials Per Month -->
             <aura:if isTrue="{!v.currentUser.Actual_Sales_By_Month_Report__c}">                
                 <lightning:tab id="ActualSalesByMonthSummary" label="Actual Sales By Month Summary">
