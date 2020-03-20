@@ -731,9 +731,11 @@ t.adminFee =  d.Amount__c;
         lstFields.add('Account.All_Payout_Interest__c');
         lstFields.add('Primary_Contact__r.Email');
         
+        system.debug(String.join(lstFields, ','));
+        
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' order by CreatedDate DESC limit 1';
+        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' order by Loan_Requests__c DESC limit 1';
         
         // *** Still need to handle exceptions ***
         // Executing the query to retrieve the latest opportunity
@@ -775,7 +777,7 @@ t.adminFee =  d.Amount__c;
         
         // Building the query
         String strQuery = 'SELECT ' + String.join(lstFields, ',');
-        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' and (StageName = \'Closed With Loan\' OR StageName = \'Re-Assessment\') order by StageName ASC, CreatedDate DESC limit 1';
+        strQuery += ' FROM Opportunity WHERE AccountId =: accountId and RecordTypeDev__c != \'Loan_Re_Assessment_Opportunity\' and (StageName = \'Closed With Loan\' OR StageName = \'Re-Assessment\') order by StageName ASC, Loan_Requests__c DESC limit 1';
         
         // *** Still need to handle exceptions ***
         // Executing the query to retrieve the latest opportunity
