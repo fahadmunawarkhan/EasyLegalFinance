@@ -268,7 +268,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 opp.Temp_Payment_Received__c = amountRemaining;
                 amountRemaining = 0;
             } else 
-                // This is the full payment, when we have enough for the payout                
+                // This is the full payment, when we have enough for the payout
                 if(amountRemaining > 0 && totalPayout > 0 && amountRemaining >= totalPayout){
                     opp.Temp_Payment_Received__c = totalPayout;    
                     amountRemaining = amountRemaining - totalPayout;
@@ -329,7 +329,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Surplus';
         opp.Loan_Status__c = 'Closed - Surplus';
-        update opp;       
+        update opp;        
     }
     
     /******************* Method to change an opportunity to shortfall stage *********************/
@@ -408,7 +408,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
-        dd.CHQ__c = chq;    
+        dd.CHQ__c = chq;        
         drawdowns.add(dd);
         if ((searchType == 'Payout') && (opp.Client_Rebate_Amount__c > 0))
             drawdowns.add(createClientRebateDrawdown(opp, payoutDate));
