@@ -1,3 +1,14 @@
+/**
+ * @File Name          : FundingDashboardCtrl.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 26/03/2020, 5:29:44 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    26/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public class FundingDashboardCtrl {
     
     @AuraEnabled
@@ -621,5 +632,9 @@ public class FundingDashboardCtrl {
         return Lsr;
     }
 
+    @AuraEnabled
+    public static List<string> getPickListValues(String objectType, String field){
+        return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
+    }
     
 }
