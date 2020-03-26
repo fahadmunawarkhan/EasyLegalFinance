@@ -52,7 +52,8 @@
             action.setParams({
                 startDate: component.get('v.startDate'),
                 endDate: component.get('v.endDate'),
-                BusinessUnit: component.get("v.selectedBusinessUnitFilter")
+                BusinessUnit: component.get("v.selectedBusinessUnitFilter"),
+                typeOfLoan: component.get("v.selectedTypeOfLoanFilter")
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();

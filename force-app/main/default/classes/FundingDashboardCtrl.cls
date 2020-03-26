@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 26/03/2020, 5:29:44 pm
+ * @Last Modified On   : 26/03/2020, 6:17:45 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    26/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -12,7 +12,7 @@
 public class FundingDashboardCtrl {
     
     @AuraEnabled
-    public static List<LoanProgressionData> getData(String startDate, String endDate, string BusinessUnit){
+    public static List<LoanProgressionData> getData(String startDate, String endDate, string BusinessUnit, string typeOfLoan){
         
         if(BusinessUnit == 'Consolidated'){
             BusinessUnit = '%%';
@@ -32,6 +32,7 @@ public class FundingDashboardCtrl {
                                        AND StageName = 'Closed With Loan'
                                        AND (Stage_Status__C like '%Active%' OR Stage_Status__c = null)
                                        And Account.business_unit__c like:Businessunit
+                                       AND Type_of_Loan__c = :typeOfLoan
                                        Group by AccountId])
             {
                 activeLoans.put((Id)res.get('AccountId'), res);

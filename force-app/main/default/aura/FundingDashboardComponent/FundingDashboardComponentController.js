@@ -46,7 +46,6 @@
         component.set("v.spinner", true);
 
         helper.setBUCustomSettings(component);
-
         helper.getData(component).then($A.getCallback(
             function(result) {
                 helper.setDateCustomSettings(component);
