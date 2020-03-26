@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 26/03/2020, 5:26:36 pm
+  @Last Modified On   : 26/03/2020, 5:46:37 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    26/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -30,7 +30,8 @@
     <aura:attribute name="showWarning" type="Boolean" default="false" />
 
     <!--Funding Dashboard (Type of Loan)-->
-    <aura:attribute name="typeOfLoanOptions" type="List" /> {!v.typeOfLoanOptions}
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Facility Loan" />
     <!--|==============================|-->
 
     <aura:attribute name="showDetails" type="Boolean" default="false" />
@@ -107,6 +108,17 @@
                                                         value="{!v.selectedBusinessUnitFilter}" 
                                                         placeholder="Business Unit" 
                                                         options="{! v.businessUnitOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
                                 </div>
                             </span>
                         </div>
