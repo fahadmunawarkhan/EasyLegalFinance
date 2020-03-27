@@ -102,7 +102,7 @@
     viewAllButton: function(component, event, helper) {
 
         let newWin;
-        let url = '/apex/FundingDashboardViewAll?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        let url = '/apex/FundingDashboardViewAll?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter");
         try {
             newWin = window.open(url);
         } catch (e) {}
