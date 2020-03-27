@@ -260,8 +260,8 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             
             
             Decimal totalPayout = opp.Total_Payout__c;
-            if (amountRemaining + opp.Potential_Client_Rebate_Amount__c >= totalPayout)
-                totalPayout -= opp.Potential_Client_Rebate_Amount__c;
+            if (amountRemaining + opp.Client_Rebate_Amount__c >= totalPayout)
+                totalPayout -= opp.Client_Rebate_Amount__c;
             
             // This for the last opty in case we have more payment than expected
             if(amountRemaining > 0 && helper == openOpsList.size()){
@@ -376,6 +376,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         }
         insert dd;
         
+        opp = getSingleOpportunity(oppId);
         opp.Temp_Payment_Received__c = 0;   
         opp.Stage_Status__c = 'Active - Partial Payment';
         opp.Loan_Status__c = 'Active - Partial Payment';
@@ -414,6 +415,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             drawdowns.add(createClientRebateDrawdown(opp, payoutDate));
         insert drawdowns;
         
+        opp = getSingleOpportunity(oppId);
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Paid';
         opp.Total_Service_Providers_Allowance__c = 0;

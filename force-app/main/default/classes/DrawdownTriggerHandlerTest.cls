@@ -129,4 +129,18 @@ public with sharing class DrawdownTriggerHandlerTest {
 
         Test.stopTest();
     }
+
+	public static testMethod void clientRebateTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Drawdown__c drawdown = new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 1000, Payment_Method__c ='Payment', Payout_Date__c = Date.today(),
+                                            Reference_Notes__c = 'Client Rebate');
+        insert drawdown;                        
+        Test.startTest();       
+        Id oppId = clientOpportunity.id;
+        clientOpportunity = [SELECT Id,Client_Rebate_Applied__c FROM Opportunity WHERE Id = :oppId];
+        System.assertEquals(true, clientOpportunity.Client_Rebate_Applied__c);
+        
+        Test.stopTest();
+    }    
 }

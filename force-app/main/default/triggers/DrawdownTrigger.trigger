@@ -21,7 +21,8 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
     }  
     if (trigger.isBefore && trigger.isUpdate && !TriggerHelper.runOnce('DrawdownTrigger')) {
         TriggerHelper.add('DrawdownTrigger');
-        DrawdownTriggerHandler.validatePaymentChange(trigger.oldMap,trigger.new);           
+        DrawdownTriggerHandler.validatePaymentChange(trigger.oldMap,trigger.new);  
+        DrawdownTriggerHandler.validateClientRebate(trigger.oldMap,trigger.new);  
     }
     if(trigger.isBefore && trigger.isDelete){
         DrawdownTriggerHandler.validatePaymentDelete(trigger.old);
@@ -42,6 +43,7 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,
                                                              Trigger.isInsert || Trigger.isDelete);
+        DrawdownTriggerHandler.processClientRebate(Trigger.isDelete ? Trigger.old : Trigger.new);
         
         // DrawdownTriggerHandler.reCalculateCriticalDatePayout(Trigger.isDelete ? Trigger.old : Trigger.new, 
                                                              // Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);        

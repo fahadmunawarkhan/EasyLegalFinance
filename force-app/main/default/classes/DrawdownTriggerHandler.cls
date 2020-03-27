@@ -283,6 +283,34 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
         }
 	}
     
+    public static void processClientRebate(List<Drawdown__c> newDrawdowns){        
+        if (Trigger.isAfter && (Trigger.isInsert || Trigger.isDelete)){
+            Set<Id> oppIds = new Set<Id>();
+            for (Drawdown__c d : newDrawdowns){
+                if (d.Payment_Method__c=='Payment' && d.Reference_Notes__c=='Client Rebate')
+                	oppIds.add(d.Opportunity__c);
+            }
+            if (!oppIds.isEmpty()){
+                List<Opportunity> opps = [select Id, Client_Rebate_Applied__c from Opportunity where Id in:oppIds];
+                for (Opportunity opp : opps){
+                    opp.Client_Rebate_Applied__c = Trigger.isInsert;
+				}
+                if (!opps.isEmpty()){
+                    update opps;
+                }
+            }
+        }
+    }
+    
+    public static void validateClientRebate(Map<Id, Drawdown__c> oldDrawdowns, List<Drawdown__c> newDrawdowns){
+        for (Drawdown__c newDrawdown : newDrawdowns){
+            Drawdown__c oldDrawdown = oldDrawdowns.get(newDrawdown.Id);
+            if (oldDrawdown != null && oldDrawdown.Reference_Notes__c == 'Client Rebate' && newDrawdown.Reference_Notes__c != 'Client Rebate'){
+                newDrawdown.addError('Reference Notes of the Client Rebate Drawdown cannot be changed');            
+            }
+        }
+    }
+    
     /*
     public static void reCalculateCriticalDatePayout(List<Drawdown__c> newDrawdowns, Map<Id,Drawdown__c> oldMap, Boolean isInsert){
         
