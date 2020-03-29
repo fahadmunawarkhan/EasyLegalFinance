@@ -146,6 +146,11 @@
                 <default>false</default>
                 <label>Payment Halted</label>
             </value>
+            <value>
+                <fullName>Client Rebate</fullName>
+                <default>false</default>
+                <label>Client Rebate</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -255,6 +260,10 @@
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
             <valueName>Payment Halted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Payment</controllingFieldValue>
+            <valueName>Client Rebate</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

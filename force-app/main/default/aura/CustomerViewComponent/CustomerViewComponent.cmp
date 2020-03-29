@@ -1653,7 +1653,7 @@
                                         <div style="width:500px;margin-left:5%;">
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + ((opp.Stage_Status__c != '' &amp;&amp; opp.Stage_Status__c != '--- None ---') ? ' (' + opp.Stage_Status__c + ')' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Surplus__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}"/>
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}"/>
                                                          
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
@@ -1780,6 +1780,22 @@
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr>    
+														<tr class="slds-text-title_caps">
+                                                            <aura:if isTrue="{!opp.Client_Rebate_Amount__c > 0}">
+                                                                <th>
+                                                                    <div class="slds-truncate" title="Column 1">Client Rebate</div>
+                                                                </th>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!opp.Stage_Status__c != 'Closed - Paid' &amp;&amp; 
+                                                                               opp.Stage_Status__c != 'Closed - Surplus' &amp;&amp;
+                                                                               opp.Stage_Status__c != 'Closed - Shortfall' &amp;&amp;
+                                                                               opp.Stage_Status__c != 'Closed - Bad Debt' &amp;&amp;
+                                                                               opp.Client_Rebate_Amount__c > 0}">
+                                                                <td class="slds-border_top">
+                                                                    <ui:outputCurrency value="{!opp.Client_Rebate_Amount__c}" />
+                                                                </td>                                                               
+                                                            </aura:if>
+                                                        </tr>                                                        
                                                         <tr class="slds-text-title_caps">
                                                             <th>
                                                                 <div class="slds-truncate" title="Column 1">Total Payout</div>
@@ -1816,7 +1832,7 @@
                                                                                opp.Stage_Status__c != 'Closed - Bad Debt' }">
                                                                 <td class="slds-border_top slds-border_bottom">
                                                                     <!-- <ui:outputCurrency value="{!opp.Shortfall_Surplus__c}" /> -->
-                                                                    <ui:outputCurrency value="{!opp.Surplus__c}" />                                                                    
+                                                                    <ui:outputCurrency value="{!opp.Calculated_Balance__c}" />                                                                    
                                                                 </td>                                                               
                                                             </aura:if>                                                           
                                                         </tr>                                                          
@@ -1927,7 +1943,7 @@
                                             
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + (opp.Stage_Status__c == 'Bad Debt' ? ' (Bad Debt) ' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Surplus__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" />                                                            
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" />                                                            
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                                                     <thead>
