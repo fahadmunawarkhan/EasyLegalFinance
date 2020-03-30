@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 30/03/2020, 3:51:41 pm
+ * @Last Modified On   : 30/03/2020, 3:55:45 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    30/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -94,7 +94,7 @@ public class FundingDashboardCtrlTest {
         Test.setMock(HttpCalloutMock.class, new SendCustomerDataToBirdEyeMock());
         initailizeTestData();
         Test.startTest();
-        List<FundingDashboardCtrl.LoanProgressionData> aggList = FundingDashboardCtrl.getData(String.valueOf(Date.today() - 10), String.valueOf(Date.today()), 'ELFI', 'Consolidated');
+        List<FundingDashboardCtrl.LoanProgressionData> aggList = FundingDashboardCtrl.getData(String.valueOf(Date.today() - 10), String.valueOf(Date.today()), 'ELFI', 'Consolidated'); 
         system.debug('Drawdowns number:');
         system.debug(aggList);
         system.assertEquals(1, aggList.size());
