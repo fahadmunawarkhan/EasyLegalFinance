@@ -16,6 +16,8 @@
     <aura:attribute name="financialReportDataRhino" type="Object" />
     
     <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
+    <aura:attribute name="batchTotalJobItems" type="integer" default="0" />
+    <aura:attribute name="batchJobItemsProcessed" type="integer" default="0" />
     <aura:attribute name="batchJobStatus" type="String" default="" />
     <aura:attribute name="batchJobItems" type="String" default="" />
     <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
@@ -27,21 +29,30 @@
     <aura:attribute name="ChosenFilter" type="string" />
     <aura:attribute name="design" type="Boolean" default="false" />
     
+    <aura:attribute name="showZeroBatchError" type="Boolean" default="false" />
+    
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
+    
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" />
     
     <aura:attribute name="financials" type="AggregateResult[]" />
-    <aura:if isTrue="{!v.showWarning}">
+    
+    <aura:attribute name="adhocAsOfDate" type="date" />
+    <aura:handler event="aura:locationChange" action="{!c.handleDestroy}"/>
+    
+    <!--<aura:if isTrue="{!v.showWarning}">-->
         <lightning:card>
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="12">                                
                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
                         <span class="slds-assistive-text">warning</span>
                         <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
-                            <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                            <lightning:icon iconName="utility:info_alt" alternativeText="info!" size="x-small" />
                         </span>
-                        <h2>"Accrued Interest" is not as of the selected date range, You must <span style="font-weight:bold;">Rerun</span> the job.
+                        <h2>Tip! <span style="font-weight:bold;">"Accrued Interest"</span> might not be as of the selected date range or type of loan, You must <span style="font-weight:bold;">Rerun</span> the job for accurate values.
                         </h2>
                         <div class="slds-notify__close">                            
                             <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.closeWarning}" >
@@ -53,7 +64,7 @@
                 </lightning:layoutItem>
             </lightning:layout>
         </lightning:card>
-    </aura:if>
+    <!--</aura:if>-->
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -63,7 +74,7 @@
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
                                     <!--<ui:inputCheckbox label="Since Inception" value="{!v.sinceInception}" change="{!c.check}"/>-->
-                                    <lightning:input class="slds-p-vertical_large" type="checkbox" label="Since Inception" checked="{!v.sinceInception}" />
+                                    <lightning:input class="slds-p-vertical_large" type="checkbox" label="Since Inception" checked="{!v.sinceInception}" onchange="{!c.sinceInceptionClicked}" />
                                     
                                 </div>
                             </span>
@@ -120,6 +131,52 @@
                     </div>
                 </lightning:layoutItem> -->
             </lightning:layout>
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                    
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="4">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:input label="Adhoc as of Date (Accrued Interest)" type="date" value="{!v.adhocAsOfDate}" 
+                                                     min="{! v.calendarMin}" max="{! v.calendarMax}" 
+                                                     onchange="{! c.handleAdhocAsOfDateChange }" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem> 
+                
+                <lightning:layoutItem size="4">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                    
+                                </div>                                                    
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
         </div>
     </lightning:card>
     <lightning:card title="Filter" variant="base">
@@ -131,6 +188,17 @@
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
                                     <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
                                 </div>
                             </span>
                         </div>
@@ -180,7 +248,7 @@
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
                     <div style="margin-right:20px;">
-                        <span style="margin-left:5px;">{!v.batchJobItems}</span>
+                        <span style="margin-left:5px;">{!v.batchJobItems} - ({!v.batchJobItemsProcessed}/{!v.batchTotalJobItems})</span>
                         <lightning:progressBar value="{!v.batchJobProgress}" />
                     </div>                  
                 </lightning:layoutItem>
@@ -198,10 +266,11 @@
                             <aura:if isTrue="{!v.customSetting.Since_Inception__c}">
                                 <b>Inception</b>
                                 <aura:set attribute="else">
-                                    <b><lightning:formattedDateTime value="{!v.customSetting.Start_Date__c}"/></b>
+                                    <b><lightning:formattedDateTime value="{!v.customSetting.Adhoc_as_of_Date__c}"/></b>
                                 </aura:set>
                             </aura:if>
-                            to <b><lightning:formattedDateTime value="{!v.customSetting.End_Date__c}"/></b>
+                            to 
+                            <b><lightning:formattedDateTime value="{!v.customSetting.End_Date__c}"/></b>                            
                             <br /> on : 
                             <span style="text-transform: uppercase">
                                 <b><lightning:formattedDateTime value="{!v.apexBatchJobOBJ.CreatedDate}" year="numeric" day="numeric" month="short" hour="2-digit" minute="2-digit"/></b>
@@ -641,8 +710,8 @@
                                         </aura:if>
                                     </tr>
                                     <tr class="slds-hint-parent">
-                                        <td data-label="Total Number of Advanced Files">
-                                            <div class="slds-truncate makeBold" title="Total Number of Advanced Files">Total Number of Advanced Files</div>
+                                        <td data-label="Accounts">
+                                            <div class="slds-truncate makeBold" title="Accounts">Accounts</div>
                                         </td>
                                         <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
                                             <td data-label="Advanced Files">
@@ -728,7 +797,45 @@
                                                 </div>
                                             </td>
                                         </aura:if>
-                                    </tr>                    
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td data-label="Surplus Paid">
+                                            <div class="slds-truncate makeBold" title="Surplus Paid">Surplus Paid</div>
+                                        </td>
+                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
+                                            <td data-label="Surplus Paid">
+                                                <div class="slds-truncate makeBoldBlue" title="Surplus Paid">
+                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.paymentSurplus}" style="currency" maximumFractionDigits="2"/>
+                                                </div>
+                                            </td>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
+                                            <td data-label="Surplus Paid">
+                                                <div class="slds-truncate makeBoldBlue" title="Surplus Paid">
+                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.paymentSurplus}" style="currency" maximumFractionDigits="2"/>
+                                                </div>
+                                            </td>
+                                        </aura:if>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <td data-label="Shortfall Paid">
+                                            <div class="slds-truncate makeBold" title="Surplus Paid">Shortfall Paid</div>
+                                        </td>
+                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
+                                            <td data-label="Shortfall Paid">
+                                                <div class="slds-truncate makeBoldBlue" title="Shortfall Paid">
+                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.paymentShortfall}" style="currency" maximumFractionDigits="2"/>
+                                                </div>
+                                            </td>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
+                                            <td data-label="Shortfall Paid">
+                                                <div class="slds-truncate makeBoldBlue" title="Shortfall Paid">
+                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.paymentShortfall}" style="currency" maximumFractionDigits="2"/>
+                                                </div>
+                                            </td>
+                                        </aura:if>
+                                    </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Partial Payments">
                                             <div class="slds-truncate makeBold" title="Partial Payments">Partial Payments</div>

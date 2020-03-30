@@ -74,18 +74,17 @@ public class BadDebtSummaryReportCtlrTest {
     
     public static testmethod void mainTest(){
         Test.startTest();
-        List<BadDebtSummaryReportCtlr.Wrapper> aggListRhino = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Rhino');
-        List<BadDebtSummaryReportCtlr.Wrapper> aggListElfi = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI');
-        List<BadDebtSummaryReportCtlr.Wrapper> aggListConsolidated = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Consolidated');
+        List<BadDebtSummaryReportCtlr.Wrapper> aggListRhino = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Rhino','Facility Loan');
+        List<BadDebtSummaryReportCtlr.Wrapper> aggListElfi = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI','Facility Loan');
+        List<BadDebtSummaryReportCtlr.Wrapper> aggListConsolidated = BadDebtSummaryReportCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Consolidated','Facility Loan');
         //system.assertEquals(1, aggList.size());
         
         Drawdown__c drawdown = BadDebtSummaryReportCtlr.getDrawdown();
         system.assertNotEquals(null, drawdown);
         
         //BadDebtSummaryReportCtlr.PartialPaymentsWrapper financials = BadDebtSummaryReportCtlr.getPartialPayments(String.valueOf(Date.today()), String.valueOf(Date.today()));
-        BadDebtSummaryReportCtlr.saveDateCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()));
+        BadDebtSummaryReportCtlr.saveCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()),'ELFI', 'Facility Loan');
         BadDebtSummaryReportCtlr.getCustomSetting();
-        BadDebtSummaryReportCtlr.saveBusinessUnitCustomSettings('ELFI');
 		BadDebtSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
         BadDebtSummaryReportCtlr.getDrawdown();
 

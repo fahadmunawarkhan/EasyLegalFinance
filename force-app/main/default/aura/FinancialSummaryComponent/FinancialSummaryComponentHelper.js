@@ -16,7 +16,8 @@
             let action = component.get('c.saveDateCustomSettings');
             action.setParams({
                 startDate : component.get('v.startDate'),
-                endDate : component.get('v.endDate')
+                endDate : component.get('v.endDate'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -41,6 +42,7 @@
                 component.set("v.sinceInception", customSetting.Since_Inception__c);
                 component.set("v.endDate", customSetting.End_Date__c == null ? defaultEndDate : customSetting.End_Date__c);
                 component.set("v.startDate", customSetting.Start_Date__c == null ? defaultStartDate : customSetting.Start_Date__c); 
+                component.set("v.adhocAsOfDate", customSetting.Adhoc_as_of_Date__c == null ? '' : customSetting.Adhoc_as_of_Date__c);
             	resolve(true);
             }catch(e){
                 reject([{message:'Failed to set default filter dates from custom settings.'}]);                
@@ -109,7 +111,7 @@
                     class: "optionClass",
                     label: 'Consolidated',
                     value: 'Consolidated'
-                });                
+                });
                 component.set('v.'+attributeId, opts);
             }
         });
@@ -120,7 +122,8 @@
         return new Promise($A.getCallback(function(resolve, reject){
             let action = component.get('c.saveBusinessUnitCustomSettings');
             action.setParams({
-                BusinessUnit : component.get('v.selectedBusinessUnitFilter')
+                BusinessUnit : component.get('v.selectedBusinessUnitFilter'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -141,7 +144,9 @@
                 action.setParams({
                     sinceInception : component.get('v.sinceInception'),
                     startDate: component.get('v.startDate'),
-                    endDate: component.get('v.endDate')
+                    endDate: component.get('v.endDate'),
+                    typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
+                    adhocAsOfDate: component.get('v.adhocAsOfDate')
                 });
                 action.setCallback(this,function(response){
                     let state = response.getState();
@@ -163,7 +168,8 @@
                 action.setParams({
                     startDate:component.get('v.startDate'),
                     endDate:component.get('v.endDate'),
-                    BusinessUnit: businessUnit
+                    BusinessUnit: businessUnit,
+                    typeOfLoan: component.get('v.selectedTypeOfLoanFilter')
                 });
                 action.setCallback(this, function(response){
                     let state = response.getState();
@@ -184,7 +190,9 @@
                 let action = component.get('c.validateReport');
                 action.setParams({
                     startDate:component.get('v.startDate'),
-                    endDate:component.get('v.endDate')
+                    endDate:component.get('v.endDate'),
+                    typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
+                    adhocAsOfDate : component.get('v.adhocAsOfDate')
                 });
                 action.setCallback(this,function(response){
                     let state = response.getState();
@@ -200,6 +208,7 @@
     },
     
     pingForBatchJobStatus : function(component){
+        console.log('pinging...');
         let self = this;
         let intervalId = window.setInterval(
             $A.getCallback(function() { 
@@ -235,13 +244,19 @@
             if(apexBatchJobOBJ != null){
                 component.set('v.batchJobStatus',apexBatchJobOBJ.Status);
                 component.set('v.batchJobProgress',0);
-                component.set('v.batchJobItems', ' '+ 0 + '%'); 
+                component.set('v.batchJobItems', ' '+ 0 + '%');
+                component.set('v.batchTotalJobItems', apexBatchJobOBJ != null? apexBatchJobOBJ.TotalJobItems : 0);
+            	component.set('v.batchJobItemsProcessed', apexBatchJobOBJ != null? apexBatchJobOBJ.JobItemsProcessed : 0);
                 if(apexBatchJobOBJ.Status == 'Processing' || apexBatchJobOBJ.Status == 'Completed'){
-                    component.set('v.batchJobProgress',(apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100);
-                component.set('v.batchJobItems', ' '+ parseFloat((apexBatchJobOBJ.JobItemsProcessed/apexBatchJobOBJ.TotalJobItems)*100).toFixed(0) + '%');
-                }                               
+                    component.set('v.batchJobProgress',(apexBatchJobOBJ.JobItemsProcessed/(apexBatchJobOBJ.TotalJobItems!=0? apexBatchJobOBJ.TotalJobItems : 1))*100);
+                    component.set('v.batchJobItems', ' '+ parseFloat((apexBatchJobOBJ.JobItemsProcessed/(apexBatchJobOBJ.TotalJobItems!=0? apexBatchJobOBJ.TotalJobItems : 1))*100).toFixed(0) + '%');
+                    component.set('v.batchTotalJobItems', apexBatchJobOBJ.TotalJobItems);
+                    component.set('v.batchJobItemsProcessed', apexBatchJobOBJ.JobItemsProcessed);
+                }
             }
             if(apexBatchJobOBJ.Status == 'Completed'){
+                component.set('v.batchJobProgress',100);
+                component.set('v.batchJobItems', ' '+ 100 + '%');
                 //$A.enqueueAction(component.get('c.getRecords'));                  
                 resolve(true);
             }else{
@@ -258,7 +273,8 @@
                 action.setParams({
                     startDate:component.get('v.startDate'),
                     endDate:component.get('v.endDate'),
-                    BusinessUnit:component.get('v.selectedBusinessUnitFilter')
+                    BusinessUnit:component.get('v.selectedBusinessUnitFilter'),
+                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
                 });
                 action.setCallback(this, function(response){
                     let state = response.getState();
@@ -306,6 +322,7 @@
         }
     },
     showToast : function(title, message,type) {
+        console.log("showToast");
         var toastEvent = $A.get("e.force:showToast");
         toastEvent.setParams({
             "title": title,
@@ -313,6 +330,5 @@
             "type": type
         });
         toastEvent.fire();
-        console.log("this is test");
     }        
 })

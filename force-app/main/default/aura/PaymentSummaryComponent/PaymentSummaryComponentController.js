@@ -2,11 +2,10 @@
     doInit : function(component, event, helper) {
         
         component.set("v.spinner", true);
-        
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         //helper.setDefaultDates(component);
-        
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions').then($A.getCallback(
             function(result){
                 return helper.getCustomSettings(component);
@@ -52,6 +51,8 @@
             }
         )).then($A.getCallback(
             function(result){
+                console.log('partialPayments');
+                console.log(result);
                 component.set('v.partialPayments',result);                
             }
         )).then(

@@ -192,6 +192,8 @@
         <members>ApprovelProcessUnlock</members>
         <members>ApprovelProcessUnlockTest</members>
         <members>RecallApprovalProcess</members>
+        <members>LawyerSalesSummaryViewAllCtlr</members>
+        <members>LawyerSalesSummaryViewAllCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -247,6 +249,8 @@
         <members>Template_MassUpdateCustomObject</members>
         <members>LawSocietyReviewPrint</members>
         <memebers>GenerateConsolidatedAssessmentPayout</memebers>
+        <memebers>LawyerSalesSummaryPrintPDF</memebers>
+        <memebers>LawyerSalesSummaryViewAllVF</memebers>
         <name>ApexPage</name>
     </types>
     <types>
@@ -1352,6 +1356,14 @@
         <members>Contact.Pre_Approved_Loan_Formula__c</members>
         <members>Account.Conga_Send_Payout_Email_URL__c</members>
         <members>Account.Conga_Send_Assessment_Payout_Email_URL__c</members>
+        <members>Bad_Debt_Summary_Report__c.Type_of_Loan__c</members>
+        <members>Lawyer_Sales_Summary__c.Search_By_Name__c</members>
+        <members>Lawyer_Sales_Summary__c.Type_of_Loan__c</members>
+        <members>Payment_Summary_Report__c.Type_of_Loan__c</members>
+        <members>Financial_Summary_Report__c.Adhoc_as_of_Date__c</members>
+        <members>Financial_Summary_Report__c.Type_of_Loan__c</members>
+        <members>Drawdown__c.Conga_Payment_Summary_Report_Print_All_7__c</members>
+        <members>Drawdown__c.Conga_Financial_Summary_Report_Print_3__c</members>
         <name>CustomField</name>
     </types>
     <types>

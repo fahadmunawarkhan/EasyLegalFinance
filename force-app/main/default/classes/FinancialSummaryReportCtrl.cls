@@ -1,6 +1,6 @@
 public with sharing class FinancialSummaryReportCtrl {
      @AuraEnabled
-    public static void saveDateCustomSettings(String startDate, String endDate){
+    public static void saveDateCustomSettings(String startDate, String endDate, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -9,6 +9,7 @@ public with sharing class FinancialSummaryReportCtrl {
             
             fsr.End_date__c = endDt;
             fsr.Start_Date__c = startDt;
+            fsr.Type_of_Loan__c = typeOfLoan;
             
             update fsr;
             
@@ -22,7 +23,7 @@ public with sharing class FinancialSummaryReportCtrl {
         
     }
     @AuraEnabled
-    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, string BusinessUnit){
+    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, string BusinessUnit, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -60,6 +61,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
@@ -127,21 +129,27 @@ public with sharing class FinancialSummaryReportCtrl {
     }
     
     @AuraEnabled
-    public static Boolean validateReport(String startDate, String endDate){
+    public static Boolean validateReport(String startDate, String endDate, String typeOfLoan, String adhocAsOfDate){
         String strQuery = '';
         String closedWithLoan = 'Closed With Loan';
         String active = '';
         String activePartialPayment = 'Active - Partial Payment';
+        
+        
         List<Drawdown__c> dList = new List<Drawdown__c>();
         try{
             Date startDt = Date.valueOf(startDate);
-            Date endDt = Date.valueOf(endDate);
+            Date endDt = adhocAsOfDate != null && !String.isEmpty(adhocAsOfDate)? Date.valueOf(adhocAsOfDate): Date.valueOf(endDate);
             strQuery = 'Select Id'; 
             strQuery += ' FROM Drawdown__c';
-            strQuery += ' WHERE (temp_payout_date__c != :endDt)';
+            strQuery += ' WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt';
+            strQuery += ' AND (temp_payout_date__c != :endDt)';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan'; 
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            strQuery += ' AND Interest_Rate__c > 0 AND Payment_Method__c != \'Payment\'';
             dList = Database.query(strQuery);
             if(!dList.isEmpty()){
                 return false;
@@ -162,24 +170,30 @@ public with sharing class FinancialSummaryReportCtrl {
     }
     
     @AuraEnabled 
-    public static Id executeBatchJob(Boolean sinceInception, String startDate, String endDate){
+    public static Id executeBatchJob(Boolean sinceInception, String startDate, String endDate, String typeOfLoan, string adhocAsOfDate){
         try{
+            
             abortBatchJobs();
             Financial_Summary_Report__c fSR_CustomSetting = Financial_Summary_Report__c.getOrgDefaults();
             fSR_CustomSetting.Start_Date__c = !String.isEmpty(startDate) && startDate != null? Date.valueOf(startDate) : fSR_CustomSetting.Start_Date__c;
-            fSR_CustomSetting.End_Date__c = !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : fSR_CustomSetting.End_Date__c;
+            fSR_CustomSetting.End_Date__c =  !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : fSR_CustomSetting.End_Date__c;
             fSR_CustomSetting.Report_Date__c = Date.today();
             fSR_CustomSetting.Since_Inception__c = sinceInception;
+            fSR_CustomSetting.Type_of_Loan__c = typeOfLoan;
+            fSR_CustomSetting.Adhoc_as_of_Date__c = !String.isEmpty(adhocAsOfDate) && adhocAsOfDate != null? Date.valueOf(adhocAsOfDate) : null;
             upsert fSR_CustomSetting;
-            return Database.executeBatch(new FinancialReportCalculateData(Date.valueOf(startDate),
-                                                                          Date.valueOf(endDate), sinceInception));
+            return Database.executeBatch(new FinancialReportCalculateData(fSR_CustomSetting.Start_Date__c,
+                                                                          fSR_CustomSetting.End_Date__c, 
+                                                                          fSR_CustomSetting.Since_Inception__c,
+                                                                          fSR_CustomSetting.Type_of_Loan__c,
+                                                                          fSR_CustomSetting.Adhoc_as_of_Date__c));
         }catch (Exception e){
             throw new AuraHandledException(e.getMessage());
         }
     }
     
     @AuraEnabled
-    public static FinancialReportDataWrapper getFinancialReportData(String startDate, String endDate, String BusinessUnit){
+    public static FinancialReportDataWrapper getFinancialReportData(String startDate, String endDate, String BusinessUnit, String typeOfLoan){
         
         FinancialReportDataWrapper fReportDataW = new FinancialReportDataWrapper();
         String strQuery = '';
@@ -203,7 +217,8 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' SUM(Accrued_Interest_In_Reporting_Period__c) accruedInterest,';
             strQuery += ' SUM(Admin_Fee__c) adminFee';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
-            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += ' AND Date__c <= :endDt';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
@@ -223,6 +238,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:payment AND Reference_Notes__c =:partialPayment)'; 
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
@@ -237,6 +253,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery = 'SELECT SUM(Accrued_Interest_In_Reporting_Period__c) accruedInterest';
             strQuery += ' FROM Drawdown__c'; 
             strQuery += ' WHERE Opportunity__r.StageName =:closedWithLoan';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)'; 
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
@@ -244,6 +261,46 @@ public with sharing class FinancialSummaryReportCtrl {
             aggResult = Database.query(strQuery);
             if(aggResult != null){
                 fReportDataW.accruedInterest = aggResult.get('accruedInterest') != null? (Decimal)aggResult.get('accruedInterest') : 0.0;
+            }
+            
+            // total shortfall paid
+            strQuery = '';
+            
+            String Shortfall = 'Payment Shortfall';
+            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) shortfall';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
+            strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += ' AND Reference_Notes__c =:Shortfall';
+            strQuery += ' AND Is_Rejected__c = false';
+            
+            aggResult = Database.query(strQuery);
+            if(aggResult != null){
+                fReportDataW.paymentShortfall = aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.0;
+            }
+            
+            // total surplus paid
+            strQuery = '';
+
+            String Surplus = 'Payment Surplus';
+
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) surplus';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
+            strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND Reference_Notes__c =:Surplus';
+            strQuery += ' AND Is_Rejected__c = false';
+            
+            aggResult = Database.query(strQuery);
+            if(aggResult != null){
+                fReportDataW.paymentSurplus = aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.0;
             }
             
             fReportDataW.total = fReportDataW.amountOfAdvances;
@@ -254,10 +311,11 @@ public with sharing class FinancialSummaryReportCtrl {
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());
         }
-        List<Drawdown__c> congaUrlHolder = [Select Conga_Financial_Summary_Report_Print__c, Conga_Financial_Summary_Report_Print_2__c,Conga_Financial_Summary_Report_View_All__c 
+        List<Drawdown__c> congaUrlHolder = [Select Conga_Financial_Summary_Report_Print__c, Conga_Financial_Summary_Report_Print_2__c,Conga_Financial_Summary_Report_Print_3__c,
+                                            Conga_Financial_Summary_Report_View_All__c 
                                             from Drawdown__c limit 1];
         fReportDataW.congaViewAllURL = congaUrlHolder.isEmpty() ? '' : congaUrlHolder[0].Conga_Financial_Summary_Report_View_All__c;
-        fReportDataW.congaPrintReportURL = congaUrlHolder.isEmpty() ? '' : congaUrlHolder[0].Conga_Financial_Summary_Report_Print__c + congaUrlHolder[0].Conga_Financial_Summary_Report_Print_2__c;
+        fReportDataW.congaPrintReportURL = congaUrlHolder.isEmpty() ? '' : congaUrlHolder[0].Conga_Financial_Summary_Report_Print__c + congaUrlHolder[0].Conga_Financial_Summary_Report_Print_2__c + congaUrlHolder[0].Conga_Financial_Summary_Report_Print_3__c;
         return fReportDataW;        
     }
     
@@ -268,13 +326,13 @@ public with sharing class FinancialSummaryReportCtrl {
     }
     
     @AuraEnabled
-    public static void saveBusinessUnitCustomSettings(String BusinessUnit){
+    public static void saveBusinessUnitCustomSettings(String BusinessUnit, String typeOfLoan){
         try{
-            
            // Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
             Financial_Summary_Report__c fsr = Financial_Summary_Report__c.getOrgDefaults();
             
             fsr.BusinessUnit__C = BusinessUnit;
+            fsr.Type_of_Loan__c = typeOfLoan;
             
             upsert fsr;
 
@@ -289,7 +347,7 @@ public with sharing class FinancialSummaryReportCtrl {
         List<AsyncApexJob> aaj = null;
         try{
             aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
-                   WHERE ApexClass.Name = 'FinancialReportCalculateData' order by CreatedDate DESC LIMIT 1];
+                   WHERE ApexClass.Name = 'FinancialReportCalculateData' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());
         }        
@@ -299,6 +357,7 @@ public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled
     public static Financial_Summary_Report__c getCustomSetting(){
         Financial_Summary_Report__c fSR_CustomSetting = Financial_Summary_Report__c.getOrgDefaults();
+        fSR_CustomSetting.Type_of_Loan__c = fSR_CustomSetting.Type_of_Loan__c == null || fSR_CustomSetting.Type_of_Loan__c == '' ? 'Consolidated' : fSR_CustomSetting.Type_of_Loan__c;
         return fSR_CustomSetting;
     }
     
@@ -347,6 +406,10 @@ public with sharing class FinancialSummaryReportCtrl {
         @AuraEnabled
         public Decimal partialPayment{get;set;}
         @AuraEnabled
+        public Decimal paymentShortfall{get;set;}
+        @AuraEnabled
+        public Decimal paymentSurplus{get;set;}
+        @AuraEnabled
         public Decimal total{get;set;}
         @AuraEnabled
         public String congaViewAllURL{get;set;}
@@ -359,6 +422,8 @@ public with sharing class FinancialSummaryReportCtrl {
             adminFee = 0.0;
             accruedInterest = 0.0;
             partialPayment = 0.0;
+            paymentShortfall = 0.0;
+            paymentSurplus = 0.0;
         }
     }    
 }
