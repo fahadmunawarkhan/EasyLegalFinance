@@ -1,3 +1,14 @@
+<!--
+  @File Name          : FundingDashboardPrintReport.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 30/03/2020, 7:13:26 pm
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    30/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
 <apex:page controller="FundingDashboardReportVFCtlr" renderAs="PDF" applyBodyTag="false">
 
     <head>
@@ -114,11 +125,21 @@
                                     </div>
                                 </td>
                                 <td class="style-td">
-                                    <div style="{!IF(Data[0].TotalOfOpptyCount == null,'display:none;', '')}">
-                                        <apex:outputText value="{0,Number,Currency}">
-                                            <apex:param value="{!Data[0].TotalAmountPaidOnActiveLoans / Data[0].TotalOfOpptyCount}" />
-                                        </apex:outputText>
-                                    </div>
+                                    <apex:outputPanel rendered="{!IF(Data[0].TotalOfOpptyCount != 0 && Data[0].TotalAmountPaidOnActiveLoans != 0 ,true,false)}">
+                                        <div style="{!IF(Data[0].TotalOfOpptyCount == null ,'display:none;', '')}">
+                                            <apex:outputText value="{0,Number,Currency}">
+                                                <apex:param value="{!Data[0].TotalAmountPaidOnActiveLoans / Data[0].TotalOfOpptyCount}" />
+                                            </apex:outputText>
+                                        </div>
+                                    </apex:outputPanel>
+
+                                    <apex:outputPanel rendered="{!IF(Data[0].TotalOfOpptyCount == 0 && Data[0].TotalAmountPaidOnActiveLoans == 0 ,true,false)}">
+                                        <div style="{!IF(Data[0].TotalOfOpptyCount == null ,'display:none;', '')}">
+                                            <apex:outputText value="{0,Number,Currency}">
+                                                <apex:param value="{!Data[0].TotalAmountPaidOnActiveLoans}" />
+                                            </apex:outputText>
+                                        </div>
+                                    </apex:outputPanel>
                                 </td>
                                 <td class="style-td">
                                     <div style="{!IF(Data[0].TotalOfOpptyCount == null,'display:none;', '')}">
