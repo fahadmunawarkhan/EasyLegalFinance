@@ -5,6 +5,7 @@
         helper.getCalendarMax(component); 
         
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
         
         helper.getCustomSettings(component).then(
             function(result){                
@@ -50,8 +51,10 @@
         })).then(function(result){
             component.set('v.apexBatchJobOBJ', result);
             component.set('v.batchJobStatus',result.Status);
-                component.set('v.batchJobProgress',(result.JobItemsProcessed/result.TotalJobItems)*100);
-            component.set('v.batchJobItems', (result.TotalJobItems > 0) ? ' '+ parseFloat((result.JobItemsProcessed/result.TotalJobItems)*100).toFixed(0) + '%' : '0%');
+            component.set('v.batchTotalJobItems', (result.TotalJobItems > 0) ? result.TotalJobItems : 0);
+            component.set('v.batchJobItemsProcessed', (result.TotalJobItems > 0) ? result.JobItemsProcessed : 0);
+            component.set('v.batchJobProgress',(result.TotalJobItems > 0) ? (result.JobItemsProcessed/(result.TotalJobItems !=0? result.TotalJobItems: 1)*100) : 0);
+            component.set('v.batchJobItems', (result.TotalJobItems > 0) ? ' '+ parseFloat((result.JobItemsProcessed/(result.TotalJobItems !=0? result.TotalJobItems: 1))*100).toFixed(0) + '%' : '0%');
             if(result != null && (result.Status != 'Completed' && result.Status != 'Aborted' && result.Status != 'Failed')){                    
                 helper.pingForBatchJobStatus(component);
             }else{
@@ -93,6 +96,13 @@
             return helper.updateProgress(component);        
         }).then($A.getCallback(function(result){
             if(result){
+                let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
+                let showBatchError = component.get("v.showZeroBatchError");
+                if(apexBatchJobOBJ != null && apexBatchJobOBJ.TotalJobItems == 0 && showBatchError){
+                    helper.showToast('ERROR', 'No records found for selected date range or type of loan to run the job.', 'error');
+                    component.set("v.showZeroBatchError", false);
+                }
+                
                 window.clearInterval(component.get('v.intervalId'));
                 return helper.getCustomSettings(component);                
             }
@@ -182,6 +192,7 @@
         if(apexBatchJobOBJ != null && (apexBatchJobOBJ.Status != 'Completed' && apexBatchJobOBJ.Status != 'Aborted' && apexBatchJobOBJ.Status != 'Failed')){
             if(confirm('Another Job is already in progress. Do you want to cancel and run a new one?')) {
                 component.set("v.spinner", true);
+                component.set("v.showZeroBatchError", true);
                 window.clearInterval(component.get('v.intervalId'));
                 helper.executeBatchJob(component).then(
                     function(result){
@@ -189,7 +200,7 @@
                     }
                 ).then(
                     function(result){
-                        component.set('v.apexBatchJobOBJ', result);
+                        component.set('v.apexBatchJobOBJ', result);                        
                         return helper.updateProgress(component);
                     }
                 ).then(
@@ -211,6 +222,7 @@
             }
         }else{
             component.set("v.spinner", true);
+            component.set("v.showZeroBatchError", true);
             helper.executeBatchJob(component).then(
                 function(result){
                     return helper.getBatchJobStatus(component);
@@ -235,5 +247,27 @@
                 }
             );
         }        
-    }
+    },
+    sinceInceptionClicked : function(component, event, helper){
+        let adhocAsOfDate = component.get("v.adhocAsOfDate");
+        let sinceInception = component.get("v.sinceInception");
+        console.log('sinceInception = ' + sinceInception);
+        if(sinceInception){
+            component.set("v.adhocAsOfDate", '');
+        }else{
+            component.set("v.adhocAsOfDate", component.get("v.startDate"));
+        }
+    },
+    handleAdhocAsOfDateChange : function(component, event, helper){
+        let adhocAsOfDate = component.get("v.adhocAsOfDate");
+        console.log('adhocAsOfDateChange ' + adhocAsOfDate);
+        component.set("v.sinceInception", true);
+        if(adhocAsOfDate != null && adhocAsOfDate != ''){
+            component.set("v.sinceInception", false);
+        }
+    },
+    handleDestroy : function( component, event, helper ) {
+        console.log('clear interval due to navigation');
+        window.clearInterval(component.get("v.intervalId"));
+    },
 })

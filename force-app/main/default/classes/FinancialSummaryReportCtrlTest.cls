@@ -70,26 +70,26 @@ public class FinancialSummaryReportCtrlTest {
         Test.setMock(HttpCalloutMock.class, new SendCustomerDataToBirdEyeMock());
         initailizeTestData();
         Test.startTest();
-        list<FinancialSummaryReportCtrl.Wrapper> result = FinancialSummaryReportCtrl.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI');
+        list<FinancialSummaryReportCtrl.Wrapper> result = FinancialSummaryReportCtrl.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
         system.assertEquals(1, result.size());
         
-        FinancialSummaryReportCtrl.FinancialReportDataWrapper financials = FinancialSummaryReportCtrl.getFinancialReportData(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI');
+        FinancialSummaryReportCtrl.FinancialReportDataWrapper financials = FinancialSummaryReportCtrl.getFinancialReportData(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
         FinancialSummaryReportCtrl.getCustomSetting();
         FinancialSummaryReportCtrl.getPickListValues('Account', 'Business_Unit__c');
-        FinancialSummaryReportCtrl.saveBusinessUnitCustomSettings('ELFI');
+        FinancialSummaryReportCtrl.saveBusinessUnitCustomSettings('ELFI', 'Facility Loan');
         
         Date dt = Date.today();
         try{
-            FinancialSummaryReportCtrl.saveDateCustomSettings('' + dt, '' + dt);
+            FinancialSummaryReportCtrl.saveDateCustomSettings('' + dt, '' + dt, 'Facility Loan');
         }catch(exception e){
             system.debug(e.getMessage() + ' -- ' + e.getStackTraceString() );
         }
         
         
         
-        FinancialSummaryReportCtrl.executeBatchJob(true,String.valueOf(Date.today()), String.valueOf(Date.today()));
+        FinancialSummaryReportCtrl.executeBatchJob(true,String.valueOf(Date.today()), String.valueOf(Date.today()), 'Facility Loan', '');
         FinancialSummaryReportCtrl.getBatchJobStatus();
-        FinancialSummaryReportCtrl.validateReport(String.valueOf(Date.today()), String.valueOf(Date.today()));
+        FinancialSummaryReportCtrl.validateReport(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Facility Loan', '');
         
         
         Test.stopTest();

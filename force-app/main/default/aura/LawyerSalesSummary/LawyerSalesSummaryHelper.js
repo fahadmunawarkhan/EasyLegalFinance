@@ -107,7 +107,8 @@
                 field : component.get('v.sortField'),
                 direction : component.get('v.sortOrder'),
                 BusinessUnit : component.get("v.selectedBusinessUnitFilter"),
-                searchByName: component.get('v.searchByName')
+                searchByName: component.get('v.searchByName'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -138,18 +139,22 @@
             $A.enqueueAction(action);
         }));
     },
-    setDateCustomSettings : function(component){
+    setCustomSettings : function(component){
         return new Promise($A.getCallback(function(resolve, reject){
-            let action = component.get('c.saveDateCustomSettings');
+            let action = component.get('c.saveCustomSettings');
             action.setParams({
                 startDate : component.get('v.startDate'),
-                endDate : component.get('v.endDate')
+                endDate : component.get('v.endDate'),
+                businessUnit : component.get('v.selectedBusinessUnitFilter'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter'),
+                searchByName : component.get('v.searchByName')
+                
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
                 if(state === 'SUCCESS'){
                     console.log('The start date and end date in custom settings have been updated.');
-                    console.log(response.getReturnValue());
+                    resolve(true);
                 }else if(state === 'ERROR'){
                     console.log('The start date and end date in custom settings could not be updated.');
                     reject(response.getError());
@@ -197,6 +202,20 @@
         var ElfiamountTotal = 0;
         var ElfiClosedFileTotal = 0;
         
+        var ElfiBadDebtTotal = 0,
+            ElfiBadDebtAmtTotal = 0.0,
+            ElfiShortfallTotal = 0,
+            ElfiShortfallAmtTotal = 0.0,
+            ElfiOverageTotal = 0,
+            ElfiOverageAmtTotal = 0.0;
+        
+        var RhinoBadDebtTotal = 0,
+            RhinoBadDebtAmtTotal = 0.0,
+            RhinoShortfallTotal = 0,
+            RhinoShortfallAmtTotal = 0.0,
+            RhinoOverageTotal = 0,
+            RhinoOverageAmtTotal = 0.0;
+        
         for(var i = 0; i < paymentData.length; i++){
             
             RhinofileTotal += (paymentData[i].rhinoFileCount == null) ? 0 : paymentData[i].rhinoFileCount;
@@ -210,6 +229,20 @@
             ElfiClosedAmtTotal += (paymentData[i].elfiClosedAmount == null) ? 0 : paymentData[i].elfiClosedAmount;
             ElfiClosedFileTotal += (paymentData[i].elfiClosedFileCount == null) ? 0 : paymentData[i].elfiClosedFileCount;
             RhinoClosedFileTotal += (paymentData[i].rhinoClosedFileCount == null) ? 0 : paymentData[i].rhinoClosedFileCount;
+            
+            RhinoBadDebtTotal += (paymentData[i].rhinoBadDebtFileCount == null) ? 0 : paymentData[i].rhinoBadDebtFileCount;
+            RhinoBadDebtAmtTotal += (paymentData[i].rhinoBadDebtAmount == null) ? 0 : paymentData[i].rhinoBadDebtAmount;
+            RhinoShortfallTotal += (paymentData[i].rhinoShortfallFileCount == null) ? 0 : paymentData[i].rhinoShortfallFileCount;
+            RhinoShortfallAmtTotal += (paymentData[i].rhinoShortfallAmount == null) ? 0 : paymentData[i].rhinoShortfallAmount;
+            RhinoOverageTotal += (paymentData[i].rhinoOverageFileCount == null) ? 0 : paymentData[i].rhinoOverageFileCount;
+            RhinoOverageAmtTotal += (paymentData[i].rhinoOverageAmount == null) ? 0 : paymentData[i].rhinoOverageAmount;
+            
+            ElfiBadDebtTotal += (paymentData[i].elfiBadDebtFileCount == null) ? 0 : paymentData[i].elfiBadDebtFileCount;
+            ElfiBadDebtAmtTotal += (paymentData[i].elfiBadDebtAmount == null) ? 0 : paymentData[i].elfiBadDebtAmount;
+            ElfiShortfallTotal += (paymentData[i].elfiShortfallFileCount == null) ? 0 : paymentData[i].elfiShortfallFileCount;
+            ElfiShortfallAmtTotal += (paymentData[i].elfiShortfallAmount == null) ? 0 : paymentData[i].elfiShortfallAmount;
+            ElfiOverageTotal += (paymentData[i].elfiOverageFileCount == null) ? 0 : paymentData[i].elfiOverageFileCount;
+            ElfiOverageAmtTotal += (paymentData[i].elfiOverageAmount == null) ? 0 : paymentData[i].elfiOverageAmount;
             
             /*if(paymentData[i].businessunit == "Rhino"){
                 RhinofileTotal += (paymentData[i].file == null) ? 0 : paymentData[i].file;
@@ -229,7 +262,21 @@
         component.set("v.RhinoamtTotal", RhinoamountTotal);
         component.set("v.ElfifileTotal", ElfifileTotal); 
         component.set("v.ElfiOpptyTotal", ElfiOpptyTotal); 
-        component.set("v.ElfiamtTotal", ElfiamountTotal);  
+        component.set("v.ElfiamtTotal", ElfiamountTotal); 
+        
+        component.set("v.RhinoBadDebtTotal", RhinoBadDebtTotal);
+        component.set("v.RhinoBadDebtAmtTotal", RhinoBadDebtAmtTotal);
+        component.set("v.RhinoShortfallTotal", RhinoShortfallTotal);
+        component.set("v.RhinoShortfallAmtTotal", RhinoShortfallAmtTotal);
+        component.set("v.RhinoOverageTotal", RhinoOverageTotal);
+        component.set("v.RhinoOverageAmtTotal", RhinoOverageAmtTotal);
+        
+        component.set("v.ElfiBadDebtTotal", ElfiBadDebtTotal);
+        component.set("v.ElfiBadDebtAmtTotal", ElfiBadDebtAmtTotal);
+        component.set("v.ElfiShortfallTotal", ElfiShortfallTotal);
+        component.set("v.ElfiShortfallAmtTotal", ElfiShortfallAmtTotal);
+        component.set("v.ElfiOverageTotal", ElfiOverageTotal);
+        component.set("v.ElfiOverageAmtTotal", ElfiOverageAmtTotal);
     },
     
     errorsHandler : function(errors){

@@ -35,7 +35,8 @@
             action.setParams({
                 startDate : component.get('v.startDate'),
                 endDate : component.get('v.endDate'),
-                BusinessUnit : component.get("v.selectedBusinessUnitFilter")
+                BusinessUnit : component.get("v.selectedBusinessUnitFilter"),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -117,19 +118,20 @@
         }));
     },
     
-    setDateCustomSettings : function(component){
-        console.log('+++++');
+    setCustomSettings : function(component){
         return new Promise($A.getCallback(function(resolve, reject){
-            let action = component.get('c.saveDateCustomSettings');
+            let action = component.get('c.saveCustomSettings');
             action.setParams({
                 startDate : component.get('v.startDate'),
-                endDate : component.get('v.endDate')
+                endDate : component.get('v.endDate'),
+                businessUnit : component.get('v.selectedBusinessUnitFilter'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
                 if(state === 'SUCCESS'){
                     console.log('The start date and end date in custom settings have been updated.');
-                    console.log(response.getReturnValue());
+                    resolve(true);
                 }else if(state === 'ERROR'){
                     console.log('The start date and end date in custom settings could not be updated.');
                     reject(response.getError());
@@ -138,24 +140,6 @@
             $A.enqueueAction(action);
         }));
     },
-    setBUCustomSettings : function(component){
-        return new Promise($A.getCallback(function(resolve, reject){
-            let action = component.get('c.saveBusinessUnitCustomSettings');
-            action.setParams({
-                BusinessUnit : component.get('v.selectedBusinessUnitFilter')
-            });
-            action.setCallback(this,function(response){
-                let state = response.getState();
-                if(state === 'SUCCESS'){
-                    console.log(response.getReturnValue());
-                }else if(state === 'ERROR'){
-                    reject(response.getError());
-                }
-            });
-            $A.enqueueAction(action);
-        }));
-    }
-    ,
     getCustomSettings : function(component){
         //get report dates from custom setting
         return new Promise($A.getCallback(

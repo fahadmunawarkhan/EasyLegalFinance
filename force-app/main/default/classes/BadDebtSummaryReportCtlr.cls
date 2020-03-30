@@ -1,6 +1,6 @@
 public with sharing class BadDebtSummaryReportCtlr {
     @AuraEnabled
-    public static list<Wrapper> getPaymentsGroupByProvince(String startDate, String endDate, string BusinessUnit){
+    public static list<Wrapper> getPaymentsGroupByProvince(String startDate, String endDate, string BusinessUnit, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -33,6 +33,7 @@ public with sharing class BadDebtSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt'; 
             //strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             //strQuery += ' AND Payment_Method__c =:payment';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
                 ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
@@ -129,7 +130,7 @@ public with sharing class BadDebtSummaryReportCtlr {
         return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
     }
     @AuraEnabled
-    public static void saveDateCustomSettings(String startDate, String endDate){
+    public static void saveCustomSettings(String startDate, String endDate,String businessUnit, String typeOfLoan){
         try{
             
             Date startDt = Date.valueOf(startDate);
@@ -137,8 +138,10 @@ public with sharing class BadDebtSummaryReportCtlr {
             
             Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getOrgDefaults();
             
+            bdr.BusinessUnit__C = businessUnit;
             bdr.End_Date__c = endDt;
             bdr.Start_Date__c = startDt;
+            bdr.Type_of_Loan__c = typeOfLoan;
             
             upsert bdr;
             
@@ -151,14 +154,15 @@ public with sharing class BadDebtSummaryReportCtlr {
         
         
     }
-    @AuraEnabled
-    public static void saveBusinessUnitCustomSettings(String BusinessUnit){
+    /*@AuraEnabled
+    public static void saveBusinessUnitCustomSettings(String BusinessUnit, String typeOfLoan){
         try{
             
             // Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
             Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getOrgDefaults();
             
             bdr.BusinessUnit__C = BusinessUnit;
+            bdr.Type_of_Loan__c = typeOfLoan;
             
             upsert bdr;
             
@@ -170,11 +174,12 @@ public with sharing class BadDebtSummaryReportCtlr {
         }
         
         
-    }
+    }*/
     @AuraEnabled
     public static Bad_Debt_Summary_Report__c getCustomSetting(){
         // Bad_Debt_Summary_Report__c bDSR = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
         Bad_Debt_Summary_Report__c bDSR = Bad_Debt_Summary_Report__c.getOrgDefaults();
+        bDSR.Type_of_Loan__c = bDSR.Type_of_Loan__c == null || String.isEmpty(bDSR.Type_of_Loan__c) ? 'Consolidated' : bDSR.Type_of_Loan__c;
         return bDSR;
     }
     
