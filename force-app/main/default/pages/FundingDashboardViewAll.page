@@ -1,3 +1,14 @@
+<!--
+  @File Name          : FundingDashboardViewAll.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 27/03/2020, 11:27:34 am
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    27/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
 <apex:page controller="FundingDashboardReportVFCtlr" contentType="application/x-excel#FundingDashboardViewAll.xls">
     <apex:pageBlock >
         <div>
@@ -9,6 +20,9 @@
                         </th>
                         <th>
                             Business Unit
+                        </th>
+                        <th>
+                            Type Of Loan
                         </th>
                         <th>
                             Total Loans funded
@@ -62,6 +76,7 @@
                         <tr>
                             <td>{!item.AccountName}</td>
                             <td>{!item.BusinessUnit}</td>
+                            <td>{!TypeOfLoan}</td>
                             <td>
                                 <div style="{!IF(item.AmountPaidOnActiveLoans == null,'display:none;', '')}">
                                     <apex:outputText value="{0,Number,Currency}">
