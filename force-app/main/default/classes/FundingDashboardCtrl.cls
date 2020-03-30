@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 3/27/2020, 6:03:29 PM
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 27/03/2020, 7:01:19 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    26/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -35,7 +35,7 @@ public class FundingDashboardCtrl {
                                        AND StageName = 'Closed With Loan'
                                        AND (Stage_Status__C like '%Active%' OR Stage_Status__c = null)
                                        And Account.business_unit__c like:Businessunit
-                                       AND Type_of_Loan__c = :typeOfLoan
+                                       AND Type_of_Loan__c like:typeOfLoan
                                        Group by AccountId])
             {
                 activeLoans.put((Id)res.get('AccountId'), res);
@@ -73,7 +73,7 @@ public class FundingDashboardCtrl {
                                        AND (Opportunity__r.Stage_Status__C like '%Active%' OR 
                                             Opportunity__r.Stage_Status__c = null)
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 Principals.put((Id)res.get('AccountId'), res);
@@ -88,7 +88,7 @@ public class FundingDashboardCtrl {
                                             and Date_Applied__c <= :endDt
                                             AND StageName = 'Closed With Loan'
                                             And Account.business_unit__c like:Businessunit
-                                            AND Type_of_Loan__c = :typeOfLoan
+                                            AND Type_of_Loan__c like:typeOfLoan
                                             Group by AccountId])
             {
                 OpptyCountMap.put((Id)countRes.get('AccountId'), countRes);
@@ -110,7 +110,7 @@ public class FundingDashboardCtrl {
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
                                             AND Is_Rejected__c = false
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 ClosedFundingsMap.put((Id)res.get('AccountId'), res);
@@ -132,7 +132,7 @@ public class FundingDashboardCtrl {
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
                                             AND Is_Rejected__c = false
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 PayoutsTotalPrincipalReceivedMap.put((Id)res.get('AccountId'), res);
@@ -154,7 +154,7 @@ public class FundingDashboardCtrl {
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 TotalPayoutsAdminFeeMap.put((Id)res.get('AccountId'), res);
@@ -176,7 +176,7 @@ public class FundingDashboardCtrl {
                                                        AND Opportunity__r.Stage_Status__c like '%Closed%'
                                                        AND Opportunity__r.Stage_Status__c != 'Closed - Bad Debt'
                                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                                        Group by opportunity__r.AccountId])
             {
                 TotalInterestReceivedMap.put((Id)interestReceivedRes.get('AccountId'), interestReceivedRes);
@@ -198,7 +198,7 @@ public class FundingDashboardCtrl {
                                                            Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                                            Opportunity__r.Stage_Status__c = 'Closed - Surplus')
                                                       And Opportunity__r.Account.business_unit__c like:Businessunit
-                                                      AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                                      AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                                       Group by opportunity__r.AccountId])
             {
                 TotalPayoutsReceivedMap.put((Id)payoutsReceivedRes.get('AccountId'), payoutsReceivedRes);
@@ -215,7 +215,7 @@ public class FundingDashboardCtrl {
                                                    StageName = 'Closed With Loan'
                                                    AND Stage_Status__C ='Closed - Bad Debt'
                                                    And Account.business_unit__c like:Businessunit
-                                                   AND Type_of_Loan__c = :typeOfLoan
+                                                   AND Type_of_Loan__c like:typeOfLoan
                                                    Group by AccountId])
             {
                 badDebtOpptyCountMap.put((Id)badDebtOpptyRes.get('AccountId'), badDebtOpptyRes);
@@ -234,7 +234,7 @@ public class FundingDashboardCtrl {
                                        AND Is_Rejected__c = false
                                        //AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 BadDebtTotalPrincipalReceivedMap.put((Id)res.get('AccountId'), res);
@@ -254,7 +254,7 @@ public class FundingDashboardCtrl {
                                        AND Is_Rejected__c = false
                                        AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 BadDebtTotalAdminFeeMap.put((Id)res.get('AccountId'), res);
@@ -274,7 +274,7 @@ public class FundingDashboardCtrl {
                                                              //AND Reference_Notes__c = 'Bad Debt'
                                                              AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                                              And Opportunity__r.Account.business_unit__c like:Businessunit
-                                                             AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                                             AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                                              Group by opportunity__r.AccountId])
             {
                 BadDebtTotalPayoutsReceivedMap.put((Id)BadDebtpayoutsReceivedRes.get('AccountId'), 
@@ -296,7 +296,7 @@ public class FundingDashboardCtrl {
                                        //AND Payment_Method__c = 'Bad Debt'
                                        AND Opportunity__r.Stage_Status__C ='Closed - Bad Debt'
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
-                                       AND Opportunity__r.Type_of_Loan__c = :typeOfLoan
+                                       AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
             {
                 BadDebtTotalInterestReceivedMap.put((Id)res.get('AccountId'), res);
