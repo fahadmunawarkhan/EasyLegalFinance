@@ -18,5 +18,16 @@
             }
         });
         $A.enqueueAction(action);
-	}
+	},
+    parseNavigationHash : function(component) {
+        if (window.location.hash) {
+            var hash = window.location.hash.split('/');
+            if (hash.length > 1) {
+                component.set("v._selectedTabId", hash[1]);
+                if (hash.length > 2) {
+                    component.set("v._selectedSecondaryTabId", hash[2]);
+                }
+            }
+        }
+    }
 })
