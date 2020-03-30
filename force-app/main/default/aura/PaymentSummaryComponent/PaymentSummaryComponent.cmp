@@ -21,6 +21,9 @@
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" /> 
     <aura:attribute name="businessUnitOptions" type="List" />
     
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
+    
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -78,6 +81,17 @@
                     </div>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
@@ -120,7 +134,7 @@
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
                     <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Shows Only "Payment" Drawdowns with Reference Notes being Partial Payments or Loan Payouts Falling under Selected Range. <br/>
+                    This Table Shows Only "Payment" Drawdowns with Reference Notes being Partial Payments or Loan Payouts or Client Rebate Falling under Selected Range. <br/>
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003mrAjUAI/view" target="_BLANK">
@@ -465,10 +479,9 @@
                                     <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'Rhino'}">
                                         <td data-label="Total Interest Paid">
                                             <div class="slds-truncate makeBoldBlue" title="Total Interest Paid" style="float:left;width:50%;">
-                                                <!--<lightning:formattedNumber value="{!v.partialPayments.totalInterestPaid}" style="currency" maximumFractionDigits="2"/>-->
-                                                ??????
+                                                <lightning:formattedNumber value="{!v.partialPayments.totalInterestPaidRhino}" style="currency" maximumFractionDigits="2"/>
                                             </div>
-                                            <div title="TBD." style="float:right;width:50%;">
+                                            <div title="{!'Sum of Interest Repaid\nFrom Drawdowns Where (Payment Method = \'Payment\')\nOpportunity Stage = \'Closed with Loan\' \nfor the selected Date Range and Business Unit'}" style="float:right;width:50%;">
                                                 <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                             </div>
                                         </td>
@@ -476,10 +489,9 @@
                                     <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'ELFI'}">
                                         <td data-label="Total Interest Paid">
                                             <div class="slds-truncate makeBoldBlue" title="Total Interest Paid" style="float:left;width:50%;">
-                                                <!--<lightning:formattedNumber value="{!v.partialPayments.totalInterestPaid}" style="currency" maximumFractionDigits="2"/>-->
-                                                ??????
+                                                <lightning:formattedNumber value="{!v.partialPayments.totalInterestPaidELFI}" style="currency" maximumFractionDigits="2"/>
                                             </div>
-                                            <div title="TBD." style="float:right;width:50%;">
+                                            <div title="{!'Sum of Interest Repaid\nFrom Drawdowns Where (Payment Method = \'Payment\')\nOpportunity Stage = \'Closed with Loan\' \nfor the selected Date Range and Business Unit'}" style="float:right;width:50%;">
                                                 <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                             </div>
                                         </td>

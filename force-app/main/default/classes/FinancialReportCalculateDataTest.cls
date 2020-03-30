@@ -64,7 +64,7 @@ public class FinancialReportCalculateDataTest {
     
     public static testmethod void mainMethod(){
         Test.startTest();
-        FinancialReportCalculateData fRCD = new FinancialReportCalculateData(Date.today(),Date.today(),true); 
+        FinancialReportCalculateData fRCD = new FinancialReportCalculateData(Date.today(),Date.today(),true, 'Facility Loan', null); 
         ID batchprocessid = Database.executeBatch(fRCD);
 		Test.stopTest();
     }

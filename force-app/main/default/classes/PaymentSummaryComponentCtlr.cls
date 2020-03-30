@@ -31,7 +31,7 @@ public with sharing class PaymentSummaryComponentCtlr {
         }
     }
     @AuraEnabled
-    public static wrapperClass[] getPaymentsGroupByProvince(String startDate, String endDate, String businessUnit){
+    public static wrapperClass[] getPaymentsGroupByProvince(String startDate, String endDate, String businessUnit, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -42,15 +42,17 @@ public with sharing class PaymentSummaryComponentCtlr {
             string ClosedWithLoan = 'Closed With Loan';
             String PartialPayment = 'Partial Payment';
             String LoanPayout = 'Loan Payout';
+            String clientRebate = 'Client Rebate';
             
             strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c prov, Opportunity__r.Account.Business_Unit__c bunit, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
             strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Amount__c) amt';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit'; 
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate)';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c, Opportunity__r.Account.Business_Unit__c ';
             strQuery += ' Order by SUM(Amount__c) desc NULLS LAST';
@@ -99,7 +101,7 @@ public with sharing class PaymentSummaryComponentCtlr {
     }
     
     @AuraEnabled
-    public static PartialPaymentsWrapper getPartialPayments(String startDate, String endDate, String businessUnit){
+    public static PartialPaymentsWrapper getPartialPayments(String startDate, String endDate, String businessUnit, String typeOfLoan){
         PartialPaymentsWrapper partialPaymentsW = new PartialPaymentsWrapper();
         //List<AggregateResult> aggResult = new List<AggregateResult>();
         try{
@@ -113,15 +115,17 @@ public with sharing class PaymentSummaryComponentCtlr {
             string ClosedWithLoan = 'Closed With Loan';
             String PartialPayment = 'Partial Payment';
             String LoanPayout = 'Loan Payout';
+            String clientRebate = 'Client Rebate';
             
             strQuery = 'Select'; 
             strQuery += ' COUNT(Opportunity__c) payouts, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate)';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
@@ -135,10 +139,11 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Opportunity WHERE id in ( Select Opportunity__c from Drawdown__c where Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout))';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate))';
             strQuery += ' group by Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultOutstanding = Database.query(strQuery);
@@ -154,6 +159,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Is_Rejected__c = false';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:eTransfer OR Payment_Method__c =:Cheque)';
@@ -175,6 +181,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Is_Rejected__c = false';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:AdminFee)';
@@ -193,6 +200,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:Other)';
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
@@ -210,6 +218,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) shortfall, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Shortfall';
@@ -228,6 +237,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Surplus';
             strQuery += ' AND Is_Rejected__c = false';
@@ -245,12 +255,33 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Misc';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
             List<AggregateResult> aggResultMisc = Database.query(strQuery);
+            
+            
+            // Total Interest Received
+            strQuery = 'SELECT SUM(Interest_Repaid__c) interestReceived,';
+            strQuery += ' Opportunity__r.Account.Business_Unit__c unit';
+            strQuery += ' FROM Drawdown__c';
+            strQuery += ' WHERE Opportunity__r.Date_Applied__c >= :startDt';
+            strQuery += ' AND Opportunity__r.Date_Applied__c <= :endDt';
+            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Interest_Repaid__c != null';
+            strQuery += ' AND Payment_Method__c =:payment';
+            strQuery += ' AND Reference_Notes__c != \'Payment Rejected\'';
+            strQuery += ' AND Is_Rejected__c = false';
+            strQuery += ' AND Opportunity__r.Stage_Status__c like \'%Closed%\'';
+            strQuery += ' AND Opportunity__r.Stage_Status__c != \'Closed - Bad Debt\'';
+            strQuery += ' group by Opportunity__r.Account.Business_Unit__c';
+            
+            List<AggregateResult> aggResultInterestReceived = Database.query(strQuery);
 
             if(!aggResultPayouts.isEmpty()){
                 for(AggregateResult aggResult : aggResultPayouts)
@@ -325,11 +356,24 @@ public with sharing class PaymentSummaryComponentCtlr {
                 }
                 
             }
+            
+            if(!aggResultInterestReceived.isEmpty()){
+                for(AggregateResult aggResult : aggResultInterestReceived)
+                {
+                    String unit = (string)aggResult.get('unit');
+                    if(unit == 'ELFI')	partialPaymentsW.totalInterestPaidELFI = aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
+                    if(unit == 'Rhino')	partialPaymentsW.totalInterestPaidRhino = aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
+                }                
+            }
+            
             partialPaymentsW.totalPaymentsELFI = partialPaymentsW.totalPrincipalPaidELFI + partialPaymentsW.totalAdminFeePaidELFI + 
-                partialPaymentsW.totalOtherELFI;
+                partialPaymentsW.totalOtherELFI + partialPaymentsW.totalInterestPaidELFI;
             
             partialPaymentsW.totalPaymentsRhino = partialPaymentsW.totalPrincipalPaidRhino + partialPaymentsW.totalAdminFeePaidRhino + 
-                partialPaymentsW.totalOtherRhino;
+                partialPaymentsW.totalOtherRhino + partialPaymentsW.totalInterestPaidRhino;
+            
+            
+            
             
             //if(!aggResult.isEmpty()){
                 
@@ -353,6 +397,7 @@ public with sharing class PaymentSummaryComponentCtlr {
                                                 Conga_Payment_Summary_Report_Print_All_4__c,
                                                 Conga_Payment_Summary_Report_Print_All_5__c,
                                                 Conga_Payment_Summary_Report_Print_All_6__c,
+                                                Conga_Payment_Summary_Report_Print_All_7__c,
                                                 Conga_Payment_Summary_Report_View_All__c 
                                             from Drawdown__c limit 1];
         	partialPaymentsW.congaViewAllURL = congaUrlHolder.isEmpty() ? '' 
@@ -363,7 +408,8 @@ public with sharing class PaymentSummaryComponentCtlr {
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_3__c +
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_4__c +
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_5__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_6__c ;
+                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_6__c +
+                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_7__c;
             
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage()+e.getStackTraceString());
@@ -376,7 +422,7 @@ public with sharing class PaymentSummaryComponentCtlr {
         return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
     }
     @AuraEnabled
-    public static void saveDateCustomSettings(String startDate, String endDate, String businessUnit){
+    public static void saveDateCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -386,6 +432,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             psr.End_date__c = endDt;
             psr.Start_Date__c = startDt;
             psr.Business_Unit__c = businessUnit;
+            psr.Type_of_Loan__c = typeOfLoan;
             update psr;
             
             

@@ -1,7 +1,6 @@
 ({
     getCalendarMin : function(component){
-        var year = new Date().getFullYear() - 5;
-        var min = year+'-01-01';
+        var min = '2010-01-01';
         component.set("v.calendarMin", min);                
     },
     
@@ -35,7 +34,8 @@
             action.setParams({
                 startDate : component.get('v.startDate'),
                 endDate : component.get('v.endDate'),
-                businessUnit : component.get("v.selectedBusinessUnitFilter")
+                businessUnit : component.get("v.selectedBusinessUnitFilter"),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -55,7 +55,8 @@
             action.setParams({
                 startDate : component.get('v.startDate'),
                 endDate : component.get('v.endDate'),
-                businessUnit : component.get("v.selectedBusinessUnitFilter")
+                businessUnit : component.get("v.selectedBusinessUnitFilter"),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -77,7 +78,8 @@
             action.setParams({
                 startDate : component.get('v.startDate'),
                 endDate : component.get('v.endDate'),
-                businessUnit: component.get('v.selectedBusinessUnitFilter')
+                businessUnit: component.get('v.selectedBusinessUnitFilter'),
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -134,11 +136,13 @@
                         });
                     }
                 }
-                opts.push({
-                    class: "optionClass",
-                    label: 'Consolidated',
-                    value: 'Consolidated'
-                });                
+                    
+                    opts.push({
+                        class: "optionClass",
+                        label: 'Consolidated',
+                        value: 'Consolidated'
+                    });      
+                                   
                 component.set('v.'+attributeId, opts);
                 resolve(opts);
             }
@@ -177,14 +181,15 @@
         var opptyTotalELFI = 0;
         var accountTotalELFI = 0;
         var amountTotalELFI = 0;
-            
-        for(var i = 0; i < paymentData.length; i++){
-            accountTotalRhino += (paymentData[i].numAccountsRhino == null) ? 0 : paymentData[i].numAccountsRhino;
-            opptyTotalRhino += (paymentData[i].numOpptiesRhino == null) ? 0 : paymentData[i].numOpptiesRhino;
-            amountTotalRhino += (paymentData[i].amountRhino == null) ? 0 : paymentData[i].amountRhino;
-            accountTotalELFI += (paymentData[i].numAccountsELFI == null) ? 0 : paymentData[i].numAccountsELFI;
-            opptyTotalELFI += (paymentData[i].numOpptiesELFI == null) ? 0 : paymentData[i].numOpptiesELFI;
-            amountTotalELFI += (paymentData[i].amountELFI == null) ? 0 : paymentData[i].amountELFI;
+        if(paymentData != undefined && paymentData != null) {   
+            for(var i = 0; i < paymentData.length; i++){
+                accountTotalRhino += (paymentData[i].numAccountsRhino == null) ? 0 : paymentData[i].numAccountsRhino;
+                opptyTotalRhino += (paymentData[i].numOpptiesRhino == null) ? 0 : paymentData[i].numOpptiesRhino;
+                amountTotalRhino += (paymentData[i].amountRhino == null) ? 0 : paymentData[i].amountRhino;
+                accountTotalELFI += (paymentData[i].numAccountsELFI == null) ? 0 : paymentData[i].numAccountsELFI;
+                opptyTotalELFI += (paymentData[i].numOpptiesELFI == null) ? 0 : paymentData[i].numOpptiesELFI;
+                amountTotalELFI += (paymentData[i].amountELFI == null) ? 0 : paymentData[i].amountELFI;
+            }
         }
         component.set("v.accountTotalRhino", accountTotalRhino); 
         component.set("v.opptyTotalRhino", opptyTotalRhino); 
@@ -209,5 +214,13 @@
             "type": type
         });
         toastEvent.fire();
+    },
+    resetTotals : function(component, event, helper){
+        component.set("v.accountTotalRhino", 0); 
+        component.set("v.opptyTotalRhino", 0); 
+        component.set("v.amountTotalRhino", 0.0); 
+        component.set("v.accountTotalELFI", 0); 
+        component.set("v.opptyTotalELFI", 0); 
+        component.set("v.amountTotalELFI", 0.0);
     }
 })

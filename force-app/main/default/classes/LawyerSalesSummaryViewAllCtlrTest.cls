@@ -1,16 +1,16 @@
-@isTest
-public class PaymentSummaryComponentCtrlTest {
-	
+@isTest 
+public class LawyerSalesSummaryViewAllCtlrTest {
+    
     @TestSetup
     static void initailizeTestData(){
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
         
-        accountList.add( new Account(Name = 'Test Client Account', Authorization_Clause__c = 'No', Business_Unit__c='ELFI',
+        accountList.add( new Account(Name = 'Test Client Account', Authorization_Clause__c = 'No',business_unit__c = 'Rhino', 
                                              RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Client').getRecordTypeId()));
-        accountList.add( new Account(Name = 'Test LawFirm Account', Authorization_Clause__c = 'No', Business_Unit__c='Rhino',
+        accountList.add( new Account(Name = 'Test LawFirm Account', Authorization_Clause__c = 'No',business_unit__c = 'ELFI', 
                                              RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Law Firm').getRecordTypeId()));
-        accountList.add( new Account(Name = 'Firm Account', Account_Type__c = 'Treatment Provider Firm', Business_Unit__c='ELFI',
+        accountList.add( new Account(Name = 'Firm Account', Account_Type__c = 'Treatment Provider Firm',business_unit__c = 'Rhino',
                                     RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId()));
         
         insert accountList;
@@ -39,12 +39,12 @@ public class PaymentSummaryComponentCtrlTest {
         
         insertDrawdowns(Opp.Id);
         
-        Payment_Summary_Report__c psr = new Payment_Summary_Report__c();
+        Lawyer_Sales_Summary_Report__c lfssr = new Lawyer_Sales_Summary_Report__c();
         
-        psr.Start_Date__c = date.today();
-        psr.End_Date__c = date.today() + 7;
+        lfssr.Start_Date__c = date.today();
+        lfssr.End_Date__c = date.today() + 7;
         
-        insert psr;
+        insert lfssr;
     }
     
     public static void insertDrawdowns(String OppId){
@@ -56,7 +56,7 @@ public class PaymentSummaryComponentCtrlTest {
         }
         if(drawdownList.size() > 0){
             insert (new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = OppId,
-                                            Amount__c = 1500, Payment_Method__c ='Payment',
+                                            Amount__c = 1500, Payment_Method__c ='e-Transfer',
                                             Reference_Notes__c = 'Partial Payment'));
             insert drawdownList;
             insertDrawdownPaymentAllocations(drawdownList, OppId);
@@ -72,17 +72,44 @@ public class PaymentSummaryComponentCtrlTest {
         insert drawdownPAList;
     }
     
-    public static testmethod void mainTest(){
+    public static testmethod void getAllDrawdowns_Test(){
         Test.startTest();
-        List<PaymentSummaryComponentCtlr.wrapperClass> aggList = PaymentSummaryComponentCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
-        system.assertEquals(1, aggList.size());
+        Date endDate = Date.today();
+        Date startDate = endDate.addDays(-30);
+        PageReference pageRef = Page.LawyerSalesSummaryViewAllVF;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('StartDate', startDate.year() + '-' + startDate.month() + '-' + startDate.day());
+        ApexPages.currentPage().getParameters().put('EndDate', '' + endDate.year() + '-' + endDate.month() + '-' + endDate.day());
+        ApexPages.currentPage().getParameters().put('BusinessUnit', 'Consolidated');
+        ApexPages.currentPage().getParameters().put('TypeOfLoan', 'Consolidated');
+        ApexPages.currentPage().getParameters().put('SearchByName', '');
+        ApexPages.currentPage().getParameters().put('ContentType', 'PDF');
         
-        PaymentSummaryComponentCtlr.PartialPaymentsWrapper financials = PaymentSummaryComponentCtlr.getPartialPayments(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI','Facility Loan');
-        PaymentSummaryComponentCtlr.getCustomSetting();
-        PaymentSummaryComponentCtlr.saveDateCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI','Facility Loan');
-
+        LawyerSalesSummaryViewAllCtlr ctlr = new LawyerSalesSummaryViewAllCtlr();
         
+        ctlr.getAllDrawdowns();
         
         Test.stopTest();
     }
+    
+    public static testmethod void getGroupbyLawyer_Test(){
+        Test.startTest();
+        Date endDate = Date.today();
+        Date startDate = endDate.addDays(-30);
+        PageReference pageRef = Page.LawyerSalesSummaryPrintPDF;
+        Test.setCurrentPage(pageRef);
+        ApexPages.currentPage().getParameters().put('StartDate', startDate.year() + '-' + startDate.month() + '-' + startDate.day());
+        ApexPages.currentPage().getParameters().put('EndDate', '' + endDate.year() + '-' + endDate.month() + '-' + endDate.day());
+        ApexPages.currentPage().getParameters().put('BusinessUnit', 'Consolidated');
+        ApexPages.currentPage().getParameters().put('TypeOfLoan', 'Consolidated');
+        ApexPages.currentPage().getParameters().put('SearchByName', '');
+        ApexPages.currentPage().getParameters().put('ContentType', 'PDF');
+        
+        LawyerSalesSummaryViewAllCtlr ctlr = new LawyerSalesSummaryViewAllCtlr();
+        
+        ctlr.getGroupbyLawyer();
+        
+        Test.stopTest();
+    }
+    
 }

@@ -23,6 +23,9 @@
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" />    
     
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
+    
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -55,8 +58,8 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                      variant="neutral" type="button" label="Filter" onclick="{!c.filterButton}" />                    
+                                    <!--<lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                                      variant="neutral" type="button" label="Filter" onclick="{!c.filterButton}" />-->                    
                                 </div>                                                    
                             </span>
                         </div>
@@ -74,6 +77,17 @@
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
                                     <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
                                 </div>
                             </span>
                         </div>
