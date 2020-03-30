@@ -313,5 +313,6 @@
             "type": type
         });
         toastEvent.fire();
+        console.log("this is test");
     }        
 })
