@@ -17,6 +17,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     @track sortedBy = 'Verified_Date__c';
     @track sortedDirection = 'desc';
     @track selectedScheduledPaymentId;
+    @track drawdownId;
     @track showReverseForm = false;
 
     _queryTerm = '';
@@ -72,7 +73,9 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
     ];
 
     getRowActions(row, doneCallback) {
-        const actions = [];
+        //console.log('Row ' + row.Id + ' '  + row.Can_Be_Reversed__c + '  ' + row.Drawdown__c);
+        const actions = [];        
+        {
             fetchCustomPermissions({permissions: [
                 'Can_Process_Scheduled_Payments'
             ]}).then(result => {
@@ -80,11 +83,13 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
                     actions.push({
                         label: 'Reverse',
                         iconName: 'utility:edit',
-                        name: 'reverse'
+                        name: 'reverse',
+                        disabled: !row.Can_Be_Reversed__c
                     });
                 }
                 doneCallback(actions);
             });
+        }
     }
 
 
@@ -228,7 +233,8 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         const row = event.detail.row;
         switch (actionName) {
             case 'reverse':
-                this.selectedScheduledPaymentId = row.Id;
+                //this.selectedScheduledPaymentId = row.Id;                
+                this.drawdownId = row.Drawdown__c;
                 this.showReverseModal();
                 break;
             default:
@@ -243,7 +249,7 @@ export default class FundingDetailsCompletedPayments extends LightningElement {
         showToast(
             this,
             'Success',
-            'Successfully reversed the scheduled payment',
+            'Successfully reversed the payment',
             'success'
         );
     }

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-({
+({    
     doInit : function(component, event, helper) {
         helper.getOpportunityInfo(component);
         /*helper.getCriticalDatesList(component).then(
@@ -46,6 +46,9 @@
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule__c', 'Payment_Schedule__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule_Mode__c', 'Payment_Schedule_Mode__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Day_of_Month__c', 'Day_of_Month__c_options');
+        helper.getPickListValues(component, 'Opportunity', 'Invoice_Type__c', 'invoiceTypeOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');        
+        
         helper.getBankAccountOptions(component);
         
         // get the fields API name and pass it to helper function  
@@ -120,7 +123,7 @@
     
     saveDrawdowns : function(component, event, helper){
         component.set("v.spinner", true);
-        helper.saveDrawdowns(component);
+        helper.saveDrawdownsAndUpdateList(component);
     },
     
     savePaymentDrawdowns : function(component, event, helper){
@@ -411,12 +414,27 @@
         }, 100);
     },
     hideLookupInput : function(component, event, helper) {	
-        
+        console.log('hideLookupInput');
+        let clickSource = component.get("v.clickSource");
+        console.log('clickSource = ' + clickSource);
         component.set("v.clickSource", "none");   
         var oppObjId = component.get("v.oppObj.Id");
-        if(oppObjId){
+        if(oppObjId && clickSource != 'none'){
+            console.log('call');
             component.set("v.spinner", true);
-            helper.saveOppty(component);
+            helper.saveOppty(component).then(
+                $A.getCallback(function(result) {
+                    helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
+                    helper.getOpportunityInfo(component);
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    }else {
+                        helper.unknownErrorsHandler();
+                    }
+                    
+                }));
         }
     },
     handlePaymentScheduleChange : function(component, event, helper) {  
@@ -481,7 +499,7 @@
     },
     handleReverseClick: function(component, event, helper) {
         helper.showReverseModal(component, event.getParam("Id"));
-    },
+    },    
     handleReverseSuccess : function(component, event, helper) {
         helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
@@ -491,4 +509,47 @@
         //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
     },
+	handleRejectSuccess : function(component, event, helper) {
+        helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+        //helper.getServiceProvidersList(component);
+    },
+    handleRejectCancel: function(component, event, helper) {
+        //helper.reInitSomeData(component, event, helper);
+        helper.hideReverseModal(component);
+    },      
+    refreshDiscountButton : function(component, event, helper){
+        
+        var confirm = window.confirm('Are you sure you want to apply the recent discount rate of lawyer by assessment provider?');
+        if (confirm) {
+            component.set("v.spinner", true);
+            helper.setLatestDiscountRateLaywer(component).then(
+                function(result){
+                    helper.getOpportunityInfo(component);
+                }
+            ).then(
+                function(){
+                    helper.showToast('SUCCESS','New discount rate is applied successfully.','success');
+                    component.set("v.spinner", false);
+                }
+            ).catch(
+                function(errors){
+                    component.set("v.spinner", false);
+                    console.log('error : ' + errors);
+                    helper.errorsHandler(errors);
+                }
+            );
+        }
+    },
+    
+    setSendToGoogleReview : function(component, event, helper) {
+        
+        let oppObj = component.get("v.oppObj");
+        if(event.getSource().get("v.label") == 'Yes'){
+			oppObj.Restrict_Communication__c = true;           
+        }else{
+            oppObj.Restrict_Communication__c = false;
+        }
+        component.set("v.oppObj", oppObj);
+    }
 })

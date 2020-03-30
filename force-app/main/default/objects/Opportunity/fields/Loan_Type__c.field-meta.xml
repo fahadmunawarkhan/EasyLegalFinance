@@ -73,6 +73,16 @@
                 <label>12 - Uncategorized</label>
             </value>
             <value>
+                <fullName>13 - Assessment Loan</fullName>
+                <default>false</default>
+                <label>13 - Assessment Loan</label>
+            </value>
+            <value>
+                <fullName>14 - Lawyer Loan</fullName>
+                <default>false</default>
+                <label>14 - Lawyer Loan</label>
+            </value>
+            <value>
                 <fullName>Other</fullName>
                 <default>false</default>
                 <isActive>false</isActive>

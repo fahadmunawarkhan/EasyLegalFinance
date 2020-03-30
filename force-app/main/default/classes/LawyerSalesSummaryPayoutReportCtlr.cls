@@ -54,6 +54,7 @@ public with sharing class LawyerSalesSummaryPayoutReportCtlr {
         strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
         strQuery += ' OR (Payment_Method__c =:Cheque)';
         strQuery += ' OR (Payment_Method__c =:AdminFee))';
+        strQuery += ' AND Is_Rejected__c = false';
         strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit';
         strQuery += ' AND Opportunity__r.Lawyer__c != \'\''; 
         
@@ -79,6 +80,7 @@ public with sharing class LawyerSalesSummaryPayoutReportCtlr {
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus)';
             strQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIds';
+            strQuery += ' AND Is_Rejected__c = false';
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit';
             strQuery += ' order by Opportunity__r.Lawyer__r.Name asc NULLS LAST,  Opportunity__r.Law_Firm__r.Name asc, Date__c desc, Opportunity__r.Account.Name asc';
             

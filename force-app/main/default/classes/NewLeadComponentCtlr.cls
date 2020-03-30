@@ -118,4 +118,10 @@ delete lead;
         
         return result;
     }
+    
+    @AuraEnabled
+    public static List<String> getPickListValues(String objectType, String field)
+    {
+        return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
+    }
 }

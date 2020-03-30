@@ -5,6 +5,7 @@
     <label>Referred By</label>
     <length>32768</length>
     <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>LongTextArea</type>
     <visibleLines>2</visibleLines>
 </CustomField>

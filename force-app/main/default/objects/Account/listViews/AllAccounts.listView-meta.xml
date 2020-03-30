@@ -10,5 +10,10 @@
     <columns>CORE.USERS.ALIAS</columns>
     <columns>ACCOUNT.CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.NAME</field>
+        <operation>contains</operation>
+        <value>Popovich</value>
+    </filters>
     <label>All Accounts</label>
 </ListView>

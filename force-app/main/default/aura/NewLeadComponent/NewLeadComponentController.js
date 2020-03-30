@@ -4,6 +4,7 @@
         helper.getLeadInfo(component);		
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);   
+        helper.getPickListValuesHelper(component, 'Account','ProvinceResidency__c','provinceResidencyOptions');
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
         component.set('v.leadObj.Date_of_Application__c', today);
         

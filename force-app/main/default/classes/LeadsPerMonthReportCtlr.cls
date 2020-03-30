@@ -61,7 +61,8 @@ public with sharing class LeadsPerMonthReportCtlr {
         List<Drawdown__c> drawdowns = Database.query(
             'SELECT Created_Month__c, Amount__c, Opportunity__r.Account.Business_Unit__c FROM Drawdown__c WHERE ' +
             '( Payment_Method__c = \'Cheque\' OR Payment_Method__c =\'e-Transfer\' OR '+
-            'Payment_Method__c = \'Admin Fee\' OR Reference_Notes__c = \'Admin Fee\' ) '+
+            'Payment_Method__c = \'Admin Fee\' OR Reference_Notes__c = \'Admin Fee\' OR Reference_Notes__c = \'Assessment Fee\') '+
+            ' AND Is_Rejected__c = false' +
             ' AND Opportunity__r.Account.Business_Unit__c LIKE \'%'+(businessUnit == 'Consolidated' ? '' : businessUnit)+'%\' '+
             ' AND Date__c >= :startDt and Date__c<= :endDt and Opportunity__r.StageName = \'Closed with Loan\' '
         );        

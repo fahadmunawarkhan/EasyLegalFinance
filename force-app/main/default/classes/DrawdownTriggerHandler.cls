@@ -129,74 +129,188 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
         }
         if(!oppties.isEmpty())
         {
-            mergeAdminFeeWithFirstDrawdown(oppties);
+            mergeAdminFees(oppties);
         }
     }
-    public static void mergeAdminFeeWithFirstDrawdown(Set<Id> opptyIds)
-    {
-        system.debug('In mergeAdminFeeWithFirstDrawdown Function');
+    public static void mergeAdminFees(Set<Id> opptyIds){
+        system.debug('In mergeAdminFees Function');
         List<Opportunity> oppties = [Select id , Stage_Status__c,
                                      (Select Amount__c, Reference_Notes__c , Payment_Method__c,
                                       Accrued_Interest_as_of_Payout_Date__c, Admin_Accrued_Interest__c,
                                       Admin_Outstanding_Balance__c, Outstanding_Balance_as_of_Payout_Date__c,
                                       Admin_Per_Diem__c, Per_Diem_as_of_Payout_Date__c From Drawdowns__r
-                                      Order by Date__c asc)
+                                      Order by Date__c asc, Name asc)
                                      from Opportunity where id in :opptyIds];
-        List<Drawdown__c> updatables = new List<Drawdown__c>();
+        List<Drawdown__c> drawdownsToUpdate = new List<Drawdown__c>();
         for(Opportunity op : oppties)
         {
             if(!op.Drawdowns__r.isEmpty())
             {
-                double adminFee = 0.0;
-                double adminAccuredInterest = 0.0;
-                double adminOutstandingBalance = 0.0;
-                double adminPerDiem = 0.0;
-                Drawdown__c firstDrawdown = null;
+				List<Drawdown__c> drawdownsRange = new List<Drawdown__c>();
+                //Splitting drawdowns by Rejected Payments. Merge admin fee separately in each range
                 for(Drawdown__c d : op.Drawdowns__r)
                 {
-                    if(d.Reference_Notes__c == 'Admin Fee' || d.Reference_Notes__c == 'Assessment Fee')
-                    {
-                        //system.debug('Reference Notes == Admin Fee ' + d.Id);
-                        adminFee += d.Amount__c;
-                        adminAccuredInterest += d.Accrued_Interest_as_of_Payout_Date__c;
-                        adminOutstandingBalance +=d.Outstanding_Balance_as_of_Payout_Date__c;
-                        adminPerDiem += d.Per_Diem_as_of_Payout_Date__c;
-                        //system.debug('sel drawdown Admin Fee ' + d.Amount__c);
-                        //ystem.debug('Total Admin Fee ' + adminFee);
-                        //system.debug('Total Admin Accrued Interest ' + adminAccuredInterest);
+                    if (d.Reference_Notes__c == 'Payment Rejected' || d.Reference_Notes__c == 'Payment Halted'){
+                        if (!drawdownsRange.isEmpty()){
+                            List<Drawdown__c> drawdownsToUpdateInRange = mergeAdminFeesWithDrawdown(drawdownsRange);
+                            drawdownsToUpdate.addAll(drawdownsToUpdateInRange);
+                            drawdownsRange.clear();
+                        }
                     }
-                    else if (d.Reference_Notes__c != 'Referral Fee' && firstDrawdown == null)
-                    {
-                        //system.debug('Reference Notes != Referral Fee and FDd == null ' + d.Id);
-                        firstDrawdown = d;
-                        //System.debug('firstDrawdown'+firstDrawdown);
-                        
-                    }else if (firstDrawdown != null){
-                        d.Admin_Fee__c = null;
-                        d.Admin_Accrued_Interest__c = null;
-                        d.Admin_Outstanding_Balance__c = null;
-                        d.Admin_Per_Diem__c = null;
-                        updatables.add(d);
+                    else{
+                        drawdownsRange.add(d);
                     }
                 }
-                //if(firstDrawdown != null && adminFee > 0)
-                if(firstDrawdown != null)
-                {
-                    system.debug('FDd != null admin fee ++ ' + firstDrawdown.Id);
-                    system.debug('Admin Fee to be assigned ' + adminFee);
-                    firstDrawdown.Admin_Fee__c = adminFee > 0 ? adminFee : null;
-                    firstDrawdown.Admin_Accrued_Interest__c = adminAccuredInterest > 0 ? adminAccuredInterest : null;
-                    firstDrawdown.Admin_Outstanding_Balance__c = adminOutstandingBalance > 0 ? adminOutstandingBalance : null;
-                    firstDrawdown.Admin_Per_Diem__c = adminPerDiem > 0 ? adminPerDiem : null;
-                    updatables.add(firstDrawdown);
+                if (!drawdownsRange.isEmpty()){
+                    List<Drawdown__c> drawdownsToUpdateInRange = mergeAdminFeesWithDrawdown(drawdownsRange);
+                    drawdownsToUpdate.addAll(drawdownsToUpdateInRange);
                 }
             }
         }
-        if(!updatables.isEmpty())
+        if(!drawdownsToUpdate.isEmpty())
         {
-            update updatables;
+            update drawdownsToUpdate;
         }
     }
+    public static List<Drawdown__c> mergeAdminFeesWithDrawdown(List<Drawdown__c> drawdowns){
+        List<Drawdown__c> drawdownsToUpdate = new List<Drawdown__c>();
+        double adminFee = 0.0;
+        double adminAccuredInterest = 0.0;
+        double adminOutstandingBalance = 0.0;
+        double adminPerDiem = 0.0;
+        Drawdown__c firstDrawdown = null;
+        for(Drawdown__c d : drawdowns)
+        {
+            if(d.Reference_Notes__c == 'Admin Fee' || d.Reference_Notes__c == 'Assessment Fee')
+            {
+                //system.debug('Reference Notes == Admin Fee ' + d.Id);
+                adminFee += d.Amount__c;
+                adminAccuredInterest += d.Accrued_Interest_as_of_Payout_Date__c;
+                adminOutstandingBalance +=d.Outstanding_Balance_as_of_Payout_Date__c;
+                adminPerDiem += d.Per_Diem_as_of_Payout_Date__c;
+                //system.debug('sel drawdown Admin Fee ' + d.Amount__c);
+                //ystem.debug('Total Admin Fee ' + adminFee);
+                //system.debug('Total Admin Accrued Interest ' + adminAccuredInterest);
+            }
+            else if (d.Reference_Notes__c != 'Referral Fee' && firstDrawdown == null)
+            {
+                //system.debug('Reference Notes != Referral Fee and FDd == null ' + d.Id);
+                firstDrawdown = d;
+                //System.debug('firstDrawdown'+firstDrawdown);
+                
+            }else if (firstDrawdown != null){
+                d.Admin_Fee__c = null;
+                d.Admin_Accrued_Interest__c = null;
+                d.Admin_Outstanding_Balance__c = null;
+                d.Admin_Per_Diem__c = null;
+                drawdownsToUpdate.add(d);
+            }
+        }
+        //if(firstDrawdown != null && adminFee > 0)
+        if(firstDrawdown != null)
+        {
+            system.debug('FDd != null admin fee ++ ' + firstDrawdown.Id);
+            system.debug('Admin Fee to be assigned ' + adminFee);
+            firstDrawdown.Admin_Fee__c = adminFee > 0 ? adminFee : null;
+            firstDrawdown.Admin_Accrued_Interest__c = adminAccuredInterest > 0 ? adminAccuredInterest : null;
+            firstDrawdown.Admin_Outstanding_Balance__c = adminOutstandingBalance > 0 ? adminOutstandingBalance : null;
+            firstDrawdown.Admin_Per_Diem__c = adminPerDiem > 0 ? adminPerDiem : null;
+            drawdownsToUpdate.add(firstDrawdown);
+        }
+        
+        return drawdownsToUpdate;
+    }
+
+    public static void createAdminFeeRejections(List<Drawdown__c> newDrawdowns){
+        List<Drawdown__c> rejections = new List<Drawdown__c>();
+        for (Drawdown__c d : newDrawdowns){
+            if (d.Payment_To_Reverse__c != null){
+                rejections.add(d);
+            }
+        }
+        if (!rejections.isEmpty()){            
+            List<Id> drawdownsToReverseIds = new List<Id>();
+            List<Id> oppIds = new List<Id>();
+            for (Drawdown__c rejectionDrawdown : rejections){
+                drawdownsToReverseIds.add(rejectionDrawdown.Payment_To_Reverse__c);
+                oppIds.add(rejectionDrawdown.Opportunity__c);
+            }
+            List<Drawdown__c> drawdownsToReverse = [select Id, Date__c, Admin_Fee__c, Admin_Outstanding_Balance__c, Admin_Accrued_Interest__c from Drawdown__c where Id in :drawdownsToReverseIds];
+            Map<Id, Drawdown__c> drawdownsToReverseMap = new Map<Id, Drawdown__c>();
+            for (Drawdown__c d : drawdownsToReverse){
+                drawdownsToReverseMap.put(d.Id, d);
+            }
+            List<Drawdown__c> adminFeeDrawdowns = [select Id, Opportunity__c, Date__c, CHQ__c, EFT__c, Opportunity_Service_Provider__c, Payment_Method__c, Amount__c,Outstanding_Balance_as_of_Payout_Date__c,Rejections_Count__c   from Drawdown__c where (Reference_Notes__c = 'Admin Fee' OR Reference_Notes__c = 'Assessment Fee') and Opportunity__c in :oppIds and (Rejections_Count__c=NULL OR Rejections_Count__c=0)];            
+            Map<Id, List<Drawdown__c>> oppToAdminFeeDrawdownsMap = new Map<Id, List<Drawdown__c>>();
+            for (Id oppId : oppIds){
+                oppToAdminFeeDrawdownsMap.put(oppId, new List<Drawdown__c>());
+            }
+            for (Drawdown__c adminFeeDrawdown : adminFeeDrawdowns){
+                System.debug('AF ' + adminFeeDrawdown.Id + ' ' + adminFeeDrawdown.Rejections_Count__c);
+                oppToAdminFeeDrawdownsMap.get(adminFeeDrawdown.Opportunity__c).add(adminFeeDrawdown);
+			}
+            List<Drawdown__c> adminFeeRejectionDrawdowns = new List<Drawdown__c>();
+            for (Drawdown__c rejectionDrawdown : rejections){
+                Drawdown__c drawdownToReverse = drawdownsToReverseMap.get(rejectionDrawdown.Payment_To_Reverse__c);                
+                if (drawdownToReverse.Admin_Fee__c != null){
+                    List<Drawdown__c> adminFees = oppToAdminFeeDrawdownsMap.get(rejectionDrawdown.Opportunity__c);                    
+                    for (Drawdown__c adminFeeDrawdown : adminFees){
+                        if (adminFeeDrawdown.Date__c > rejectionDrawdown.Date__c)
+                            continue;
+                        Drawdown__c adminFeeRejectionDrawdown = new Drawdown__c();                        
+                        adminFeeRejectionDrawdown.Opportunity__c = rejectionDrawdown.Opportunity__c;        
+                        adminFeeRejectionDrawdown.CHQ__c = adminFeeDrawdown.CHQ__c;        
+                        adminFeeRejectionDrawdown.EFT__c = adminFeeDrawdown.EFT__c;        
+                        adminFeeRejectionDrawdown.Payment_Method__c = 'Payment';  
+                        adminFeeRejectionDrawdown.Reference_Notes__c = rejectionDrawdown.Reference_Notes__c;
+                        adminFeeRejectionDrawdown.Reason_to_Reverse_Payment__c = rejectionDrawdown.Reason_to_Reverse_Payment__c;
+                        if (rejectionDrawdown.Reason_to_Reverse_Payment__c == 'Client Error'){
+                            adminFeeRejectionDrawdown.Amount__c = adminFeeDrawdown.Amount__c;
+                        }                   
+                        else
+                            adminFeeRejectionDrawdown.Amount__c = adminFeeDrawdown.Outstanding_Balance_as_of_Payout_Date__c;
+                        adminFeeRejectionDrawdown.Principal_Reversed__c = adminFeeDrawdown.Amount__c;
+                        adminFeeRejectionDrawdown.Date__c = rejectionDrawdown.Date__c;
+                        adminFeeRejectionDrawdown.Rejection_Notes__c = rejectionDrawdown.Rejection_Notes__c;
+                        adminFeeRejectionDrawdown.Payment_To_Reverse__c = adminFeeDrawdown.Id;
+                        adminFeeRejectionDrawdown.Opportunity_Service_Provider__c = adminFeeDrawdown.Opportunity_Service_Provider__c;
+                        adminFeeRejectionDrawdowns.add(adminFeeRejectionDrawdown);
+                    }
+                }
+            }
+            if (!adminFeeRejectionDrawdowns.isEmpty())
+            	insert adminFeeRejectionDrawdowns;
+        }
+	}
+    
+    public static void processClientRebate(List<Drawdown__c> newDrawdowns){        
+        if (Trigger.isAfter && (Trigger.isInsert || Trigger.isDelete)){
+            Set<Id> oppIds = new Set<Id>();
+            for (Drawdown__c d : newDrawdowns){
+                if (d.Payment_Method__c=='Payment' && d.Reference_Notes__c=='Client Rebate')
+                	oppIds.add(d.Opportunity__c);
+            }
+            if (!oppIds.isEmpty()){
+                List<Opportunity> opps = [select Id, Client_Rebate_Applied__c from Opportunity where Id in:oppIds];
+                for (Opportunity opp : opps){
+                    opp.Client_Rebate_Applied__c = Trigger.isInsert;
+				}
+                if (!opps.isEmpty()){
+                    update opps;
+                }
+            }
+        }
+    }
+    
+    public static void validateClientRebate(Map<Id, Drawdown__c> oldDrawdowns, List<Drawdown__c> newDrawdowns){
+        for (Drawdown__c newDrawdown : newDrawdowns){
+            Drawdown__c oldDrawdown = oldDrawdowns.get(newDrawdown.Id);
+            if (oldDrawdown != null && oldDrawdown.Reference_Notes__c == 'Client Rebate' && newDrawdown.Reference_Notes__c != 'Client Rebate'){
+                newDrawdown.addError('Reference Notes of the Client Rebate Drawdown cannot be changed');            
+            }
+        }
+    }
+    
     /*
     public static void reCalculateCriticalDatePayout(List<Drawdown__c> newDrawdowns, Map<Id,Drawdown__c> oldMap, Boolean isInsert){
         

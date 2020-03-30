@@ -116,6 +116,11 @@
                 <default>false</default>
                 <label>Waived Fee</label>
             </value>
+            <value>
+                <fullName>Payment Halted</fullName>
+                <default>false</default>
+                <label>Payment Halted</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -134,6 +139,7 @@
             <controllingFieldValue>Cheque</controllingFieldValue>
             <controllingFieldValue>e-Transfer</controllingFieldValue>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
+            <controllingFieldValue>Payment</controllingFieldValue>
             <valueName>Payment Rejected</valueName>
         </valueSettings>
         <valueSettings>
@@ -195,6 +201,10 @@
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
             <valueName>Payment Surplus</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Payment</controllingFieldValue>
+            <valueName>Payment Halted</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

@@ -20,6 +20,11 @@
         <operation>equals</operation>
         <value/>
     </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Reference_Notes__c</field>
+        <operation>notEqual</operation>
+        <value>Refund</value>
+    </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

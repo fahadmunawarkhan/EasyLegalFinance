@@ -57,7 +57,8 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
             strQuery += ' OR (Payment_Method__c =:Cheque)';
-            strQuery += ' OR (Payment_Method__c =:AdminFee)) AND';
+            strQuery += ' OR (Payment_Method__c =:AdminFee))';
+            strQuery += ' AND Is_Rejected__c = false AND';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? 
                 ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
             ' Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';

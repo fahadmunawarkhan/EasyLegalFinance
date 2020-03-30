@@ -29,6 +29,7 @@ public with sharing class ScheduledPaymentHelper {
 
         if (sp.Opportunity_Service_Provider__c != null) {
             drawdown.Opportunity_Service_Provider__c = sp.Opportunity_Service_Provider__c;
+            drawdown.Amount__c = (sp.Amount__c / sp.Opportunity_Service_Provider__r.Payment_Factor__c) * 100.0;
         }
 
         drawdown.Reference_Notes__c = sp.Calculated_Reference_Notes__c;
@@ -190,7 +191,7 @@ public with sharing class ScheduledPaymentHelper {
         //update oppMap.values();
         */
 
-        DrawdownTriggerHandler.mergeAdminFeeWithFirstDrawdown(oppIds);
+        DrawdownTriggerHandler.mergeAdminFees(oppIds);
 
         return spList;
     }
@@ -248,6 +249,7 @@ public with sharing class ScheduledPaymentHelper {
                     Sent_to_Bank_By__c,
                     Cheque_Number__c,
                     Opportunity_Service_Provider__c,
+                	Opportunity_Service_Provider__r.Payment_Factor__c,
                     EFT_Number__c,
                     Calculated_Reference_Notes__c
                 From

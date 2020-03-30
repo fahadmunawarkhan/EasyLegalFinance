@@ -72,4 +72,17 @@ public with sharing class DrawdownHelper {
         if(!paymentsToDelete.isEmpty()) delete paymentsToDelete;
     }
     **/
+    
+    @AuraEnabled(cacheable=false)
+    public static Drawdown__c getDrawdown(Id drawdownId) {
+        return [Select Opportunity__c, Date__c, Amount__c, CHQ__c, EFT__c, Payment_Method__c, Outstanding_Balance_as_of_Payout_Date__c, Rejection_Notes__c, Opportunity_Service_Provider__c From Drawdown__c Where Id = :drawdownId];
+    }
+    
+    @AuraEnabled(cacheable=false)
+    public static void updateOpportunityPayoutDate(Id opportunityId, Date payoutDate) {
+        Opportunity opp = [select Id, Payout_Date__c from Opportunity where Id=:opportunityId];
+        opp.Payout_Date__c = payoutDate;
+        opp.Temp_Payment_Received__c = 0;
+        update opp;        
+    }    
 }

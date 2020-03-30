@@ -7,6 +7,10 @@
         <members>AC_ScenarioToolTest</members>
         <members>AmendmentTriggerHandler</members>
         <members>AmendmentTriggerHandlerTest</members>
+        <members>AssessmentProviderSummaryReportCtlr</members>
+        <members>AssessmentProviderSummaryReportCtlrTest</members>
+        <members>AssessmentSummaryReportCtlr</members>
+        <members>AssessmentSummaryReportCtlrTest</members>
         <members>BadDebtSummaryReportCtlr</members>
         <members>BadDebtSummaryReportCtlrTest</members>
         <members>BankAccountsController</members>
@@ -107,6 +111,7 @@
         <members>LeadViewComponentCtlr</members>
         <members>LeadViewComponentCtlrTest</members>
         <members>LoanProgressionReportCtlr</members>
+		<members>LoanProgressionReportCtlrTest</members>
         <members>LoanSimulatorController</members>
         <members>LoanSimulatorControllerTest</members>
         <members>MassUpdater</members>
@@ -167,6 +172,26 @@
         <members>PermissionAssigner</members>
         <members>PermissionAssignerTest</members>
         <members>UserTriggerHandler</members>
+        <members>LawSocietyReviewController</members>
+        <members>LawSocietyReviewControllerTest</members>
+        <members>LawyerLawSocietyPageTabCtlr</members>
+        <members>LawyerLawSocietyPageTabCtlrTest</members>
+        <members>OpportunityTriggerHandler</members>         
+        <members>OpportunityViewComponentCtlr</members>  
+        <members>AssessmentProviderScheduleCtlr</members>
+        <members>AssessmentProviderScheduleTriggerHandler</members>
+        <members>AssessmentProviderScheduleCtlrTest</members>
+        <members>AssessmentProviderScheduleTriggerTest</members>
+        <members>LawyerAvailableCreditComponentCtlrTest</members>
+        <members>Batch_UpdatePayoutDateOnOppty</members>
+        <members>Batch_UpdateSelectedForAssessmentPayout</members>
+        <members>GenerateConsolidatedAssessmentPayoutCtlr</members>
+        <members>GenerateConsolidatedAssessmentPayoutTest</members>
+        <members>PreApprovedInvoiceCtlr</members>
+        <members>PreApprovedInvoiceCtlrTest</members>
+        <members>ApprovelProcessUnlock</members>
+        <members>ApprovelProcessUnlockTest</members>
+        <members>RecallApprovalProcess</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -220,6 +245,8 @@
         <members>RDS_OpportunityDispatcher</members>
         <members>Template_MassEditCustomObject</members>
         <members>Template_MassUpdateCustomObject</members>
+        <members>LawSocietyReviewPrint</members>
+        <memebers>GenerateConsolidatedAssessmentPayout</memebers>
         <name>ApexPage</name>
     </types>
     <types>
@@ -242,6 +269,8 @@
         <members>PortfolioReportTrigger</members>
         <members>ScheduledPaymentTrigger</members>
         <members>UserTrigger</members>
+        <members>OpportunityTrigger</members>
+        <members>AssessmentProviderScheduleTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -293,6 +322,18 @@
         <members>Test</members>
         <members>threeRegionHomeTemplate</members>
         <members>viewPayments</members>
+        <members>AssessmentSummaryReport</members>
+        <members>AssessmentLoans</members>
+        <members>AssessmentProviderSummaryReport</members>
+        <members>LawyerAssessmentOpportunities</members>
+        <members>LawyerApprovedCreditHistory</members>
+        <members>LawyerAvailableCreditComponent</members>
+        <members>lawSocietyReviewReport</members>
+        <members>LawyerLawSocietyPageTab</members>
+        <members>AssessmentProviderSchedule</members>
+        <members>AssessmentScheduleLawyerTab</members>
+        <members>EditAssessmentProviderSchedule</members>
+        <members>PreApprovedInvoices</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -344,11 +385,14 @@
         <members>Account.Amount_Paid_to_Client__c</members>
         <members>Account.Area__c</members>
         <members>Account.Authorization_Clause__c</members>
+        <members>Account.Assessment_Provider_Payout_Date__c</members>
+        <members>Account.Assessment_Provider_Report_Date__c</members>
         <members>Account.Business_Unit__c</members>
         <members>Account.CM_Application_Template_Id__c</members>
         <members>Account.CM_Lawyer_Fax__c</members>
         <members>Account.Conga_Account_Notes_URL__c</members>
         <members>Account.Conga_Batch_Law_Firm_Summary__c</members>
+        <members>Account.Conga_Batch_Assessment_Provider__c</members>
         <members>Account.Conga_Batch_Law_Firm_Summary_Send_Email__c</members>
         <members>Account.Conga_Formula_Principal_Total__c</members>
         <members>Account.Conga_Payouts_URL__c</members>
@@ -363,6 +407,7 @@
         <members>Account.External_ID__c</members>
         <members>Account.First_Party_Insurance_Company__c</members>
         <members>Account.How_did_you_hear_about_us__c</members>
+        <members>Account.Is_Selected__c</members>
         <members>Account.Law_Firm_Pipeline_Report__c</members>
         <members>Account.Lawyer__c</members>
         <members>Account.Lawyer_s_Assistant_Paralegal_LC_Info__c</members>
@@ -406,6 +451,33 @@
         <members>Amendment__c.Opportunity__c</members>
         <members>Amendment__c.Renewal_date__c</members>
         <members>Amendment__c.Renewal_Date_New__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Business_Unit__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Elfi_Print_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Rhino_Print_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_View_All_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Elfi_View_All_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Rhino_View_All_Template_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Conga_Conductor_Id__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Payout_Date__c</members>  
+        <members>Assessment_Provider_Summary_Report__c.Selected_Ids__c</members>
+        <members>Assessment_Provider_Summary_Report__c.Report_Date__c</members>
+        <members>Assessment_Summary_Report__c.Business_Unit__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Print_Report_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Elfi_Print_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Rhino_Print_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_View_All_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Elfi_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Rhino_View_All_Template_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Search_Print_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Search_View_All_Query_Id__c</members>
+        <members>Assessment_Summary_Report__c.Search_by_Name__c</members>
+        <members>Assessment_Summary_Report__c.Conga_Conductor_Id__c</members>
+        <members>Assessment_Summary_Report__c.Payout_Date__c</members>  
+        <members>Assessment_Summary_Report__c.Selected_Ids__c</members>
+        <members>Assessment_Summary_Report__c.Report_Date__c</members>     
         <members>Bad_Debt_Summary_Report__c.BusinessUnit__c</members>
         <members>Bad_Debt_Summary_Report__c.End_Date__c</members>
         <members>Bad_Debt_Summary_Report__c.Start_Date__c</members>
@@ -455,9 +527,12 @@
         <members>Contact.Alternate_Email__c</members>
         <members>Contact.Annual_Income_on_Date_of_Loss__c</members>
         <members>Contact.Any_SpousalChild_support_payment__c</members>
+        <members>Contact.Lawyer_Assessment_Payout_Date__c</members>
+        <members>Contact.Lawyer_Assessment_Report_Date__c</members>
         <members>Contact.Citizenship_Status__c</members>
         <members>Contact.Collateral_Benefits__c</members>
         <members>Contact.Company__c</members>
+        <members>Contact.Conga_Batch_Assessment_Loans_Lawyer__c</members>
         <members>Contact.Conga_Batch_Lawyer_Summary__c</members>
         <members>Contact.Conga_Batch_Lawyer_Summary_Send_Email__c</members>
         <members>Contact.Conga_Workflow__c</members>
@@ -484,6 +559,7 @@
         <members>Contact.If_yes_please_provide_amount__c</members>
         <members>Contact.If_Yes_please_provide_details__c</members>
         <members>Contact.If_yes_please_provide_previous_name__c</members>
+        <members>Contact.Is_Selected__c</members>
         <members>Contact.Job_description__c</members>
         <members>Contact.Law_Firm__c</members>
         <members>Contact.Lawyer_Pipeline_Report__c</members>
@@ -518,6 +594,12 @@
         <members>Contact.Update_Address__c</members>
         <members>Contact.WebSite__c</members>
         <members>Contact.Web_To_Lead_From__c</members>
+        <members>Contact.Available_Credit__c</members> 
+        <members>Contact.Amount_wo_Payment_Roll_up__c</members>
+        <members>Contact.Approved_Credit_Limit__c</members>
+        <members>Contact.Assessment_Fee_Roll_up__c</members>
+        <members>Contact.Principal_Repaid_Roll_up__c</members>
+        <members>Contact.Utilized_Credit_Limit__c</members> 
         <members>Critical_Date__c.Account__c</members>
         <members>Critical_Date__c.Account_Name__c</members>
         <members>Critical_Date__c.Account_Name_Formula__c</members>
@@ -553,7 +635,9 @@
         <members>Drawdown__c.Balance_Change_In_Reporting_Period__c</members>
         <members>Drawdown__c.CHQ__c</members>
         <members>Drawdown__c.Compounding_Frequency__c</members>
-        <members>Drawdown__c.Compounding_Interest__c</members>
+        <members>Drawdown__c.Compounding_Interest__c</members>        
+        <members>Drawdown__c.Conga_Assessment_Provider_Report_Print__c</members>
+        <members>Drawdown__c.Conga_Assessment_Provider_Report_ViewAll__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All2__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All3__c</members>
         <members>Drawdown__c.Conga_Bad_Debt_Summary_Report_Print_All__c</members>
@@ -634,6 +718,7 @@
         <members>Drawdown__c.Principal_Repaid__c</members>
         <members>Drawdown__c.Quarter_Target__c</members>
         <members>Drawdown__c.Quarter_Year__c</members>
+		<members>Drawdown__c.Quarter_of_Year__c</members>
         <members>Drawdown__c.Reference_Notes__c</members>
         <members>Drawdown__c.Reporting_Days_Outstanding__c</members>
         <members>Drawdown__c.Reporting_From_Date__c</members>
@@ -652,6 +737,11 @@
         <members>Drawdown__c.Total_Per_Diem__c</members>
         <members>Drawdown__c.Type__c</members>
         <members>Drawdown__c.Year_Target__c</members>
+		<members>Drawdown__c.Year__c</members>
+        <members>Drawdown__c.Yearly_Assessment_Target__c</members>
+        <members>Drawdown__c.Yearly_Lawyer_Target__c</members>
+        <members>Drawdown__c.Conga_Assessment_Summary_Report_Print__c</members>  
+        <members>Drawdown__c.Conga_Assessment_Summary_Report_View_All__c</members>
         <members>Drawdown_Payment_Allocation__c.Amount__c</members>
         <members>Drawdown_Payment_Allocation__c.Before_Temp_Payout_Date__c</members>
         <members>Drawdown_Payment_Allocation__c.Drawdown__c</members>
@@ -676,6 +766,9 @@
         <members>Financial_Summary_Report__c.Report_Date__c</members>
         <members>Financial_Summary_Report__c.Since_Inception__c</members>
         <members>Financial_Summary_Report__c.Start_Date__c</members>
+		<members>FinanceLoanProgression__c.Business_Unit__c</members>
+        <members>FinanceLoanProgression__c.Start_Date__c</members>
+        <members>FinanceLoanProgression__c.End_Date__c</members>
         <members>Firm__c.Date_of_Update__c</members>
         <members>Firm__c.Date_Retained__c</members>
         <members>Firm__c.Email__c</members>
@@ -1086,6 +1179,11 @@
         <members>Opportunity.WIP__c</members>
         <members>Opportunity.Year_Quarter__c</members>
         <members>Opportunity.Year_Quarter_Formula__c</members>
+        <members>Opportunity.Principal_Repaid_Roll_up__c</members> 
+        <members>Opportunity.Insurer_Name__c</members>
+        <members>Opportunity.Invoice__c</members>
+        <members>Opportunity.Invoice_Type__c</members>
+        <members>Opportunity.Assessment_Provider__c</members>
         <members>Payment_Rejection__c.Reason__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment_Action__c</members>
         <members>Payment_Rejection__c.Scheduled_Payment__c</members>
@@ -1179,6 +1277,8 @@
         <members>System_Monitoring__c.Report_Result_Summary__c</members>
         <members>System_Monitoring__c.Status__c</members>
         <members>User.Actual_Sales_By_Month_Report__c</members>
+        <members>User.Assessment_Summary_Report__c</members>       
+        <members>User.Can_Edit_Approved_Credit_Limit__c</members>
         <members>User.Bad_Debt_Summary_Report__c</members>
         <members>User.Business_Unit__c</members>
         <members>User.Critical_Items_Dates__c</members>
@@ -1207,6 +1307,51 @@
         <members>User.Schedule_Payments__c</members>
         <members>User.Funding_Tab__c</members>
         <members>User.Generate_Banking_Sheets__c</members>
+        <members>Contact.Current_Proceedings__c</members>
+        <members>Contact.Date_Reviewed__c</members>
+        <members>Contact.Orders__c</members>
+        <members>Contact.Next_Review_Date__c</members>
+        <members>Contact.Upcoming_Hearings__c</members>
+        <members>User.Law_Society_Review__c</members>
+        <members>User.Can_Edit_Assessment_Schedule__c</members>
+        <members>Opportunity.Amount_Paid_to_Assessment_Provider__c</members>
+        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Opportunity.Discount_Rate__c</members>
+        <members>Opportunity.Invoice_Discount__c</members>
+        <members>Opportunity.Client_Rebate__c</members>
+        <members>Opportunity.Deferred_Revenue__c</members>
+        <members>Opportunity.Rebate_Period__c</members>
+        <members>Opportunity.Rebate_Discount__c</members>
+        <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
+        <members>Assessment_Provider_Schedule__c.Discount__c</members>
+        <members>Assessment_Provider_Schedule__c.Lawyer__c</members>
+        <members>Assessment_Provider_Schedule__c.Assessment_Provider__c</members>
+        <members>Assessment_Provider_Schedule__c.Rebate_Period__c</members>
+        <members>Assessment_Provider_Schedule__c.Rebate_Discount__c</members>
+        <members>Account.Rebate_Allowed__c</members>
+        <members>Account.Total_Rebate_Discount__c</members>
+        <members>Account.Total_Outstanding__c</members>
+        <members>Account.Conga_Assessmnet_Payouts_URL__c</members>        
+        <members>Drawdown__c.Assessment_Provider_Report_Date__c</members>
+        <members>Drawdown__c.Lawyer_Assessment_Report_Date__c</members>
+        <members>Opportunity.Rebate_to_Lawyer__c</members>  
+        <members>Opportunity.Assessment_Outstanding__c</members>
+        <members>Account.Old_Projected_Loan_Value__c</members>
+        <members>User.Can_Send_for_Google_Review__c</members>
+        <members>Custom_Approval_History__c.Account__c</members>
+        <members>Custom_Approval_History__c.Process_Instance_Id__c</members>
+        <members>Custom_Approval_History__c.Value_to_Approve__c</members>
+		<members>Custom_Approval_History__c.Loan_To_Value__c</members>
+        <members>Opportunity.Client_Rebate_Amount__c</members>
+        <members>Account.Selected_for_Assessment_Payout__c</members>
+        <members>Account.Total_Client_Rebate__c</members>
+        <members>Integration_Log__c.Body__c</members>
+        <members>Integration_Log__c.Class__c</members>
+        <members>Integration_Log__c.Identifier__c</members>
+        <members>Contact.Pre_approved_Amount_Roll_Up__c</members>
+        <members>Contact.Pre_Approved_Loan_Formula__c</members>
+        <members>Account.Conga_Send_Payout_Email_URL__c</members>
+        <members>Account.Conga_Send_Assessment_Payout_Email_URL__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1249,6 +1394,10 @@
         <members>dlrs__LookupRollupSummary2.OpportunityTotalSPA</members>
         <members>dlrs__LookupRollupSummary2.OppSPTotalPaid</members>
         <members>dlrs__LookupRollupSummary2.SendLead</members>
+        <members>dlrs__LookupRollupSummary2.ContactAmountWoPayment</members>
+        <members>dlrs__LookupRollupSummary2.AssessmentFeeRollup</members>
+        <members>dlrs__LookupRollupSummary2.ContactPrincipalRepaidRollup</members>
+        <members>dlrs__LookupRollupSummary2.PrincipalRepaidRollUp</members>
         <members>ForceeaSetting.Default</members>
         <members>Permission_Assignment__mdt.Funding_Tab</members>
         <members>Permission_Assignment__mdt.Generate_Banking_Sheets</members>
@@ -1259,6 +1408,8 @@
         <members>abc__c</members>
         <members>Actual_Sales_by_Month_Report__c</members>
         <members>Amendment__c</members>
+        <members>Assessment_Provider_Summary_Report__c</members>
+        <members>Assessment_Summary_Report__c</members>
         <members>Bad_Debt_Summary_Report__c</members>
         <members>Bank_Account__c</members>
         <members>Bird_Eye_Settings__mdt</members>
@@ -1272,6 +1423,7 @@
         <members>EFT_File__c</members>
         <members>EFT_File_Setting__c</members>
         <members>Financial_Summary_Report__c</members>
+		<members>FinanceLoanProgression__c</members>		
         <members>Firm__c</members>
         <members>FObjectFour__c</members>
         <members>FObjectOne__c</members>
@@ -1295,6 +1447,9 @@
         <members>Scheduled_Payment__c</members>
         <members>Service_Provider_Drawdown__c</members>
         <members>System_Monitoring__c</members>
+        <members>Assessment_Provider_Schedule__c</members>
+        <members>Integration_Log__c</members>
+        <members>Custom_Approval_History__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -1305,6 +1460,7 @@
     </types>
     <types>
         <members>About_Mass_Update_and_Mass_Edit</members>
+        <members>Assessment_Loans</members>
         <members>Critical_Date__c</members>
         <members>Custom_Reports</members>
         <members>Drawdown__c</members>
@@ -1324,6 +1480,7 @@
         <members>Scheduled_Payment__c</members>
         <members>Service_Provider_Drawdown__c</members>
         <members>System_Monitoring__c</members>
+        <members>lawSocietyReviewReport</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -1364,8 +1521,11 @@
         <members>Lead</members>
         <members>LightningSalesConsole_UtilityBar</members>
         <members>LightningService_UtilityBar</members>
+        <members>Lawyer_Contact_Record_Page</members>
         <members>System_Monitoring_Record_Page</members>
         <members>System_Monitoring_UtilityBar</members>
+        <members>Assessment_Provider_Account_Layout</members>
+        <members>Lawyer_Contact_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -1390,6 +1550,7 @@
         <members>Send_Review_Request_via_Bird_Eye</members>
         <members>Task_Handler</members>
         <members>Update_Sent_to_EFT_Date_information</members>
+        <members>Submit_for_Approval</members>
         <name>Flow</name>
     </types>
     <types>
@@ -1414,6 +1575,7 @@
         <members>Send_Review_Request_via_Bird_Eye</members>
         <members>Task_Handler</members>
         <members>Update_Sent_to_EFT_Date_information</members>
+        <members>Submit_for_Approval</members>
         <name>FlowDefinition</name>
     </types>
     <types>
@@ -1429,6 +1591,7 @@
     </types>
     <types>
         <members>abc__c-abc Layout</members>
+        <members>Account-Account Layout - Assessment Provider</members>
         <members>Account-Account Layout</members>
         <members>Account-Account Layout - Client</members>
         <members>Account-Account Layout - General Business</members>
@@ -1731,6 +1894,7 @@
         <name>QuickAction</name>
     </types>
     <types>
+        <members>Account.Assessment_Provider</members>
         <members>Account.Client</members>
         <members>Account.General_Business</members>
         <members>Account.Law_Firm</members>
@@ -1749,6 +1913,7 @@
         <members>Opportunity.Client_Opportunity_Record_Type</members>
         <members>Opportunity.Law_Firm_Engagement_Opportunity</members>
         <members>Opportunity.Loan_Re_Assessment_Opportunity</members>
+        <members>Lawyer_with_Opportunities</members>
         <name>RecordType</name>
     </types>
     <types>
@@ -1814,6 +1979,8 @@
         <members>ELFI_Company_Reports/WIP_Rhino</members>
         <members>ELFI_Company_Reports/YTD_Monthly_Opportunities_Performanc_kK1</members>
         <members>ELFI_Company_Reports/YTD_Opportunities_Performance_Report_Nyu</members>
+        <members>ELFI_Company_Reports/YTD_Bad_Debt_Shortfall_IgP</members>
+        <members>ELFI_Company_Reports/YTD_Admin_Fee_e0x</members>
         <members>ELFI_Sales_Team_Reports</members>
         <members>ELFI_Sales_Team_Reports/activty</members>
         <members>ELFI_Sales_Team_Reports/Company_Drawdown_Report_Last_Month</members>
@@ -1886,6 +2053,10 @@
         <members>TroubleshootingReportsByFahad</members>
         <members>TroubleshootingReportsByFahad/Financial_Summary_Vxl</members>
         <members>TroubleshootingReportsByFahad/Lawyer_Sales_Summary_G5e</members>
+		<members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Advances_JHh</members>
+        <members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Losses_sE5</members>
+        <members>TroubleshootingReportsByFahad/Assessment_Summary_Report_HYP</members>
+        <members>TroubleshootingReportsByFahad/Assessment_Provider_Summary_Report_KXp</members>
         <name>Report</name>
     </types>
     <types>
@@ -1902,6 +2073,7 @@
         <members>Opportunities_with_Contact_Info</members>
         <members>Opportunities_with_Scheduled_Payments_with_Payment_Rejections</members>
         <members>WIP_List_with_Activities</members>
+        <members>Assessment_Provider_Referred_Cases</members>
         <name>ReportType</name>
     </types>
     <types>
@@ -2181,6 +2353,10 @@
     <types>
         <name>WorkflowRule</name>
         <members>*</members>
+    </types>
+    <types>
+        <members>*</members>
+        <name>ApprovalProcess</name>
     </types>
     <version>46.0</version>
 </Package>

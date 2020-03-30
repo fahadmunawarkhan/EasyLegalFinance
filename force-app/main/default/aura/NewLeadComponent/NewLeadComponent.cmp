@@ -19,7 +19,9 @@
     <aura:handler name="change" value="{!v.leadObj.Phone}" action="{!c.formatPhone}" />
     <aura:handler name="change" value="{!v.leadObj.MobilePhone}" action="{!c.formatMobilePhone}" />
     <aura:handler name="change" value="{!v.leadObj.Fax}" action="{!c.formatFax}" />
-    <aura:handler name="change" value="{!v.leadObj.Law_Phone__c}" action="{!c.formatLaw_Phone__c}" />     
+    <aura:handler name="change" value="{!v.leadObj.Law_Phone__c}" action="{!c.formatLaw_Phone__c}" />
+        
+    <aura:attribute name="provinceResidencyOptions" type="List" default="[]"/>
     
     <aura:attribute name="showRecordTypePopup" type="boolean" default="true" />    
     <aura:attribute name="leadRecordTypes" type="Map"/>
@@ -378,10 +380,16 @@
                                     <span class="slds-form-element__label">
                                         {!v.fieldLabels.State}:
                                     </span>
-                                    <lightning:input type="Text" 
+                                    <!--<lightning:input type="Text" 
                                                      aura:id="Address"
                                                      value="{!v.leadObj.State}"
-                                                     tabindex="13"/>
+                                                     tabindex="13"/>-->
+                                    
+                                    <lightning:combobox aura:id="Address" 
+                                                        value="{!v.leadObj.State}" 
+                                                        placeholder="--None--" 
+                                                        options="{!v.provinceResidencyOptions}"
+                                                        tabindex="13" />
                                     
                                     <span class="slds-form-element__label">
                                         {!v.fieldLabels.PostalCode}:
@@ -590,10 +598,15 @@
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">{!v.fieldLabels.Province_of_Driver_s_Licence__c}</span>
                             <div class="slds-form-element__control">
                                 <section class="slds-popover_edit" > 
-                                    <lightning:input type="Text" 
+                                    <!--<lightning:input type="Text" 
                                                      aura:id="Province_of_Driver_s_Licence__c"
                                                      value="{!v.leadObj.Province_of_Driver_s_Licence__c}" 
-                                                     tabindex="23"/>
+                                                     tabindex="23"/>-->
+                                    <lightning:combobox aura:id="Province_of_Driver_s_Licence__c" 
+                                                        value="{!v.leadObj.Province_of_Driver_s_Licence__c}" 
+                                                        placeholder="--None--" 
+                                                        options="{!v.provinceResidencyOptions}"
+                                                        tabindex="23" />
                                 </section>
                             </div>
                         </div>
@@ -676,7 +689,8 @@
                                                     hideLookupInputAction="{!c.hideLookupInput}"
                                                     label="{!v.fieldLabels.Lawyer_Name_new__c}" 
                                                     selectedRecord="{!v.selectedLookUpLawyer}"
-                                                    filter="{!'AccountId = \''+ v.selectedLookUpFirm.Id+'\' and MailingCity = \'' + v.selectedLookUpFirm.BillingCity + '\' and MailingState = \'' + v.selectedLookUpFirm.BillingState +'\''}"
+                                                    fieldtoSearchIn="Name_Formula__c"
+                                                    filter="{!'AccountId = \''+ v.selectedLookUpFirm.Id+'\''}"
                                                     additionalFields = "MailingCity,Province_fm__c, Phone, Email" 
                                                     additionalDisplayFields = "MailingCity,Province_fm__c"
                                                     tabindex="40" />

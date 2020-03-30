@@ -20,6 +20,8 @@
     <aura:handler name="change" value="{!v.leadObj.Law_Phone__c}" action="{!c.formatLaw_Phone__c}" />
     <aura:handler name="change" value="{!v.selectedLookUpLawyer}" action="{!c.onLawyerChange}" />  
     
+    <aura:attribute name="provinceResidencyOptions" type="List" default="[]"/>
+    
     <aura:attribute name="scrollCheckIntervalId"
                     type="String"
                     description="In the renderer.js, the interval id for periodically checking scroll position. Used when unrendering component to cancel interval check."
@@ -535,13 +537,22 @@
                                                           required="true"
                                                           value="{!v.leadObj.City}" />
                                             
-                                            <ui:inputText label="{!v.fieldLabels.State}"
+                                            <!--<ui:inputText label="{!v.fieldLabels.State}"
                                                           aura:id="Address"
                                                           blur="{!c.closeNameBox}"
                                                           change="{!c.onNameChange}"
                                                           focus="{!c.onTextFocus}"
                                                           required="true"
-                                                          value="{!v.leadObj.State}" />
+                                                          value="{!v.leadObj.State}" />-->
+                                            <lightning:combobox onblur="{!c.closeNameBox}"
+                                                                onchange="{!c.onNameChange}"
+                                                                onfocus="{!c.onTextFocus}"
+                                                                required="true"
+                                                                aura:id="Address" 
+                                                                label="{!v.fieldLabels.State}" 
+                                                                value="{!v.leadObj.State}" 
+                                                                placeholder="--None--" 
+                                                                options="{! v.provinceResidencyOptions }"  />
                                             
                                             <ui:inputText label="{!v.fieldLabels.PostalCode}"
                                                           aura:id="Address"
@@ -903,12 +914,20 @@
                                     <aura:set attribute="else">
                                         
                                         <section class="slds-popover slds-popover_edit" > 
-                                            <ui:inputText 
+                                            <!--<ui:inputText 
                                                           aura:id="Province_of_Driver_s_Licence__c"
                                                           blur="{!c.closeNameBox}"
                                                           change="{!c.onNameChange}"
                                                           required="true"
-                                                          value="{!v.leadObj.Province_of_Driver_s_Licence__c}" />
+                                                          value="{!v.leadObj.Province_of_Driver_s_Licence__c}" />-->
+                                            <lightning:combobox onblur="{!c.closeNameBox}"
+                                                                onchange="{!c.onNameChange}"
+                                                                onfocus="{!c.onTextFocus}"
+                                                                required="true"
+                                                                aura:id="Province_of_Driver_s_Licence__c"
+                                                                value="{!v.leadObj.Province_of_Driver_s_Licence__c}" 
+                                                                placeholder="--None--" 
+                                                                options="{! v.provinceResidencyOptions }"  />
                                         </section>
                                     </aura:set>
                                 </aura:if>
@@ -964,7 +983,7 @@
                                                             IconName="standard:account" 
                                                             hideLookupInputAction="{!c.hideLookupInput}"
                                                             label="{!v.fieldLabels.Law_Firm_Name_new__c}" 
-                                                            selectedRecord="{!v.selectedLookUpFirm}"
+                                                            selectedRecord="{!v.selectedLookUpFirm}"                                                            
                                                             filter="RecordType.Name='Law Firm' "
                                                             additionalFields="BillingCity,BillingState"
                                                             additionalDisplayFields="BillingCity,BillingState" />
@@ -1044,7 +1063,8 @@
                                                             hideLookupInputAction="{!c.hideLookupInput}"
                                                             label="{!v.fieldLabels.Lawyer_Name_new__c}" 
                                                             selectedRecord="{!v.selectedLookUpLawyer}"
-                                                            filter="{!'AccountId = \''+ v.selectedLookUpFirm.Id+'\' and MailingCity = \'' + v.selectedLookUpFirm.BillingCity + '\' and MailingState = \'' + v.selectedLookUpFirm.BillingState +'\''}"
+                                                            fieldtoSearchIn="Name_Formula__c"
+                                                            filter="{!'AccountId = \''+ v.selectedLookUpFirm.Id+'\''}"
                                                             additionalFields = "MailingCity,Province_fm__c, Phone, Email" 
                                                             additionalDisplayFields = "MailingCity,Province_fm__c" />
                                         </section>

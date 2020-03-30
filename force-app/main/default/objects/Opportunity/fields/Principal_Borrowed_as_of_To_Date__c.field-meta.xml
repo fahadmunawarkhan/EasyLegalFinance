@@ -6,7 +6,7 @@
     <label>Principal Borrowed as of To Date</label>
     <summarizedField>Drawdown__c.Amount__c</summarizedField>
     <summaryFilterItems>
-        <field>Drawdown__c.Include_in_Portfolio_Reports__c</field>
+        <field>Drawdown__c.Include_Principal_In_Portfolio_Reports__c</field>
         <operation>equals</operation>
         <value>True</value>
     </summaryFilterItems>
@@ -14,6 +14,16 @@
         <field>Drawdown__c.Payment_Method__c</field>
         <operation>notEqual</operation>
         <value>Payment</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Date_Fits_To_Portfolio_Report__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Reference_Notes__c</field>
+        <operation>notEqual</operation>
+        <value>Refund</value>
     </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>

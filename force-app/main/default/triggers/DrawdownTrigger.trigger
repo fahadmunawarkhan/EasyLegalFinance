@@ -21,7 +21,8 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
     }  
     if (trigger.isBefore && trigger.isUpdate && !TriggerHelper.runOnce('DrawdownTrigger')) {
         TriggerHelper.add('DrawdownTrigger');
-        DrawdownTriggerHandler.validatePaymentChange(trigger.oldMap,trigger.new);           
+        DrawdownTriggerHandler.validatePaymentChange(trigger.oldMap,trigger.new);  
+        DrawdownTriggerHandler.validateClientRebate(trigger.oldMap,trigger.new);  
     }
     if(trigger.isBefore && trigger.isDelete){
         DrawdownTriggerHandler.validatePaymentDelete(trigger.old);
@@ -42,14 +43,12 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         DrawdownTriggerHandler.updateAdminFeeOnFirstDrawdown(Trigger.isDelete ? Trigger.old : Trigger.new,
                                                              Trigger.oldMap,
                                                              Trigger.isInsert || Trigger.isDelete);
+        DrawdownTriggerHandler.processClientRebate(Trigger.isDelete ? Trigger.old : Trigger.new);
         
         // DrawdownTriggerHandler.reCalculateCriticalDatePayout(Trigger.isDelete ? Trigger.old : Trigger.new, 
                                                              // Trigger.oldMap, Trigger.isInsert || Trigger.isDelete);        
         //*/
     }
-    if (trigger.isAfter && (Trigger.isInsert || trigger.isUpdate)){
-        DrawdownPaymentAllocator.allocate(Trigger.isInsert, Trigger.oldMap, Trigger.new);
-    } 
     
     /*
     // Replaced with process and InvocableMethod callout to consolidate work
@@ -57,4 +56,13 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         DrawdownHelper.updatePaymentScheduleForFacilityLoan((List<Drawdown__c>)Trigger.new);
     }
     */
+    if (trigger.isAfter && Trigger.isInsert){
+        DrawdownTriggerHandler.createAdminFeeRejections(Trigger.new);
+    } 
+    if (trigger.isAfter && (Trigger.isInsert || trigger.isUpdate)){
+        DrawdownPaymentAllocator.allocate(Trigger.isInsert, Trigger.oldMap, Trigger.new);
+    }  
+    if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){
+        dlrs.RollupService.rollup(Trigger.oldMap, Trigger.newMap, Drawdown__c.SObjectType);
+    }
 }
