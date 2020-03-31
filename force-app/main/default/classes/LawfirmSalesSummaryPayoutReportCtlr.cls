@@ -1,9 +1,21 @@
+/**
+ * @File Name          : LawfirmSalesSummaryPayoutReportCtlr.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 31/03/2020, 1:21:58 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
     public Date startDate{get;set;}
     public Date endDate{get;set;}
     public String businessUnit{get;set;}
     public String contentType{get;set;}
     public String renderAs{get;set;}
+    public String typeofloan{get;set;}
     
     public LawfirmSalesSummaryPayoutReportCtlr(){
         Date dt = Date.today();
@@ -17,7 +29,7 @@ public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
         String paramStartDate = ApexPages.currentPage().getParameters().get('StartDate');
         String paramEndDate = ApexPages.currentPage().getParameters().get('EndDate');
         String paramContentType = ApexPages.currentPage().getParameters().get('ContentType');
-        
+        String paramTypeofLoan = ApexPages.currentPage().getParameters().get('typeOfLoan');
         if(paramContentType == 'PDF'){
             renderAs = 'PDF';
         }else{
@@ -26,7 +38,8 @@ public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
         
         this.businessUnit = !String.isEmpty(paramBusinessUnit) ? paramBusinessUnit : 'ELFI';
         this.startDate = !String.isEmpty(paramStartDate)? Date.valueOf(paramStartDate) : dt.addDays(-30);
-            this.endDate = !String.isEmpty(paramEndDate)? Date.valueOf(paramEndDate) : dt;
+        this.endDate = !String.isEmpty(paramEndDate)? Date.valueOf(paramEndDate) : dt;
+        this.typeofloan = !String.isEmpty(paramTypeofLoan)? paramTypeofLoan : '';
     }
     
     public List<Wrapper> getPayoutDrawdowns(){
@@ -55,6 +68,7 @@ public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
         strQuery += ' OR (Payment_Method__c =:AdminFee))';
         strQuery += ' AND Is_Rejected__c = false';
         strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit';
+        strQuery += typeofloan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeofloan';
         strQuery += ' AND Opportunity__r.Law_firm__c != \'\''; 
         
         drawdowns = Database.query(strQuery);
@@ -69,7 +83,7 @@ public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
         if(!lawfirmIdsSet.isEmpty()){
             
             strQuery = 'SELECT Id, Name, Opportunity__r.Account.Name,';
-            strQuery += ' Opportunity__r.Account.Business_Unit__c, Opportunity__r.Law_Firm__c,';
+            strQuery += ' Opportunity__r.Account.Business_Unit__c, Opportunity__r.Law_Firm__c,Opportunity__r.Type_of_Loan__c,';
             strQuery += ' Opportunity__r.Law_Firm__r.Name, Date__c, Amount__c,Payment_Method__c';
             strQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDate'; 
             strQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDate'; 
@@ -83,6 +97,7 @@ public with sharing class LawfirmSalesSummaryPayoutReportCtlr {
             strQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
             strQuery += ' AND Is_Rejected__c = false';   
             strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit';
+            strQuery += typeofloan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeofloan';
             strQuery += ' order by Opportunity__r.Law_Firm__r.Name asc NULLS LAST, Opportunity__r.Account.Business_Unit__c NULLS LAST , Date__c desc, Opportunity__r.Account.Name asc';
             
             drawdowns.clear();
