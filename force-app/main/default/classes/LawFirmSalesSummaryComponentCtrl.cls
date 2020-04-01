@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 31/03/2020, 9:03:28 pm
+ * @Last Modified On   : 01/04/2020, 5:11:49 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -30,6 +30,14 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         @AuraEnabled
         double rhinoBadDebtAmount {get; set;}
         @AuraEnabled
+        integer rhinoShortFallFile {get; set;}
+        @AuraEnabled
+        double rhinoShortFallamt {get; set;}
+        @AuraEnabled
+        integer rhinoOverAgeFile {get; set;}
+        @AuraEnabled
+        double rhinoOverAgeamt {get; set;}
+        @AuraEnabled
         integer elfiFileCount {get; set;}
         @AuraEnabled
         integer elfiClosedFileCount {get; set;}
@@ -44,6 +52,14 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         @AuraEnabled
         double elfiBadDebtAmount {get; set;}
         @AuraEnabled
+        integer elfiShortFallFile {get; set;}
+        @AuraEnabled
+        double elfiShortFallAmt {get; set;}
+        @AuraEnabled
+        integer elfiOverAgeFile {get; set;}
+        @AuraEnabled
+        double elfiOverAgeAmt {get; set;}
+        @AuraEnabled
         integer totalFileCount {get; set;}
         @AuraEnabled
         integer totalClosedFileCount {get; set;}
@@ -57,8 +73,16 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         integer totalbdfile {get; set;}
         @AuraEnabled
         double totalbdamount {get; set;}
+        @AuraEnabled
+        integer totalShortFallFile {get; set;}
+        @AuraEnabled
+        double totalShortFallAmt {get; set;}
+        @AuraEnabled
+        integer totalOverAgeFile {get; set;}
+        @AuraEnabled
+        double totalOverAgeAmt {get; set;}
         
-        public wrapper(string f, string frmId, integer rc,integer rcc, integer roc, decimal ra, decimal rca, integer rbdf, double rbda, integer ec, integer ecc, integer eoc, decimal ea, decimal eca, integer ebdf, double ebda, integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda){
+        public wrapper(string f, string frmId, integer rc,integer rcc, integer roc, decimal ra, decimal rca, integer rbdf, double rbda, integer rsff, double rsfa, integer roaf, double roaa, integer ec, integer ecc, integer eoc, decimal ea, decimal eca, integer ebdf, double ebda, integer esff, double esfa, integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda, integer tsff, double tsfa){
             
             firm = f;
             firmId = frmId;
@@ -70,6 +94,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             rhinoClosedAmount = rca;
             rhinoBadDebtFile = rbdf;
             rhinoBadDebtAmount = rbda;
+            rhinoShortFallFile = rsff;
+            rhinoShortFallamt = rsfa;
+            rhinoOverAgeFile = roaf;
+            rhinoOverAgeamt = roaa;
             
             elfiFileCount = ec;
             elfiClosedFileCount = ecc;
@@ -78,6 +106,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             elfiClosedAmount = eca;
             elfiBadDebtFile = ebdf;
             elfiBadDebtAmount = ebda;
+            elfiShortFallFile = esff;
+            elfiShortFallAmt = esfa;
             
             totalFileCount = tc;
             totalClosedFileCount = tcc;
@@ -86,6 +116,20 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             totalClosedAmount = tca;
             totalbdfile = tbdf;
             totalbdamount = tbda;
+            totalShortFallFile = tsff;
+            totalShortFallAmt = tsfa;
+        }
+
+        /*
+            Creation Reason:
+            Created this method because only 32 parameters can pass in method in constructor. Remaining variables set in this method.
+        */
+        public void wrapper2(integer eoaf, double eoaa, integer toaf, double toaa){
+            elfiOverAgeFile = eoaf;
+            elfiOverAgeAmt = eoaa;
+            
+            totalOverAgeFile = toaf;
+            totalOverAgeAmt = toaa;
         }
     }
     @AuraEnabled
@@ -192,7 +236,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 System.debug(closedOppResultMap);
                 /*
                 =================
-                BAD DEBT
+                BAD DEBT QUERY
                 =================
                 */
                 String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
@@ -222,6 +266,74 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 system.debug('Bad Debts');
                 system.debug(BadDebtResultMap);
 
+                /*
+                =================
+                SHORT FALL QUERY
+                =================
+                */
+                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                shortFallOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
+                shortFallOppQuery += ' SUM(Amount__c) amt';
+                shortFallOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
+                shortFallOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
+                shortFallOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                shortFallOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+                shortFallOppQuery += ' AND Payment_Method__c =:payment';
+                shortFallOppQuery += ' AND Reference_Notes__c =:paymentShortfall';
+                shortFallOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedShortfall';
+                shortFallOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
+                shortFallOppQuery += ' AND Is_Rejected__c = false';
+                shortFallOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+
+                List<AggregateResult> ShortFallAggResult = Database.query(shortFallOppQuery);
+                Map<String, AggregateResult> ShortFallResultMap = new Map<String, AggregateResult>();
+                if(!ShortFallAggResult.isEmpty()){
+                    for(AggregateResult shortfallagr : ShortFallAggResult)
+                    {
+                        String key = String.valueOf(shortfallagr.get('firm')) + '-' + String.valueOf(shortfallagr.get('unit'));
+                        ShortFallResultMap.put(key, shortfallagr);
+                        //closedOppResultMap.put(key,res);
+                    }
+                }
+                system.debug('Short Fall Results');
+                system.debug(ShortFallResultMap);
+
+
+                /*
+                =================
+                OVERAGE QUERY
+                =================
+                */
+                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                overageOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
+                overageOppQuery += ' SUM(Amount__c) amt';
+                overageOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
+                overageOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
+                overageOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                overageOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+                overageOppQuery += ' AND Payment_Method__c =:payment';  
+                overageOppQuery += ' AND Reference_Notes__c =:paymentSurplus'; 
+                overageOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedSurplus';
+                overageOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
+                overageOppQuery += ' AND Is_Rejected__c = false';
+                overageOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+
+                List<AggregateResult> OverAgeAggResult = Database.query(shortFallOppQuery);
+                Map<String, AggregateResult> OverAgeResultMap = new Map<String, AggregateResult>();
+                if(!OverAgeAggResult.isEmpty()){
+                    for(AggregateResult overageagr : OverAgeAggResult)
+                    {
+                        String key = String.valueOf(overageagr.get('firm')) + '-' + String.valueOf(overageagr.get('unit'));
+                        OverAgeResultMap.put(key, overageagr);
+                        //closedOppResultMap.put(key,res);
+                    }
+                }
+                system.debug('Over Age Results');
+                system.debug(OverAgeResultMap);
+
+
 
                 
                 for(String f : lawfirms)
@@ -229,7 +341,6 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                     String rhinokey = f+'-Rhino';
                     String elfikey = f+'-ELFI';
                     String emptyKey = f+'-';
-                    system.debug(rhinokey);
                     Wrapper w = new Wrapper(f,
                                             result.containsKey(rhinokey) ? (String)result.get(rhinokey).get('firmId') : '',
                                             /* ===== RINO Values =====*/
@@ -240,18 +351,24 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                                             closedOppResultMap.containsKey(rhinokey) ? (decimal)closedOppResultMap.get(rhinokey).get('amt') : 0,
                                             BadDebtResultMap.containsKey(rhinokey) ? (Integer)BadDebtResultMap.get(rhinokey).get('file') : 0,
                                             BadDebtResultMap.containsKey(rhinokey) ? (double)BadDebtResultMap.get(rhinokey).get('amt') : 0,
+                                            ShortFallResultMap.containsKey(rhinokey) ? (Integer)ShortFallResultMap.get(rhinokey).get('file') : 0,
+                                            ShortFallResultMap.containsKey(rhinokey) ? (double)ShortFallResultMap.get(rhinokey).get('amt') : 0,
+                                            OverAgeResultMap.containsKey(rhinokey) ? (Integer)OverAgeResultMap.get(rhinokey).get('file') : 0,
+                                            OverAgeResultMap.containsKey(rhinokey) ? (double)OverAgeResultMap.get(rhinokey).get('amt') : 0,
                                             /* ===== RINO Values =====*/
                                             /* ===== ELFI Values =====*/
                                             result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('file') : 0,
                                             closedOppResultMap.containsKey(elfikey) ? (Integer)closedOppResultMap.get(elfikey).get('file') : 0,
-                                            result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('opptyCount') : 0,                                            
+                                            result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('opptyCount') : 0,
                                             result.containsKey(elfikey) ? (decimal)result.get(elfikey).get('amt') : 0,
                                             closedOppResultMap.containsKey(elfikey) ? (decimal)closedOppResultMap.get(elfikey).get('amt') : 0,
                                             BadDebtResultMap.containsKey(elfikey) ? (integer)BadDebtResultMap.get(elfikey).get('file') : 0,
                                             BadDebtResultMap.containsKey(elfikey) ? (double)BadDebtResultMap.get(elfikey).get('amt') : 0,
+                                            ShortFallResultMap.containsKey(elfikey) ? (Integer)ShortFallResultMap.get(elfikey).get('file') : 0,
+                                            ShortFallResultMap.containsKey(elfikey) ? (double)ShortFallResultMap.get(elfikey).get('amt') : 0,
                                             /* ===== ELFI Values =====*/
                                             
-                                            /* ===== ALL Value =====*/
+                                            /* ===== ALL (Rhino, Elfi, Consolidated) Value =====*/
                                             (result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('file') : 0) +
                                             (result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('file') : 0) +
                                             (result.containsKey(emptyKey) ? (Integer)result.get(emptyKey).get('file') : 0),
@@ -278,9 +395,34 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
 
                                             (BadDebtResultMap.containsKey(rhinokey) ? (double)BadDebtResultMap.get(rhinokey).get('amt') : 0) +
                                             (BadDebtResultMap.containsKey(elfikey) ? (double)BadDebtResultMap.get(elfikey).get('amt') : 0) +
-                                            (BadDebtResultMap.containsKey(emptyKey) ? (double)BadDebtResultMap.get(emptyKey).get('amt') : 0)
+                                            (BadDebtResultMap.containsKey(emptyKey) ? (double)BadDebtResultMap.get(emptyKey).get('amt') : 0),
+
+                                            
+                                            (ShortFallResultMap.containsKey(rhinokey) ? (integer)ShortFallResultMap.get(rhinokey).get('file') : 0) +
+                                            (ShortFallResultMap.containsKey(elfikey) ? (integer)ShortFallResultMap.get(elfikey).get('file') : 0) +
+                                            (ShortFallResultMap.containsKey(emptyKey) ? (integer)ShortFallResultMap.get(emptyKey).get('file') : 0),
+
+                                            (ShortFallResultMap.containsKey(rhinokey) ? (double)ShortFallResultMap.get(rhinokey).get('amt') : 0) +
+                                            (ShortFallResultMap.containsKey(elfikey) ? (double)ShortFallResultMap.get(elfikey).get('amt') : 0) +
+                                            (ShortFallResultMap.containsKey(emptyKey) ? (double)ShortFallResultMap.get(emptyKey).get('amt') : 0)
                                         );
                                             /* ===== ALL Value =====*/
+
+                            w.wrapper2(
+                                /* ===== ELFI VALUES =====*/
+                                OverAgeResultMap.containsKey(elfikey) ? (Integer)OverAgeResultMap.get(elfikey).get('file') : 0,
+                                OverAgeResultMap.containsKey(elfikey) ? (double)OverAgeResultMap.get(elfikey).get('amt') : 0,
+                                /* ===== ELFI VALUES =====*/
+                                /* ===== ALL Value =====*/
+                                (OverAgeResultMap.containsKey(rhinokey) ? (Integer)OverAgeResultMap.get(rhinokey).get('file') : 0) +
+                                (OverAgeResultMap.containsKey(elfikey) ? (Integer)OverAgeResultMap.get(elfikey).get('file') : 0) +
+                                (OverAgeResultMap.containsKey(emptyKey) ? (Integer)OverAgeResultMap.get(emptyKey).get('file') : 0),
+
+                                (OverAgeResultMap.containsKey(rhinokey) ? (double)OverAgeResultMap.get(rhinokey).get('amt') : 0) +
+                                (OverAgeResultMap.containsKey(elfikey) ? (double)OverAgeResultMap.get(elfikey).get('amt') : 0) +
+                                (OverAgeResultMap.containsKey(emptyKey) ? (double)OverAgeResultMap.get(emptyKey).get('amt') : 0)
+                                /* ===== ALL Value =====*/
+                            );
                     wrapers.add(w);
                 }
                 return wrapers;

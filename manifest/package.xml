@@ -251,6 +251,7 @@
         <memebers>GenerateConsolidatedAssessmentPayout</memebers>
         <memebers>LawyerSalesSummaryPrintPDF</memebers>
         <memebers>LawyerSalesSummaryViewAllVF</memebers>
+        <memebers>LawFirmSalesSummaryViewAllVF</memebers>
         <name>ApexPage</name>
     </types>
     <types>

@@ -116,11 +116,11 @@
         let url = '';
 
 
-        if (selectedMenuItemValue == "ViewAll") {
+        /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl');
         } else if (selectedMenuItemValue == "PayoutViewAll") {
             url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&ContentType=Excel';
-        }
+        }*/
 
         try {
             newWin = window.open(url);
