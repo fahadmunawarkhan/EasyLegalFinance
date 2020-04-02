@@ -259,10 +259,9 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             system.debug('TOTAL PAYOUT BEFORE PAYMENT >> ' + opp.Total_Payout__c);
             
             
-            Decimal totalPayout = opp.Total_Payout__c;
-            if (amountRemaining + opp.Client_Rebate_Amount__c >= totalPayout)
-                totalPayout -= opp.Client_Rebate_Amount__c;
-            
+            Decimal totalPayout = opp.Total_Payout__c;            
+            if (!opp.Client_Rebate_Applied__c && opp.Potential_Client_Rebate_Amount__c > 0)           
+            	totalPayout -= opp.Potential_Client_Rebate_Amount__c;            
             // This for the last opty in case we have more payment than expected
             if(amountRemaining > 0 && helper == openOpsList.size()){
                 opp.Temp_Payment_Received__c = amountRemaining;
