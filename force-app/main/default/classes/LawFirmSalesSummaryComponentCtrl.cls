@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 02/04/2020, 4:32:07 pm
+ * @Last Modified On   : 02/04/2020, 11:39:37 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -12,75 +12,75 @@
 public with sharing class LawFirmSalesSummaryComponentCtrl {
     public class Wrapper {
         @AuraEnabled
-        string firm {get; set;}
+        public string firm {get; set;}
         @AuraEnabled
-        string firmId {get; set;}
+        public string firmId {get; set;}
         @AuraEnabled
-        integer rhinoFileCount {get; set;}
+        public integer rhinoFileCount {get; set;}
         @AuraEnabled
-        integer rhinoClosedFileCount {get; set;}
+        public integer rhinoClosedFileCount {get; set;}
         @AuraEnabled
-        integer rhinoOpptyCount {get; set;}
+        public integer rhinoOpptyCount {get; set;}
         @AuraEnabled
-        decimal rhinoAmount {get; set;}
+        public decimal rhinoAmount {get; set;}
         @AuraEnabled
-        decimal rhinoClosedAmount {get; set;}
+        public decimal rhinoClosedAmount {get; set;}
         @AuraEnabled
-        integer rhinoBadDebtFile {get; set;}
+        public integer rhinoBadDebtFile {get; set;}
         @AuraEnabled
-        double rhinoBadDebtAmount {get; set;}
+        public double rhinoBadDebtAmount {get; set;}
         @AuraEnabled
-        integer rhinoShortFallFile {get; set;}
+        public integer rhinoShortFallFile {get; set;}
         @AuraEnabled
-        double rhinoShortFallamt {get; set;}
+        public double rhinoShortFallamt {get; set;}
         @AuraEnabled
-        integer rhinoOverAgeFile {get; set;}
+        public integer rhinoOverAgeFile {get; set;}
         @AuraEnabled
-        double rhinoOverAgeamt {get; set;}
+        public double rhinoOverAgeamt {get; set;}
         @AuraEnabled
-        integer elfiFileCount {get; set;}
+        public integer elfiFileCount {get; set;}
         @AuraEnabled
-        integer elfiClosedFileCount {get; set;}
+        public integer elfiClosedFileCount {get; set;}
         @AuraEnabled
-        integer elfiOpptyCount {get; set;}
+        public integer elfiOpptyCount {get; set;}
         @AuraEnabled
-        decimal elfiAmount {get; set;}
+        public decimal elfiAmount {get; set;}
         @AuraEnabled
-        decimal elfiClosedAmount {get; set;}
+        public decimal elfiClosedAmount {get; set;}
         @AuraEnabled
-        integer elfiBadDebtFile {get; set;}
+        public integer elfiBadDebtFile {get; set;}
         @AuraEnabled
-        double elfiBadDebtAmount {get; set;}
+        public double elfiBadDebtAmount {get; set;}
         @AuraEnabled
-        integer elfiShortFallFile {get; set;}
+        public integer elfiShortFallFile {get; set;}
         @AuraEnabled
-        double elfiShortFallAmt {get; set;}
+        public double elfiShortFallAmt {get; set;}
         @AuraEnabled
-        integer elfiOverAgeFile {get; set;}
+        public integer elfiOverAgeFile {get; set;}
         @AuraEnabled
-        double elfiOverAgeAmt {get; set;}
+        public double elfiOverAgeAmt {get; set;}
         @AuraEnabled
-        integer totalFileCount {get; set;}
+        public integer totalFileCount {get; set;}
         @AuraEnabled
-        integer totalClosedFileCount {get; set;}
+        public integer totalClosedFileCount {get; set;}
         @AuraEnabled
-        integer totalOpptyCount {get; set;}
+        public integer totalOpptyCount {get; set;}
         @AuraEnabled
-        decimal totalAmount {get; set;}
+        public decimal totalAmount {get; set;}
         @AuraEnabled
-        decimal totalClosedAmount {get; set;}
+        public decimal totalClosedAmount {get; set;}
         @AuraEnabled
-        integer totalbdfile {get; set;}
+        public integer totalbdfile {get; set;}
         @AuraEnabled
-        double totalbdamount {get; set;}
+        public double totalbdamount {get; set;}
         @AuraEnabled
-        integer totalShortFallFile {get; set;}
+        public integer totalShortFallFile {get; set;}
         @AuraEnabled
-        double totalShortFallAmt {get; set;}
+        public double totalShortFallAmt {get; set;}
         @AuraEnabled
-        integer totalOverAgeFile {get; set;}
+        public integer totalOverAgeFile {get; set;}
         @AuraEnabled
-        double totalOverAgeAmt {get; set;}
+        public double totalOverAgeAmt {get; set;}
         
         public wrapper(string f, string frmId, integer rc,integer rcc, integer roc, decimal ra, decimal rca, integer rbdf, double rbda, integer rsff, double rsfa, integer roaf, double roaa, integer ec, integer ecc, integer eoc, decimal ea, decimal eca, integer ebdf, double ebda, integer esff, double esfa, integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda, integer tsff, double tsfa){
             
@@ -423,6 +423,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                             );
                     wrapers.add(w);
                 }
+                system.debug('this is wrapper');
                 return wrapers;
             }
             return null;

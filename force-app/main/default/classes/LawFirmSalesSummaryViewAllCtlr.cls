@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 02/04/2020, 4:40:51 pm
+ * @Last Modified On   : 03/04/2020, 12:17:43 am
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -18,6 +18,8 @@ public class LawFirmSalesSummaryViewAllCtlr {
     public String typeOfLoan{get;set;}
     public String contentType{get;set;}
     public String renderAs{get;set;}
+    public String SortField{get;set;}
+    public String Direction{get;set;}
 
     public LawFirmSalesSummaryViewAllCtlr() {
         Date dt = Date.today();
@@ -30,7 +32,8 @@ public class LawFirmSalesSummaryViewAllCtlr {
         
         String paramSearchByName = ApexPages.currentPage().getParameters().get('SearchByName');
         String paramTypeOfLoan = ApexPages.currentPage().getParameters().get('TypeOfLoan');
-
+        String paramSortField = ApexPages.currentPage().getParameters().get('sortField');
+        String paramDirection = ApexPages.currentPage().getParameters().get('direction');
         if(paramContentType == 'PDF'){
             this.renderAs = 'PDF';
         }else{
@@ -44,6 +47,8 @@ public class LawFirmSalesSummaryViewAllCtlr {
         this.endDate = !String.isEmpty(paramEndDate)? Date.valueOf(paramEndDate) : dt;
         this.searchByName = !String.isEmpty(paramSearchByName) ? paramSearchByName : '';
         this.typeOfLoan = !String.isEmpty(paramTypeOfLoan) ? paramTypeOfLoan : '';
+        this.SortField = !String.isEmpty(paramSortField) ? paramSortField : '';
+        this.Direction = !String.isEmpty(paramDirection) ? paramDirection : '';
         //Date startDt = Date.valueOf(startDate);
         //Date endDt = Date.valueOf(endDate);
     }
@@ -121,4 +126,12 @@ public class LawFirmSalesSummaryViewAllCtlr {
         return drawdowns;
     }
 
+    public list<LawFirmSalesSummaryComponentCtrl.Wrapper> getGroupbyLawFirm(){
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> Test = new List<LawFirmSalesSummaryComponentCtrl.Wrapper>();
+        for(LawFirmSalesSummaryComponentCtrl.Wrapper t : LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(''+this.startDate, ''+this.endDate, SortField, Direction, this.businessUnit, this.searchByName, this.typeOfLoan)){
+            Test.add(t);
+        }
+        system.debug(Test);
+        return Test;
+    }
 }

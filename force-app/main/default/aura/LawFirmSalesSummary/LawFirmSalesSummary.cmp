@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 01/04/2020, 5:15:55 pm
+  @Last Modified On   : 02/04/2020, 4:53:15 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -192,9 +192,10 @@
                 </a>
             </lightning:layoutItem>-->
             <lightning:layoutItem>
-                <a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printPDFReportButton}" variant="neutral" type="button" label="Print Report (PDF)" />
+                <!--<a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Print Report (PDF)" />
-                </a>
+                </a>-->
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>

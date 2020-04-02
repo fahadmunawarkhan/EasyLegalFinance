@@ -1,0 +1,287 @@
+<!--
+  @File Name          : LawFirmSalesSummaryPrintPDF.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 03/04/2020, 12:41:04 am
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<apex:page controller="LawFirmSalesSummaryViewAllCtlr" readOnly="true" renderAs="PDF" showHeader="false" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false">
+    <head>
+        <style>
+            @page{
+            size: A4 landscape;
+            margin-left: 0.1cm;
+            margin-right: 0.1cm;
+            }            
+            body {
+            font-size: 8pt !important;
+            } 
+        </style>
+    </head>
+    <body>
+        
+        <apex:pageBlock>
+            <apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'Rhino')}">
+                <div>
+                    <table  style="width:100%" border='0'>
+                        <tr>
+                            <td colspan="11">
+                                <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
+                                    <span>
+                                        <apex:image value="{!if(or(businessUnit == 'Rhino', businessUnit == 'Consolidated'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
+                                    </span>
+                                </apex:outputPanel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="11">
+                                <span style="font-size:20pt;font-weight:bold;text-align:center;">
+                                    Law Firm Sales Summary (Rhino)
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="11">
+                                <span>                            
+                                    <b>From: </b>
+                                    <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
+                                        <apex:param value="{!startDate}" /> 
+                                    </apex:outputText>
+                                </span>                                                         
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="11">                            
+                                <span>
+                                    <strong>To: </strong>
+                                    <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
+                                        <apex:param value="{!endDate}" /> 
+                                    </apex:outputText>
+                                </span>                             
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div>
+                        <table border='1'>
+                            <thead>
+                                <tr align="center" style="background-color:#0a3b63; color:#ffffff;">
+                                    <th>
+                                        <span>LAW FIRM</span>
+                                    </th>
+                                    
+                                    <th>
+                                        <span># OF FILES</span>
+                                    </th>
+                                    <th>
+                                        <span># OF CLOSED FILES</span>
+                                    </th>   
+                                    <th>
+                                        <span># OF OPPS</span>
+                                    </th>
+                                    <th>
+                                        <span>PAYOUT</span>
+                                    </th>
+                                    <th>
+                                        <span>AMOUNT</span>
+                                    </th>
+                                    <th>
+                                        <span># OF BAD DEBT FILES</span>
+                                    </th>
+                                    <th>
+                                        <span>BAD DEBT AMOUNT</span>
+                                    </th>
+                                    <th>
+                                        <span># OF SHORTFALL FILES</span>
+                                    </th>
+                                    <th>
+                                        <span>SHORTFALL AMOUNT</span>
+                                    </th>
+                                    <th>
+                                        <span># OF OVERAGE FILES</span>
+                                    </th>
+                                    <th>
+                                        <span>OVERAGE AMOUNT</span>
+                                    </th>                                
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <apex:variable value="{!0}" var="totalrhinoFileCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoClosedFileCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoOpptyCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoClosedAmount"/>
+                                <apex:variable value="{!0}" var="totalrhinoAmount"/>
+                                <apex:variable value="{!0}" var="totalrhinoBadDebtFileCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoBadDebtAmount"/>                            
+                                <apex:variable value="{!0}" var="totalrhinoShortfallFileCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoShortfallAmount"/>
+                                <apex:variable value="{!0}" var="totalrhinoOverageFileCount"/>
+                                <apex:variable value="{!0}" var="totalrhinoOverageAmount"/>
+                                <apex:repeat value="{!GroupbyLawFirm}" var="data">
+                                    
+                                    <tr>
+                                        <td>
+                                            <span>
+                                                {!data.firm}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalFileCount}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalClosedFileCount}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalOpptyCount}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.totalClosedAmount}" />                                    
+                                                </apex:outputText>
+                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoAmount}" var="totalrhinoAmount"/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.totalAmount}" />
+                                                </apex:outputText>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalbdfile}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.totalbdamount}" />
+                                                </apex:outputText>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalShortFallFile}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.totalShortFallAmt}" />
+                                                </apex:outputText>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                {!data.totalOverAgeFile}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.totalOverAgeAmt}" />
+                                                </apex:outputText>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                <tr style="background-color:#c7c8ca;">
+                                    <td colspan="2">
+                                        <span><strong>Total:</strong></span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong></strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </body>
+</apex:page>

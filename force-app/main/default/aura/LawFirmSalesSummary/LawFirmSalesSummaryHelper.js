@@ -67,6 +67,8 @@
         $A.enqueueAction(picklistgetter);
     },
     getAmountGroupByLawFirm: function(component) {
+        console.log("sortFiels Is ====>");
+        console.log(component.get('v.sortField'));
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.getAmountGroupByLawFirm');
             action.setParams({
