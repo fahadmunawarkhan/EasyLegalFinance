@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 01/04/2020, 5:11:49 pm
+ * @Last Modified On   : 02/04/2020, 4:32:07 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -168,7 +168,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             
             
             
-            strQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, Opportunity__r.Lawyer__c lawyerId, ';
+            strQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, ';
             strQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
             strQuery += ' SUM(Amount__c) amt, Opportunity__r.Account.Business_Unit__c unit';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
@@ -181,7 +181,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
             strQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
-            strQuery += ' Group by Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c';
+            strQuery += ' Group by Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c';
             strQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
             
             List<AggregateResult> aggResult = Database.query(strQuery);
@@ -191,7 +191,6 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 List<String> lawfirms = new List<String>();
                 Set<String> lawfirmSet = new Set<String>();
                 Set<String> lawfirmIdsSet = new Set<String>();
-                Set<String> lawyerIdsSet = new Set<String>();
                 for(AggregateResult res : aggResult)
                 {
                     String key = res.get('firm')+'-'+res.get('unit');
@@ -199,7 +198,6 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                     lawfirmIdsSet.add((String)res.get('firmId'));
                     if(!lawfirmSet.contains((String)res.get('firm')))		lawfirms.add((String)res.get('firm'));
                     lawfirmSet.add((String)res.get('firm'));
-                    lawyerIdsSet.add(String.ValueOf(res.get('lawyerId')));
                 }
                 
                 // Closed with loan
@@ -239,7 +237,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 BAD DEBT QUERY
                 =================
                 */
-                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
                 badDebtOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 badDebtOppQuery += ' SUM(Amount__c) amt';
                 badDebtOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
@@ -248,10 +246,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 //badDebtOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 //badDebtOppQuery += ' AND Payment_Method__c =:payment';
                 badDebtOppQuery += ' AND Reference_Notes__c =:badDebt';
-                badDebtOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
+                badDebtOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 badDebtOppQuery += ' AND Is_Rejected__c = false';
                 badDebtOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                badDebtOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                badDebtOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
 
                 List<AggregateResult> BadDebtAggResult = Database.query(badDebtOppQuery);
                 Map<String, AggregateResult> BadDebtResultMap = new Map<String, AggregateResult>();
@@ -271,7 +269,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 SHORT FALL QUERY
                 =================
                 */
-                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
                 shortFallOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 shortFallOppQuery += ' SUM(Amount__c) amt';
                 shortFallOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
@@ -281,10 +279,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 shortFallOppQuery += ' AND Payment_Method__c =:payment';
                 shortFallOppQuery += ' AND Reference_Notes__c =:paymentShortfall';
                 shortFallOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedShortfall';
-                shortFallOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
+                shortFallOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 shortFallOppQuery += ' AND Is_Rejected__c = false';
                 shortFallOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
 
                 List<AggregateResult> ShortFallAggResult = Database.query(shortFallOppQuery);
                 Map<String, AggregateResult> ShortFallResultMap = new Map<String, AggregateResult>();
@@ -305,7 +303,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 OVERAGE QUERY
                 =================
                 */
-                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
                 overageOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 overageOppQuery += ' SUM(Amount__c) amt';
                 overageOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
@@ -315,10 +313,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 overageOppQuery += ' AND Payment_Method__c =:payment';  
                 overageOppQuery += ' AND Reference_Notes__c =:paymentSurplus'; 
                 overageOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedSurplus';
-                overageOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
+                overageOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 overageOppQuery += ' AND Is_Rejected__c = false';
                 overageOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
 
                 List<AggregateResult> OverAgeAggResult = Database.query(shortFallOppQuery);
                 Map<String, AggregateResult> OverAgeResultMap = new Map<String, AggregateResult>();

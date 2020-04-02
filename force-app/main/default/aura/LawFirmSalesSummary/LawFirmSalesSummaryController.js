@@ -114,8 +114,8 @@
 
         let newWin;
         let url = '';
-
-
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=Excel';
         /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl');
         } else if (selectedMenuItemValue == "PayoutViewAll") {
@@ -134,13 +134,13 @@
 
         let newWin;
         let url = '';
-
-
-        if (selectedMenuItemValue == "ViewAll") {
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=PDF';
+        /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl') + '%26' + 'DefaultPDF=1';
         } else if (selectedMenuItemValue == "PayoutViewAll") {
             url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&ContentType=PDF';
-        }
+        }*/
 
         try {
             newWin = window.open(url);

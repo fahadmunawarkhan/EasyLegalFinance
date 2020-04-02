@@ -1,6 +1,161 @@
-<apex:page>
+<!--
+  @File Name          : LawFirmSalesSummaryViewAllVF.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 02/04/2020, 4:40:32 pm
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<apex:page controller="LawFirmSalesSummaryViewAllCtlr" readOnly="true" renderAs="{!renderAs}" contentType="{!contentType}" applyBodyTag="false">
 <!-- Begin Default Content REMOVE THIS -->
-<h1>Congratulations</h1>
-This is your new Page
+<head>
+    <style>
+        @page{
+        size: A4 landscape;
+        }            
+        body {
+        font-family: 'Arial Unicode MS';
+        font-size: 8pt !important;
+        } 
+    </style>
+</head>
+<body>
+
+    <apex:pageBlock >
+        <div>
+            <table  style="width:100%" border='0'>
+                <tr>
+                    <td colspan="11">
+                        <apex:outputPanel rendered="{!if(renderAs == 'PDF', false, true)}">
+                            <span style="">
+                                <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png')}" />
+                                </font>
+                            </span>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
+                            <span>
+                                <apex:image value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), URLFOR($Resource.ELFI_Logo), URLFOR($Resource.Rhino_Logo))}" />
+                            </span>
+                        </apex:outputPanel>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="11">
+                        <span style="font-size:20pt;font-weight:bold;text-align:center;">
+                            Law Firm Sales Summary (View All)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="11">                            
+                        <font size="2" face="Arial Unicode MS"><b>From: </b>
+                            <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
+                                <apex:param value="{!startDate}" /> 
+                            </apex:outputText>
+                        </font>                             
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="11">                            
+                        <font size="2" face="Arial Unicode MS"><strong>To: </strong>
+                            <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
+                                <apex:param value="{!endDate}" /> 
+                            </apex:outputText>
+                        </font>                             
+                    </td>
+                </tr>
+            </table>
+            
+            <div>
+                <table border='1'>
+                    <thead>
+                        <tr>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Law Firm</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Drawdown</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Account</font></span>
+                            </th>   
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">File Number</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Business Unit</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Drawdown Date</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Amount</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Payment Method</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Reference Notes</font></span>
+                            </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Type of Loan</font></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:variable value="{!0}" var="totalAmount"/>
+                        <apex:repeat value="{!AllDrawdowns}" var="drawdown">
+                            <tr>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Law_firm__r.name}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Name}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Account.Name}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Account.AccountNumber}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Account.Business_Unit__c}</font>
+                                </td>
+                                <td align="left">
+                                    <font size="1" face="Arial Unicode MS">
+                                        <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
+                                            <apex:param value="{!drawdown.Date__c}" />
+                                        </apex:outputText>
+                                    </font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">
+                                        <apex:outputText value="{0, Number, Currency}">
+                                            <apex:param value="{!drawdown.Amount__c}" />
+                                        </apex:outputText>
+                                    </font>
+                                    <apex:variable value="{!drawdown.Amount__c + totalAmount}" var="totalAmount"/>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Payment_Method__c}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Reference_Notes__c}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Type_of_Loan__c}</font>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </apex:pageBlock>
+
+</body>
 <!-- End Default Content REMOVE THIS -->
 </apex:page>
