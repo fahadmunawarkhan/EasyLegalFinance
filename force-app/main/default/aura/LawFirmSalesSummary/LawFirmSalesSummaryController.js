@@ -1,156 +1,172 @@
 ({
-    doInit : function(component, event, helper) {
-        
+    doInit: function(component, event, helper) {
+
         component.set("v.spinner", true);
-        
+
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
         helper.getReportCongaURL(component).then($A.getCallback(
-            function(result){ 
+            function(result) {
                 component.set('v.ViewAllUrl', result[0].Conga_Law_Firm_Sales_Summary_View_All__c);
                 component.set('v.PrintAllUrl', result[0].Conga_Law_Firm_Sales_Summary_Print_All__c);
             }));
-        
+
         helper.getCustomSettings(component).then($A.getCallback(
-            function(result){ 
+            function(result) {
                 component.set('v.customSetting', result);
-                console.log('customSetting:'+component.get('v.customSetting.Business_Unit__c'));
+                console.log('customSetting:' + component.get('v.customSetting.Business_Unit__c'));
                 let filter = component.get("v.selectedBusinessUnitFilter");
-                if(filter == "Consolidated"){
-                    component.set("v.design", true); 
-                }else{
-                    component.set("v.design", false); 
+                if (filter == "Consolidated") {
+                    component.set("v.design", true);
+                } else {
+                    component.set("v.design", false);
                 }
                 return helper.setDefaultDates(component);
-            })).then($A.getCallback(function(result){
-            		return helper.getAmountGroupByLawFirm(component);
+            })).then($A.getCallback(function(result) {
+            return helper.getAmountGroupByLawFirm(component);
         })).then($A.getCallback(
-            function(result){
+            function(result) {
                 component.set('v.AmountByLawFirm', result);
                 helper.GetFileTotalAndAmountTotalForLawFirm(component);
                 component.set("v.spinner", false);
             }
         )).catch(
-            function(errors){
+            function(errors) {
                 console.log(errors);
                 component.set("v.spinner", false);
                 helper.errorsHandler(errors);
             }
         );
-        
-                
+
+
     },
-    
-    filterButton : function(component, event, helper){
-        
+
+    filterButton: function(component, event, helper) {
+
         component.set("v.spinner", true);
-        
+
         helper.getAmountGroupByLawFirm(component).then($A.getCallback(
-            function(result){
+            function(result) {
                 helper.setCustomSettings(component);
                 component.set('v.AmountByLawFirm', result);
                 helper.GetFileTotalAndAmountTotalForLawFirm(component);
                 let filter = component.get("v.selectedBusinessUnitFilter");
-                if(filter == "Consolidated"){
-                    component.set("v.design", true); 
-                }else{
-                    component.set("v.design", false); 
+                if (filter == "Consolidated") {
+                    component.set("v.design", true);
+                } else {
+                    component.set("v.design", false);
                 }
-                
+
                 component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));
             }
         )).then(
-            function(){
-                
+            function() {
+
                 helper.getReportCongaURL(component).then($A.getCallback(
-                    function(result){ 
+                    function(result) {
                         component.set('v.ViewAllUrl', result[0].Conga_Law_Firm_Sales_Summary_View_All__c);
                         component.set('v.PrintAllUrl', result[0].Conga_Law_Firm_Sales_Summary_Print_All__c);
-                    })
-                                                        );
-                
+                    }));
+
                 component.set("v.spinner", false);
             }
         ).catch(
-            function(errors){
+            function(errors) {
                 component.set("v.spinner", false);
                 helper.errorsHandler(errors);
             }
         );
     },
-    sort: function(component, event, helper) {  
-        
+    sort: function(component, event, helper) {
+
         let selectedItem = event.currentTarget;
         let field = selectedItem.dataset.field;
         let sortOrder = component.get('v.sortOrder');
         let oldField = component.get('v.sortField');
-        
+
         sortOrder = (sortOrder == 'DESC' && oldField == field) ? 'ASC' : 'DESC';
-        
-        component.set('v.sortField',field);   
-        component.set('v.sortOrder',sortOrder); 
-        
+
+        component.set('v.sortField', field);
+        component.set('v.sortOrder', sortOrder);
+
         component.set("v.spinner", true);
-        
+
         //helper.getLawyersList(component,event);
         helper.getAmountGroupByLawFirm(component).then($A.getCallback(
-            function(result){ 
+            function(result) {
                 component.set('v.AmountByLawFirm', result);
                 return helper.GetFileTotalAndAmountTotalForLawFirm(component);
-            })
-                                                      ).then($A.getCallback(
-            function(result){
-                
+            })).then($A.getCallback(
+            function(result) {
+
                 component.set("v.spinner", false);
-            })
-                                                            ).catch(
-            function(errors){
+            })).catch(
+            function(errors) {
                 component.set("v.spinner", false);
                 helper.errorsHandler(errors);
             }
-        );         
+        );
     },
-    handleViewAllButtonMenu : function(component, event, helper) {
+    handleViewAllButtonMenu: function(component, event, helper) {
         var selectedMenuItemValue = event.getParam("value");
-        
+
         let newWin;
         let url = '';
-        
-        
-        if(selectedMenuItemValue == "ViewAll"){
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=Excel';
+        /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl');
-        }else if(selectedMenuItemValue == "PayoutViewAll"){
-            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate='+component.get('v.startDate')+'&EndDate='+component.get('v.endDate')+'&BusinessUnit='+component.get('v.selectedBusinessUnitFilter')+ '&ContentType=Excel';
-        }
-        
-        try{                       
+        } else if (selectedMenuItemValue == "PayoutViewAll") {
+            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&ContentType=Excel';
+        }*/
+
+        try {
             newWin = window.open(url);
-        }catch(e){}
-        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
-        {
-            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        } catch (e) {}
+        if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+            reject([{ message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!' }]);
         }
     },
-    handleViewAllPDFButtonMenu : function(component, event, helper) {
+    handleViewAllPDFButtonMenu: function(component, event, helper) {
         var selectedMenuItemValue = event.getParam("value");
-        
+
         let newWin;
         let url = '';
-        
-        
-        if(selectedMenuItemValue == "ViewAll"){
-            url = component.get('v.ViewAllUrl') +'%26'+'DefaultPDF=1';
-        }else if(selectedMenuItemValue == "PayoutViewAll"){
-            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate='+component.get('v.startDate')+'&EndDate='+component.get('v.endDate')+'&BusinessUnit='+component.get('v.selectedBusinessUnitFilter')+ '&ContentType=PDF';
-        }
-        
-        try{                       
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=PDF';
+        /*if (selectedMenuItemValue == "ViewAll") {
+            url = component.get('v.ViewAllUrl') + '%26' + 'DefaultPDF=1';
+        } else if (selectedMenuItemValue == "PayoutViewAll") {
+            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&ContentType=PDF';
+        }*/
+
+        try {
             newWin = window.open(url);
-        }catch(e){}
-        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
-        {
-            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        } catch (e) {}
+        if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+            reject([{ message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!' }]);
+        }
+    },
+    printPDFReportButton: function(component, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+
+        let newWin;
+        let url = '';
+        url += '/apex/LawFirmSalesSummaryPrintPDF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&sortField=' + component.get('v.sortField') + '&direction=' + component.get('v.sortOrder') + '&ContentType=PDF';
+        /*if (selectedMenuItemValue == "ViewAll") {
+            url = component.get('v.ViewAllUrl') + '%26' + 'DefaultPDF=1';
+        } else if (selectedMenuItemValue == "PayoutViewAll") {
+            url = '/apex/LawFirmSalesSummaryPayoutReportVF?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&ContentType=PDF';
+        }*/
+
+        try {
+            newWin = window.open(url);
+        } catch (e) {}
+        if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
+            reject([{ message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!' }]);
         }
     }
 })
