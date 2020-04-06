@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 02/04/2020, 11:39:37 pm
+ * @Last Modified On   : 03/04/2020, 3:53:25 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -108,7 +108,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             elfiBadDebtAmount = ebda;
             elfiShortFallFile = esff;
             elfiShortFallAmt = esfa;
-            
+
             totalFileCount = tc;
             totalClosedFileCount = tcc;
             totalOpptyCount = toc;
@@ -127,7 +127,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         public void wrapper2(integer eoaf, double eoaa, integer toaf, double toaa){
             elfiOverAgeFile = eoaf;
             elfiOverAgeAmt = eoaa;
-            
+
             totalOverAgeFile = toaf;
             totalOverAgeAmt = toaa;
         }
@@ -153,6 +153,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             String closedShortfall = 'Closed - Shortfall';
             String closedSurplus = 'Closed - Surplus';
             String badDebt = 'Bad Debt';
+            String clientRebate = 'Client Rebate';
             
             // for sorting 
             
@@ -181,7 +182,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
             strQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
-            strQuery += ' Group by Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c';
+            strQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
             strQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
             
             List<AggregateResult> aggResult = Database.query(strQuery);
@@ -189,20 +190,20 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             if(!aggResult.isEmpty()){
                 Map<String, AggregateResult> result = new Map<String, AggregateResult>();
                 List<String> lawfirms = new List<String>();
-                Set<String> lawfirmSet = new Set<String>();
+                Map<String, String> lawfirmMap = new Map<String, String>();
                 Set<String> lawfirmIdsSet = new Set<String>();
                 for(AggregateResult res : aggResult)
                 {
-                    String key = res.get('firm')+'-'+res.get('unit');
+                    String key = res.get('firmId')+'-'+res.get('unit');
                     result.put(key,res);
                     lawfirmIdsSet.add((String)res.get('firmId'));
-                    if(!lawfirmSet.contains((String)res.get('firm')))		lawfirms.add((String)res.get('firm'));
-                    lawfirmSet.add((String)res.get('firm'));
+                    if(!lawfirmMap.containsKey((String)res.get('firmId')))		lawfirmMap.put((String)res.get('firmId'), (String)res.get('firm'));
+                    
                 }
                 
                 // Closed with loan
                 
-                String closedWLoanQuery = 'Select Opportunity__r.Law_firm__r.name firm,'; 
+                String closedWLoanQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,'; 
                 closedWLoanQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
                 closedWLoanQuery += ' SUM(Amount__c) amt, Opportunity__r.Account.Business_Unit__c unit';
                 closedWLoanQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
@@ -210,7 +211,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 closedWLoanQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 closedWLoanQuery += ' AND Payment_Method__c =:payment';  
                 closedWLoanQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment'; 
-                closedWLoanQuery += ' OR Reference_Notes__c =:paymentShortfall OR Reference_Notes__c =:paymentSurplus)'; 
+                closedWLoanQuery += ' OR Reference_Notes__c =:clientRebate)'; 
                 closedWLoanQuery += ' AND (Opportunity__r.Stage_Status__c =:closedPaid';
                 closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedShortfall';
                 closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus)';
@@ -218,18 +219,22 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 closedWLoanQuery += ' AND Is_Rejected__c = false'; 
                 closedWLoanQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
                 closedWLoanQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-                closedWLoanQuery += ' Group by Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
+                closedWLoanQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
                 //lawfirm in set of lawfirm
                 List<AggregateResult> closedOppAggResult = Database.query(closedWLoanQuery);
-                
+                double testvalue = 0;
                 Map<String, AggregateResult> closedOppResultMap = new Map<String, AggregateResult>();
                 if(!closedOppAggResult.isEmpty()){
                     for(AggregateResult res : closedOppAggResult)
                     {
-                        String key = res.get('firm')+'-'+res.get('unit');
+                        testvalue = testvalue + (double)res.get('amt');
+                        String key = res.get('firmId')+'-'+res.get('unit');
                         closedOppResultMap.put(key,res);
                     }
                 }
+                system.debug('====>Toatl Test By Me');
+                system.debug(testvalue);
+                system.debug('====>Toatl Test By Me');
                 system.debug('Closed Loan');
                 System.debug(closedOppResultMap);
                 /*
@@ -237,7 +242,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 BAD DEBT QUERY
                 =================
                 */
-                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 badDebtOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 badDebtOppQuery += ' SUM(Amount__c) amt';
                 badDebtOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
@@ -249,14 +254,14 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 badDebtOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 badDebtOppQuery += ' AND Is_Rejected__c = false';
                 badDebtOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                badDebtOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                badDebtOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
 
                 List<AggregateResult> BadDebtAggResult = Database.query(badDebtOppQuery);
                 Map<String, AggregateResult> BadDebtResultMap = new Map<String, AggregateResult>();
                 if(!BadDebtAggResult.isEmpty()){
                     for(AggregateResult baddebtsagr : BadDebtAggResult)
                     {
-                        String key = String.valueOf(baddebtsagr.get('firm')) + '-' + String.valueOf(baddebtsagr.get('unit'));
+                        String key = String.valueOf(baddebtsagr.get('firmId')) + '-' + String.valueOf(baddebtsagr.get('unit'));
                         BadDebtResultMap.put(key, baddebtsagr);
                         //closedOppResultMap.put(key,res);
                     }
@@ -269,7 +274,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 SHORT FALL QUERY
                 =================
                 */
-                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 shortFallOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 shortFallOppQuery += ' SUM(Amount__c) amt';
                 shortFallOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
@@ -282,14 +287,14 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 shortFallOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 shortFallOppQuery += ' AND Is_Rejected__c = false';
                 shortFallOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                shortFallOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c ';
 
                 List<AggregateResult> ShortFallAggResult = Database.query(shortFallOppQuery);
                 Map<String, AggregateResult> ShortFallResultMap = new Map<String, AggregateResult>();
                 if(!ShortFallAggResult.isEmpty()){
                     for(AggregateResult shortfallagr : ShortFallAggResult)
                     {
-                        String key = String.valueOf(shortfallagr.get('firm')) + '-' + String.valueOf(shortfallagr.get('unit'));
+                        String key = String.valueOf(shortfallagr.get('firmId')) + '-' + String.valueOf(shortfallagr.get('unit'));
                         ShortFallResultMap.put(key, shortfallagr);
                         //closedOppResultMap.put(key,res);
                     }
@@ -303,7 +308,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 OVERAGE QUERY
                 =================
                 */
-                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 overageOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 overageOppQuery += ' SUM(Amount__c) amt';
                 overageOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
@@ -316,14 +321,14 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 overageOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 overageOppQuery += ' AND Is_Rejected__c = false';
                 overageOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                overageOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
 
-                List<AggregateResult> OverAgeAggResult = Database.query(shortFallOppQuery);
+                List<AggregateResult> OverAgeAggResult = Database.query(overageOppQuery);
                 Map<String, AggregateResult> OverAgeResultMap = new Map<String, AggregateResult>();
                 if(!OverAgeAggResult.isEmpty()){
                     for(AggregateResult overageagr : OverAgeAggResult)
                     {
-                        String key = String.valueOf(overageagr.get('firm')) + '-' + String.valueOf(overageagr.get('unit'));
+                        String key = String.valueOf(overageagr.get('firmId')) + '-' + String.valueOf(overageagr.get('unit'));
                         OverAgeResultMap.put(key, overageagr);
                         //closedOppResultMap.put(key,res);
                     }
@@ -334,12 +339,13 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
 
 
                 
-                for(String f : lawfirms)
+                for(String f : lawfirmIdsSet)
                 {
+                    String fName = lawfirmMap.get(f);
                     String rhinokey = f+'-Rhino';
                     String elfikey = f+'-ELFI';
                     String emptyKey = f+'-';
-                    Wrapper w = new Wrapper(f,
+                    Wrapper w = new Wrapper(fName,
                                             result.containsKey(rhinokey) ? (String)result.get(rhinokey).get('firmId') : '',
                                             /* ===== RINO Values =====*/
                                             result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('file') : 0,

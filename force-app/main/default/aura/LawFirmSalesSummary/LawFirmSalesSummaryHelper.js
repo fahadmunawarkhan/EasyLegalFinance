@@ -197,10 +197,10 @@
             opptyTotal += (paymentData[i].totalOpptyCount == null) ? 0 : paymentData[i].totalOpptyCount;
             closedAmountTotal += (paymentData[i].totalClosedAmount == null) ? 0 : paymentData[i].totalClosedAmount;
             amountTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalAmount;
-            NoBadDebtTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalbdfile;
-            BadDebtAmtTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalbdamount;
-            ShortFallFileTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalShortFallFile;
-            ShortFallAmtTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalShortFallAmt;
+            NoBadDebtTotal += (paymentData[i].totalbdfile == null) ? 0 : paymentData[i].totalbdfile;
+            BadDebtAmtTotal += (paymentData[i].totalbdamount == null) ? 0 : paymentData[i].totalbdamount;
+            ShortFallFileTotal += (paymentData[i].totalShortFallFile == null) ? 0 : paymentData[i].totalShortFallFile;
+            ShortFallAmtTotal += (paymentData[i].totalShortFallAmt == null) ? 0 : paymentData[i].totalShortFallAmt;
             OverAgeFileTotal += (paymentData[i].totalOverAgeFile == null) ? 0 : paymentData[i].totalOverAgeFile;
             OverAgeAmtTotal += (paymentData[i].totalOverAgeAmt == null) ? 0 : paymentData[i].totalOverAgeAmt;
 
@@ -228,6 +228,9 @@
             ElfiOverAgeFileTotal += (paymentData[i].elfiOverAgeFile == null) ? 0 : paymentData[i].elfiOverAgeFile;
             ElfiOverAgeAmtTotal += (paymentData[i].elfiOverAgeAmt == null) ? 0 : paymentData[i].elfiOverAgeAmt;
         }
+
+        console.log("ElfiShortFallFileTotal : " + ElfiShortFallFileTotal);
+        console.log("ElfiOverAgeFileTotal : " + ElfiOverAgeFileTotal);
 
         component.set("v.fileTotal", fileTotal);
         component.set("v.closedFileTotal", closedFileTotal);

@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 02/04/2020, 4:40:32 pm
+  @Last Modified On   : 03/04/2020, 5:11:22 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -150,6 +150,26 @@
                                 </td>
                             </tr>
                         </apex:repeat>
+                        <tr>
+                            <td>
+                                <font size="1" face="Arial Unicode MS">TOTAL</font>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <font size="1" face="Arial Unicode MS">
+                                    <apex:outputText value="{0, Number, Currency}">
+                                        <apex:param value="{!TotalAmountPDF}" />
+                                    </apex:outputText>
+                                </font>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

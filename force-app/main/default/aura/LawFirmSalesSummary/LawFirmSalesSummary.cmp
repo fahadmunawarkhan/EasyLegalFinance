@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 02/04/2020, 4:53:15 pm
+  @Last Modified On   : 03/04/2020, 4:52:44 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -1044,6 +1044,7 @@
                                 </td>
                                 <th>
                                     <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+
                                         <aura:if isTrue="{!v.ElfiOverAgeFileTotal == null}">
                                             0
                                             <aura:set attribute="else">
@@ -1054,6 +1055,7 @@
                                 </th>
                                 <th>
                                     <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+
                                         <aura:if isTrue="{!v.ElfiOverAgeAmtTotal == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -1105,6 +1107,7 @@
                                         </div>
                                     </td>
                                     <td data-label="Closed Amount Grand Total">
+
                                         <div class="slds-truncate makeBoldBlue" title="Closed Amount Grand Total">
                                             <aura:if isTrue="{!v.closedAmtTotal == null}">
                                                 $0.00
