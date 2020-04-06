@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawFirmSalesSummaryComponentCtrlTest.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 06/04/2020, 11:38:02 am
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    06/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 @isTest
 public class LawFirmSalesSummaryComponentCtrlTest {
 	
@@ -74,13 +85,13 @@ public class LawFirmSalesSummaryComponentCtrlTest {
     
     public static testmethod void mainTest(){
         Test.startTest();
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', 'Consolidated', '');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', 'Consolidated', '','Facility Loan');
         system.assertEquals(1, aggList.size());
         
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList2 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Files', 'ASC', 'Consolidated', '');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList2 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Files', 'ASC', 'Consolidated', '','Facility Loan');
         system.assertEquals(1, aggList2.size());
         
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList3 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Amount', 'ASC', 'Consolidated', '');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList3 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Amount', 'ASC', 'Consolidated', '','Facility Loan');
         system.assertEquals(1, aggList3.size());
         
         LawFirmSalesSummaryComponentCtrl.getDrawdownLawFirmSalesCongaURLs();
