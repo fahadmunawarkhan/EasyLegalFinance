@@ -2,13 +2,9 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="LeadsByMonth" type="Object[]" />
     
-    <aura:attribute name="totalConvertedRhino" type="Integer" default="0"/>
-    <aura:attribute name="totalRecordsRhino" type="Integer" default="0"/>
-    <aura:attribute name="totalAmountPaidtoClientRhino" type="Decimal" default="0.00"/>
-    
-    <aura:attribute name="totalConvertedELFI" type="Integer" default="0"/>
-    <aura:attribute name="totalRecordsELFI" type="Integer" default="0"/>
-    <aura:attribute name="totalAmountPaidtoClientELFI" type="Decimal" default="0.00"/>
+    <aura:attribute name="totalConverted" type="Integer" default="0"/>
+    <aura:attribute name="totalRecords" type="Integer" default="0"/>
+    <aura:attribute name="totalAmountPaidtoClient" type="Decimal" default="0.00"/>
     
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" />
@@ -147,29 +143,15 @@
                     <th class="table-header-cell" scope="col">
                         <div class="slds-truncate" title="Created Month">Created Month</div>
                     </th>   
-                    <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'Rhino'}">
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Record Count"># of Leads <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}"> (Rhino) </aura:if></div>
-                        </th>
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Converted">Converted Leads <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}">(Rhino)</aura:if></div>
-                        </th>
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Amount Paid to Client">Paid to Client <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}">(Rhino)</aura:if></div>
-                        </th>
-                    </aura:if>
-                    
-                    <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'ELFI'}">
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Record Count"># of Leads <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}">(ELFI)</aura:if></div>
-                        </th>
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Converted">Converted Leads <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}">(ELFI)</aura:if></div>
-                        </th>
-                        <th class="table-header-cell" scope="col">
-                            <div class="slds-truncate" title="Amount Paid to Client">Paid to Client <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated'}">(ELFI)</aura:if></div>
-                        </th>
-                    </aura:if>
+                    <th class="table-header-cell" scope="col">
+                        <div class="slds-truncate" title="Record Count"># of Leads</div>
+                    </th>
+                    <th class="table-header-cell" scope="col">
+                        <div class="slds-truncate" title="Converted">Converted Leads</div>
+                    </th>
+                    <th class="table-header-cell" scope="col">
+                        <div class="slds-truncate" title="Amount Paid to Client">Paid to Client</div>
+                    </th>
                 </tr>                
             </thead>
             <tbody>
@@ -177,59 +159,32 @@
                     <tr class="slds-hint-parent">
                         <td class="table-groupby-cell">
                             {! lead.CreatedDate }
-                        </td>
-                        <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'Rhino'}">
+                        </td>                        
                             <td class="slds-text-align_right">
-                                {! lead.RecordCountRhino }
+                                {! lead.RecordCount }
                             </td>
                             <td class="slds-text-align_right">
-                                {! lead.SumofConvertedLeadsRhino }
+                                {! lead.SumofConvertedLeads}
                             </td>
                             <td class="slds-text-align_right">
-                                <ui:outputCurrency value="{! lead.SumofAmountPaidtoClientRhino }" />
-                            </td>    
-                        </aura:if>
-                        <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'ELFI'}">
-                            <td class="slds-text-align_right">
-                                {! lead.RecordCountELFI }
+                                <ui:outputCurrency value="{! lead.SumofAmountPaidtoClient}" />
                             </td>
-                            <td class="slds-text-align_right">
-                                {! lead.SumofConvertedLeadsELFI }
-                            </td>
-                            <td class="slds-text-align_right">
-                                <ui:outputCurrency value="{! lead.SumofAmountPaidtoClientELFI }" />
-                            </td>  
-                        </aura:if>
-                    </tr>
+                        </tr>
                 </aura:iteration>
                 <tr class="">
                     <th class="table-header-cell " >Total</th>
-                    <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'Rhino'}">
-                        <th class="table-header-cell slds-text-align_right">
-                            {!v.totalRecordsRhino}
-                        </th>
-                        <th class="table-header-cell slds-text-align_right">
-                            {!v.totalConvertedRhino}
-                        </th>
-                        <th class="table-header-cell slds-text-align_right">
-                            <ui:outputCurrency value="{! v.totalAmountPaidtoClientRhino }" />
-                        </th>  
-                    </aura:if>
-                    <aura:if isTrue="{!v.selectedBusinessUnit == 'Consolidated' || v.selectedBusinessUnit == 'ELFI'}">
-                        <th class="table-header-cell slds-text-align_right">
-                            {!v.totalRecordsELFI}
-                        </th>
-                        <th class="table-header-cell slds-text-align_right">
-                            {!v.totalConvertedELFI}
-                        </th>
-                        <th class="table-header-cell slds-text-align_right">
-                            <ui:outputCurrency value="{! v.totalAmountPaidtoClientELFI }" />
-                        </th>  
-                    </aura:if>
+                    <th class="table-header-cell slds-text-align_right">
+                        {!v.totalRecords}
+                    </th>
+                    <th class="table-header-cell slds-text-align_right">
+                        {!v.totalConverted}
+                    </th>
+                    <th class="table-header-cell slds-text-align_right">
+                        <ui:outputCurrency value="{! v.totalAmountPaidtoClient}" />
+                    </th>                      
                 </tr>
             </tbody>
-        </table>
-        
+        </table>        
     </lightning:card>
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">
