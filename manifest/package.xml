@@ -194,6 +194,8 @@
         <members>RecallApprovalProcess</members>
         <members>LawyerSalesSummaryViewAllCtlr</members>
         <members>LawyerSalesSummaryViewAllCtlrTest</members>
+        <members>LawFirmSalesSummaryViewAllCtlr</members>
+        <members>LawFirmSalesSummaryViewAllCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -252,6 +254,7 @@
         <memebers>LawyerSalesSummaryPrintPDF</memebers>
         <memebers>LawyerSalesSummaryViewAllVF</memebers>
         <memebers>LawFirmSalesSummaryViewAllVF</memebers>
+        <memebers>LawFirmSalesSummaryPrintPDF</memebers>
         <name>ApexPage</name>
     </types>
     <types>
