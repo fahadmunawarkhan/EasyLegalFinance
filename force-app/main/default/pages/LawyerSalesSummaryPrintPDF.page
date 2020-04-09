@@ -1,3 +1,14 @@
+<!--
+  @File Name          : LawyerSalesSummaryPrintPDF.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 4/7/2020, 5:54:28 PM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
 <apex:page controller="LawyerSalesSummaryViewAllCtlr" readOnly="true" renderAs="PDF" showHeader="false" applyBodyTag="false" applyHtmlTag="false" standardStylesheets="false">
     <head>
         <style>
@@ -12,15 +23,14 @@
         </style>
     </head>
     <body>
-        <apex:pageBlock >
-            <apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'Rhino')}">
+        <apex:pageBlock >            
                 <div>
                     <table  style="width:100%" border='0'>
                         <tr>
                             <td colspan="11">
                                 <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
                                     <span>
-                                        <apex:image value="{!if(or(businessUnit == 'Rhino', businessUnit == 'Consolidated'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
+                                        <apex:image value="{!if(or(businessUnit == 'Rhino'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
                                     </span>
                                 </apex:outputPanel>
                             </td>
@@ -28,7 +38,7 @@
                         <tr>
                             <td align="center" colspan="11">
                                 <span style="font-size:20pt;font-weight:bold;text-align:center;">
-                                    Lawyer Sales Summary (Rhino)
+                                    Lawyer Sales Summary {!if((businessUnit == 'Consolidated'), '('&businessUnit&')', '')}
                                 </span>
                             </td>
                         </tr>
@@ -57,7 +67,7 @@
                     <div>
                         <table border='1'>
                             <thead>
-                                <tr align="center" style="background-color:#0a3b63; color:#ffffff;">
+                                <tr align="center" style="background-color:{!if((businessUnit == 'Rhino'),'#0a3b63',if((businessUnit == 'ELFI'), '#fb733a', '#fb733a'))}; color:{!if((businessUnit == 'ELFI'), '#000000', if((businessUnit == 'Rhino'), '#ffffff','#000000') )};">
                                     <th>
                                         <span>LAWYER</span>
                                     </th>
@@ -121,68 +131,68 @@
                                             <span>{!data.firm}</span>                                
                                         </td>
                                         <td>
-                                            <span>{!data.rhinoFileCount}</span>
-                                            <apex:variable value="{!data.rhinoFileCount + totalrhinoFileCount}" var="totalrhinoFileCount"/>
+                                            <span>{!data.FileCount}</span>
+                                            <apex:variable value="{!data.FileCount + totalrhinoFileCount}" var="totalrhinoFileCount"/>
                                         </td>
                                         <td>
-                                            <span>{!data.rhinoClosedFileCount}</span>
-                                            <apex:variable value="{!data.rhinoClosedFileCount + totalrhinoClosedFileCount}" var="totalrhinoClosedFileCount"/>
+                                            <span>{!data.ClosedFileCount}</span>
+                                            <apex:variable value="{!data.ClosedFileCount + totalrhinoClosedFileCount}" var="totalrhinoClosedFileCount"/>
                                         </td>
                                         <td>
-                                            <span>{!data.rhinoOpptyCount}</span>
-                                            <apex:variable value="{!data.rhinoOpptyCount + totalrhinoOpptyCount}" var="totalrhinoOpptyCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.rhinoClosedAmount}" />                                    
-                                                </apex:outputText>                                                
-                                            </span>
-                                            <apex:variable value="{!data.rhinoClosedAmount + totalrhinoClosedAmount}" var="totalrhinoClosedAmount"/>
+                                            <span>{!data.OpptyCount}</span>
+                                            <apex:variable value="{!data.OpptyCount + totalrhinoOpptyCount}" var="totalrhinoOpptyCount"/>
                                         </td>
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.rhinoAmount}" />                                    
-                                                </apex:outputText>                                                
+                                                    <apex:param value="{!data.ClosedAmount}" />
+                                                </apex:outputText>
                                             </span>
-                                            <apex:variable value="{!data.rhinoAmount + totalrhinoAmount}" var="totalrhinoAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>{!data.rhinoBadDebtFileCount}</span>
-                                            <apex:variable value="{!data.rhinoBadDebtFileCount + totalrhinoBadDebtFileCount}" var="totalrhinoBadDebtFileCount"/>
+                                            <apex:variable value="{!data.ClosedAmount + totalrhinoClosedAmount}" var="totalrhinoClosedAmount"/>
                                         </td>
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.rhinoBadDebtAmount}" />                                    
-                                                </apex:outputText>                                                
+                                                    <apex:param value="{!data.Amount}" />
+                                                </apex:outputText>
                                             </span>
-                                            <apex:variable value="{!data.rhinoBadDebtAmount + totalrhinoBadDebtAmount}" var="totalrhinoBadDebtAmount"/>
+                                            <apex:variable value="{!data.Amount + totalrhinoAmount}" var="totalrhinoAmount"/>
                                         </td>
                                         <td>
-                                            <span>{!data.rhinoShortfallFileCount}</span>
-                                            <apex:variable value="{!data.rhinoShortfallFileCount + totalrhinoShortfallFileCount}" var="totalrhinoShortfallFileCount"/>
+                                            <span>{!data.BadDebtFileCount}</span>
+                                            <apex:variable value="{!data.BadDebtFileCount + totalrhinoBadDebtFileCount}" var="totalrhinoBadDebtFileCount"/>
                                         </td>
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.rhinoShortfallAmount}" />                                    
-                                                </apex:outputText>                                                
+                                                    <apex:param value="{!data.BadDebtAmount}" />
+                                                </apex:outputText>
                                             </span>
-                                            <apex:variable value="{!data.rhinoShortfallAmount + totalrhinoShortfallAmount}" var="totalrhinoShortfallAmount"/>
+                                            <apex:variable value="{!data.BadDebtAmount + totalrhinoBadDebtAmount}" var="totalrhinoBadDebtAmount"/>
                                         </td>
                                         <td>
-                                            <span>{!data.rhinoOverageFileCount}</span>
-                                            <apex:variable value="{!data.rhinoOverageFileCount + totalrhinoOverageFileCount}" var="totalrhinoOverageFileCount"/>
+                                            <span>{!data.ShortfallFileCount}</span>
+                                            <apex:variable value="{!data.ShortfallFileCount + totalrhinoShortfallFileCount}" var="totalrhinoShortfallFileCount"/>
                                         </td>
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.rhinoOverageAmount}" />                                    
+                                                    <apex:param value="{!data.ShortfallAmount}" />
+                                                </apex:outputText>
+                                            </span>
+                                            <apex:variable value="{!data.ShortfallAmount + totalrhinoShortfallAmount}" var="totalrhinoShortfallAmount"/>
+                                        </td>
+                                        <td>
+                                            <span>{!data.OverageFileCount}</span>
+                                            <apex:variable value="{!data.OverageFileCount + totalrhinoOverageFileCount}" var="totalrhinoOverageFileCount"/>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.OverageAmount}" />                                    
                                                 </apex:outputText>                                                
                                             </span>
-                                            <apex:variable value="{!data.rhinoOverageAmount + totalrhinoOverageAmount}" var="totalrhinoOverageAmount"/>
+                                            <apex:variable value="{!data.OverageAmount + totalrhinoOverageAmount}" var="totalrhinoOverageAmount"/>
                                         </td>
                                     </tr>
                                 </apex:repeat>
@@ -270,8 +280,7 @@
                         </table>
                     </div>
                 </div>
-            </apex:outputPanel>
-            <apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'ELFI')}">
+            <!--<apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'ELFI')}">
                 <div style="{!IF(businessUnit == 'Consolidated', 'page-break-after:always;','')}"></div>
                 <div>
                     <table  style="width:100%" border='0'>
@@ -529,7 +538,7 @@
                         </table>
                     </div>
                 </div>
-            </apex:outputPanel>
+            </apex:outputPanel>-->
         </apex:pageBlock>
     </body>
 </apex:page>

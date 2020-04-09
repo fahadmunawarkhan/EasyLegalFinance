@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 03/04/2020, 7:23:14 pm
+  @Last Modified On   : 08/04/2020, 4:03:09 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -24,14 +24,14 @@
     </head>
     <body>
         <apex:pageBlock >
-            <apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'Rhino')}">
+            
                 <div>
                     <table  style="width:100%" border='0'>
                         <tr>
                             <td colspan="11">
                                 <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
                                     <span>
-                                        <apex:image value="{!if(or(businessUnit == 'Rhino', businessUnit == 'Consolidated'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
+                                        <apex:image value="{!if(or(businessUnit == 'Rhino'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
                                     </span>
                                 </apex:outputPanel>
                             </td>
@@ -39,7 +39,7 @@
                         <tr>
                             <td align="center" colspan="11">
                                 <span style="font-size:20pt;font-weight:bold;text-align:center;">
-                                    Law Firm Sales Summary (Rhino)
+                                    Law Firm Sales Summary {!if((businessUnit == 'Consolidated'), '('&businessUnit&')', '')}
                                 </span>
                             </td>
                         </tr>
@@ -68,7 +68,7 @@
                     <div>
                         <table border='1'>
                             <thead>
-                                <tr align="center" style="background-color:#0a3b63; color:#ffffff;">
+                                <tr align="center" style="background-color:{!if((businessUnit == 'Rhino'), '#0a3b63', if((businessUnit == 'ELFI'), '#fb733a', '#fb733a') )}; color:{!if((businessUnit == 'Rhino'), '#ffffff', if((businessUnit == 'ELFI'), '#000000', '#000000') )};">
                                     <th>
                                         <span>LAW FIRM</span>
                                     </th>
@@ -109,17 +109,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <apex:variable value="{!0}" var="totalrhinoFileCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoClosedFileCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoOpptyCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoClosedAmount"/>
-                                <apex:variable value="{!0}" var="totalrhinoAmount"/>
-                                <apex:variable value="{!0}" var="totalrhinoBadDebtFileCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoBadDebtAmount"/>                            
-                                <apex:variable value="{!0}" var="totalrhinoShortfallFileCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoShortfallAmount"/>
-                                <apex:variable value="{!0}" var="totalrhinoOverageFileCount"/>
-                                <apex:variable value="{!0}" var="totalrhinoOverageAmount"/>
+                                <apex:variable value="{!0}" var="totalFileCount"/>
+                                <apex:variable value="{!0}" var="totalClosedFileCount"/>
+                                <apex:variable value="{!0}" var="totalOpptyCount"/>
+                                <apex:variable value="{!0}" var="totalClosedAmount"/>
+                                <apex:variable value="{!0}" var="totalAmount"/>
+                                <apex:variable value="{!0}" var="totalBadDebtFileCount"/>
+                                <apex:variable value="{!0}" var="totalBadDebtAmount"/>                            
+                                <apex:variable value="{!0}" var="totalShortfallFileCount"/>
+                                <apex:variable value="{!0}" var="totalShortfallAmount"/>
+                                <apex:variable value="{!0}" var="totalOverageFileCount"/>
+                                <apex:variable value="{!0}" var="totalOverageAmount"/>
                                 <apex:repeat value="{!GroupbyLawFirm}" var="data">
                                     
                                     <tr>
@@ -130,152 +130,80 @@
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalFileCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoFileCount}
-                                                </apex:outputPanel>
-                                                <apex:variable value="{!data.totalFileCount + totalrhinoFileCount}" var="totalrhinoFileCount"/>
+                                                <apex:variable value="{!data.totalFileCount + totalFileCount}" var="totalFileCount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalClosedFileCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoClosedFileCount}
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalFileCount + totalrhinoClosedFileCount}" var="totalrhinoClosedFileCount"/>
+                                                <apex:variable value="{!data.totalClosedFileCount + totalClosedFileCount}" var="totalClosedFileCount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalOpptyCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoOpptyCount}
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalFileCount + totalrhinoOpptyCount}" var="totalrhinoOpptyCount"/>
+                                                <apex:variable value="{!data.totalOpptyCount + totalOpptyCount}" var="totalOpptyCount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     <apex:outputText value="{0, Number, Currency}">
                                                         <apex:param value="{!data.totalClosedAmount}" />
                                                     </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.rhinoClosedAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
+                                                    <apex:variable value="{!data.totalClosedAmount + totalClosedAmount}" var="totalClosedAmount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
+
                                                     <apex:outputText value="{0, Number, Currency}">
                                                         <apex:param value="{!data.totalAmount}" />
                                                     </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.rhinoAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoAmount}" var="totalrhinoAmount"/>
+                                                    <apex:variable value="{!data.totalAmount + totalAmount}" var="totalAmount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalbdfile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoBadDebtFile}
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoBadDebtFileCount}" var="totalrhinoBadDebtFileCount"/>
+                                                    <apex:variable value="{!data.totalbdfile + totalBadDebtFileCount}" var="totalBadDebtFileCount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     <apex:outputText value="{0, Number, Currency}">
                                                         <apex:param value="{!data.totalbdamount}" />
                                                     </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.rhinoBadDebtAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoBadDebtAmount}" var="totalrhinoBadDebtAmount"/>
+                                                    <apex:variable value="{!data.totalbdamount + totalBadDebtAmount}" var="totalBadDebtAmount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalShortFallFile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoShortFallFile}
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoShortfallFileCount}" var="totalrhinoShortfallFileCount"/>
+                                                    <apex:variable value="{!data.totalShortFallFile + totalShortfallFileCount}" var="totalShortfallFileCount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     <apex:outputText value="{0, Number, Currency}">
                                                         <apex:param value="{!data.totalShortFallAmt}" />
                                                     </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.rhinoShortFallamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                                <apex:variable value="{!data.totalClosedAmount + totalrhinoShortfallAmount}" var="totalrhinoShortfallAmount"/>
+                                                    <apex:variable value="{!data.totalShortFallAmt + totalShortfallAmount}" var="totalShortfallAmount"/>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     {!data.totalOverAgeFile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.rhinoOverAgeFile}
-                                                </apex:outputPanel>
-                                                
                                             </span>
-                                            <apex:variable value="{!data.totalClosedAmount + totalrhinoOverageFileCount}" var="totalrhinoOverageFileCount"/>
+                                                    <apex:variable value="{!data.totalOverAgeFile + totalOverageFileCount}" var="totalOverageFileCount"/>
                                         </td>
                                         <td>
                                             <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
                                                     <apex:outputText value="{0, Number, Currency}">
                                                         <apex:param value="{!data.totalOverAgeAmt}" />
                                                     </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.rhinoOverAgeamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
                                             </span>
-                                            <apex:variable value="{!data.totalClosedAmount + totalrhinoOverageAmount}" var="totalrhinoOverageAmount"/>
+                                                    <apex:variable value="{!data.totalOverAgeAmt + totalOverageAmount}" var="totalOverageAmount"/>
                                         </td>
                                     </tr>
                                 </apex:repeat>
@@ -286,159 +214,87 @@
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfFilestotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoFileCount}
-                                                </apex:outputPanel>
+                                                {!totalFileCount}
                                             </strong>
                                         </span>
                                     </td>
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfClosedFiles}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoClosedFileCount}
-                                                </apex:outputPanel>
+                                                {!totalClosedFileCount}
                                             </strong>
                                         </span>
                                     </td>
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfOpps}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoOpptyCount}
-                                                </apex:outputPanel>
+                                                {!totalOpptyCount}
                                             </strong>
                                         </span>
                                     </td>
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!PayoutsTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!rhinoPayoutAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!AmountTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!rhinoClosedAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfBadDebtFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoBadDebtFile}
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!BadDebtAmtTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!rhinoBadDebtAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfShortFallFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoShortFallFile}
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!ShortFallAmtTotal}" />
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalClosedAmount}" />
                                                 </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!rhinoShortFallamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
                                             </strong>
                                         </span>
                                     </td>
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    {!NoOfOverAgeFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!rhinoOverAgeFile}
-                                                </apex:outputPanel>
-                                                
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalAmount}" />
+                                                </apex:outputText>
                                             </strong>
                                         </span>
                                     </td>
                                     <td>
                                         <span>
                                             <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Rhino'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!OverAgeAmtTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!rhinoOverAgeamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-
+                                                {!totalBadDebtFileCount}
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalBadDebtAmount}" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                {!totalShortfallFileCount}
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalShortfallAmount}" />
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                {!totalOverageFileCount}
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalOverageAmount}" />
+                                                </apex:outputText>
                                             </strong>
                                         </span>
                                     </td>
@@ -447,434 +303,7 @@
                         </table>
                     </div>
                 </div>
-            </apex:outputPanel>
-            <apex:outputPanel rendered="{!or(businessUnit == 'Consolidated', businessUnit == 'ELFI')}">
-                <div style="{!IF(businessUnit == 'Consolidated', 'page-break-after:always;','')}"></div>
-                <div>
-                    <table  style="width:100%" border='0'>
-                        <tr>
-                            <td colspan="11">
-                                <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
-                                    <span>
-                                        <apex:image value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), URLFOR($Resource.ELFI_Logo),URLFOR($Resource.Rhino_Logo))}" />
-                                    </span>
-                                </apex:outputPanel>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center" colspan="11">
-                                <span style="font-size:20pt;font-weight:bold;text-align:center;">
-                                    Law Firm Sales Summary (ELFI)
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="11">
-                                <span>                            
-                                    <b>From: </b>
-                                    <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
-                                        <apex:param value="{!startDate}" /> 
-                                    </apex:outputText>
-                                </span>                                                         
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="11">                            
-                                <span>
-                                    <strong>To: </strong>
-                                    <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
-                                        <apex:param value="{!endDate}" /> 
-                                    </apex:outputText>
-                                </span>                             
-                            </td>
-                        </tr>
-                    </table>
-                    
-                    <div>
-                        <table border='1'>
-                            <thead>
-                                <tr align="center" style="background-color:#fb733a;">
-                                    <th>
-                                        <span>LAW FIRM</span>
-                                    </th>
-                                    
-                                    <th>
-                                        <span># OF FILES</span>
-                                    </th>
-                                    <th>
-                                        <span># OF CLOSED FILES</span>
-                                    </th>   
-                                    <th>
-                                        <span># OF OPPS</span>
-                                    </th>
-                                    <th>
-                                        <span>PAYOUT</span>
-                                    </th>
-                                    <th>
-                                        <span>AMOUNT</span>
-                                    </th>
-                                    <th>
-                                        <span># OF BAD DEBT FILES</span>
-                                    </th>
-                                    <th>
-                                        <span>BAD DEBT AMOUNT</span>
-                                    </th>
-                                    <th>
-                                        <span># OF SHORTFALL FILES</span>
-                                    </th>
-                                    <th>
-                                        <span>SHORTFALL AMOUNT</span>
-                                    </th>
-                                    <th>
-                                        <span># OF OVERAGE FILES</span>
-                                    </th>
-                                    <th>
-                                        <span>OVERAGE AMOUNT</span>
-                                    </th>                                
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <apex:variable value="{!0}" var="totalelfiFileCount"/>
-                                <apex:variable value="{!0}" var="totalelfiClosedFileCount"/>
-                                <apex:variable value="{!0}" var="totalelfiOpptyCount"/>
-                                <apex:variable value="{!0}" var="totalelfiClosedAmount"/>
-                                <apex:variable value="{!0}" var="totalelfiAmount"/>
-                                <apex:variable value="{!0}" var="totalelfiBadDebtFileCount"/>
-                                <apex:variable value="{!0}" var="totalelfiBadDebtAmount"/>                            
-                                <apex:variable value="{!0}" var="totalelfiShortfallFileCount"/>
-                                <apex:variable value="{!0}" var="totalelfiShortfallAmount"/>
-                                <apex:variable value="{!0}" var="totalelfiOverageFileCount"/>
-                                <apex:variable value="{!0}" var="totalelfiOverageAmount"/>
-                                <apex:repeat value="{!GroupbyLawFirm}" var="data">
-                                    
-                                    <tr>
-                                        <td>
-                                            <span>
-                                                {!data.firm}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalFileCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiFileCount}
-                                                </apex:outputPanel>
-                                            </span>
-                                            <apex:variable value="{!data.totalFileCount + totalelfiFileCount}" var="totalelfiFileCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalClosedFileCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiClosedFileCount}
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalClosedFileCount + totalelfiClosedFileCount}" var="totalelfiClosedFileCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalOpptyCount}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiOpptyCount}
-                                                </apex:outputPanel>
-
-                                            </span>
-                                            <apex:variable value="{!data.totalOpptyCount + totalelfiOpptyCount}" var="totalelfiOpptyCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.totalClosedAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.elfiClosedAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalClosedAmount + totalelfiClosedAmount}" var="totalelfiClosedAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.totalAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.elfiAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalAmount + totalelfiAmount}" var="totalelfiAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalbdfile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiBadDebtFile}
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalbdfile + totalelfiBadDebtFileCount}" var="totalelfiBadDebtFileCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.totalbdamount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.elfiBadDebtAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalbdamount + totalelfiBadDebtAmount}" var="totalelfiBadDebtAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalShortFallFile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiShortFallFile}
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalShortFallFile + totalelfiShortfallFileCount}" var="totalelfiShortfallFileCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.totalShortFallAmt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!data.elfiShortFallAmt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalShortFallAmt + totalelfiShortfallAmount}" var="totalelfiShortfallAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!data.totalOverAgeFile}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!data.elfiOverAgeFile}
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalOverAgeFile + totalelfiOverageFileCount}" var="totalelfiOverageFileCount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.totalOverAgeAmt}" />
-                                                </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.elfiOverAgeAmt}" />
-                                                </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </span>
-                                            <apex:variable value="{!data.totalOverAgeAmt + totalelfiOverageAmount}" var="totalelfiOverageAmount"/>
-                                        </td>
-                                    </tr>
-                                </apex:repeat>
-                                <tr style="background-color:#c7c8ca;">
-                                    <td>
-                                        <span><strong>Total:</strong></span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfFilestotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiFileCount}
-                                                </apex:outputPanel>
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfClosedFiles}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiClosedFileCount}
-                                                </apex:outputPanel>
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfOpps}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiOpptyCount}
-                                                </apex:outputPanel>
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!PayoutsTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!elfiClosedAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!AmountTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!elfiAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfBadDebtFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiBadDebtFile}
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!BadDebtAmtTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!elfiBadDebtAmount}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfShortFallFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiShortFallFile}
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!ShortFallAmtTotal}" />
-                                                </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!elfiShortFallamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    {!NoOfOverAgeFilesTotal}
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    {!elfiOverAgeFile}
-                                                </apex:outputPanel>
-                                                
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputPanel rendered="{!businessUnit == 'ELFI'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!OverAgeAmtTotal}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-                                                <apex:outputPanel rendered="{!businessUnit == 'Consolidated'}">
-                                                    <apex:outputText value="{0, Number, Currency}">
-                                                        <apex:param value="{!elfiOverAgeamt}" />
-                                                    </apex:outputText>
-                                                </apex:outputPanel>
-
-                                            </strong>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>                
-                        </table>
-                    </div>
-                </div>
-            </apex:outputPanel>
+            
         </apex:pageBlock>
     </body>
 </apex:page>

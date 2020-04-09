@@ -194,6 +194,12 @@
         <members>RecallApprovalProcess</members>
         <members>LawyerSalesSummaryViewAllCtlr</members>
         <members>LawyerSalesSummaryViewAllCtlrTest</members>
+        <members>LawFirmSalesSummaryViewAllCtlr</members>
+        <members>LawFirmSalesSummaryViewAllCtlrTest</members>
+        <members>ARSummaryReportCtlr</members>
+        <members>ARSummaryReportCtlrTest</members>
+        <members>LawyerSummaryGeneratePayoutBalance</members>
+        <members>LawyerSummaryGeneratePayoutBalanceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -252,6 +258,7 @@
         <memebers>LawyerSalesSummaryPrintPDF</memebers>
         <memebers>LawyerSalesSummaryViewAllVF</memebers>
         <memebers>LawFirmSalesSummaryViewAllVF</memebers>
+        <memebers>LawFirmSalesSummaryPrintPDF</memebers>
         <name>ApexPage</name>
     </types>
     <types>
@@ -339,6 +346,7 @@
         <members>AssessmentScheduleLawyerTab</members>
         <members>EditAssessmentProviderSchedule</members>
         <members>PreApprovedInvoices</members>
+        <members>ARSummaryReport</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -1365,6 +1373,15 @@
         <members>Financial_Summary_Report__c.Type_of_Loan__c</members>
         <members>Drawdown__c.Conga_Payment_Summary_Report_Print_All_7__c</members>
         <members>Drawdown__c.Conga_Financial_Summary_Report_Print_3__c</members>
+        <members>Drawdown__c.Conga_AR_Summary_Rpt_Start_Date__c</members>
+        <members>Drawdown__c.Conga_AR_Summary_Rpt_End_Date__c</members>
+        <members>Drawdown__c.Conga_AR_Summary_Report_View_All__c</members>
+        <members>Drawdown__c.Conga_AR_Summary_Report_Print__c</members>
+        <members>AR_Summary_Report__c.Business_Unit__c</members>
+        <members>AR_Summary_Report__c.Start_Date__c</members>
+        <members>AR_Summary_Report__c.End_Date__c</members>
+        <members>AR_Summary_Report__c.Type_of_Loan__c</members>
+        <members>User.AR_Summary_Report__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1463,6 +1480,7 @@
         <members>Assessment_Provider_Schedule__c</members>
         <members>Integration_Log__c</members>
         <members>Custom_Approval_History__c</members>
+        <members>AR_Summary_Report__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -2070,6 +2088,9 @@
         <members>TroubleshootingReportsByFahad/Financial_Loan_Progression_Losses_sE5</members>
         <members>TroubleshootingReportsByFahad/Assessment_Summary_Report_HYP</members>
         <members>TroubleshootingReportsByFahad/Assessment_Provider_Summary_Report_KXp</members>
+        <members>TroubleshootingReportsByFahad/AR_Summary_816</members>
+        <members>TroubleshootingReportsByFahad/Law_Firm_Summary_utN</members>
+        <members>TroubleshootingReportsByFahad/Lawyer_Summary_0xk</members>
         <name>Report</name>
     </types>
     <types>

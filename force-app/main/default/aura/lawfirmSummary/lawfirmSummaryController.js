@@ -19,6 +19,7 @@
         let strQuery = "SELECT " + fieldSet.join(",");
             strQuery += " FROM Account WHERE RecordType.Name = \'Law Firm\' ";
         component.set("v.query", strQuery); 
+        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
@@ -67,8 +68,25 @@
     generateForSelected: function(component, event, helper) {
         helper.generateForSelected(component);
     },
+    generateBalanceForSelected: function(component, event, helper) {
+        helper.generateBalanceForSelected(component);
+    },
     hideLookupInput: function(component, event, helper)
     {
         
     },
+    openLinkReport : function(component, event, helper){
+        
+        let lawfirmid = event.currentTarget.dataset.lawfirmid;
+        let newWin;
+        let url = '/lightning/r/Report/00O3J000000O7gCUAS/view';
+        let businessUnitFilter = component.get("v.selectedBusinessUnitFilter");
+        try{                       
+            newWin = window.open(url + '?fv3=' + lawfirmid.substring(0,15) + '&fv4=' + businessUnitFilter);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
+    }
 })

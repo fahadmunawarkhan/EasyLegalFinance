@@ -44,7 +44,7 @@ public with sharing class LeadsPerMonthReportCtlr {
         Map<String, List<Lead>> convertedLeadsByMonth = new Map<String, List<Lead>>();
         for(lead ld : leads){
             months.add(ld.Created_Month__c);
-            String key = ld.Created_Month__c + '-' + ld.Business_Unit__c;
+            String key = ld.Created_Month__c;
             if(ld.IsConverted){
                 if(!convertedLeadsByMonth.containsKey(key)){
                     convertedLeadsByMonth.put(key, new List<Lead>());
@@ -69,7 +69,7 @@ public with sharing class LeadsPerMonthReportCtlr {
         
         Map<String, List<Drawdown__c>> drawdownsByMonth = new Map<String, List<Drawdown__c>>();        
         for(Drawdown__c dd : drawdowns){
-            String key = dd.Created_Month__c + '-' + dd.Opportunity__r.Account.Business_Unit__c;
+            String key = dd.Created_Month__c;
             if(!drawdownsByMonth.containsKey(key)){
                 drawdownsByMonth.put(key, new List<Drawdown__c>());
             }
@@ -84,25 +84,17 @@ public with sharing class LeadsPerMonthReportCtlr {
         wrapperClass wrr;
         //loop on months in des order
         for(Integer i = sortedMonths.size() - 1; i >= 0; i--){
-            String rhinokey = sortedMonths[i]+'-Rhino';
-            String elfikey = sortedMonths[i]+'-ELFI';
+            String key = sortedMonths[i];
             wrr = new wrapperClass();
             wrr.CreatedDate = sortedMonths[i];
-            if(drawdownsByMonth.containsKey(rhinokey)){
-                wrr.SumofAmountPaidtoClientRhino = calculateSumOfAmount(drawdownsByMonth.get(rhinokey));
-            }
-            if(drawdownsByMonth.containsKey(elfikey)){
-                wrr.SumofAmountPaidtoClientELFI = calculateSumOfAmount(drawdownsByMonth.get(elfikey));
+            if(drawdownsByMonth.containsKey(key)){
+                wrr.SumofAmountPaidtoClient += calculateSumOfAmount(drawdownsByMonth.get(key));
             }
             
-            if(convertedLeadsByMonth.containsKey(rhinokey)){
-                wrr.SumofConvertedLeadsRhino = convertedLeadsByMonth.get(rhinokey).size();
+            if(convertedLeadsByMonth.containsKey(key)){
+                wrr.SumofConvertedLeads = convertedLeadsByMonth.get(key).size();
             }
-            if(convertedLeadsByMonth.containsKey(elfikey)){
-                wrr.SumofConvertedLeadsELFI = convertedLeadsByMonth.get(elfikey).size();
-            }
-            wrr.RecordCountRhino = wrr.SumofConvertedLeadsRhino + (leadsByMonth.containsKey(rhinokey) ? leadsByMonth.get(rhinokey).size() :  0);
-            wrr.RecordCountELFI = wrr.SumofConvertedLeadsELFI + (leadsByMonth.containsKey(elfikey) ? leadsByMonth.get(elfikey).size() :  0);
+            wrr.RecordCount = wrr.SumofConvertedLeads + (leadsByMonth.containsKey(key) ? leadsByMonth.get(key).size() :  0);
             result.add(wrr);
         }
         
@@ -133,27 +125,18 @@ public with sharing class LeadsPerMonthReportCtlr {
         @AuraEnabled
         public String businessUnit{get;set;}
         @AuraEnabled
-        public Decimal SumofAmountPaidtoClientRhino{get;set;}
+        public Decimal SumofAmountPaidtoClient{get;set;}
         @AuraEnabled
-        public Decimal SumofAmountPaidtoClientELFI{get;set;}
+        public Integer SumofConvertedLeads{get;set;}
         @AuraEnabled
-        public Integer SumofConvertedLeadsRhino{get;set;}
-        @AuraEnabled
-        public Integer SumofConvertedLeadsELFI{get;set;}
-        @AuraEnabled
-        public Integer RecordCountRhino{get;set;}
-        @AuraEnabled
-        public Integer RecordCountELFI{get;set;}
+        public Integer RecordCount{get;set;}
         
         public wrapperClass(){
             CreatedDate = '';
-            SumofAmountPaidtoClientRhino = 0.00;
-            SumofConvertedLeadsRhino = 0;
-            RecordCountRhino = 0;
-            
-            SumofAmountPaidtoClientELFI = 0.00;
-            SumofConvertedLeadsELFI = 0;
-            RecordCountELFI = 0;
+            businessUnit = '';
+            SumofAmountPaidtoClient = 0.00;
+            SumofConvertedLeads = 0;
+            RecordCount = 0;
         }
     }
 }

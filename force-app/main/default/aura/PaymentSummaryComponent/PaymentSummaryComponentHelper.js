@@ -1,5 +1,6 @@
 ({
     getCalendarMin : function(component){
+        
         var min = '2010-01-01';
         component.set("v.calendarMin", min);                
     },
@@ -175,28 +176,20 @@
     calculateReportByProvinceData : function(component){
         var paymentData = component.get('v.paymentsByProvince');
         // calculate financial summary total for file and amount
-        var accountTotalRhino = 0;
-        var opptyTotalRhino = 0;
-        var amountTotalRhino = 0;
-        var opptyTotalELFI = 0;
-        var accountTotalELFI = 0;
-        var amountTotalELFI = 0;
+        var opptyTotal = 0;
+        var fileTotal = 0;
+        var amountTotal = 0;
+        
         if(paymentData != undefined && paymentData != null) {   
             for(var i = 0; i < paymentData.length; i++){
-                accountTotalRhino += (paymentData[i].numAccountsRhino == null) ? 0 : paymentData[i].numAccountsRhino;
-                opptyTotalRhino += (paymentData[i].numOpptiesRhino == null) ? 0 : paymentData[i].numOpptiesRhino;
-                amountTotalRhino += (paymentData[i].amountRhino == null) ? 0 : paymentData[i].amountRhino;
-                accountTotalELFI += (paymentData[i].numAccountsELFI == null) ? 0 : paymentData[i].numAccountsELFI;
-                opptyTotalELFI += (paymentData[i].numOpptiesELFI == null) ? 0 : paymentData[i].numOpptiesELFI;
-                amountTotalELFI += (paymentData[i].amountELFI == null) ? 0 : paymentData[i].amountELFI;
+                fileTotal += (paymentData[i].fileCount == null) ? 0 : paymentData[i].fileCount;
+                opptyTotal += (paymentData[i].opptyCount == null) ? 0 : paymentData[i].opptyCount;
+                amountTotal += (paymentData[i].amount == null) ? 0 : paymentData[i].amount;
             }
         }
-        component.set("v.accountTotalRhino", accountTotalRhino); 
-        component.set("v.opptyTotalRhino", opptyTotalRhino); 
-        component.set("v.amountTotalRhino", amountTotalRhino); 
-        component.set("v.accountTotalELFI", accountTotalELFI); 
-        component.set("v.opptyTotalELFI", opptyTotalELFI); 
-        component.set("v.amountTotalELFI", amountTotalELFI); 
+        component.set("v.opptyTotal", opptyTotal); 
+        component.set("v.fileTotal", fileTotal); 
+        component.set("v.amountTotal", amountTotal);
     },
     
     errorsHandler : function(errors){

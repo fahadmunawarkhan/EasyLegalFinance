@@ -1,54 +1,65 @@
-<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="LawyerSalesSummaryComponentCtrl" >
-    
+<!--
+  @File Name          : LawyerSalesSummary.cmp
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 07/04/2020, 4:50:15 pm
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="LawyerSalesSummaryComponentCtrl">
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" />
     <aura:attribute name="startDate" type="date" />
     <aura:attribute name="endDate" type="date" />
-    <aura:attribute name="RhinoamtTotal" type="decimal" />
-    <aura:attribute name="RhinofileTotal" type="integer" />
-    <aura:attribute name="RhinoClosedFileTotal" type="integer" />
-    <aura:attribute name="RhinoOpptyTotal" type="integer" />
-    <aura:attribute name="RhinoClosedAmtTotal" type="decimal" />
-    
-    <aura:attribute name="RhinoBadDebtTotal" type="integer" default="0"/>
-    <aura:attribute name="RhinoBadDebtAmtTotal" type="decimal" default="0.0"/>
-    <aura:attribute name="RhinoShortfallTotal" type="integer" default="0"/>
-    <aura:attribute name="RhinoShortfallAmtTotal" type="decimal" default="0.0"/>
-    <aura:attribute name="RhinoOverageTotal" type="integer" default="0"/>
-    <aura:attribute name="RhinoOverageAmtTotal" type="decimal" default="0.0"/>
-    
-    <aura:attribute name="ElfiBadDebtTotal" type="integer" default="0"/>
-    <aura:attribute name="ElfiBadDebtAmtTotal" type="decimal" default="0.0"/>
-    <aura:attribute name="ElfiShortfallTotal" type="integer" default="0"/>
-    <aura:attribute name="ElfiShortfallAmtTotal" type="decimal" default="0.0"/>
-    <aura:attribute name="ElfiOverageTotal" type="integer" default="0"/>
-    <aura:attribute name="ElfiOverageAmtTotal" type="decimal" default="0.0"/>
-    
+    <aura:attribute name="amtTotal" type="decimal" />
+    <aura:attribute name="fileTotal" type="integer" />
+    <aura:attribute name="ClosedFileTotal" type="integer" />
+    <aura:attribute name="OpptyTotal" type="integer" />
+    <aura:attribute name="ClosedAmtTotal" type="decimal" />
+
+    <aura:attribute name="BadDebtTotal" type="integer" default="0" />
+    <aura:attribute name="BadDebtAmtTotal" type="decimal" default="0.0" />
+    <aura:attribute name="ShortfallTotal" type="integer" default="0" />
+    <aura:attribute name="ShortfallAmtTotal" type="decimal" default="0.0" />
+    <aura:attribute name="OverageTotal" type="integer" default="0" />
+    <aura:attribute name="OverageAmtTotal" type="decimal" default="0.0" />
+
+    <!--<aura:attribute name="ElfiBadDebtTotal" type="integer" default="0" />
+    <aura:attribute name="ElfiBadDebtAmtTotal" type="decimal" default="0.0" />
+    <aura:attribute name="ElfiShortfallTotal" type="integer" default="0" />
+    <aura:attribute name="ElfiShortfallAmtTotal" type="decimal" default="0.0" />
+    <aura:attribute name="ElfiOverageTotal" type="integer" default="0" />
+    <aura:attribute name="ElfiOverageAmtTotal" type="decimal" default="0.0" />
+
     <aura:attribute name="ElfiamtTotal" type="decimal" />
     <aura:attribute name="ElfifileTotal" type="integer" />
     <aura:attribute name="ElfiClosedFileTotal" type="integer" />
     <aura:attribute name="ElfiOpptyTotal" type="integer" />
-    <aura:attribute name="ElfiClosedAmtTotal" type="decimal" />
+    <aura:attribute name="ElfiClosedAmtTotal" type="decimal" />-->
     <aura:attribute name="AmountByLawyer" type="AggregateResult[]" />
     <aura:attribute name="spinner" type="Boolean" />
-    <aura:attribute name="customSetting" type="Object"/>
-    <aura:attribute name="ViewAllUrl" type="String"/>
-    <aura:attribute name="PrintAllUrl" type="String"/>
-    <aura:attribute name="sortField" type="String" default="Amount"/>
+    <aura:attribute name="customSetting" type="Object" />
+    <aura:attribute name="ViewAllUrl" type="String" />
+    <aura:attribute name="PrintAllUrl" type="String" />
+    <aura:attribute name="sortField" type="String" default="Amount" />
     <aura:attribute name="sortOrder" type="String" default="DESC" />
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="searchByName" type="String" default="" />
-    
+
     <aura:attribute name="ChosenFilter" type="string" default="ELFI" />
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" /> 
-    
+    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" />
+
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
-    
-    
+
+
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -87,7 +98,7 @@
                             </span>
                         </div>
                     </div>
-                </lightning:layoutItem> 
+                </lightning:layoutItem>
             </lightning:layout>
         </div>
     </lightning:card>
@@ -105,7 +116,7 @@
                         </div>
                     </div>
                 </lightning:layoutItem>
-                
+
                 <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small">
                         <div class="slds-form-element__control">
@@ -139,23 +150,20 @@
                             </span>
                         </div>
                     </div>
-                </lightning:layoutItem>                            
+                </lightning:layoutItem>
             </lightning:layout>
         </div>
     </lightning:card>
     <lightning:card>
-        <lightning:layout horizontalAlign="center" >
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllReportButton}"
-                                  variant="neutral" type="button" label="View All (Excel)" />
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllReportButton}" variant="neutral" type="button" label="View All (Excel)" />
             </lightning:layoutItem>
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllPDFReportButton}"
-                                  variant="neutral" type="button" label="View All (PDF)" />
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllPDFReportButton}" variant="neutral" type="button" label="View All (PDF)" />
             </lightning:layoutItem>
-            <lightning:layoutItem >
-                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printPDFReportButton}"
-                                  variant="neutral" type="button" label="Print Report (PDF)" />
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printPDFReportButton}" variant="neutral" type="button" label="Print Report (PDF)" />
                 <!--<a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="Print Report (PDF)" />
@@ -167,30 +175,28 @@
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
-                    <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Show Active Files Where Payment Method is "e-Transfer", "Cheque" and "Admin Fee",<br/>
-                    <span style="margin-left:39px;">
+                    <span style="color:red;margin-left:10px;"> Note</span>: This Table Show Active Files Where Payment Method is "e-Transfer", "Cheque" and "Admin Fee",<br/>
+                <span style="margin-left:39px;">
                         Closed Files Where Opportunity Stage Status is "Closed - Paid" and Reference Notes equals to "Loan Payout" OR "Partial Payment",
                     </span><br/>
-                    <span style="margin-left:39px;">
+                <span style="margin-left:39px;">
                         Bad Debt Files Where Reference Notes equals to "Bad Debt",
                     </span><br/>
-                    <span style="margin-left:39px;">
+                <span style="margin-left:39px;">
                         ShortFall Files Where Opportunity Stage is "Closed With Loan", Stage Status "Closed - ShortFall", Payment Method "Payment" and Reference Notes equals to "Payment ShortFall",
                     </span><br/>
-                    <span style="margin-left:39px;">
+                <span style="margin-left:39px;">
                         Overage Files Where Opportunity Stage is "Closed With Loan", Stage Status "Closed - Surplus", Payment Method "Payment" and Reference Notes equals to "Payment Surplus"
                     </span><br/>
-                    <span style="margin-left:39px;">
+                <span style="margin-left:39px;">
                         Drawdowns Falling under Selected Date Range and Type of Loan.
                     </span><br/>
-                    <!--This Table Shows Only "e-Transfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and Opportunities being "Closed With Loan". <br/>-->
-                    <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
+                <!--This Table Shows Only "e-Transfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and Opportunities being "Closed With Loan". <br/>-->
+                <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003mqYfUAI/view" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="brand" type="button" label="Reference Report" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
                 </a>
             </div>
         </div>
@@ -203,91 +209,58 @@
                                 <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer" style="cursor: pointer;">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Lawyer">LAWYER</span>
                                     <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer')}">
-                                        <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                        <lightning:icon iconName="utility:arrowdown" size="xx-small" />
                                     </aura:if>
                                     <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer')}">
-                                        <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                        <lightning:icon iconName="utility:arrowup" size="xx-small" />
                                     </aura:if>
                                 </th>
                                 <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Firm" style="cursor: pointer;">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Law Firm">LAW FIRM</span>
                                     <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Firm')}">
-                                        <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
+                                        <lightning:icon iconName="utility:arrowdown" size="xx-small" />
                                     </aura:if>
                                     <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Firm')}">
-                                        <lightning:icon iconName="utility:arrowup" size="xx-small"/>
+                                        <lightning:icon iconName="utility:arrowup" size="xx-small" />
                                     </aura:if>
                                 </th>
-                                <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'Rhino')}">
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF FILES">{!'# OF FILES' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th>
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED FILES">{!'# OF CLOSED FILES' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS">{!'# OF OPPS' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th>
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Amount">{!'AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT FILES">{!'# OF BAD DEBT FILES' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">{!'BAD DEBT AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL FILES">{!'# OF SHORTFALL FILES' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="SHORTFALL AMOUNT">{!'SHORTFALL AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE FILES">{!'# OF OVERAGE FILES' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">{!'OVERAGE AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (Rhino)', '')}</span>
-                                    </th>
-                                </aura:if>
-                                <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'ELFI')}">
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF FILES">{!'# OF FILES' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th>
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED FILES">{!'# OF CLOSED FILES' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS">{!'# OF OPPS' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th>
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Amount">{!'AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT FILES">{!'# OF BAD DEBT FILES' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">{!'BAD DEBT AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL FILES">{!'# OF SHORTFALL FILES' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="SHORTFALL AMOUNT">{!'SHORTFALL AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE FILES">{!'# OF OVERAGE FILES' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                    <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                        <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">{!'OVERAGE AMOUNT' + if(v.ChosenFilter == 'Consolidated',' (ELFI)', '')}</span>
-                                    </th>
-                                </aura:if>
+                                <!--CONSOLIDATED, RHINO, ELFI-->
+
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF FILES">{!'# OF FILES'}</span>
+                                </th>
+                                <th>
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED FILES">{!'# OF CLOSED FILES'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS">{!'# OF OPPS'}</span>
+                                </th>
+                                <th>
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Amount">{!'AMOUNT'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT FILES">{!'# OF BAD DEBT FILES'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">{!'BAD DEBT AMOUNT'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL FILES">{!'# OF SHORTFALL FILES'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="SHORTFALL AMOUNT">{!'SHORTFALL AMOUNT'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE FILES">{!'# OF OVERAGE FILES'}</span>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">{!'OVERAGE AMOUNT'}</span>
+                                </th>
+
+                                <!--CONSOLIDATED, RHINO, ELFI-->
                             </tr>
                         </thead>
                         <tbody>
@@ -299,7 +272,7 @@
                                                 <aura:set attribute="else">
                                                     <a href="{! '/' + item.lawyerId}">{!item.lawyer}</a>
                                                 </aura:set>
-                                            </aura:if>                                    
+                                            </aura:if>
                                         </div>
                                     </td>
                                     <td class="">
@@ -308,169 +281,71 @@
                                                 <aura:set attribute="else">
                                                     <a href="{! '/' + item.firmId}">{!item.firm}</a>
                                                 </aura:set>
-                                            </aura:if>                                    
+                                            </aura:if>
                                         </div>
                                     </td>
-                                    <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'Rhino')}">
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoClosedFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoOpptyCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoClosedAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoBadDebtFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoBadDebtAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoShortfallFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoShortfallAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoOverageFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.rhinoOverageAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                    </aura:if>   
-                                    <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'ELFI')}">
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiClosedFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiOpptyCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiClosedAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiBadDebtFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiBadDebtAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiShortfallFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiShortfallAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiOverageFileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>                                            
-                                            </div>
-                                        </td>
-                                        <td class="">
-                                            <div class="slds-truncate">                                            
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.elfiOverageAmount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </div>
-                                        </td>
-                                    </aura:if>
+                                    <!--RHINO-->
+                                    <!--<aura:if isTrue="{!or(v.ChosenFilter == 'Rhino', v.ChosenFilter == 'ELFI', v.ChosenFilter == 'Consolidated')}">-->
+                                    <td class="">
+                                        <div class="slds-truncate">
+
+                                            <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.Amount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.BadDebtAmount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.ShortfallAmount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    <!--</aura:if>-->
+                                    <!--RHINO-->
                                 </tr>
-                                
+
                             </aura:iteration>
                             <!-- This section will be outside of the iteration above -->
                             <tr class="slds-hint-parent">
@@ -480,175 +355,75 @@
                                 <td data-label="">
                                     <div class="slds-truncate makeBold" title=""></div>
                                 </td>
-                                <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'Rhino')}">
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">                                           
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinofileTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>                                               
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoClosedFileTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoOpptyTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoClosedAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoamtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoBadDebtTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoBadDebtAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoShortfallTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoShortfallAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoOverageTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.RhinoOverageAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                </aura:if>
-                                <aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'ELFI')}">
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">                                           
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfifileTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>                                               
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiClosedFileTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiOpptyTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiClosedAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiamtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiBadDebtTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiBadDebtAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiShortfallTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiShortfallAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiOverageTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount Grand Total">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.ElfiOverageAmtTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
-                                        </div>
-                                    </td>
-                                </aura:if>
+                                <!--CONSOLIDATED-->
+                                <!--<aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'Rhino', v.ChosenFilter == 'ELFI')}">-->
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.ClosedFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.OpptyTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.ClosedAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.amtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.BadDebtAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.ShortfallTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.ShortfallAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <td data-label="File Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.OverageTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.OverageAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <!--</aura:if>-->
+                                <!--CONSOLIDATED-->
                             </tr>
                             <!-- / This section will be outside of the iteration above -->
                         </tbody>
-                    </table>   
+                    </table>
                 </div>
             </lightning:card>
         </div>
     </lightning:card>
-    
+
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">
         <div class="demo-only demo--inverse" style="height: 6rem;">
@@ -660,5 +435,5 @@
                 </div>
             </div>
         </div>
-    </aura:if> 
+    </aura:if>
 </aura:component>

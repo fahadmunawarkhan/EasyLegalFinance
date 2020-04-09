@@ -1,11 +1,7 @@
 ({
     getCalendarMin : function(component){
-        var year = new Date().getFullYear() - 1;
-        //var min = year+'-01-01';
-        var min = '2010-01-01';
-        component.set("v.calendarMin", min);                  
+        component.set("v.calendarMin", '2010-01-01');                  
     },
-    
     getCalendarMax : function(component){
         var year = new Date().getFullYear() + 5;
         var max = year+'-12-31';
@@ -27,21 +23,11 @@
             objectType: object,
             field: field
         });
-        
-        
         picklistgetter.setCallback(this, function(response){
             var opts = [];
             if(response.getState() == 'SUCCESS')
             {
                 var allValues = response.getReturnValue();
- 
-               /*if (allValues != undefined && allValues.length > 0) {
-                    opts.push({
-                        class: "optionClass",
-                        label: "All",
-                        value: "All"
-                    });
-                }*/
                 for (var i = 0; i < allValues.length; i++) {
                     if(allValues[i].includes('===SEPERATOR==='))
                     {
@@ -59,62 +45,19 @@
                             value: allValues[i]
                         });
                     }
+                }
+                if(attributeId == 'typeOfLoanOptions'){
+                    opts.push({
+                        class: "optionClass",
+                        label: 'Consolidated',
+                        value: 'Consolidated'
+                    });
                 }                
                 component.set('v.'+attributeId, opts);
             }
         });
         $A.enqueueAction(picklistgetter);
     },
-    /*
-    getLawyersList : function(component) {
-        //var recordId = component.get("v.recordId");
-        var action = component.get('c.getLawyersContacts');             
-        
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            
-            if (state === 'SUCCESS') {
-                component.set("v.contactsList", response.getReturnValue());                
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
-                    }
-                } else {
-                    this.unknownErrorsHandler();
-                }
-            }
-        });
-        $A.enqueueAction(action);        
-    },
-    searchButton : function(component) {
-        let searchString = component.get('v.searchString');
-        let endDateSearch = component.get('v.endDateSearch');
-		let loanFilterValue = component.find("activeLoanFilter").get("v.value"); 
-        
-        var action = component.get('c.getLawyersContacts');
-        action.setParams({ sortField : '', sortOrder : '', searchString : searchString, LoanFilter: loanFilterValue});
-        
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            
-            if (state === 'SUCCESS') {
-                component.set("v.contactsList", response.getReturnValue());                
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
-                    }
-                } else {
-                    this.unknownErrorsHandler();
-                }
-            }
-        });
-        $A.enqueueAction(action);       
-    },*/
-    //sort : function(component, event) {
     
     getQueryString : function(component){
         let searchString = component.get('v.searchString');
@@ -122,83 +65,88 @@
         let sortOrder = component.get('v.sortOrder');
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
-        let strQuery = component.get('v.query');        
+        let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
+        let strQuery = "SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\'"; 
         
         searchString = searchString ? "'%"+searchString+"%'" : "'%%'";
         sortOrder = sortOrder? sortOrder : "ASC";
         field = field ? field : "Name";
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : 'ELFI';
-        console.log(businessUnitFilterValue);
+            
         strQuery += " AND (Name Like " + searchString + " OR Account.Name Like " + searchString + " ) ";
         strQuery += " AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null";
         strQuery += businessUnitFilterValue == 'All'? "" : " AND Account.Business_Unit__c = \'"+businessUnitFilterValue+"\'";
-        strQuery += loanFilterValue == "Active"? " AND isClosed = true AND isWon = true AND Stage_Status__c != 'Paid Off')" : ")";
+        strQuery += loanFilterValue == "Active"? " AND isClosed = true AND isWon = true AND Stage_Status__c NOT IN ('Closed - Paid', 'Closed - Surplus', 'Closed - Shortfall', 'Closed - BadDebt')" : "";
+        strQuery += typeOfLoan == "Consolidated"? "" : " AND Type_of_Loan__c = \'"+typeOfLoan+"\'";
+        strQuery += ")"
         strQuery += " order by " + field + " " + sortOrder + " limit 10000";
         console.log(strQuery);
+        component.set("v.query", strQuery);
         return strQuery;
     },
     
-    getLawyersList : function(component, event) {
-        
-        component.set('v.spinner', true);
-        let loanFilterValue = component.get("v.selectedLoanFilter");
-        let strQuery = this.getQueryString(component);             
-        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
-        
-        var action = component.get('c.getLawyersContacts');
-        action.setParams({
-            strQuery : strQuery, 
-            LoanFilter: loanFilterValue,
-            businessUnitFilter: businessUnitFilterValue
-        });
-        
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            component.set('v.spinner', false);
-            if (state === 'SUCCESS') {
-                component.set("v.contactsList", response.getReturnValue());                
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
+    getLawyersList : function(component) {        
+        return new Promise($A.getCallback(
+            function(resolve,reject){
+                let action = component.get('c.getLawyersContacts');
+                action.setParams({
+                    searchByName : component.get('v.searchString'),
+                    sortField : component.get('v.sortField'),
+                    sortOrder : component.get('v.sortOrder'),
+                    loanFilter: component.get("v.selectedLoanFilter"),
+                    businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
+                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                });
+                
+                action.setCallback(this, function (response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());                
+                    } else if(state === 'ERROR') {
+                        reject(response.getError());
                     }
-                } else {
-                    this.unknownErrorsHandler();
-                }
+                });
+                $A.enqueueAction(action);
             }
-        });
-        $A.enqueueAction(action);    
+        ));   
     },
     checkAll: function(component){
         
-        let value = component.find("selectAllcheckbox").get("v.value");      
+        let value = component.find("selectAllcheckbox").get("v.value");
         let contactList = component.get("v.contactsList");
-        
+        let selectedCount = component.get('v.selectedCount');
+        selectedCount = 0;
+        if(value){
+            selectedCount = contactList.length;
+        }
         for(let i=0; i<contactList.length; i++){
             contactList[i].checked = value;
         }
         
         component.set("v.contactsList",contactList);
+        component.set('v.selectedCount', selectedCount);
         
     },
-    check: function(component){    
+    check: function(component, event){
+        let selectedCount = component.get('v.selectedCount');
+        if(event.getSource().get('v.value')){
+            selectedCount++;
+        }else{
+            selectedCount--;
+        }
+        
         var comp = component.find("selectAllcheckbox");
         let value = comp.get("v.value");        
         if(value){
             value = false;
         }
         let contactList = component.get("v.contactsList");
-        let count = 0;
-        for(let i=0; i<contactList.length; i++){
-            if(contactList[i].checked == true){
-                count++;
-            }
-        }
-        if(count == contactList.length){
+        
+        if(selectedCount == contactList.length){
             value = true;
         }
+        component.set("v.selectedCount", selectedCount);
 		comp.set("v.value", value);        
         
     },
@@ -227,7 +175,7 @@
         }else{
             //alert("Total " + selectedIds.length);
             var action = component.get('c.generate');
-            action.setParams({
+            action.setParams({ 
                 query : '', 
                 selectedIds : selectedIds, 
                 payoutDate : payoutDate, 
@@ -398,7 +346,7 @@
     GenerateForAll: function (component){
         component.set('v.spinner', true);
         let payoutDate = component.get("v.payoutDate");
-        let reportDate = component.get("v.reportDate");        
+        let reportDate = component.get("v.reportDate");
         let query = this.getQueryString(component);
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
         let loanFilterValue = component.get("v.selectedLoanFilter");
@@ -406,7 +354,7 @@
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";
         
         var action = component.get('c.generate');
-        action.setParams({
+        action.setParams({ 
             query : query, 
             selectedIds : [], 
             payoutDate : payoutDate, 
@@ -449,7 +397,7 @@
     sendAll: function (component){
         component.set('v.spinner', true);
         let payoutDate = component.get("v.payoutDate");
-        let reportDate = component.get("v.reportDate");        
+        let reportDate = component.get("v.reportDate");
         let query = this.getQueryString(component);
         let emailBody = component.get("v.emailBody");
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
@@ -501,13 +449,15 @@
     errorsHandler : function(errors){
         if (errors[0] && errors[0].message) {
             console.log('Error message: ' + errors[0].message);
-            this.showToast('Error', errors[0].message);
+            this.showToast('Error', errors[0].message, 'error');
+        }else{
+            this.unknownErrorsHandler();
         }
     },
     
     unknownErrorsHandler : function(){
         console.log('Unknown error');
-        this.showToast('Error', 'Unknown error'); 
+        this.showToast('Error', 'Unknown error', 'error'); 
     },       
     
     showToast : function(title, message,type) {
@@ -518,5 +468,129 @@
             "type": type
         });
         toastEvent.fire();
+    },
+    generatePayoutBalanceForSelected: function(component){
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let contactList = component.get("v.contactsList");
+                let selectedIds = [];
+                for(let i=0; i<contactList.length; i++){
+                    if(contactList[i].checked == true){
+                        selectedIds.push(contactList[i].contact.Id);
+                    }
+                }
+                
+                let action = component.get("c.generatePayoutBalance");
+                action.setParams({
+                    selectedIds : selectedIds,
+                    payoutDate : component.get("v.payoutDate"),
+                    searchByName : component.get('v.searchString'),
+                    loanFilter: component.get("v.selectedLoanFilter"),
+                    businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
+                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                });
+                
+                action.setCallback(this, function (response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());                
+                    } else if(state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
+    },
+    generatePayoutBalanceForAll : function(component){
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                let selectedIds = [];
+                
+                let action = component.get("c.generatePayoutBalance");
+                action.setParams({
+                    selectedIds : selectedIds,
+                    payoutDate : component.get("v.payoutDate"),
+                    searchByName : component.get('v.searchString'),
+                    loanFilter: component.get("v.selectedLoanFilter"),
+                    businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
+                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                });
+                
+                action.setCallback(this, function (response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());                
+                    } else if(state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
+    },
+    pingBatchJobStatus : function (component, helper){ 
+        console.log('Is pinging..');
+        helper.getBatchJobStatus(component).then($A.getCallback(
+            function(result){
+                let showBatchError = component.get("v.showZeroBatchError");
+                if(result != null && result.TotalJobItems == 0 && showBatchError){
+                    helper.showToast('ERROR', 'No records found for selected date range or type of loan to run the job.', 'error');
+                    component.set("v.showZeroBatchError", false);
+                }
+                component.set('v.apexBatchJobOBJ', result);
+                helper.updateProgress(component);
+                component.set("v.spinner", false);
+            }
+        )).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
+    },
+    updateProgress : function (component){
+        return new Promise(function(resolve, reject){
+            let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
+            if(apexBatchJobOBJ != null){
+                component.set('v.batchJobStatus',apexBatchJobOBJ.Status);
+                component.set('v.batchJobProgress',0);
+                component.set('v.batchJobItems', ' '+ 0 + '%');
+                component.set('v.batchTotalJobItems', apexBatchJobOBJ != null? apexBatchJobOBJ.TotalJobItems : 0);
+                component.set('v.batchJobItemsProcessed', apexBatchJobOBJ != null? apexBatchJobOBJ.JobItemsProcessed : 0);
+                if(apexBatchJobOBJ.Status == 'Processing' || apexBatchJobOBJ.Status == 'Completed'){
+                    component.set('v.batchJobProgress',(apexBatchJobOBJ.JobItemsProcessed/(apexBatchJobOBJ.TotalJobItems!=0? apexBatchJobOBJ.TotalJobItems : 1))*100);
+                    component.set('v.batchJobItems', ' '+ parseFloat((apexBatchJobOBJ.JobItemsProcessed/(apexBatchJobOBJ.TotalJobItems!=0? apexBatchJobOBJ.TotalJobItems : 1))*100).toFixed(0) + '%');
+                    component.set('v.batchTotalJobItems', apexBatchJobOBJ.TotalJobItems);
+                    component.set('v.batchJobItemsProcessed', apexBatchJobOBJ.JobItemsProcessed);
+                }
+            }
+            if(apexBatchJobOBJ != null && apexBatchJobOBJ.Status == 'Completed'){
+                window.clearInterval(component.get('v.intervalId'));
+                resolve(true);
+            }else if(apexBatchJobOBJ == null){
+                window.clearInterval(component.get('v.intervalId'));
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+            
+        });
+    },
+    getBatchJobStatus : function (component){
+        return new Promise($A.getCallback(
+            function(resolve,reject){                
+                let action = component.get('c.getBatchJobStatus');
+                action.setCallback(this,function(response){
+                    let state = response.getState();
+                    if(state === 'SUCCESS'){
+                        resolve(response.getReturnValue());
+                    }else if(state === 'ERROR'){
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
     }
 })

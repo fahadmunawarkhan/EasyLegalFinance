@@ -49,30 +49,18 @@
     
     calculateTotal : function(component){
         let leads = component.get('v.LeadsByMonth');
-        let totalAmountRhino = 0.00;
-        let totalRecordCountRhino = 0;
-        let totalConvertedLeadsRhino = 0;
-        
-        let totalAmountELFI = 0.00;
-        let totalRecordCountELFI = 0;
-        let totalConvertedLeadsELFI = 0;
+        let totalAmount = 0.00;
+        let totalRecordCount = 0;
+        let totalConvertedLeads = 0;
         
         for(let i=0; i<leads.length; i++){
-            totalAmountRhino += leads[i].SumofAmountPaidtoClientRhino;
-            totalRecordCountRhino += leads[i].RecordCountRhino;
-            totalConvertedLeadsRhino += leads[i].SumofConvertedLeadsRhino;
-            
-            totalAmountELFI += leads[i].SumofAmountPaidtoClientELFI;
-            totalRecordCountELFI += leads[i].RecordCountELFI;
-            totalConvertedLeadsELFI += leads[i].SumofConvertedLeadsELFI;
+            totalAmount += leads[i].SumofAmountPaidtoClient;
+            totalRecordCount += leads[i].RecordCount;
+            totalConvertedLeads += leads[i].SumofConvertedLeads;
         }
-        component.set('v.totalAmountPaidtoClientRhino',totalAmountRhino);
-        component.set('v.totalRecordsRhino',totalRecordCountRhino);
-        component.set('v.totalConvertedRhino',totalConvertedLeadsRhino);
-        
-        component.set('v.totalAmountPaidtoClientELFI',totalAmountELFI);
-        component.set('v.totalRecordsELFI',totalRecordCountELFI);
-        component.set('v.totalConvertedELFI',totalConvertedLeadsELFI);
+        component.set('v.totalAmountPaidtoClient',totalAmount);
+        component.set('v.totalRecords',totalRecordCount);
+        component.set('v.totalConverted',totalConvertedLeads);
     },
     
     errorsHandler : function(errors){

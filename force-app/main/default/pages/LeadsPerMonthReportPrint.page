@@ -26,47 +26,25 @@
         
         <table border="1" width="100%" style="border-collapse: collapse; border-color: black">
             <tr style="background-color: #d8d8d8">
-                <th><b>Created Month</b></th>
-                <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='Rhino')}" >
-                    <th><b># of Leads (Rhino)</b></th>
-                    <th><b>Converted Leads (Rhino)</b></th>
-                    <th><b>Paid to Client (Rhino)</b></th>
-                </apex:outputPanel>
-                <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='ELFI')}" >
-                    <th><b># of Leads (ELFI)</b></th>
-                    <th><b>Converted Leads (ELFI)</b></th>
-                    <th><b>Paid to Client (ELFI)</b></th>
-                </apex:outputPanel>
+                <th><b>Created Month</b></th>                
+                <th><b># of Leads</b></th>
+                <th><b>Converted Leads</b></th>
+                <th><b>Paid to Client</b></th>
             </tr>
             <apex:repeat value="{!data}" var="d">
                 <tr >
                     <td>{!d.CreatedDate}</td>
-                    <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='Rhino')}" >
-                        <td>{!d.RecordCountRhino}</td>
-                        <td>{!d.SumofConvertedLeadsRhino}</td>
-                        <td><apex:outputText value="{0, Number, Currency}"><apex:param value="{!d.SumofAmountPaidtoClientRhino}" /></apex:outputText></td>
-                    </apex:outputPanel>
-                    
-                    <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='ELFI')}" >
-                        <td>{!d.RecordCountELFI}</td>
-                        <td>{!d.SumofConvertedLeadsELFI}</td>
-                        <td><apex:outputText value="{0, Number, Currency}"><apex:param value="{!d.SumofAmountPaidtoClientELFI}" /></apex:outputText></td>
-                    </apex:outputPanel>
+                    <td>{!d.RecordCount}</td>
+                    <td>{!d.SumofConvertedLeads}</td>
+                    <td><apex:outputText value="{0, Number, Currency}"><apex:param value="{!d.SumofAmountPaidtoClient}" /></apex:outputText></td>
                 </tr>
             </apex:repeat>
             <!-- totals -->
             <tr style="background-color: #d8d8d8">
-                <th><b>Totals:</b></th>
-                <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='Rhino')}" >
-                    <th><b>{!rhinocount}</b></th>
-                    <th><b>{!rhinoConvertedcount}</b></th>
-                    <th><b><apex:outputText value="{0, Number, Currency}"><apex:param value="{!rhinoAmount}" /></apex:outputText></b></th>
-                </apex:outputPanel>
-                <apex:outputPanel layout="none" rendered="{!OR(LFSR.Business_Unit__c=='Consolidated',LFSR.Business_Unit__c=='ELFI')}" >
-                    <th><b>{!elficount}</b></th>
-                    <th><b>{!elfiConvertedcount}</b></th>
-                    <th><b><apex:outputText value="{0, Number, Currency}"><apex:param value="{!elfiAmount}" /></apex:outputText></b></th>
-                </apex:outputPanel>
+                <th><b>Totals:</b></th>                
+                <th><b>{!Count}</b></th>
+                <th><b>{!ConvertedCount}</b></th>
+                <th><b><apex:outputText value="{0, Number, Currency}"><apex:param value="{!Amount}" /></apex:outputText></b></th>
             </tr>
         </table>
     </div>

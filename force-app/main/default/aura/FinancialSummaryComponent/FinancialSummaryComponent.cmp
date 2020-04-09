@@ -5,14 +5,11 @@
     <aura:attribute name="calendarMax" type="date" />
     <aura:attribute name="startDate" type="date" />
     <aura:attribute name="endDate" type="date" />
-    <aura:attribute name="RhinoamtTotal" type="decimal" />
-    <aura:attribute name="RhinofileTotal" type="integer" />
-    <aura:attribute name="RhinoOpptyTotal" type="integer" />
-    <aura:attribute name="ElfiamtTotal" type="decimal" />
-    <aura:attribute name="ElfifileTotal" type="integer" />
-    <aura:attribute name="ElfiOpptyTotal" type="integer" />
+    <aura:attribute name="amountTotal" type="decimal" />
+    <aura:attribute name="fileTotal" type="integer" />
+    <aura:attribute name="opptyTotal" type="integer" />
     <aura:attribute name="currentBatchJobId" type="String" />
-    <aura:attribute name="financialReportDataElfi" type="Object" />
+    <aura:attribute name="financialReportData" type="Object" />
     <aura:attribute name="financialReportDataRhino" type="Object" />
     
     <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
@@ -26,8 +23,7 @@
     <aura:attribute name="spinner" type="Boolean" />
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="sinceInception" type="Boolean" default="false" />
-    <aura:attribute name="ChosenFilter" type="string" />
-    <aura:attribute name="design" type="Boolean" default="false" />
+    <aura:attribute name="v.selectedBusinessUnit" type="string" />
     
     <aura:attribute name="showZeroBatchError" type="Boolean" default="false" />
     
@@ -37,6 +33,7 @@
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.BusinessUnit__c}" />
+    
     
     <aura:attribute name="financials" type="AggregateResult[]" />
     
@@ -222,13 +219,13 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <a href="{!v.financialReportDataElfi.congaViewAllURL}" target="_BLANK">
+                <a href="{!v.financialReportData.congaViewAllURL}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (Excel)" />
                 </a>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.financialReportDataElfi.congaViewAllURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <a href="{!v.financialReportData.congaViewAllURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (PDF)" />
                 </a>
@@ -300,383 +297,109 @@
             <!--<div class="slds-theme_shade">-->        
             <lightning:card title="Financial Summary" iconName="standard:case" variant="base" >
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
-                    <thead>
-                        <aura:if isTrue="{!v.design}">
+                    <thead>                        
+                        <tr class="slds-line-height_reset">
                             <th class="" scope="col">
                                 <div class="slds-truncate makeBold" title="Province">Province</div>
                             </th>
                             <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Files (Rhino)"># of Accounts (Rhino)</div>
+                                <div class="slds-truncate makeBold" title="File Total"># of Accounts</div>
                             </th>
                             <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Files (Rhino)"># of Opps (Rhino)</div>
+                                <div class="slds-truncate makeBold" title="File Total"># of Opps</div>
                             </th>
                             <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Amount (Rhino)">Amount (Rhino)</div>
+                                <div class="slds-truncate makeBold" title="Amount">Amount</div>
                             </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Files (ELFI)"># of Accounts (ELFI)</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Files (ELFI)"># of Accounts (ELFI)</div>
-                            </th>
-                            <th class="" scope="col">
-                                <div class="slds-truncate makeBold" title="Amount (ELFI)">Amount (ELFI)</div>
-                            </th>
-                            <aura:set attribute="else">
-                                <tr class="slds-line-height_reset">
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate makeBold" title="Province">Province</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate makeBold" title="File Total"># of Accounts</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate makeBold" title="File Total"># of Opps</div>
-                                    </th>
-                                    <th class="" scope="col">
-                                        <div class="slds-truncate makeBold" title="Amount">Amount</div>
-                                    </th>
-                                </tr>
-                            </aura:set>                            
-                        </aura:if>
+                        </tr>
                     </thead>
                     <tbody>
                         <aura:iteration items="{!v.financials}" var="item">
-                            <aura:if isTrue="{!v.design}">
-                                <tr class="slds-hint-parent">
-                                    <td data-label="Province">
-                                        <div class="slds-truncate makeBold" title="Province">{!item.province}</div>
-                                    </td>
-                                    <td data-label="File Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Total">
-                                            <aura:if isTrue="{!item.rhinoFileCount == 0}">
-                                                0
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.rhinoFileCount}" style="decimal" 
-                                                                               maximumFractionDigits="0"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Total">
-                                            <aura:if isTrue="{!item.rhinoOpptyCount == 0}">
-                                                0
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.rhinoOpptyCount}" style="decimal" 
-                                                                               maximumFractionDigits="0"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount">
-                                            <aura:if isTrue="{!item.rhinoAmount == null}">
-                                                $0.00
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.rhinoAmount}" style="currency" 
-                                                                               maximumFractionDigits="2"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Total">
-                                            <aura:if isTrue="{!item.elfiFileCount == 0}">
-                                                0
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.elfiFileCount}" style="decimal" 
-                                                                               maximumFractionDigits="0"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                    <td data-label="File Total">
-                                        <div class="slds-truncate makeBoldBlue" title="File Total">
-                                            <aura:if isTrue="{!item.elfiOpptyCount == 0}">
-                                                0
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.elfiOpptyCount}" style="decimal" 
-                                                                               maximumFractionDigits="0"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                    <td data-label="Amount">
-                                        <div class="slds-truncate makeBoldBlue" title="Amount">
-                                            <aura:if isTrue="{!item.elfiAmount == null}">
-                                                $0.00
-                                                <aura:set attribute="else">
-                                                    <lightning:formattedNumber 
-                                                                               value="{!item.elfiAmount}" style="currency" 
-                                                                               maximumFractionDigits="2"/>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <aura:set attribute="else">
-                                    <aura:if isTrue="{!item.elfiFileCount == 0}">
-                                        <tr class="slds-hint-parent">
-                                            <td data-label="Province">
-                                                <div class="slds-truncate makeBold" title="Province">{!item.province}</div>
-                                            </td>
-                                            <td data-label="File Total">
-                                                <div class="slds-truncate makeBoldBlue" title="File Total">
-                                                    <aura:if isTrue="{!item.rhinoFileCount == null}">
-                                                        0
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!item.rhinoFileCount}" style="decimal" 
-                                                                                       maximumFractionDigits="0"/>
-                                                        </aura:set>
-                                                    </aura:if>   
-                                                </div>
-                                            </td>
-                                            <td data-label="File Total">
-                                                <div class="slds-truncate makeBoldBlue" title="File Total">
-                                                    <aura:if isTrue="{!item.rhinoOpptyCount == null}">
-                                                        0
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!item.rhinoOpptyCount}" style="decimal" 
-                                                                                       maximumFractionDigits="0"/>
-                                                        </aura:set>
-                                                    </aura:if>   
-                                                </div>
-                                            </td>
-                                            <td data-label="Amount">
-                                                <div class="slds-truncate makeBoldBlue" title="Amount">
-                                                    <aura:if isTrue="{!item.rhinoAmount == null}">
-                                                        $0.00
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!item.rhinoAmount}" style="currency" 
-                                                                                       maximumFractionDigits="2"/>
-                                                        </aura:set>
-                                                    </aura:if>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <aura:set attribute="else">
-                                            <tr class="slds-hint-parent">
-                                                <td data-label="Province">
-                                                    <div class="slds-truncate makeBold" title="Province">{!item.province}</div>
-                                                </td>
-                                                <td data-label="File Total">
-                                                    <div class="slds-truncate makeBoldBlue" title="File Total">
-                                                        <aura:if isTrue="{!item.elfiFileCount == null}">
-                                                            0
-                                                            <aura:set attribute="else">
-                                                                <lightning:formattedNumber 
-                                                                                           value="{!item.elfiFileCount}" style="decimal" 
-                                                                                           maximumFractionDigits="0"/>
-                                                            </aura:set>
-                                                        </aura:if>   
-                                                    </div>
-                                                </td>
-                                                <td data-label="File Total">
-                                                    <div class="slds-truncate makeBoldBlue" title="File Total">
-                                                        <aura:if isTrue="{!item.elfiOpptyCount == null}">
-                                                            0
-                                                            <aura:set attribute="else">
-                                                                <lightning:formattedNumber 
-                                                                                           value="{!item.elfiOpptyCount}" style="decimal" 
-                                                                                           maximumFractionDigits="0"/>
-                                                            </aura:set>
-                                                        </aura:if>   
-                                                    </div>
-                                                </td>
-                                                <td data-label="Amount">
-                                                    <div class="slds-truncate makeBoldBlue" title="Amount">
-                                                        <aura:if isTrue="{!item.elfiAmount == null}">
-                                                            $0.00
-                                                            <aura:set attribute="else">
-                                                                <lightning:formattedNumber 
-                                                                                           value="{!item.elfiAmount}" style="currency" 
-                                                                                           maximumFractionDigits="2"/>
-                                                            </aura:set>
-                                                        </aura:if>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </aura:set>
-                                    </aura:if>
-                                </aura:set>
-                            </aura:if>                            
+                            <tr class="slds-hint-parent">
+                                <td data-label="Province">
+                                    <div class="slds-truncate makeBold" title="Province">{!item.province}</div>
+                                </td>
+                                <td data-label="File Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Total">
+                                        <aura:if isTrue="{!item.fileCount == null}">
+                                            0
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!item.fileCount}" style="decimal" 
+                                                                           maximumFractionDigits="0"/>
+                                            </aura:set>
+                                        </aura:if>   
+                                    </div>
+                                </td>
+                                <td data-label="File Total">
+                                    <div class="slds-truncate makeBoldBlue" title="File Total">
+                                        <aura:if isTrue="{!item.opptyCount == null}">
+                                            0
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!item.opptyCount}" style="decimal" 
+                                                                           maximumFractionDigits="0"/>
+                                            </aura:set>
+                                        </aura:if>   
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount">
+                                        <aura:if isTrue="{!item.amount == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber 
+                                                                           value="{!item.amount}" style="currency" 
+                                                                           maximumFractionDigits="2"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                            </tr>                             
                         </aura:iteration>
                         <!-- This section will be outside of the iteration above -->
                         <tr class="slds-hint-parent">
                             <td data-label="TOTAL">
                                 <div class="slds-truncate makeBold" title="TOTAL:">TOTAL:</div>
                             </td>
-                            <aura:if isTrue="{!v.design}">
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                        <aura:if isTrue="{!v.RhinofileTotal == null}">
-                                            0
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.RhinofileTotal}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </aura:set>
-                                        </aura:if>
-                                        
-                                    </div>
-                                </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                        <aura:if isTrue="{!v.RhinoOpptyTotal == null}">
-                                            0
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.RhinoOpptyTotal}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </aura:set>
-                                        </aura:if>
-                                        
-                                    </div>
-                                </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                        <aura:if isTrue="{!v.RhinoamtTotal == null}">
-                                            $0.00
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.RhinoamtTotal}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </aura:set>
-                                        </aura:if>
-                                    </div>
-                                </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                        <aura:if isTrue="{!v.ElfifileTotal == null}">
-                                            0
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.ElfifileTotal}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </aura:set>
-                                        </aura:if>
-                                        
-                                    </div>
-                                </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                        <aura:if isTrue="{!v.ElfiOpptyTotal == null}">
-                                            0
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.ElfiOpptyTotal}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
-                                            </aura:set>
-                                        </aura:if>
-                                        
-                                    </div>
-                                </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                        <aura:if isTrue="{!v.ElfiamtTotal == null}">
-                                            $0.00
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!v.ElfiamtTotal}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
-                                            </aura:set>
-                                        </aura:if>
-                                    </div>
-                                </td>
-                                <aura:set attribute="else">
-                                    <aura:if isTrue="{!v.ChosenFilter == 'Rhino'}">
-                                        <td data-label="File Grand Total">
-                                            <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                                <aura:if isTrue="{!v.RhinofileTotal == null}">
-                                                    0
-                                                    <aura:set attribute="else">
-                                                        <lightning:formattedNumber 
-                                                                                   value="{!v.RhinofileTotal}" style="decimal" 
-                                                                                   maximumFractionDigits="0"/>
-                                                    </aura:set>
-                                                </aura:if>
-                                                
-                                            </div>
-                                        </td>
-                                        <td data-label="File Grand Total">
-                                            <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                                <aura:if isTrue="{!v.RhinoOpptyTotal == null}">
-                                                    0
-                                                    <aura:set attribute="else">
-                                                        <lightning:formattedNumber 
-                                                                                   value="{!v.RhinoOpptyTotal}" style="decimal" 
-                                                                                   maximumFractionDigits="0"/>
-                                                    </aura:set>
-                                                </aura:if>
-                                                
-                                            </div>
-                                        </td>
-                                        <td data-label="Amount Grand Total">
-                                            <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                                <aura:if isTrue="{!v.RhinoamtTotal == null}">
-                                                    $0.00
-                                                    <aura:set attribute="else">
-                                                        <lightning:formattedNumber 
-                                                                                   value="{!v.RhinoamtTotal}" style="currency" 
-                                                                                   maximumFractionDigits="2"/>
-                                                    </aura:set>
-                                                </aura:if>
-                                            </div>
-                                        </td>
+                            <td data-label="File Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    <aura:if isTrue="{!v.fileTotal == null}">
+                                        0
                                         <aura:set attribute="else">
-                                            <td data-label="File Grand Total">
-                                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                                    <aura:if isTrue="{!v.ElfifileTotal == null}">
-                                                        0
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!v.ElfifileTotal}" style="decimal" 
-                                                                                       maximumFractionDigits="0"/>
-                                                        </aura:set>
-                                                    </aura:if>
-                                                    
-                                                </div>
-                                            </td>
-                                            <td data-label="File Grand Total">
-                                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
-                                                    <aura:if isTrue="{!v.ElfiOpptyTotal == null}">
-                                                        0
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!v.ElfiOpptyTotal}" style="decimal" 
-                                                                                       maximumFractionDigits="0"/>
-                                                        </aura:set>
-                                                    </aura:if>
-                                                    
-                                                </div>
-                                            </td>
-                                            <td data-label="Amount Grand Total">
-                                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                                    <aura:if isTrue="{!v.ElfiamtTotal == null}">
-                                                        $0.00
-                                                        <aura:set attribute="else">
-                                                            <lightning:formattedNumber 
-                                                                                       value="{!v.ElfiamtTotal}" style="currency" 
-                                                                                       maximumFractionDigits="2"/>
-                                                        </aura:set>
-                                                    </aura:if>
-                                                </div>
-                                            </td>
-                                            
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.fileTotal}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
                                         </aura:set>
                                     </aura:if>
-                                </aura:set>
-                            </aura:if>
+                                    
+                                </div>
+                            </td>
+                            <td data-label="File Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    <aura:if isTrue="{!v.opptyTotal == null}">
+                                        0
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.opptyTotal}" style="decimal" 
+                                                                       maximumFractionDigits="0"/>
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                </div>
+                            </td>
+                            <td data-label="Amount Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                    <aura:if isTrue="{!v.amountTotal == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber 
+                                                                       value="{!v.amountTotal}" style="currency" 
+                                                                       maximumFractionDigits="2"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>                                        
                         </tr>
                         <!-- / This section will be outside of the iteration above -->
                     </tbody>
@@ -693,192 +416,101 @@
                                     <tr class="slds-hint-parent">
                                         <td data-label="=">
                                             <div class="slds-truncate makeBold" title=""></div>
-                                        </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
+                                        </td>                                        
                                         <td data-label="">
                                             <div class="slds-truncate makeBoldBlue" title="">
-                                                    Business Unit (Rhino)
+                                                    Business Unit ({!v.selectedBusinessUnitFilter})
                                             </div>
                                         </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="">
-                                                <div class="slds-truncate makeBoldBlue" title="">
-                                                    Business Unit (ELFI)
-                                                </div>
-                                            </td>
-                                        </aura:if>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Accounts">
                                             <div class="slds-truncate makeBold" title="Accounts">Accounts</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Advanced Files">
-                                                <div class="slds-truncate makeBoldBlue" title="Total Files">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.noOfFiles}" style="decimal" maximumFractionDigits="0"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Advanced Files">
-                                                <div class="slds-truncate makeBoldBlue" title="Total Files">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.noOfFiles}" style="decimal" maximumFractionDigits="0"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
+                                        <td data-label="Advanced Files">
+                                            <div class="slds-truncate makeBoldBlue" title="Total Files">
+                                                <lightning:formattedNumber value="{!v.financialReportData.noOfFiles}" style="decimal" maximumFractionDigits="0"/>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Total Amount of Advances">
                                             <div class="slds-truncate makeBold" title="Total Amount of Advances">Total Amount of Advances</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Advances Amount">
-                                                <div class="slds-truncate makeBoldBlue" title="Advances Amount" style="float:left;width:50%;">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.amountOfAdvances}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="This is the sum of the amount of payment methods 'eTransfer' and 'Cheque' in the selected date range." style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Advances Amount">
-                                                <div class="slds-truncate makeBoldBlue" title="Advances Amount" style="float:left;width:50%;">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.amountOfAdvances}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="This is the sum of the amount of payment methods 'eTransfer' and 'Cheque' in the selected date range." style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>
-                                            </td>
-                                        </aura:if>
+                                        <td data-label="Advances Amount">
+                                            <div class="slds-truncate makeBoldBlue" title="Advances Amount" style="float:left;width:50%;">
+                                                <lightning:formattedNumber value="{!v.financialReportData.amountOfAdvances}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                            <div title="This is the sum of the amount of payment methods 'eTransfer' and 'Cheque' in the selected date range." style="float:right;width:50%;">
+                                                <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                            </div>
+                                        </td>                                        
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Accrued Interest">
                                             <div class="slds-truncate makeBold" title="Accrued Interest">Accrued Interest</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Accrued Amount">
-                                                <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Accrued Interest Amount">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.accruedInterest}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="Accrued amount is calculated as of from date and to date from the above selected date range." style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>
-                                            </td> 
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Accrued Amount">
-                                                <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Accrued Interest Amount">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.accruedInterest}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="Accrued amount is calculated as of from date and to date from the above selected date range." style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>
-                                            </td> 
-                                        </aura:if>
+                                        <td data-label="Accrued Amount">
+                                            <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Accrued Interest Amount">
+                                                <lightning:formattedNumber value="{!v.financialReportData.accruedInterest}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                            <div title="Accrued amount is calculated as of from date and to date from the above selected date range." style="float:right;width:50%;">
+                                                <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                            </div>
+                                        </td>                                         
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Admin Fee">
                                             <div class="slds-truncate makeBold" title="Admin Fee">Admin Fee</div>
-                                        </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Admin Fee">
-                                                <div class="slds-truncate makeBoldBlue" title="Admin Fee">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.adminFee}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Admin Fee">
-                                                <div class="slds-truncate makeBoldBlue" title="Admin Fee">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.adminFee}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
+                                        </td>                                        
+                                        <td data-label="Admin Fee">
+                                            <div class="slds-truncate makeBoldBlue" title="Admin Fee">
+                                                <lightning:formattedNumber value="{!v.financialReportData.adminFee}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                        </td>                                       
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Surplus Paid">
                                             <div class="slds-truncate makeBold" title="Surplus Paid">Surplus Paid</div>
+                                        </td>                                        
+                                        <td data-label="Surplus Paid">
+                                            <div class="slds-truncate makeBoldBlue" title="Surplus Paid">
+                                                <lightning:formattedNumber value="{!v.financialReportData.paymentSurplus}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Surplus Paid">
-                                                <div class="slds-truncate makeBoldBlue" title="Surplus Paid">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.paymentSurplus}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Surplus Paid">
-                                                <div class="slds-truncate makeBoldBlue" title="Surplus Paid">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.paymentSurplus}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Shortfall Paid">
                                             <div class="slds-truncate makeBold" title="Surplus Paid">Shortfall Paid</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Shortfall Paid">
-                                                <div class="slds-truncate makeBoldBlue" title="Shortfall Paid">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.paymentShortfall}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Shortfall Paid">
-                                                <div class="slds-truncate makeBoldBlue" title="Shortfall Paid">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.paymentShortfall}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
+                                        <td data-label="Shortfall Paid">
+                                            <div class="slds-truncate makeBoldBlue" title="Shortfall Paid">
+                                                <lightning:formattedNumber value="{!v.financialReportData.paymentShortfall}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Partial Payments">
                                             <div class="slds-truncate makeBold" title="Partial Payments">Partial Payments</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Partial Payments">
-                                                <div class="slds-truncate makeBoldBlue" title="Partial Payments">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.partialPayment}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Partial Payments">
-                                                <div class="slds-truncate makeBoldBlue" title="Partial Payments">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.partialPayment}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                            </td>
-                                        </aura:if>
+                                        <td data-label="Partial Payments">
+                                            <div class="slds-truncate makeBoldBlue" title="Partial Payments">
+                                                <lightning:formattedNumber value="{!v.financialReportData.partialPayment}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="TOTAL">
                                             <div class="slds-truncate makeBold" title="TOTAL:">TOTAL:</div>
                                         </td>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'Rhino'}">
-                                            <td data-label="Total">
-                                                <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Amount Grand Total">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataRhino.total}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="Total = (Total Amount of Advances + Total Accrued + Admin Fee) - Partial Payments" style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>                                
-                                            </td>
-                                        </aura:if>
-                                        <aura:if isTrue="{!v.design || v.ChosenFilter == 'ELFI'}">
-                                            <td data-label="Total">
-                                                <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Amount Grand Total">
-                                                    <lightning:formattedNumber value="{!v.financialReportDataElfi.total}" style="currency" maximumFractionDigits="2"/>
-                                                </div>
-                                                <div title="Total = (Total Amount of Advances + Total Accrued + Admin Fee) - Partial Payments" style="float:right;width:50%;">
-                                                    <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                                </div>                                
-                                            </td>
-                                        </aura:if>
+                                        <td data-label="Total">
+                                            <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Amount Grand Total">
+                                                <lightning:formattedNumber value="{!v.financialReportData.total}" style="currency" maximumFractionDigits="2"/>
+                                            </div>
+                                            <div title="Total = (Total Amount of Advances + Total Accrued + Admin Fee) - Partial Payments" style="float:right;width:50%;">
+                                                <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                            </div>                                
+                                        </td>                                        
                                     </tr>
                                 </tbody>
                             </table>

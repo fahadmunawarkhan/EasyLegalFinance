@@ -165,35 +165,18 @@
         console.log('paymentData');
         console.log(paymentData);
         // calculate financial summary total for file and amount
-        var RhinoAccountTotal = 0;
-        var RhinoOpptyTotal = 0;
-        var RhinoamountTotal = 0;
-        var ElfiAccountTotal = 0;
-        var ElfiOpptyTotal = 0;
-        var ElfiamountTotal = 0;
+        var fileTotal = 0;
+        var opptyTotal = 0;
+        var amountTotal = 0;
         
         for(var i = 0; i < paymentData.length; i++){
-            RhinoAccountTotal += paymentData[i].rhinoAccountCount;
-            RhinoOpptyTotal += paymentData[i].rhinoOpptyCount;
-            RhinoamountTotal += paymentData[i].rhinoAmount;
-            ElfiAccountTotal += paymentData[i].elfiAccountCount;
-            ElfiOpptyTotal += paymentData[i].elfiOpptyCount;
-            ElfiamountTotal += paymentData[i].elfiAmount;
-            
-            /*if(paymentData[i].businessunit == "Rhino"){
-                RhinofileTotal += (paymentData[i].file == null) ? 0 : paymentData[i].file;
-                RhinoamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
-            }else if(paymentData[i].businessunit == "ELFI"){
-                ElfifileTotal += (paymentData[i].elfiCount == null) ? 0 : paymentData[i].file;
-                ElfiamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
-            }*/
+            fileTotal += paymentData[i].fileCount;
+            opptyTotal += paymentData[i].opptyCount;
+            amountTotal += paymentData[i].amount;
         }
-        component.set("v.RhinoAccountTotal", RhinoAccountTotal); 
-        component.set("v.RhinoOpptyTotal", RhinoOpptyTotal); 
-        component.set("v.RhinoamtTotal", RhinoamountTotal);
-        component.set("v.ElfiAccountTotal", ElfiAccountTotal); 
-        component.set("v.ElfiOpptyTotal", ElfiOpptyTotal); 
-        component.set("v.ElfiamtTotal", ElfiamountTotal); 
+        component.set("v.fileTotal", fileTotal); 
+        component.set("v.opptyTotal", opptyTotal); 
+        component.set("v.amountTotal", amountTotal);
     },
     
     errorsHandler : function(errors){

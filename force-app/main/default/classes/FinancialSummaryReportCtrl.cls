@@ -23,27 +23,11 @@ public with sharing class FinancialSummaryReportCtrl {
         
     }
     @AuraEnabled
-    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, string BusinessUnit, String typeOfLoan){
+    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, string businessUnit, String typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
-            Date endDt = Date.valueOf(endDate);
-            
-            string filterByBusinessUnit = '';
-            string Rhino = 'Rhino';
-            string Elfi = 'ELFI';
-            
-            // Business Unit Filter
-
-            if(BusinessUnit == 'ELFI'){
-                
-                filterByBusinessUnit = 'ELFI';
-            }else if(BusinessUnit == 'Rhino'){
-                
-                filterByBusinessUnit = 'Rhino';
-            }else if(BusinessUnit == 'Consolidated'){
-                
-                filterByBusinessUnit = 'Consolidated';
-            }
+            Date endDt = Date.valueOf(endDate);            
+            string filterByBusinessUnit = (businessUnit != null && !String.isEmpty(businessUnit))? businessUnit : 'ELFI';
             
             String strQuery = '';
             
@@ -65,13 +49,13 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ?
-                ' AND (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
-            ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             //strQuery += ' (Reference_Notes__c !=:adminFee and Reference_Notes__c !=:otherFee)';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c, Opportunity__r.Account.Business_Unit__c';
             
             List<AggregateResult> aggResult = Database.query(strQuery);
+            
+            system.debug('aggResult ' + aggResult);
             
             list<Wrapper> finalWrapper = new List<Wrapper>();
             if(!aggResult.isEmpty()){
@@ -81,40 +65,20 @@ public with sharing class FinancialSummaryReportCtrl {
                 for(AggregateResult agr : aggResult){
                     
                     if(agrMap.containsKey(String.ValueOf(agr.get('province')))){
-                       // if province exists 
-                       wrapper w = agrMap.get(String.ValueOf(agr.get('province')));
-                        
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            w.rhinoFileCount = Integer.valueof(agr.get('file'));
-                            w.rhinoOpptyCount = Integer.valueof(agr.get('opptyCount'));
-                            w.rhinoAmount = Double.valueof(agr.get('amt'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiFileCount = Integer.valueof(agr.get('file'));
-                            w.elfiOpptyCount = Integer.valueof(agr.get('opptyCount'));
-                            w.elfiAmount = Double.valueof(agr.get('amt'));
-                        }
-                        
+                        // if province exists 
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('province')));
+                        w.fileCount += Integer.valueof(agr.get('file'));
+                        w.opptyCount += Integer.valueof(agr.get('opptyCount'));
+                        w.amount += Double.valueof(agr.get('amt'));
                         agrMap.put(String.ValueOf(agr.get('province')), w);
                         
                     }else{
                         // new province
-                        wrapper w;
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            w = new wrapper(String.ValueOf(agr.get('province')),
-                                            Integer.valueof(agr.get('file')),
-                                            Integer.valueof(agr.get('opptyCount')),
-                                                   Double.valueof(agr.get('amt')),0,0, 0.00);
-                            
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w = new wrapper(String.ValueOf(agr.get('province')),0,0,0.00,
-                                            Integer.valueof(agr.get('file')),
-                                            Integer.valueof(agr.get('opptyCount')),
-                                                   Double.valueof(agr.get('amt')));
-                        }
+                        wrapper w = new wrapper(String.ValueOf(agr.get('province')),
+                                                    Integer.valueof(agr.get('file')),
+                                                    Integer.valueof(agr.get('opptyCount')),
+                                                    Double.valueof(agr.get('amt')));
+                        
                         agrMap.put(String.ValueOf(agr.get('province')), w);
                     }
                 }
@@ -193,7 +157,7 @@ public with sharing class FinancialSummaryReportCtrl {
     }
     
     @AuraEnabled
-    public static FinancialReportDataWrapper getFinancialReportData(String startDate, String endDate, String BusinessUnit, String typeOfLoan){
+    public static FinancialReportDataWrapper getFinancialReportData(String startDate, String endDate, String businessUnit, String typeOfLoan){
         
         FinancialReportDataWrapper fReportDataW = new FinancialReportDataWrapper();
         String strQuery = '';
@@ -207,7 +171,7 @@ public with sharing class FinancialSummaryReportCtrl {
         String closedWithLoan = 'Closed With Loan';
         String active = 'Active';
         
-        BusinessUnit = (!String.isEmpty(BusinessUnit) && BusinessUnit != null)? BusinessUnit : 'ELFI';
+        String filterByBusinessUnit = (!String.isEmpty(businessUnit) && businessUnit != null)? businessUnit : 'ELFI';
         
         try{
             Date startDt = Date.valueOf(startDate);
@@ -223,7 +187,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)'; 
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             
             //strQuery += ' AND (Reference_Notes__c !=:adminFee and Reference_Notes__c !=:otherFee)';			
             AggregateResult aggResult = Database.query(strQuery); 
@@ -242,7 +206,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:payment AND Reference_Notes__c =:partialPayment)'; 
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
-            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';            
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';           
             
             aggResult = Database.query(strQuery); 
             system.debug(aggResult);
@@ -256,7 +220,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)'; 
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
-            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             
             aggResult = Database.query(strQuery);
             if(aggResult != null){
@@ -273,7 +237,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Shortfall';
             strQuery += ' AND Is_Rejected__c = false';
@@ -292,7 +256,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' SUM(Amount__c) surplus';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += ' AND (Opportunity__r.Account.Business_Unit__c =:BusinessUnit)';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Reference_Notes__c =:Surplus';
@@ -363,31 +327,20 @@ public with sharing class FinancialSummaryReportCtrl {
     
     public class Wrapper {
         @AuraEnabled
-        string province {get; set;}
+        String province {get; set;}
         @AuraEnabled
-        integer rhinoFileCount {get; set;}
+        Integer fileCount {get; set;}
         @AuraEnabled
-        integer rhinoOpptyCount {get; set;}
+        Integer opptyCount {get; set;}
         @AuraEnabled
-        decimal rhinoAmount {get; set;}
-        @AuraEnabled
-        integer elfiFileCount {get; set;}
-        @AuraEnabled
-        integer elfiOpptyCount {get; set;}
-        @AuraEnabled
-        decimal elfiAmount {get; set;}
+        Decimal amount {get; set;}
         
-        wrapper(string p, integer rc, integer roc, decimal ra, integer ec, integer eoc, decimal ea){
+        wrapper(string p, integer fc, integer opc, decimal amt){
             
-            province = p;
-            
-            rhinoFileCount = rc;
-            rhinoOpptyCount = roc;
-            rhinoAmount = ra;
-            
-            elfiFileCount = ec;
-            elfiOpptyCount = eoc;
-            elfiAmount = ea;
+            province = p;            
+            fileCount = fc;
+            opptyCount = opc;
+            amount = amt;
         }
         
     }
