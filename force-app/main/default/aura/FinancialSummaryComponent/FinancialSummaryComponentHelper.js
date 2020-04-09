@@ -161,19 +161,21 @@
         ));
     },  
     
-    getFinancialReportData : function (component, businessUnit){
+    getFinancialReportData : function (component){
         return new Promise($A.getCallback(
             function(resolve, reject) {
                 let action = component.get('c.getFinancialReportData');
                 action.setParams({
                     startDate:component.get('v.startDate'),
                     endDate:component.get('v.endDate'),
-                    BusinessUnit: businessUnit,
+                    businessUnit: component.get('v.selectedBusinessUnitFilter'),
                     typeOfLoan: component.get('v.selectedTypeOfLoanFilter')
                 });
                 action.setCallback(this, function(response){
                     let state = response.getState();
                     if(state === 'SUCCESS'){
+                        console.log('#####RESULT#####');  
+                        console.log(JSON.stringify(response.getReturnValue()));
                         resolve(response.getReturnValue());
                     }else if(state === 'ERROR'){                        
                         reject(response.getError());
@@ -273,12 +275,12 @@
                 action.setParams({
                     startDate:component.get('v.startDate'),
                     endDate:component.get('v.endDate'),
-                    BusinessUnit:component.get('v.selectedBusinessUnitFilter'),
+                    businessUnit:component.get('v.selectedBusinessUnitFilter'),
                     typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
                 });
                 action.setCallback(this, function(response){
                     let state = response.getState();
-                    if(state === 'SUCCESS'){                        
+                    if(state === 'SUCCESS'){						
                         resolve(response.getReturnValue());
                     }else if(state === 'ERROR'){
                         reject(response.getError());
@@ -292,27 +294,17 @@
     calculateReportByProvinceData : function(component){
         var financeData = component.get('v.financials');
         
-        var RhinofileTotal = 0;
-        var RhinoOpptyTotal = 0;
-        var RhinoamountTotal = 0;
-        var ElfifileTotal = 0;
-        var ElfiOpptyTotal = 0;
-        var ElfiamountTotal = 0;
-        
+        var fileTotal = 0;
+        var opptyTotal = 0;
+        var amountTotal = 0;
         for(var i = 0; i < financeData.length; i++){
-            RhinofileTotal += financeData[i].rhinoFileCount;
-            RhinoOpptyTotal += financeData[i].rhinoOpptyCount;
-            RhinoamountTotal += financeData[i].rhinoAmount;
-            ElfifileTotal += financeData[i].elfiFileCount;
-            ElfiOpptyTotal += financeData[i].elfiOpptyCount;
-            ElfiamountTotal += financeData[i].elfiAmount;
+            fileTotal += financeData[i].fileCount;
+            opptyTotal += financeData[i].opptyCount;
+            amountTotal += financeData[i].amount;
         }
-        component.set("v.RhinofileTotal", RhinofileTotal); 
-        component.set("v.RhinoOpptyTotal", RhinoOpptyTotal); 
-        component.set("v.RhinoamtTotal", RhinoamountTotal);
-        component.set("v.ElfifileTotal", ElfifileTotal); 
-        component.set("v.ElfiOpptyTotal", ElfiOpptyTotal); 
-        component.set("v.ElfiamtTotal", ElfiamountTotal);
+        component.set("v.fileTotal", fileTotal); 
+        component.set("v.opptyTotal", opptyTotal); 
+        component.set("v.amountTotal", amountTotal);
     },
     
     errorsHandler : function(errors){

@@ -5,29 +5,18 @@ public with sharing class PaymentSummaryComponentCtlr {
         @AuraEnabled
         public String businessUnit{get;set;}
         @AuraEnabled
-        public Decimal amountRhino{get;set;}
+        public Decimal amount{get;set;}
         @AuraEnabled
-        public Decimal amountELFI{get;set;}
+        public Integer fileCount{get;set;}
         @AuraEnabled
-        public Integer numAccountsRhino{get;set;}
-        @AuraEnabled
-        public Integer numOpptiesRhino{get;set;}
-        @AuraEnabled
-        public Integer numAccountsELFI{get;set;}
-        @AuraEnabled
-        public Integer numOpptiesELFI{get;set;}
+        public Integer opptyCount{get;set;}
         
         public wrapperClass(){
             prov = '';
             businessUnit = '';
-            amountRhino = 0;
-            amountELFI = 0;
-            
-            numAccountsRhino = 0;
-            numAccountsELFI = 0;
-            
-            numOpptiesRhino = 0;
-            numOpptiesELFI = 0;
+            amount = 0;
+            fileCount = 0;
+            opptyCount = 0;
         }
     }
     @AuraEnabled
@@ -35,6 +24,8 @@ public with sharing class PaymentSummaryComponentCtlr {
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
+            
+            string filterByBusinessUnit = (businessUnit != null && !String.isEmpty(businessUnit))? businessUnit : 'ELFI';
             
             String strQuery = '';            
             
@@ -49,7 +40,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit'; 
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit'; 
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
             strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate)';
@@ -68,7 +59,6 @@ public with sharing class PaymentSummaryComponentCtlr {
                 for(AggregateResult ar : aggResult)
                 {
                     String prov = (String)ar.get('prov');
-                    String bunit = (String)ar.get('bunit');
                     if(!provSet.contains(prov))
                     {
                         provSet.add(prov);
@@ -78,12 +68,9 @@ public with sharing class PaymentSummaryComponentCtlr {
                     if(!resultMap.containsKey(prov))	resultMap.put(prov, new wrapperClass());
                     wrapperClass r = resultMap.get(prov);
                     r.prov = prov;
-                    if(bunit == 'ELFI')		r.numAccountsELFI = (Integer)ar.get('file');
-                    if(bunit == 'ELFI')		r.numOpptiesELFI = (Integer)ar.get('opptyCount');
-                    if(bunit == 'ELFI')		r.amountELFI = (Double)ar.get('amt');
-                    if(bunit == 'Rhino')		r.numAccountsRhino = (Integer)ar.get('file');
-                    if(bunit == 'Rhino')		r.numOpptiesRhino = (Integer)ar.get('opptyCount');
-                    if(bunit == 'Rhino')		r.amountRhino = (Double)ar.get('amt');
+                    r.fileCount += (Integer)ar.get('file');
+                    r.opptyCount += (Integer)ar.get('opptyCount');
+                    r.amount += (Double)ar.get('amt');
                 }
                 for(String p : provs)
                 {
@@ -108,6 +95,8 @@ public with sharing class PaymentSummaryComponentCtlr {
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
             
+            String filterByBusinessUnit = (!String.isEmpty(businessUnit) && businessUnit != null)? businessUnit : 'ELFI';
+            
             String strQuery = ''; 
             
             // total payouts
@@ -121,7 +110,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' COUNT(Opportunity__c) payouts, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Payment_Method__c =:payment';
@@ -138,7 +127,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AVG(Outstanding_Days__c) outstanding, Account.Business_Unit__c unit ';
             strQuery += ' FROM Opportunity WHERE id in ( Select Opportunity__c from Drawdown__c where Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Is_Rejected__c = false';
@@ -160,7 +149,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:eTransfer OR Payment_Method__c =:Cheque)';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
@@ -182,7 +171,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:AdminFee)';
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
@@ -199,7 +188,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) other, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND (Payment_Method__c =:Other)';
@@ -219,7 +208,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Shortfall';
             strQuery += ' AND Is_Rejected__c = false';
@@ -236,7 +225,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) surplus, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Surplus';
@@ -254,7 +243,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' SUM(Amount__c) misc, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Misc';
@@ -270,7 +259,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' FROM Drawdown__c';
             strQuery += ' WHERE Opportunity__r.Date_Applied__c >= :startDt';
             strQuery += ' AND Opportunity__r.Date_Applied__c <= :endDt';
-            strQuery += businessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :businessUnit ';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Interest_Repaid__c != null';
@@ -286,9 +275,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             if(!aggResultPayouts.isEmpty()){
                 for(AggregateResult aggResult : aggResultPayouts)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.noOfPayoutsELFI = aggResult.get('payouts') != null? (Integer)aggResult.get('payouts') : 0;
-                    if(unit == 'Rhino')	partialPaymentsW.noOfPayoutsRhino = aggResult.get('payouts') != null? (Integer)aggResult.get('payouts') : 0;
+                    partialPaymentsW.noOfPayouts += aggResult.get('payouts') != null? (Integer)aggResult.get('payouts') : 0;
                 }
                 
             }
@@ -296,63 +283,49 @@ public with sharing class PaymentSummaryComponentCtlr {
             if(!aggResultoutstanding.isEmpty()){
                 for(AggregateResult aggResult : aggResultoutstanding)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.avgNoOfDaysOutstandingELFI = aggResult.get('outstanding') != null? (Decimal)aggResult.get('outstanding') : 0;
-                    if(unit == 'Rhino')	partialPaymentsW.avgNoOfDaysOutstandingRhino = aggResult.get('outstanding') != null? (Decimal)aggResult.get('outstanding') : 0;
+                    partialPaymentsW.avgNoOfDaysOutstanding += aggResult.get('outstanding') != null? (Decimal)aggResult.get('outstanding') : 0;
                 }
                 
             }
             if(!aggResultPrincipal.isEmpty()){
                 for(AggregateResult aggResult : aggResultPrincipal)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalPrincipalPaidELFI = aggResult.get('principalPaid') != null? (Decimal)aggResult.get('principalPaid') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalPrincipalPaidRhino = aggResult.get('principalPaid') != null? (Decimal)aggResult.get('principalPaid') : 0.00;
+                    partialPaymentsW.totalPrincipalPaid += aggResult.get('principalPaid') != null? (Decimal)aggResult.get('principalPaid') : 0.00;
                 }
                 
             }
             if(!aggResultAdminfee.isEmpty()){
                 for(AggregateResult aggResult : aggResultAdminfee)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalAdminFeePaidELFI = aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalAdminFeePaidRhino = aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.00;
+                    partialPaymentsW.totalAdminFeePaid += aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.00;
                 }
                 
             }
             if(!aggResultOther.isEmpty()){
                 for(AggregateResult aggResult : aggResultOther)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalOtherELFI = aggResult.get('other') != null? (Decimal)aggResult.get('other') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalOtherRhino = aggResult.get('other') != null? (Decimal)aggResult.get('other') : 0.00;
+                    partialPaymentsW.totalOther += aggResult.get('other') != null? (Decimal)aggResult.get('other') : 0.00;
                 }
                 
             }
             if(!aggResultShortfall.isEmpty()){
                 for(AggregateResult aggResult : aggResultShortfall)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalShortfallELFI = aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalShortfallRhino = aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.00;
+                    partialPaymentsW.totalShortfall += aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.00;
                 }
                 
             }
             if(!aggResultSurplus.isEmpty()){
                 for(AggregateResult aggResult : aggResultSurplus)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalSurplusELFI = aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalSurplusRhino = aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.00;
+                    partialPaymentsW.totalSurplus += aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.00;
                 }
                 
             }
             if(!aggResultMisc.isEmpty()){
                 for(AggregateResult aggResult : aggResultMisc)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalMiscELFI = aggResult.get('misc') != null? (Decimal)aggResult.get('misc') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalMiscRhino = aggResult.get('misc') != null? (Decimal)aggResult.get('misc') : 0.00;
+                    partialPaymentsW.totalMisc += aggResult.get('misc') != null? (Decimal)aggResult.get('misc') : 0.00;
                 }
                 
             }
@@ -360,17 +333,12 @@ public with sharing class PaymentSummaryComponentCtlr {
             if(!aggResultInterestReceived.isEmpty()){
                 for(AggregateResult aggResult : aggResultInterestReceived)
                 {
-                    String unit = (string)aggResult.get('unit');
-                    if(unit == 'ELFI')	partialPaymentsW.totalInterestPaidELFI = aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
-                    if(unit == 'Rhino')	partialPaymentsW.totalInterestPaidRhino = aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
+                    partialPaymentsW.totalInterestPaid += aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
                 }                
             }
             
-            partialPaymentsW.totalPaymentsELFI = partialPaymentsW.totalPrincipalPaidELFI + partialPaymentsW.totalAdminFeePaidELFI + 
-                partialPaymentsW.totalOtherELFI + partialPaymentsW.totalInterestPaidELFI;
-            
-            partialPaymentsW.totalPaymentsRhino = partialPaymentsW.totalPrincipalPaidRhino + partialPaymentsW.totalAdminFeePaidRhino + 
-                partialPaymentsW.totalOtherRhino + partialPaymentsW.totalInterestPaidRhino;
+            partialPaymentsW.totalPayments = partialPaymentsW.totalPrincipalPaid + partialPaymentsW.totalAdminFeePaid + 
+                partialPaymentsW.totalOther + partialPaymentsW.totalInterestPaid;
             
             
             
@@ -454,64 +422,34 @@ public with sharing class PaymentSummaryComponentCtlr {
     public class PartialPaymentsWrapper{
         
         @AuraEnabled
-        public Integer noOfPayoutsRhino {get;set;}
+        public Integer noOfPayouts {get;set;}
         
         @AuraEnabled
-        public Integer noOfPayoutsELFI {get;set;}
+        public Decimal avgNoOfDaysOutstanding {get;set;}
         
         @AuraEnabled
-        public Decimal avgNoOfDaysOutstandingRhino {get;set;}
+        public Decimal totalPrincipalPaid {get;set;}
         
         @AuraEnabled
-        public Decimal avgNoOfDaysOutstandingELFI {get;set;}
+        public Decimal totalInterestPaid {get;set;}
         
         @AuraEnabled
-        public Decimal totalPrincipalPaidRhino {get;set;}
+        public Decimal totalAdminFeePaid {get;set;}
         
         @AuraEnabled
-        public Decimal totalPrincipalPaidELFI {get;set;}
+        public Decimal totalPayments {get;set;}
         
         @AuraEnabled
-        public Decimal totalInterestPaidRhino {get;set;}
+        public Decimal totalSurplus {get;set;}
         
         @AuraEnabled
-        public Decimal totalInterestPaidELFI {get;set;}
+        public Decimal totalShortfall {get;set;}
         
         @AuraEnabled
-        public Decimal totalAdminFeePaidRhino {get;set;}
+        public Decimal totalMisc {get;set;}
         
         @AuraEnabled
-        public Decimal totalAdminFeePaidELFI {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalPaymentsRhino {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalPaymentsELFI {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalSurplusRhino {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalSurplusELFI {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalShortfallRhino {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalShortfallELFI {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalMiscRhino {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalMiscELFI {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalOtherRhino {get;set;}
-        
-        @AuraEnabled
-        public Decimal totalOtherELFI {get;set;}
+        public Decimal totalOther {get;set;}
         
         @AuraEnabled
         public String congaViewAllURL {get;set;}
@@ -520,28 +458,16 @@ public with sharing class PaymentSummaryComponentCtlr {
         public String congaPrintReportURL {get;set;}
         
         public PartialPaymentsWrapper(){
-            noOfPayoutsRhino = 0;
-            avgNoOfDaysOutstandingRhino = 0;
-            totalPrincipalPaidRhino = 0.0;
-            totalInterestPaidRhino = 0.0;
-            totalAdminFeePaidRhino = 0.0;
-            totalPaymentsRhino = 0.0;
-            totalOtherRhino = 0.00;
-            totalSurplusRhino = 0.0;
-            totalShortfallRhino = 0.0;
-            totalMiscRhino = 0.0;
-            
-            noOfPayoutsELFI = 0;
-            avgNoOfDaysOutstandingELFI = 0;
-            totalPrincipalPaidELFI = 0.0;
-            totalInterestPaidELFI = 0.0;
-            totalAdminFeePaidELFI = 0.0;
-            totalPaymentsELFI = 0.0;
-            totalOtherELFI = 0.00;
-            totalSurplusELFI = 0.0;
-            totalShortfallELFI = 0.0;
-            totalMiscELFI = 0.0;
-            
+            noOfPayouts = 0;
+            avgNoOfDaysOutstanding = 0;
+            totalPrincipalPaid = 0.0;
+            totalInterestPaid = 0.0;
+            totalAdminFeePaid = 0.0;
+            totalPayments = 0.0;
+            totalOther = 0.00;
+            totalSurplus = 0.0;
+            totalShortfall = 0.0;
+            totalMisc = 0.0;
             
             congaViewAllURL = null;
             congaPrintReportURL = null;

@@ -12,20 +12,8 @@ public with sharing class BadDebtSummaryReportCtlr {
             String badDebt = 'Bad Debt';
             String paymentShortfall = 'Payment Shortfall';
             
-            string filterByBusinessUnit = '';
-            string Rhino = 'Rhino';
-            string Elfi = 'ELFI';
+            string filterByBusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit))? BusinessUnit : 'ELFI';
             
-            if(BusinessUnit == 'ELFI'){
-                
-                filterByBusinessUnit = 'ELFI';
-            }else if(BusinessUnit == 'Rhino'){
-                
-                filterByBusinessUnit = 'Rhino';
-            }else if(BusinessUnit == 'Consolidated'){
-                
-                filterByBusinessUnit = 'Consolidated';
-            }
             
             strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c province,Opportunity__r.Account.Business_Unit__c businessunit, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
             strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Amount__c) amt';
@@ -34,10 +22,7 @@ public with sharing class BadDebtSummaryReportCtlr {
             //strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             //strQuery += ' AND Payment_Method__c =:payment';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-                ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
-            ' Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Reference_Notes__c =:badDebt';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c,Opportunity__r.Account.Business_Unit__c';
@@ -52,57 +37,24 @@ public with sharing class BadDebtSummaryReportCtlr {
                     if(agrMap.containsKey(String.ValueOf(agr.get('province')))){
                         // if province exists 
                         wrapper w = agrMap.get(String.ValueOf(agr.get('province')));
-                        
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            w.rhinoAccountCount = Integer.valueof(agr.get('file'));
-                            w.rhinoOpptyCount = Integer.valueof(agr.get('opptyCount'));
-                            w.rhinoAmount = Double.valueof(agr.get('amt'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiAccountCount = Integer.valueof(agr.get('file'));
-                            w.elfiOpptyCount = Integer.valueof(agr.get('opptyCount'));
-                            w.elfiAmount = Double.valueof(agr.get('amt'));
-                        }
-                        
-                        agrMap.put(String.ValueOf(agr.get('province')), w);
+                        w.fileCount += Integer.valueof(agr.get('file'));
+                        w.opptyCount += Integer.valueof(agr.get('opptyCount'));
+                        w.amount += Double.valueof(agr.get('amt'));
+                        agrMap.put(String.ValueOf(agr.get('province')), w);                        
                         
                     }else{
                         // new province
-                        wrapper w;
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            w = new wrapper(String.ValueOf(agr.get('province')),
-                                            Integer.valueof(agr.get('file')),
-                                            Integer.valueof(agr.get('opptyCount')),
-                                            Double.valueof(agr.get('amt')),0,0,0.00);
-                            
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w = new wrapper(String.ValueOf(agr.get('province')),0,0,0.00,
-                                            Integer.valueof(agr.get('file')),
-                                            Integer.valueof(agr.get('opptyCount')),
-                                            Double.valueof(agr.get('amt')));
-                        }
+                        wrapper w = new wrapper(String.ValueOf(agr.get('province')),
+                                                Integer.valueof(agr.get('file')),
+                                                Integer.valueof(agr.get('opptyCount')),
+                                                Double.valueof(agr.get('amt')));
+                        
                         agrMap.put(String.ValueOf(agr.get('province')), w);
                     }
                 }
                 
                 
-                list<Wrapper> finalWrapper = new list<Wrapper>(); 
-                
-                for(string key : agrMap.keyset()){
-                    
-                    Wrapper w = agrMap.get(key);
-                    
-                    if(w == null) continue;
-                    
-                    finalWrapper.add(new Wrapper(w.province, 
-                                                 w.rhinoAccountCount, w.rhinoOpptyCount, w.rhinoAmount, 
-                                                 w.elfiAccountCount, w.elfiOpptyCount, w.elfiAmount));
-                    
-                    
-                }
+                list<Wrapper> finalWrapper = new list<Wrapper>(agrMap.values());
                 
                 //system.debug('Wrapper records are:');
                 //system.debug(finalWrapper);
@@ -187,29 +139,19 @@ public with sharing class BadDebtSummaryReportCtlr {
         @AuraEnabled
         string province {get; set;}
         @AuraEnabled
-        integer rhinoAccountCount {get; set;}
+        integer fileCount {get; set;}
         @AuraEnabled
-        integer rhinoOpptyCount {get; set;}
+        integer opptyCount {get; set;}
         @AuraEnabled
-        decimal rhinoAmount {get; set;}
-        @AuraEnabled
-        integer elfiAccountCount {get; set;}
-        @AuraEnabled
-        integer elfiOpptyCount {get; set;}
-        @AuraEnabled
-        decimal elfiAmount {get; set;}
+        decimal amount {get; set;}        
         
-        wrapper(string p, integer rc, integer roc, decimal ra, integer ec, integer eoc, decimal ea){
+        wrapper(string p, integer fc, integer oc, decimal amt){
             
             province = p;
             
-            rhinoAccountCount = rc;
-            rhinoOpptyCount = roc;
-            rhinoAmount = ra;
-            
-            elfiAccountCount = ec;
-            elfiOpptyCount = eoc;
-            elfiAmount = ea;
+            fileCount = fc;
+            opptyCount = oc;
+            amount = amt;
         }
         
     }

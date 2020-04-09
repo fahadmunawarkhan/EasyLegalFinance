@@ -16,22 +16,10 @@
             return helper.getReportByProvinceHelper(component);
         })).then($A.getCallback(function(result){
             component.set('v.financials',result);
-            
-            let filter = component.get("v.selectedBusinessUnitFilter");
-            if(filter == "Consolidated"){
-                component.set("v.design", true); 
-            }else{
-                component.set("v.design", false); 
-            }
-            component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));
-            
             helper.calculateReportByProvinceData(component);
-            return helper.getFinancialReportData(component, 'ELFI');
+            return helper.getFinancialReportData(component);
         })).then($A.getCallback(function(result){
-            component.set('v.financialReportDataElfi',result);
-            return helper.getFinancialReportData(component, 'Rhino');
-        })).then($A.getCallback(function(result){
-            component.set('v.financialReportDataRhino',result);
+            component.set('v.financialReportData',result);
             return helper.validateReport(component);
         })).then($A.getCallback(function(result){
             let customSettings = component.get('v.customSetting');
@@ -72,15 +60,6 @@
     
     searchButton: function(component, event, helper) {
         component.set("v.spinner", true);
-        
-        let filter = component.get("v.selectedBusinessUnitFilter");
-        if(filter == "Consolidated"){
-            component.set("v.design", true); 
-        }else{
-            component.set("v.design", false); 
-        }
-        
-        component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));
         
         helper.setBUCustomSettings(component);
         
@@ -123,16 +102,7 @@
     
     filterButton : function(component, event, helper){
         console.log('Filter Button');
-        component.set("v.spinner", true);
-        let filter = component.get("v.selectedBusinessUnitFilter");
-        if(filter == "Consolidated"){
-            component.set("v.design", true); 
-        }else{
-            component.set("v.design", false); 
-        }
-        
-        component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));
-        
+        component.set("v.spinner", true);        
         helper.setBUCustomSettings(component);
         
         helper.getReportByProvinceHelper(component).then($A.getCallback(
@@ -142,14 +112,11 @@
                 component.set('v.financials',result);
                 helper.setDateCustomSettings(component);
                 helper.calculateReportByProvinceData(component);
-                return helper.getFinancialReportData(component, 'ELFI');
+                return helper.getFinancialReportData(component);
             }
         )).then($A.getCallback(function(result){
-            component.set('v.financialReportDataElfi',result);
-            return helper.getFinancialReportData(component, 'Rhino');
-        })).then($A.getCallback(function(result){
-            component.set('v.financialReportDataRhino',result);
-            return helper.getCustomSettings(component); 
+            component.set('v.financialReportData',result);
+            return helper.getCustomSettings(component);
         })).then($A.getCallback(
             function(result){                
                 component.set('v.customSetting', result);
