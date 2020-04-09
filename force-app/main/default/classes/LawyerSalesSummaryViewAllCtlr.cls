@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawyerSalesSummaryViewAllCtlr.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 07/04/2020, 3:00:54 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public class LawyerSalesSummaryViewAllCtlr {
     
     public Date startDate{get;set;}
