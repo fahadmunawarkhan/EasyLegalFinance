@@ -1,29 +1,51 @@
 ({
 	doInit : function(component, event, helper) {
+        component.set("v.spinner", true);
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
-        //var endOfMonth = $A.localizationService.formatDate(new Date(2008, today.getMonth() + 1, 0), "YYYY-MM-DD");
-        component.set("v.payOutDate", today);
-        //component.set("v.endDate", endOfMonth);
-        
-        //search query
-        let fieldSet = [];
-        fieldSet.push("Id");
-        fieldSet.push("Name");
-        fieldSet.push("Account.Name");
-        fieldSet.push("(Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 )");
-        fieldSet.push("(Select id,createddate from tasks where type='Email' and createddate = today order by createddate desc limit 1 )");
-        let strQuery = "SELECT " + fieldSet.join(",");
-            strQuery += " FROM Contact WHERE RecordType.Name = \'Lawyers\' ";
-        component.set("v.query", strQuery);        
+        component.set("v.payOutDate", today);        
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.setDefaultDates(component);
-        helper.getLawyersList(component,event);
+        helper.getLawyersList(component).then(
+            function(result){
+                component.set("v.spinner", false);
+                component.set('v.contactsList', result);
+            }
+        ).catch(
+            function(errors){
+                console.log('errors');
+                console.log(JSON.stringify(errors));
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
+        
+        let intervalId = window.setInterval(
+            $A.getCallback(function() { 
+                helper.pingBatchJobStatus(component, helper);
+            }), 2000
+        ); 
+        component.set('v.intervalId', intervalId);
         
 	},
     searchButton: function(component, event, helper) {
-        helper.getLawyersList(component,event);
+        component.set("v.spinner", true);
+        component.set("v.selectedCount", 0);
+        component.find("selectAllcheckbox").set("v.value", false);
+        
+        helper.getLawyersList(component).then(
+            function(result){
+                component.set("v.spinner", false);
+                component.set('v.contactsList', result);
+            }
+        ).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
     },
     sort: function(component, event, helper) {  
         
@@ -35,15 +57,15 @@
         sortOrder = ((sortOrder == 'DESC' && oldField == field) || oldField != field ) ? 'ASC' : 'DESC';
         
         component.set('v.sortField',field);   
-        component.set('v.sortOrder',sortOrder);   
+        component.set('v.sortOrder',sortOrder);
         
-        helper.getLawyersList(component,event);         
+        $A.enqueueAction(component.get('c.searchButton'));         
 	},
     checkAll:function(component, event, helper) {
         helper.checkAll(component);
     },
     check:function(component, event, helper) {
-        helper.check(component);
+        helper.check(component,event);
     },
     sendToSelected: function(component, event, helper) {
         helper.sendToSelected(component);
@@ -64,4 +86,81 @@
     generateForSelected: function(component, event, helper) {
         helper.generateForSelected(component);
     },
+    
+    /**
+     * New
+     * */
+    generatePayoutBalanceButton : function(component, event, helper){
+        let selectedCount = component.get('v.selectedCount');
+        let contactList = component.get("v.contactsList");
+        var selectedMenuItemValue = event.getParam("value");        
+        let helperToCall = null;
+        if(selectedMenuItemValue == 'generatePayoutBalanceForSelected' && contactList.length != selectedCount){
+            if(selectedCount == 0){
+                alert("Please select records to generate payout balance.");
+            }else{
+                helperToCall = helper.generatePayoutBalanceForSelected;                
+            }            
+        }else if(selectedMenuItemValue == 'generatePayoutBalanceForAll' || (contactList.length == selectedCount && selectedCount != 0)){
+            helperToCall = helper.generatePayoutBalanceForAll;
+        }
+        
+        if(helperToCall != null){
+            component.set('v.spinner', true);
+            component.set("v.showZeroBatchError", true);
+            helperToCall(component).then(
+                function(result){
+                    component.set('v.spinner', false);
+                    window.clearInterval(component.get('v.intervalId'));
+                    let intervalId = window.setInterval(
+                        $A.getCallback(function() { 
+                            helper.pingBatchJobStatus(component, helper);
+                        }), 2000
+                    ); 
+                    component.set('v.intervalId', intervalId);
+                }
+            ).catch(
+                function(errors){
+                    component.set("v.spinner", false);
+                    helper.errorsHandler(errors);
+                }
+            );
+        }
+        
+    },
+    generatePayoutDocumentButton : function(component, event, helper){
+        var selectedMenuItemValue = event.getParam("value");
+        if(selectedMenuItemValue == 'generatePayoutDocForSelected'){
+            $A.enqueueAction(component.get("c.generateForSelected"));
+        }else if(selectedMenuItemValue == 'generatePayoutDocForAll'){
+            $A.enqueueAction(component.get("c.GenerateForAll"));
+        }
+    },
+    sendPayoutDocumentButton : function(component, event, helper){
+        var selectedMenuItemValue = event.getParam("value");
+        if(selectedMenuItemValue == 'sendPayoutDocToSelected'){
+            $A.enqueueAction(component.get("c.sendToSelected"));
+        }else if(selectedMenuItemValue == 'sendPayoutDocToAll'){
+            $A.enqueueAction(component.get("c.sendAll"));
+        }
+    },
+    handleDestroy : function( component, event, helper ) {
+        window.clearInterval(component.get("v.intervalId"));
+    },
+    openLinkReport : function(component, event, helper){
+        
+        let lawyerId = event.currentTarget.dataset.lawyerid;
+        let lawfirmid = event.currentTarget.dataset.lawfirmid;
+        let businessUnitFilter = component.get("v.selectedBusinessUnitFilter");
+        let newWin;
+        let url = '/lightning/r/Report/00O3J000000O7g7UAC/view';
+        
+        try{                       
+            newWin = window.open(url + '?fv3=' + lawyerId.substring(0,15) + '&fv4=' + lawfirmid.substring(0,15) + '&fv5=' + businessUnitFilter);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
+    }
 })

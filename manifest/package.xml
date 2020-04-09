@@ -198,6 +198,8 @@
         <members>LawFirmSalesSummaryViewAllCtlrTest</members>
         <members>ARSummaryReportCtlr</members>
         <members>ARSummaryReportCtlrTest</members>
+        <members>LawyerSummaryGeneratePayoutBalance</members>
+        <members>LawyerSummaryGeneratePayoutBalanceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -2087,6 +2089,8 @@
         <members>TroubleshootingReportsByFahad/Assessment_Summary_Report_HYP</members>
         <members>TroubleshootingReportsByFahad/Assessment_Provider_Summary_Report_KXp</members>
         <members>TroubleshootingReportsByFahad/AR_Summary_816</members>
+        <members>TroubleshootingReportsByFahad/Law_Firm_Summary_utN</members>
+        <members>TroubleshootingReportsByFahad/Lawyer_Summary_0xk</members>
         <name>Report</name>
     </types>
     <types>

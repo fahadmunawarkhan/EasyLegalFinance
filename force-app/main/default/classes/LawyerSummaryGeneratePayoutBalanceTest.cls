@@ -1,6 +1,6 @@
 @isTest
-public class LawyerSummaryCtlrTest {
-    @TestSetup
+public class LawyerSummaryGeneratePayoutBalanceTest {
+	@TestSetup
     static void initailizeTestData(){
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
@@ -73,76 +73,10 @@ public class LawyerSummaryCtlrTest {
         
         Test.startTest();
         
-        String strQuery = 'SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
-        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', 'Facility Loan');
-        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'Active', 'Rhino', 'Facility Loan');
-        LawyerSummaryCtlr.getPickListValues('Account', 'Business_Unit__c');
+        LawyerSummaryGeneratePayoutBalance lsg_BatchJob = new LawyerSummaryGeneratePayoutBalance(new Set<Id>(), Date.today(), 'All', 'Rhino', 'Consolidated');
         
-        LawyerSummaryCtlr.ContactInfo conInfo = new LawyerSummaryCtlr.ContactInfo();
-        conInfo.checked = true;
-        
-        //throwing exception to cover cath block
-        strQuery = 'SELECT Id, Name Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
-        
-        try{
-            LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', 'Facility Loan');
-        }catch(Exception e){
-            System.debug('success');
-        }
+        Database.executeBatch(lsg_BatchJob);
         
         Test.stopTest();
     }
-    
-    public static testMethod void generatePayoutTest(){
-        
-        Test.startTest();
-        
-        Contact cc = [SELECT Id from Contact limit 1];
-        List<Id> selId = new List<Id>{cc.Id};
-            
-            LawyerSummaryCtlr.generatePayoutBalance(selId, Date.today() + '', '', 'All', 'Rhino', 'Facility Loan');
-        LawyerSummaryCtlr.abortBatchJobs();
-        LawyerSummaryCtlr.generatePayoutBalance(new List<Id>(), Date.today() + '', '', 'All', 'Rhino', 'Facility Loan');
-        LawyerSummaryCtlr.getBatchJobStatus();
-        
-        Test.stopTest();
-    }
-    
-    public static testMethod void sendMethodTest(){
-        
-        Test.startTest();
-        
-        String strQuery = 'SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
-        
-        Contact cc = [SELECT Id from Contact limit 1];
-        List<String> selId = new List<String>{cc.Id};
-            LawyerSummaryCtlr.send(strQuery, selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI');
-        
-        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
-        system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
-        
-        LawyerSummaryCtlr.send('', selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI');
-        
-        Test.stopTest();
-    }
-    
-    public static testMethod void generateMethodTest(){
-        
-        Test.startTest();
-        
-        String strQuery = 'SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
-        
-        Contact cc = [SELECT Id from Contact limit 1];
-        List<String> selId = new List<String>{cc.Id};
-            
-            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
-        
-        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
-        system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
-        
-        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
-        
-        Test.stopTest();
-    }
-    
 }

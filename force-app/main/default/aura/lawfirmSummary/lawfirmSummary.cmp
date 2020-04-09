@@ -21,6 +21,10 @@
     <aura:attribute name="recordSelected" type="Boolean" default="false" />
     <aura:attribute name="emailRecipient" type="Contact" default="{}" />
     
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Consolidated" />
+    <aura:attribute name="selectedCount" type="Integer" default="0"/>
+    
     <lightning:card title="Information" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -99,11 +103,11 @@
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
-                <lightning:layoutItem size="4" >
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                <lightning:layoutItem size="3" >
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
-                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                <div class="slds-media__body slds-m-bottom_medium">
                                     <lightning:input
                                                      aura:id="enter-search"
                                                      name="enter-search"
@@ -118,10 +122,10 @@
                     </div>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
-                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                <div class="slds-media__body slds-m-bottom_medium">                                                
                                     <lightning:combobox aura:id="activeLoanFilter" label="Active Loan" value="{!v.selectedLoanFilter}" placeholder="Loan" options="{! v.loanFilter }"/>
                                 </div>
                             </span>
@@ -129,10 +133,10 @@
                     </div>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
-                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                <div class="slds-media__body slds-m-bottom_medium">                                                
                                     <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
                                 </div>
                             </span>
@@ -140,10 +144,21 @@
                     </div>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
-                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                <div class="slds-media__body slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="1">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large slds-m-top_large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-bottom_medium">
                                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                                       variant="neutral" type="button" label="Search" onclick="{!c.searchButton}" />                    
                                 </div>                                                    
@@ -155,12 +170,24 @@
         </div>
     </lightning:card>
     
+    <lightning:card>
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for selected" onclick="{!c.generateBalanceForSelected}" />                
+            </lightning:layoutItem>
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Document for selected" onclick="{!c.generateForSelected}" />                
+            </lightning:layoutItem>
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Payout Document" onclick="{!c.sendToSelected}" />
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    
     <lightning:card class="slds-card slds-card_boundary" title="{!'Showing '+ v.accountsList.length + ' records.'}" variant="base">
         <aura:set attribute="actions">
             <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                      variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />
-            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for selected" onclick="{!c.generateForSelected}" />
-            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send to selected" onclick="{!c.sendToSelected}" />
+                                                      variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />            
             <!-- <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />            
             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send to all" onclick="{!c.sendAll}" /> -->                             
         </aura:set>
@@ -208,15 +235,18 @@
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!acc.noOfFiles}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                 <lightning:layout pullToBoundary="small" >
-            						<lightning:layoutItem size="4" padding="horizontal-small">
+                                    <lightning:layoutItem size="3" padding="horizontal-small">
+                                        <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-lawfirmId="{!acc.account.Id}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
+                                    </lightning:layoutItem>
+            						<lightning:layoutItem size="3" padding="horizontal-small">
                                         <a Title="{! 'Email document to ' + v.emailRecipient.Name}" onclick="{!c.sendToIndividual}" data-selected="{!acc.account.Id}"><lightning:icon iconName="utility:email" size="xx-small" alternativeText="email"/></a>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="4" padding="horizontal-small">
+                                    <lightning:layoutItem size="3" padding="horizontal-small">
                                         <aura:if isTrue="{!acc.account.Attachments[0].Id}">
                                             <span Title= "Preview" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!acc.account.Attachments[0].Id}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
                                         </aura:if>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="4" padding="horizontal-small">
+                                    <lightning:layoutItem size="3" padding="horizontal-small">
                                         <aura:if isTrue="{!acc.account.Tasks[0].Id}">
                                             <span  Title= "{! 'Email sent at ' + acc.account.Tasks[0].CreatedDate}" ><lightning:icon class="check-icn" iconName="utility:check" size="xx-small" alternativeText="email sent"/></span>
                                         </aura:if>

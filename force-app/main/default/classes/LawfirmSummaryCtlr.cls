@@ -154,6 +154,27 @@ public with sharing class LawfirmSummaryCtlr {
         }
     }
     
+    @AuraEnabled
+    public static void generatePayoutBalance(List<String> selectedIds, String payoutDate){
+        try{
+            
+            Date pDate = Date.valueOf(payoutDate);
+            String strQuery = 'SELECT Id, Payout_Date__c';
+            strQuery += ' FROM Opportunity WHERE StageName != \'Closed No Loan\' ';
+            strQuery += ' AND Law_Firm__c IN :selectedIds';
+            
+            List<Opportunity> oppList = Database.query(strQuery);
+            
+            for(Opportunity opp : oppList)
+                opp.Payout_Date__c = pDate;
+            
+            if(!oppList.isEmpty()) update oppList;
+            
+        }catch(exception e){
+            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+        }
+    }
+    
     public class AccountInfo{
         @AuraEnabled
         public Account account{get;set;}
