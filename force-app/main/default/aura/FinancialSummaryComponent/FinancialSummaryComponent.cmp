@@ -10,7 +10,6 @@
     <aura:attribute name="opptyTotal" type="integer" />
     <aura:attribute name="currentBatchJobId" type="String" />
     <aura:attribute name="financialReportData" type="Object" />
-    <aura:attribute name="financialReportDataRhino" type="Object" />
     
     <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
     <aura:attribute name="batchTotalJobItems" type="integer" default="0" />
@@ -231,7 +230,7 @@
                 </a>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.financialReportDataElfi.congaPrintReportURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <a href="{!v.financialReportData.congaPrintReportURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="Print Report (PDF)" />
                 </a>

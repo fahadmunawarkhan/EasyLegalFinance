@@ -363,9 +363,6 @@ public with sharing class PaymentSummaryComponentCtlr {
                                                 Conga_Payment_Summary_Report_Print_All_2__c,
                                                 Conga_Payment_Summary_Report_Print_All_3__c,
                                                 Conga_Payment_Summary_Report_Print_All_4__c,
-                                                Conga_Payment_Summary_Report_Print_All_5__c,
-                                                Conga_Payment_Summary_Report_Print_All_6__c,
-                                                Conga_Payment_Summary_Report_Print_All_7__c,
                                                 Conga_Payment_Summary_Report_View_All__c 
                                             from Drawdown__c limit 1];
         	partialPaymentsW.congaViewAllURL = congaUrlHolder.isEmpty() ? '' 
@@ -374,10 +371,7 @@ public with sharing class PaymentSummaryComponentCtlr {
                 : congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All__c + 
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_2__c +
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_3__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_4__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_5__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_6__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_7__c;
+                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_4__c;
             
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage()+e.getStackTraceString());
