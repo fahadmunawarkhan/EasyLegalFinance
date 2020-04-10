@@ -64,8 +64,8 @@ public class LawfirmSummaryCtlrTest {
         Test.startTest();
         
         String strQuery = 'SELECT Id, Name FROM Account WHERE RecordType.Name = \'Law Firm\' AND Id in (SELECT Law_Firm__c FROM Opportunity WHERE accountId !=null)';
-        LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'All', 'ELFI');
-        LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'Active', 'ELFI');
+        LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'All', 'ELFI', 'Facility Loan');
+        LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'Active', 'ELFI', 'Facility Loan');
         LawfirmSummaryCtlr.getPickListValues('Account', 'Business_Unit__c');
         
         LawfirmSummaryCtlr.AccountInfo accInfo = new LawfirmSummaryCtlr.AccountInfo();
@@ -75,7 +75,7 @@ public class LawfirmSummaryCtlrTest {
         strQuery = 'SELECT Id Name FROM Account WHERE RecordType.Name = \'Law Firm\' AND Id in (SELECT Law_Firm__c FROM Opportunity WHERE accountId !=null)';
         
         try{
-            LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'All', 'ELFI');
+            LawfirmSummaryCtlr.getLawfirmAccounts(strQuery, 'All', 'ELFI', 'Facility Loan');
         }catch(Exception e){
             System.debug('success');
         }
@@ -90,12 +90,12 @@ public class LawfirmSummaryCtlrTest {
         
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
-        LawfirmSummaryCtlr.send(strQuery, selId, Date.today() + '' , Date.today() + '', '', 'Email body', 'All', 'ELFI');
+        LawfirmSummaryCtlr.send(strQuery, selId, Date.today() + '' , Date.today() + '', '', 'Email body', 'All', 'ELFI', 'Facility Loan');
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Law_Firm_Summary_Report__c, null);
         
-        LawfirmSummaryCtlr.send('', selId, Date.today() + '' , Date.today() + '', '', 'Email body', 'All', 'ELFI');
+        LawfirmSummaryCtlr.send('', selId, Date.today() + '' , Date.today() + '', '', 'Email body', 'All', 'ELFI', 'Facility Loan');
         
         Test.stopTest();
     }
@@ -111,12 +111,12 @@ public class LawfirmSummaryCtlrTest {
             
             LawfirmSummaryCtlr.generatePayoutBalance(selId, ''+ Date.today());
             
-        LawfirmSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
+        LawfirmSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', 'Facility Loan');
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Law_Firm_Summary_Report__c, null);
         
-        LawfirmSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
+        LawfirmSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', 'Facility Loan');
         
         Test.stopTest();
     }

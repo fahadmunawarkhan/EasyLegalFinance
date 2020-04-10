@@ -5,6 +5,8 @@
         component.set("v.payOutDate", today);        
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
         helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
+        helper.getPickListValues(component, 'Opportunity','Stage_Status__c','oppStageStatus');
+        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','oppTypeOfLoans');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.setDefaultDates(component);
@@ -149,14 +151,35 @@
     },
     openLinkReport : function(component, event, helper){
         
+        let oppStageStatus = component.get("v.oppStageStatus");
+        let oppTypeOfLoans = component.get("v.oppTypeOfLoans");
         let lawyerId = event.currentTarget.dataset.lawyerid;
         let lawfirmid = event.currentTarget.dataset.lawfirmid;
         let businessUnitFilter = component.get("v.selectedBusinessUnitFilter");
+        let loanFilterValue = component.get("v.selectedLoanFilter");
+        let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
+        
+        let fv7 = 'Active,Active - Partial Payment';
+        if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
+            fv7 = '';
+            for(let i=0; i< oppStageStatus.length; i++){
+                fv7 += oppStageStatus[i].value + ',';
+            }
+        }
+        let loanTypes = [];
+        if(typeOfLoan == "Consolidated"){            
+            for(let i=0; i< oppTypeOfLoans.length; i++){
+                loanTypes.push(oppTypeOfLoans[i].value);
+            }
+        }
+        
+        let fv6 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : typeOfLoan;
+        
         let newWin;
-        let url = '/lightning/r/Report/00O3J000000O7g7UAC/view';
+        let url = '/lightning/r/Report/00O0L000003n3kgUAA/view';
         
         try{                       
-            newWin = window.open(url + '?fv3=' + lawyerId.substring(0,15) + '&fv4=' + lawfirmid.substring(0,15) + '&fv5=' + businessUnitFilter);
+            newWin = window.open(url + '?fv3=' + lawyerId.substring(0,15) + '&fv4=' + lawfirmid.substring(0,15) + '&fv5=' + businessUnitFilter + '&fv6=' + fv6 + '&fv7=' + fv7);
         }catch(e){}
         if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
         {

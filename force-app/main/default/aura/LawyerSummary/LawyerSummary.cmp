@@ -19,6 +19,9 @@
     <aura:attribute name="contactsList" type="Contact[]"/>
     <aura:attribute name="spinner" type="Boolean" default="false" />
     
+    <aura:attribute name="oppStageStatus" type="List" />
+    <aura:attribute name="oppTypeOfLoans" type="List" />
+    
     <aura:attribute name="batchJobItems" type="String" default="" />
     <aura:attribute name="batchJobItemsProcessed" type="integer" default="0" />
     <aura:attribute name="batchTotalJobItems" type="integer" default="0" />    

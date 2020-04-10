@@ -21,6 +21,9 @@
     <aura:attribute name="recordSelected" type="Boolean" default="false" />
     <aura:attribute name="emailRecipient" type="Contact" default="{}" />
     
+    <aura:attribute name="oppStageStatus" type="List" />
+    <aura:attribute name="oppTypeOfLoans" type="List" />
+    
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Consolidated" />
     <aura:attribute name="selectedCount" type="Integer" default="0"/>

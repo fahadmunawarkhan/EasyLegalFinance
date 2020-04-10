@@ -116,12 +116,12 @@ public class LawyerSummaryCtlrTest {
         
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
-            LawyerSummaryCtlr.send(strQuery, selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI');
+            LawyerSummaryCtlr.send(strQuery, selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', 'Facility Loan');
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
         
-        LawyerSummaryCtlr.send('', selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI');
+        LawyerSummaryCtlr.send('', selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', 'Facility Loan');
         
         Test.stopTest();
     }
@@ -135,12 +135,12 @@ public class LawyerSummaryCtlrTest {
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
             
-            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
+            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI','Facility Loan');
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
         
-        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI');
+        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI','Facility Loan');
         
         Test.stopTest();
     }

@@ -75,9 +75,9 @@
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : 'ELFI';
             
         strQuery += " AND (Name Like " + searchString + " OR Account.Name Like " + searchString + " ) ";
-        strQuery += " AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null";
+        strQuery += " AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0 ";
         strQuery += businessUnitFilterValue == 'All'? "" : " AND Account.Business_Unit__c = \'"+businessUnitFilterValue+"\'";
-        strQuery += loanFilterValue == "Active"? " AND isClosed = true AND isWon = true AND Stage_Status__c NOT IN ('Closed - Paid', 'Closed - Surplus', 'Closed - Shortfall', 'Closed - BadDebt')" : "";
+        strQuery += loanFilterValue == "Active"? " AND Stage_Status__c LIKE \'%Active%\'" : "";
         strQuery += typeOfLoan == "Consolidated"? "" : " AND Type_of_Loan__c = \'"+typeOfLoan+"\'";
         strQuery += ")"
         strQuery += " order by " + field + " " + sortOrder + " limit 10000";
@@ -181,7 +181,8 @@
                 payoutDate : payoutDate, 
                 reportDate : reportDate,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -254,7 +255,8 @@
                 reportDate : reportDate, 
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });            
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -309,7 +311,8 @@
                 reportDate : reportDate, 
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
         
             action.setCallback(this, function (response) {
@@ -360,7 +363,8 @@
             payoutDate : payoutDate, 
             reportDate : reportDate,
             LoanFilter: loanFilterValue,
-            businessUnitFilter: businessUnitFilterValue
+            businessUnitFilter: businessUnitFilterValue,
+            typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -413,7 +417,8 @@
             reportDate : reportDate, 
             emailBody : emailBody,
             LoanFilter: loanFilterValue,
-            businessUnitFilter: businessUnitFilterValue
+            businessUnitFilter: businessUnitFilterValue,
+            typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
