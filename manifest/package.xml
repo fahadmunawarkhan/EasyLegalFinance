@@ -196,8 +196,6 @@
         <members>LawyerSalesSummaryViewAllCtlrTest</members>
         <members>LawFirmSalesSummaryViewAllCtlr</members>
         <members>LawFirmSalesSummaryViewAllCtlrTest</members>
-        <members>ARSummaryReportCtlr</members>
-        <members>ARSummaryReportCtlrTest</members>
         <members>LawyerSummaryGeneratePayoutBalance</members>
         <members>LawyerSummaryGeneratePayoutBalanceTest</members>
         <members>FundingSummaryReportCtlr<members>
@@ -348,7 +346,6 @@
         <members>AssessmentScheduleLawyerTab</members>
         <members>EditAssessmentProviderSchedule</members>
         <members>PreApprovedInvoices</members>
-        <members>ARSummaryReport</members>
         <members>FundingSummaryReport</members>
         <name>AuraDefinitionBundle</name>
     </types>
