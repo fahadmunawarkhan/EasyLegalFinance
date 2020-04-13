@@ -200,6 +200,8 @@
         <members>ARSummaryReportCtlrTest</members>
         <members>LawyerSummaryGeneratePayoutBalance</members>
         <members>LawyerSummaryGeneratePayoutBalanceTest</members>
+        <members>FundingSummaryReportCtlr<members>
+        <members>FundingSummaryReportCtlrTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -347,6 +349,7 @@
         <members>EditAssessmentProviderSchedule</members>
         <members>PreApprovedInvoices</members>
         <members>ARSummaryReport</members>
+        <members>FundingSummaryReport</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
