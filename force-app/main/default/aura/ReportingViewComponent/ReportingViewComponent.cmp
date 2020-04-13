@@ -56,6 +56,11 @@
                     <c:FinancialSummaryComponent />
                 </lightning:tab> 
             </aura:if>
+            <aura:if isTrue="{!v.currentUser.Funding_Summary_Report__c}">                
+                <lightning:tab id="FUNDING_SUMMARY" label="Funding Summary">
+                    <c:FundingSummaryReport />
+                </lightning:tab> 
+            </aura:if>
             <!-- Actual Financials Per Month -->
             <aura:if isTrue="{!v.currentUser.Actual_Sales_By_Month_Report__c}">                
                 <lightning:tab id="ACTUAL_SALES_BY_MONTH" label="Actual Sales By Month Summary">
