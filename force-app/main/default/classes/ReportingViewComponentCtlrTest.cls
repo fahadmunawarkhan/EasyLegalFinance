@@ -1,3 +1,14 @@
+/**
+ * @File Name          : ReportingViewComponentCtlrTest.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 13/04/2020, 4:08:00 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    13/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 @isTest
 public class ReportingViewComponentCtlrTest {
     
