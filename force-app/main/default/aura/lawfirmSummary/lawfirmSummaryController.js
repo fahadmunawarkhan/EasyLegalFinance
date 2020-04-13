@@ -19,7 +19,10 @@
         let strQuery = "SELECT " + fieldSet.join(",");
             strQuery += " FROM Account WHERE RecordType.Name = \'Law Firm\' ";
         component.set("v.query", strQuery); 
+        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Opportunity','Stage_Status__c','oppStageStatus');
+        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','oppTypeOfLoans');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.setDefaultDates(component);
@@ -67,8 +70,46 @@
     generateForSelected: function(component, event, helper) {
         helper.generateForSelected(component);
     },
+    generateBalanceForSelected: function(component, event, helper) {
+        helper.generateBalanceForSelected(component);
+    },
     hideLookupInput: function(component, event, helper)
     {
         
     },
+    openLinkReport : function(component, event, helper){
+        
+        let lawfirmid = event.currentTarget.dataset.lawfirmid;
+        let newWin;
+        let url = '/lightning/r/Report/00O0L000003n3kfUAA/view';
+        let businessUnitFilter = component.get("v.selectedBusinessUnitFilter");
+        let oppStageStatus = component.get("v.oppStageStatus");
+        let oppTypeOfLoans = component.get("v.oppTypeOfLoans");
+        let loanFilterValue = component.get("v.selectedLoanFilter");
+        let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
+        
+        let fv6 = 'Active,Active - Partial Payment';
+        if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
+            fv6 = '';
+            for(let i=6; i< oppStageStatus.length; i++){
+                fv6 += oppStageStatus[i].value + ',';
+            }
+        }
+        let loanTypes = [];
+        if(typeOfLoan == "Consolidated"){            
+            for(let i=0; i< oppTypeOfLoans.length; i++){
+                loanTypes.push(oppTypeOfLoans[i].value);
+            }
+        }
+        
+        let fv5 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : typeOfLoan;
+        
+        try{                       
+            newWin = window.open(url + '?fv3=' + lawfirmid.substring(0,15) + '&fv4=' + businessUnitFilter + '&fv5=' + fv5 + '&fv6=' + fv6);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
+    }
 })

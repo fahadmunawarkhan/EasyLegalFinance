@@ -59,6 +59,13 @@
                             value: allValues[i]
                         });
                     }
+                }
+                if(attributeId == 'typeOfLoanOptions'){
+                    opts.push({
+                        class: "optionClass",
+                        label: 'Consolidated',
+                        value: 'Consolidated'
+                    });
                 }                
                 component.set('v.'+attributeId, opts);
             }
@@ -71,6 +78,7 @@
         let sortOrder = component.get('v.sortOrder');
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+        let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         let strQuery = component.get('v.query');
         
         searchString = searchString ? "'%"+searchString+"%'" : "'%%'";
@@ -80,9 +88,11 @@
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : 'All';
         
         strQuery += " AND Name Like " + searchString + "";
-        strQuery += " AND Id in (SELECT Law_Firm__c FROM Opportunity WHERE accountId !=null";
+        strQuery += " AND Id in (SELECT Law_Firm__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0";
         strQuery += businessUnitFilterValue == 'All'? "" : " AND Account.Business_Unit__c = \'"+businessUnitFilterValue+"\'";
-        strQuery += loanFilterValue == "Active"? " AND isClosed = true AND isWon = true AND Stage_Status__c != 'Paid Off')" : ")";
+        strQuery += loanFilterValue == "Active"? " AND Stage_Status__c LIKE \'%Active%\'" : "";
+        strQuery += typeOfLoan == "Consolidated"? "" : " AND Type_of_Loan__c = \'"+typeOfLoan+"\'";
+        strQuery += ")"
         strQuery += " order by " + field + " " + sortOrder + " limit 10000";
         
         return strQuery;
@@ -99,7 +109,8 @@
         action.setParams({
             strQuery : strQuery, 
             LoanFilter: loanFilterValue,
-            businessUnitFilter: businessUnitFilterValue
+            businessUnitFilter: businessUnitFilterValue,
+            typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
         });
         
         action.setCallback(this, function (response) {
@@ -164,7 +175,8 @@
                 payoutDate : payoutDate, 
                 reportDate : reportDate,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -184,6 +196,58 @@
                         //POPUP BLOCKED
                     }                    
                     //window.open('/apex/APXT_BPM__Conductor_Launch?mysid={!$Api.Session_ID}&myserverurl={!$Api.Partner_Server_URL_290}&&ReportId=&QueryId=a0p21000003rhuC&RecordId=&UrlFieldName=Conga_Batch_Lawyer_Summary__c&Id=a1T21000000osQc');
+                } else if (state === 'ERROR') {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            this.errorsHandler(errors)
+                        }
+                    } else {
+                        this.unknownErrorsHandler();
+                    }
+                }
+            });
+            $A.enqueueAction(action);
+            
+        }
+        
+    },
+    
+    generateBalanceForSelected : function (component){        
+        
+        component.set('v.spinner', true);
+        let accountList = component.get("v.accountsList");
+        let payoutDate = component.get("v.payoutDate");
+        let reportDate = component.get("v.reportDate");        
+        let loanFilterValue = component.get("v.selectedLoanFilter");
+        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+        loanFilterValue = loanFilterValue ? loanFilterValue : "All";
+        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+        
+        let selectedIds = [];
+        
+        for(let i=0; i<accountList.length; i++){
+            if(accountList[i].checked == true){
+                selectedIds.push("'" + accountList[i].account.Id + "'");                
+            }
+        }
+        if(selectedIds.length == 0){
+            component.set('v.spinner', false);
+            alert("Please select records.");
+        }else{
+            //alert("Total " + selectedIds.length);
+            var action = component.get('c.generatePayoutBalance');
+            action.setParams({
+                selectedIds : selectedIds, 
+                payoutDate : payoutDate
+            });
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                
+                if (state === 'SUCCESS') {
+                    component.set('v.spinner', false);
+                    this.showToast('SUCCESS', 'Payout Balance Generated Successfully!', 'success');
+                    
                 } else if (state === 'ERROR') {
                     var errors = response.getError();
                     if (errors) {
@@ -233,7 +297,8 @@
                 emailRecipientId : emailRecipient.Id,
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });            
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -290,7 +355,8 @@
                 emailRecipientId : emailRecipient.Id,
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
-                businessUnitFilter: businessUnitFilterValue
+                businessUnitFilter: businessUnitFilterValue,
+                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
         
             action.setCallback(this, function (response) {

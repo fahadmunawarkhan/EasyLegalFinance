@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 03/04/2020, 3:53:25 pm
+ * @Last Modified On   : 09/04/2020, 11:05:14 am
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -15,50 +15,6 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         public string firm {get; set;}
         @AuraEnabled
         public string firmId {get; set;}
-        @AuraEnabled
-        public integer rhinoFileCount {get; set;}
-        @AuraEnabled
-        public integer rhinoClosedFileCount {get; set;}
-        @AuraEnabled
-        public integer rhinoOpptyCount {get; set;}
-        @AuraEnabled
-        public decimal rhinoAmount {get; set;}
-        @AuraEnabled
-        public decimal rhinoClosedAmount {get; set;}
-        @AuraEnabled
-        public integer rhinoBadDebtFile {get; set;}
-        @AuraEnabled
-        public double rhinoBadDebtAmount {get; set;}
-        @AuraEnabled
-        public integer rhinoShortFallFile {get; set;}
-        @AuraEnabled
-        public double rhinoShortFallamt {get; set;}
-        @AuraEnabled
-        public integer rhinoOverAgeFile {get; set;}
-        @AuraEnabled
-        public double rhinoOverAgeamt {get; set;}
-        @AuraEnabled
-        public integer elfiFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiClosedFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiOpptyCount {get; set;}
-        @AuraEnabled
-        public decimal elfiAmount {get; set;}
-        @AuraEnabled
-        public decimal elfiClosedAmount {get; set;}
-        @AuraEnabled
-        public integer elfiBadDebtFile {get; set;}
-        @AuraEnabled
-        public double elfiBadDebtAmount {get; set;}
-        @AuraEnabled
-        public integer elfiShortFallFile {get; set;}
-        @AuraEnabled
-        public double elfiShortFallAmt {get; set;}
-        @AuraEnabled
-        public integer elfiOverAgeFile {get; set;}
-        @AuraEnabled
-        public double elfiOverAgeAmt {get; set;}
         @AuraEnabled
         public integer totalFileCount {get; set;}
         @AuraEnabled
@@ -82,55 +38,36 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         @AuraEnabled
         public double totalOverAgeAmt {get; set;}
         
-        public wrapper(string f, string frmId, integer rc,integer rcc, integer roc, decimal ra, decimal rca, integer rbdf, double rbda, integer rsff, double rsfa, integer roaf, double roaa, integer ec, integer ecc, integer eoc, decimal ea, decimal eca, integer ebdf, double ebda, integer esff, double esfa, integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda, integer tsff, double tsfa){
+        public wrapper(string f, string frmId){
             
             firm = f;
             firmId = frmId;
-            
-            rhinoFileCount = rc;
-            rhinoClosedFileCount = rcc;
-            rhinoOpptyCount = roc;
-            rhinoAmount = ra;
-            rhinoClosedAmount = rca;
-            rhinoBadDebtFile = rbdf;
-            rhinoBadDebtAmount = rbda;
-            rhinoShortFallFile = rsff;
-            rhinoShortFallamt = rsfa;
-            rhinoOverAgeFile = roaf;
-            rhinoOverAgeamt = roaa;
-            
-            elfiFileCount = ec;
-            elfiClosedFileCount = ecc;
-            elfiOpptyCount = eoc;
-            elfiAmount = ea;
-            elfiClosedAmount = eca;
-            elfiBadDebtFile = ebdf;
-            elfiBadDebtAmount = ebda;
-            elfiShortFallFile = esff;
-            elfiShortFallAmt = esfa;
-
-            totalFileCount = tc;
-            totalClosedFileCount = tcc;
-            totalOpptyCount = toc;
-            totalAmount = ta;
-            totalClosedAmount = tca;
-            totalbdfile = tbdf;
-            totalbdamount = tbda;
-            totalShortFallFile = tsff;
-            totalShortFallAmt = tsfa;
+            totalFileCount = 0;
+            totalClosedFileCount = 0;
+            totalOpptyCount = 0;
+            totalAmount = 0.00;
+            totalClosedAmount = 0.00;
+            totalbdfile = 0;
+            totalbdamount = 0.00;
+            totalShortFallFile = 0;
+            totalShortFallAmt = 0.00;
+            totalOverAgeFile = 0;
+            totalOverAgeAmt = 0.00;
         }
-
-        /*
-            Creation Reason:
-            Created this method because only 32 parameters can pass in method in constructor. Remaining variables set in this method.
-        */
-        public void wrapper2(integer eoaf, double eoaa, integer toaf, double toaa){
-            elfiOverAgeFile = eoaf;
-            elfiOverAgeAmt = eoaa;
-
-            totalOverAgeFile = toaf;
-            totalOverAgeAmt = toaa;
-        }
+        
+        // public void wrapper1(integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda, integer tsff, double tsfa, integer toaf, double toaa){
+        //     totalFileCount = tc;
+        //     totalClosedFileCount = tcc;
+        //     totalOpptyCount = toc;
+        //     totalAmount = ta;
+        //     totalClosedAmount = tca;
+        //     totalbdfile = tbdf;
+        //     totalbdamount = tbda;
+        //     totalShortFallFile = tsff;
+        //     totalShortFallAmt = tsfa;
+        //     totalOverAgeFile = toaf;
+        //     totalOverAgeAmt = toaa;
+        // }
     }
     @AuraEnabled
     public static Wrapper[] getAmountGroupByLawFirm(String startDate, String endDate, String field, String direction, string BusinessUnit, String searchByName, String typeOfLoan){
@@ -171,7 +108,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             
             strQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, ';
             strQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
-            strQuery += ' SUM(Amount__c) amt, Opportunity__r.Account.Business_Unit__c unit';
+            strQuery += ' SUM(Amount__c) amt';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
@@ -182,7 +119,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
             strQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
-            strQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
+            strQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name';
             strQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
             
             List<AggregateResult> aggResult = Database.query(strQuery);
@@ -194,7 +131,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 Set<String> lawfirmIdsSet = new Set<String>();
                 for(AggregateResult res : aggResult)
                 {
-                    String key = res.get('firmId')+'-'+res.get('unit');
+                    String key = String.valueOf(res.get('firmId'));
                     result.put(key,res);
                     lawfirmIdsSet.add((String)res.get('firmId'));
                     if(!lawfirmMap.containsKey((String)res.get('firmId')))		lawfirmMap.put((String)res.get('firmId'), (String)res.get('firm'));
@@ -205,35 +142,33 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 
                 String closedWLoanQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,'; 
                 closedWLoanQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
-                closedWLoanQuery += ' SUM(Amount__c) amt, Opportunity__r.Account.Business_Unit__c unit';
+                closedWLoanQuery += ' SUM(Amount__c) amt';
                 closedWLoanQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 closedWLoanQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
                 closedWLoanQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 closedWLoanQuery += ' AND Payment_Method__c =:payment';  
                 closedWLoanQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment'; 
                 closedWLoanQuery += ' OR Reference_Notes__c =:clientRebate)'; 
-                closedWLoanQuery += ' AND (Opportunity__r.Stage_Status__c =:closedPaid';
-                closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedShortfall';
-                closedWLoanQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus)';
+                closedWLoanQuery += ' AND Opportunity__r.Stage_Status__c =:closedPaid';
                 closedWLoanQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 closedWLoanQuery += ' AND Is_Rejected__c = false'; 
                 closedWLoanQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
                 closedWLoanQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-                closedWLoanQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
+                closedWLoanQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name';
                 //lawfirm in set of lawfirm
                 List<AggregateResult> closedOppAggResult = Database.query(closedWLoanQuery);
-                double testvalue = 0;
+                //double testvalue = 0;
                 Map<String, AggregateResult> closedOppResultMap = new Map<String, AggregateResult>();
                 if(!closedOppAggResult.isEmpty()){
                     for(AggregateResult res : closedOppAggResult)
                     {
-                        testvalue = testvalue + (double)res.get('amt');
-                        String key = res.get('firmId')+'-'+res.get('unit');
+                        //testvalue = testvalue + (double)res.get('amt');
+                        String key = String.valueOf(res.get('firmId'));
                         closedOppResultMap.put(key,res);
                     }
                 }
                 system.debug('====>Toatl Test By Me');
-                system.debug(testvalue);
+                //system.debug(testvalue);
                 system.debug('====>Toatl Test By Me');
                 system.debug('Closed Loan');
                 System.debug(closedOppResultMap);
@@ -261,7 +196,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 if(!BadDebtAggResult.isEmpty()){
                     for(AggregateResult baddebtsagr : BadDebtAggResult)
                     {
-                        String key = String.valueOf(baddebtsagr.get('firmId')) + '-' + String.valueOf(baddebtsagr.get('unit'));
+                        String key = String.valueOf(baddebtsagr.get('firmId'));
                         BadDebtResultMap.put(key, baddebtsagr);
                         //closedOppResultMap.put(key,res);
                     }
@@ -294,9 +229,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 if(!ShortFallAggResult.isEmpty()){
                     for(AggregateResult shortfallagr : ShortFallAggResult)
                     {
-                        String key = String.valueOf(shortfallagr.get('firmId')) + '-' + String.valueOf(shortfallagr.get('unit'));
+                        String key = String.valueOf(shortfallagr.get('firmId'));
                         ShortFallResultMap.put(key, shortfallagr);
-                        //closedOppResultMap.put(key,res);
                     }
                 }
                 system.debug('Short Fall Results');
@@ -328,9 +262,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 if(!OverAgeAggResult.isEmpty()){
                     for(AggregateResult overageagr : OverAgeAggResult)
                     {
-                        String key = String.valueOf(overageagr.get('firmId')) + '-' + String.valueOf(overageagr.get('unit'));
+                        String key = String.valueOf(overageagr.get('firmId'));
                         OverAgeResultMap.put(key, overageagr);
-                        //closedOppResultMap.put(key,res);
                     }
                 }
                 system.debug('Over Age Results');
@@ -342,91 +275,21 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 for(String f : lawfirmIdsSet)
                 {
                     String fName = lawfirmMap.get(f);
-                    String rhinokey = f+'-Rhino';
-                    String elfikey = f+'-ELFI';
-                    String emptyKey = f+'-';
-                    Wrapper w = new Wrapper(fName,
-                                            result.containsKey(rhinokey) ? (String)result.get(rhinokey).get('firmId') : '',
-                                            /* ===== RINO Values =====*/
-                                            result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('file') : 0,
-                                            closedOppResultMap.containsKey(rhinokey) ? (Integer)closedOppResultMap.get(rhinokey).get('file') : 0,
-                                            result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('opptyCount') : 0,
-                                            result.containsKey(rhinokey) ? (decimal)result.get(rhinokey).get('amt') : 0,
-                                            closedOppResultMap.containsKey(rhinokey) ? (decimal)closedOppResultMap.get(rhinokey).get('amt') : 0,
-                                            BadDebtResultMap.containsKey(rhinokey) ? (Integer)BadDebtResultMap.get(rhinokey).get('file') : 0,
-                                            BadDebtResultMap.containsKey(rhinokey) ? (double)BadDebtResultMap.get(rhinokey).get('amt') : 0,
-                                            ShortFallResultMap.containsKey(rhinokey) ? (Integer)ShortFallResultMap.get(rhinokey).get('file') : 0,
-                                            ShortFallResultMap.containsKey(rhinokey) ? (double)ShortFallResultMap.get(rhinokey).get('amt') : 0,
-                                            OverAgeResultMap.containsKey(rhinokey) ? (Integer)OverAgeResultMap.get(rhinokey).get('file') : 0,
-                                            OverAgeResultMap.containsKey(rhinokey) ? (double)OverAgeResultMap.get(rhinokey).get('amt') : 0,
-                                            /* ===== RINO Values =====*/
-                                            /* ===== ELFI Values =====*/
-                                            result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('file') : 0,
-                                            closedOppResultMap.containsKey(elfikey) ? (Integer)closedOppResultMap.get(elfikey).get('file') : 0,
-                                            result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('opptyCount') : 0,
-                                            result.containsKey(elfikey) ? (decimal)result.get(elfikey).get('amt') : 0,
-                                            closedOppResultMap.containsKey(elfikey) ? (decimal)closedOppResultMap.get(elfikey).get('amt') : 0,
-                                            BadDebtResultMap.containsKey(elfikey) ? (integer)BadDebtResultMap.get(elfikey).get('file') : 0,
-                                            BadDebtResultMap.containsKey(elfikey) ? (double)BadDebtResultMap.get(elfikey).get('amt') : 0,
-                                            ShortFallResultMap.containsKey(elfikey) ? (Integer)ShortFallResultMap.get(elfikey).get('file') : 0,
-                                            ShortFallResultMap.containsKey(elfikey) ? (double)ShortFallResultMap.get(elfikey).get('amt') : 0,
-                                            /* ===== ELFI Values =====*/
-                                            
-                                            /* ===== ALL (Rhino, Elfi, Consolidated) Value =====*/
-                                            (result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('file') : 0) +
-                                            (result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('file') : 0) +
-                                            (result.containsKey(emptyKey) ? (Integer)result.get(emptyKey).get('file') : 0),
-                                            
-                                            (closedOppResultMap.containsKey(rhinokey) ? (Integer)closedOppResultMap.get(rhinokey).get('file') : 0) +
-                                            (closedOppResultMap.containsKey(elfikey) ? (Integer)closedOppResultMap.get(elfikey).get('file') : 0) +
-                                            (closedOppResultMap.containsKey(emptyKey) ? (Integer)closedOppResultMap.get(emptyKey).get('file') : 0),
-                                            
-                                            (result.containsKey(rhinokey) ? (Integer)result.get(rhinokey).get('opptyCount') : 0) +
-                                            (result.containsKey(elfikey) ? (Integer)result.get(elfikey).get('opptyCount') : 0) +
-                                            (result.containsKey(emptyKey) ? (Integer)result.get(emptyKey).get('opptyCount') : 0) ,
-                                            
-                                            (result.containsKey(rhinokey) ? (decimal)result.get(rhinokey).get('amt') : 0) +
-                                            (result.containsKey(elfikey) ? (decimal)result.get(elfikey).get('amt') : 0) +
-                                            (result.containsKey(emptyKey) ? (decimal)result.get(emptyKey).get('amt') : 0),
-                                            
-                                            (closedOppResultMap.containsKey(rhinokey) ? (decimal)closedOppResultMap.get(rhinokey).get('amt') : 0) +
-                                            (closedOppResultMap.containsKey(elfikey) ? (decimal)closedOppResultMap.get(elfikey).get('amt') : 0) +
-                                            (closedOppResultMap.containsKey(emptyKey) ? (decimal)closedOppResultMap.get(emptyKey).get('amt') : 0),
-
-                                            (BadDebtResultMap.containsKey(rhinokey) ? (integer)BadDebtResultMap.get(rhinokey).get('file') : 0) +
-                                            (BadDebtResultMap.containsKey(elfikey) ? (integer)BadDebtResultMap.get(elfikey).get('file') : 0) +
-                                            (BadDebtResultMap.containsKey(emptyKey) ? (integer)BadDebtResultMap.get(emptyKey).get('file') : 0),
-
-                                            (BadDebtResultMap.containsKey(rhinokey) ? (double)BadDebtResultMap.get(rhinokey).get('amt') : 0) +
-                                            (BadDebtResultMap.containsKey(elfikey) ? (double)BadDebtResultMap.get(elfikey).get('amt') : 0) +
-                                            (BadDebtResultMap.containsKey(emptyKey) ? (double)BadDebtResultMap.get(emptyKey).get('amt') : 0),
-
-                                            
-                                            (ShortFallResultMap.containsKey(rhinokey) ? (integer)ShortFallResultMap.get(rhinokey).get('file') : 0) +
-                                            (ShortFallResultMap.containsKey(elfikey) ? (integer)ShortFallResultMap.get(elfikey).get('file') : 0) +
-                                            (ShortFallResultMap.containsKey(emptyKey) ? (integer)ShortFallResultMap.get(emptyKey).get('file') : 0),
-
-                                            (ShortFallResultMap.containsKey(rhinokey) ? (double)ShortFallResultMap.get(rhinokey).get('amt') : 0) +
-                                            (ShortFallResultMap.containsKey(elfikey) ? (double)ShortFallResultMap.get(elfikey).get('amt') : 0) +
-                                            (ShortFallResultMap.containsKey(emptyKey) ? (double)ShortFallResultMap.get(emptyKey).get('amt') : 0)
-                                        );
-                                            /* ===== ALL Value =====*/
-
-                            w.wrapper2(
-                                /* ===== ELFI VALUES =====*/
-                                OverAgeResultMap.containsKey(elfikey) ? (Integer)OverAgeResultMap.get(elfikey).get('file') : 0,
-                                OverAgeResultMap.containsKey(elfikey) ? (double)OverAgeResultMap.get(elfikey).get('amt') : 0,
-                                /* ===== ELFI VALUES =====*/
-                                /* ===== ALL Value =====*/
-                                (OverAgeResultMap.containsKey(rhinokey) ? (Integer)OverAgeResultMap.get(rhinokey).get('file') : 0) +
-                                (OverAgeResultMap.containsKey(elfikey) ? (Integer)OverAgeResultMap.get(elfikey).get('file') : 0) +
-                                (OverAgeResultMap.containsKey(emptyKey) ? (Integer)OverAgeResultMap.get(emptyKey).get('file') : 0),
-
-                                (OverAgeResultMap.containsKey(rhinokey) ? (double)OverAgeResultMap.get(rhinokey).get('amt') : 0) +
-                                (OverAgeResultMap.containsKey(elfikey) ? (double)OverAgeResultMap.get(elfikey).get('amt') : 0) +
-                                (OverAgeResultMap.containsKey(emptyKey) ? (double)OverAgeResultMap.get(emptyKey).get('amt') : 0)
-                                /* ===== ALL Value =====*/
-                            );
+                    String key = f;
+                    Wrapper w = new Wrapper(fName, result.containsKey(key) ? (String)result.get(key).get('firmId') : '');
+                        // ========== RHINO, ELFI, Consolidated ========//
+                        w.totalFileCount += (result.containsKey(key) ? (Integer)result.get(key).get('file') : 0);
+                        w.totalClosedFileCount += (closedOppResultMap.containsKey(key) ? (Integer)closedOppResultMap.get(key).get('file') : 0);
+                        W.totalOpptyCount += (result.containsKey(key) ? (Integer)result.get(key).get('opptyCount') : 0);
+                        w.totalClosedAmount += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('amt') : 0);
+                        w.totalAmount += (result.containsKey(key) ? (decimal)result.get(key).get('amt') : 0);
+                        w.totalbdfile += (BadDebtResultMap.containsKey(key) ? (integer)BadDebtResultMap.get(key).get('file') : 0);
+                        w.totalbdamount += (BadDebtResultMap.containsKey(key) ? (double)BadDebtResultMap.get(key).get('amt'): 0);
+                        w.totalShortFallFile += (ShortFallResultMap.containsKey(key) ? (integer)ShortFallResultMap.get(key).get('file') : 0);
+                        w.totalShortFallAmt += (ShortFallResultMap.containsKey(key) ? (double)ShortFallResultMap.get(key).get('amt') : 0);
+                        w.totalOverAgeFile += (OverAgeResultMap.containsKey(key) ? (Integer)OverAgeResultMap.get(key).get('file') : 0);
+                        w.totalOverAgeAmt += (OverAgeResultMap.containsKey(key) ? (double)OverAgeResultMap.get(key).get('amt') : 0);
+                        // ========== RHINO, ELFI, Consolidated ========//
                     wrapers.add(w);
                 }
                 system.debug('this is wrapper');

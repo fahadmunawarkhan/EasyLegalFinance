@@ -1,17 +1,30 @@
 public class LawyerSummaryCtlr {
     /******************* Method to return all lawyers *********************/
     @AuraEnabled
-    public static List<ContactInfo> getLawyersContacts(String strQuery, String LoanFilter, String businessUnitFilter) {
+    public static List<ContactInfo> getLawyersContacts(String searchByName, String sortField, String sortOrder, String loanFilter, String businessUnitFilter, String typeOfLoan) {
         try{
-            LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
+            
+            loanFilter = String.isEmpty(loanFilter) ? 'All' : loanFilter;
             businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
-            system.debug('LoanFilter ' + LoanFilter);
+            searchByName = (searchByName == null || String.isEmpty(searchByName))? '' : searchByName;
+            
+            String strQuery = 'SELECT Id, Name, Account.Name,';
+            strQuery += ' (Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 ),';
+            strQuery += ' (Select id,createddate from tasks where type=\'Email\' and createddate = today order by createddate desc limit 1 )';
+            strQuery += ' FROM Contact WHERE RecordType.Name = \'Lawyers\'';
+            strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name LIKE \'%' + searchByName + '%\' OR Account.Name LIKE \'%' + searchByName + '%\' )' : '';
+            strQuery += ' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
+            strQuery += ' AND Account.Business_Unit__c =:businessUnitFilter';
+            strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
+            strQuery += (typeOfLoan == null || String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated')? ')' : ' AND Type_of_Loan__c =:typeOfLoan)';
+            strQuery += ' order by ' + sortField + ' ' + sortOrder + ' limit 10000';
+            
             
             // Initializing the contact variable
             List<ContactInfo> contactInfo = new List<ContactInfo>();
             List<Contact> contacts = new List<Contact>();
             
-             system.debug(strQuery);           
+            system.debug(strQuery);           
             // *** Still need to handle exceptions ***
             // Executing the query to retrieve the account information
             contacts = Database.query(strQuery);        
@@ -23,9 +36,11 @@ public class LawyerSummaryCtlr {
                 System.debug('## getLawyersContacts - RESULT: ' + con.Id);
             }
             
-            strQuery = 'Select Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Lawyer__c in :contactIds ';
-            strQuery += LoanFilter == 'Active'? ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'' : '';
+            strQuery = 'Select Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Lawyer__c in :contactIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
+            strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
             strQuery += (businessUnitFilter == '' || businessUnitFilter == null) ? ' AND Account.Business_Unit__c = \'ELFI\'' : ' AND Account.Business_Unit__c = :businessUnitFilter';
+            strQuery += (typeOfLoan == null || String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated')? '' : ' AND Type_of_Loan__c =:typeOfLoan';
+            
             List<Opportunity> oppties = new List<Opportunity>();
             oppties = Database.query(strQuery);
             System.debug('Oppty: Query: '+strQuery);
@@ -63,7 +78,7 @@ public class LawyerSummaryCtlr {
         return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
     }
     @AuraEnabled
-    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailBody, String LoanFilter, String businessUnitFilter){       
+    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailBody, String LoanFilter, String businessUnitFilter, String typeOfLoan){       
         try{
             system.debug('-Here in Send function -');
             system.debug(selectedIds);
@@ -81,7 +96,8 @@ public class LawyerSummaryCtlr {
             customSettings.Report_Date_Lawyer_Summary_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Lawyer_Summary_Report__c;
             customSettings.Business_Unit_Lawyer_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
             customSettings.Email_Additional_Notes_Lawyer_Summary__c = emailBody;
-            customSettings.Query_Selector_Lawyer_Summary_Report__c = LoanFilter;        
+            customSettings.Query_Selector_Lawyer_Summary_Report__c = LoanFilter;
+            customSettings.Type_of_Loan_Lawyer_Summary__c = typeOfLoan;
             
             if(String.isEmpty(customSettings.Conductor_Id_Lawyer_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Lawyer summary conductor query - ' + UserInfo.getName(),
@@ -109,7 +125,7 @@ public class LawyerSummaryCtlr {
     }
     
     @AuraEnabled
-    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter){
+    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
         try{
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
@@ -125,6 +141,7 @@ public class LawyerSummaryCtlr {
             customSettings.Report_Date_Lawyer_Summary_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Lawyer_Summary_Report__c;
             customSettings.Business_Unit_Lawyer_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
             customSettings.Query_Selector_Lawyer_Summary_Report__c = LoanFilter;
+            customSettings.Type_of_Loan_Lawyer_Summary__c = typeOfLoan;
             
             if(String.isEmpty(customSettings.Conductor_Id_Lawyer_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Lawyer summary conductor query - ' + UserInfo.getName(),
@@ -149,6 +166,62 @@ public class LawyerSummaryCtlr {
         catch(Exception e){
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
+    }
+    
+    @AuraEnabled 
+    public static void abortBatchJobs(){
+        for(AsyncApexJob aJob : [SELECT id FROM AsyncApexJob WHERE Status!='Aborted' AND Status!='Completed'
+                                 AND ApexClass.Name = 'LawyerSummaryGeneratePayoutBalance'] ){                                     
+                                     System.AbortJob(aJob.Id);                                     
+                                 }
+    }
+    
+    @AuraEnabled
+    public static void generatePayoutBalance(List<Id> selectedIds, String payoutDate, String searchByName, String loanFilter, String businessUnitFilter, String typeOfLoan){
+        try{
+            abortBatchJobs();
+            Set<Id> contactIds = new Set<Id>(selectedIds);
+            
+            if(selectedIds.isEmpty()){
+                
+                loanFilter = String.isEmpty(loanFilter) ? 'All' : loanFilter;
+                businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
+                searchByName = (searchByName == null || String.isEmpty(searchByName))? '' : searchByName;
+                
+                String strQuery = 'SELECT Id, Name, Account.Name,';
+                strQuery += ' (Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 ),';
+                strQuery += ' (Select id,createddate from tasks where type=\'Email\' and createddate = today order by createddate desc limit 1 )';
+                strQuery += ' FROM Contact WHERE RecordType.Name = \'Lawyers\'';
+                strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name LIKE \'%' + searchByName + '%\' OR Account.Name LIKE \'%' + searchByName + '%\' )' : '';
+                strQuery += ' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
+                strQuery += ' AND Account.Business_Unit__c =:businessUnitFilter';
+                strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'Active\'' : '';
+                strQuery += (typeOfLoan == null || String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated')? ')' : ' AND Type_of_Loan__c =:typeOfLoan)';
+                strQuery += ' limit 10000';
+                
+                List<Contact> contacts = new List<Contact>();
+                contacts = Database.query(strQuery); 
+                contactIds = new Map<Id,Contact>(contacts).keySet();
+            }
+            
+            LawyerSummaryGeneratePayoutBalance lsgpb = new LawyerSummaryGeneratePayoutBalance(contactIds, Date.valueOf(payoutDate), loanFilter, businessUnitFilter, typeOfLoan);
+            Database.executeBatch(lsgpb, 50);
+            
+        }catch (Exception e){
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    
+    @AuraEnabled
+    public static AsyncApexJob getBatchJobStatus(){
+        List<AsyncApexJob> aaj = null;
+        try{
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+                   WHERE ApexClass.Name = 'LawyerSummaryGeneratePayoutBalance' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
+        }catch(Exception e){
+            throw new AuraHandledException(e.getMessage());
+        }        
+        return (aaj.size() > 0 )? aaj[0] : null;
     }
     
     public class ContactInfo{

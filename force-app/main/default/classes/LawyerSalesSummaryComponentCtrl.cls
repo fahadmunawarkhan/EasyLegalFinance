@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawyerSalesSummaryComponentCtrl.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 07/04/2020, 4:15:59 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public with sharing class LawyerSalesSummaryComponentCtrl {
     @AuraEnabled
     public static list<Wrapper> getAmountGroupByLawyer(String startDate, String endDate, String field, String direction, string BusinessUnit, String searchByName, String typeOfLoan){
@@ -34,23 +45,8 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             }else if(field == 'Amount'){
                 field = 'SUM(Amount__c)'; 
             }
-            string filterByBusinessUnit = '';
-            string Rhino = 'Rhino';
-            string Elfi = 'ELFI';
             
-            // Business Unit Filter
-
-            if(BusinessUnit == 'ELFI'){
-                
-                filterByBusinessUnit = 'ELFI';
-            }else if(BusinessUnit == 'Rhino'){
-                
-                filterByBusinessUnit = 'Rhino';
-            }else if(BusinessUnit == 'Consolidated'){
-                
-                filterByBusinessUnit = 'Consolidated';
-            }
-            
+            BusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit))? BusinessUnit : 'ELFI';
             
             strQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer,  Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, '; 
             strQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount, ';
@@ -61,10 +57,8 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             strQuery += ' OR (Payment_Method__c =:Cheque)';
             strQuery += ' OR (Payment_Method__c =:AdminFee))';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND Is_Rejected__c = false AND';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-                ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
-            ' Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += ' AND Is_Rejected__c = false';
+            strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
             strQuery += ' AND Opportunity__r.Lawyer__c != \'\'';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name LIKE \'%' + searchByName + '%\')'  : '';
@@ -88,43 +82,23 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                        // if province exists 
                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
                         
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            //w.rhinoFileCount += Integer.valueof(agr.get('file'));
-                            w.rhinoOpptyCount += Integer.valueof(agr.get('opptyCount'));
-                            w.rhinoAmount += Double.valueof(agr.get('amt'));
-                            w.rhinoClosedAmount = 0;                            
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            //w.elfiFileCount += Integer.valueof(agr.get('file'));
-                            w.elfiOpptyCount += Integer.valueof(agr.get('opptyCount'));
-                            w.elfiAmount += Double.valueof(agr.get('amt'));
-                            w.elfiClosedAmount = 0;
-                        }
+                        w.OpptyCount += Integer.valueof(agr.get('opptyCount'));
+                        w.Amount += Double.valueof(agr.get('amt'));
+                        w.ClosedAmount = 0; 
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                         
                     }else{
                         // new province
                         wrapper w;
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){                            
-                            w = new wrapper(String.ValueOf(agr.get('lawyer')), String.ValueOf(agr.get('lawyerId')),
-                                            String.ValueOf(agr.get('firm')), String.ValueOf(agr.get('firmId')),
-                                            0,
-                                            0,
-                                            Integer.valueof(agr.get('opptyCount')),                                            
-                                            Double.valueof(agr.get('amt')),0,0,0,0.00);
-                            
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){                            
-                            w = new wrapper(String.ValueOf(agr.get('lawyer')), String.ValueOf(agr.get('lawyerId')),
-                                            String.ValueOf(agr.get('firm')), String.ValueOf(agr.get('firmId')),
-                                            0,0,0,0.00,0,
-                                            0,
-                                            Integer.valueof(agr.get('opptyCount')),                                            
-                                            Double.valueof(agr.get('amt')));
-                        }
-                        w.rhinoClosedAmount = 0;
-                        w.elfiClosedAmount = 0;
+                        w = new wrapper(String.ValueOf(agr.get('lawyer')), String.ValueOf(agr.get('lawyerId')),
+                                        String.ValueOf(agr.get('firm')), String.ValueOf(agr.get('firmId')),
+                                        0,
+                                        0,
+                                        Integer.valueof(agr.get('opptyCount')),                                            
+                                        Double.valueof(agr.get('amt')));
+                        w.ClosedAmount = 0;
+                        w.ClosedAmount = 0;
                         agrMap.put(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                     }
                 }
@@ -138,33 +112,29 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 strQuery += ' AND Date__c <= :endDt';
                 strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
                 strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-                strQuery += ' AND Opportunity__r.Stage_Status__c LIKE \'%Active%\' AND';
-                strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-                    ' (Opportunity__r.Account.Business_Unit__c =:Elfi OR Opportunity__r.Account.Business_Unit__c =:Rhino)':
-                ' Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+                strQuery += ' AND Opportunity__r.Stage_Status__c LIKE \'%Active%\'';
+                strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
                 strQuery += ' AND Opportunity__r.Lawyer__c != \'\'';
                 strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
                 strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name LIKE \'%' + searchByName + '%\')'  : '';
                 strQuery += ' Group by Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c';
                 
                 List<AggregateResult> aggResultOpenOpps = Database.query(strQuery);
-                
                 for(AggregateResult agr : aggResultOpenOpps){
                     
                     if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
                         
                         wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
                         
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            w.rhinoFileCount += integer.valueof(agr.get('file'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            w.elfiFileCount += integer.valueof(agr.get('file'));
-                        }                        
+                         w.FileCount += integer.valueof(agr.get('file'));
+                        
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);                        
                     }
                 }
-                
-                
+                system.debug('===>');
+                system.debug(aggResultOpenOpps);
+                system.debug('===>');
+
                 String closedOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
                 closedOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
                 closedOppQuery += ' SUM(Amount__c) amt';
@@ -189,15 +159,8 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                         // if province exists 
                         wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
                         
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
-                            
-                            w.rhinoClosedAmount += Double.valueof(agr.get('amt'));
-                            w.rhinoClosedFileCount += integer.valueof(agr.get('file'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiClosedAmount += Double.valueof(agr.get('amt'));
-                            w.elfiClosedFileCount += integer.valueof(agr.get('file'));
-                        }
+                            w.ClosedAmount += Double.valueof(agr.get('amt'));
+                            w.ClosedFileCount += integer.valueof(agr.get('file'));
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                         
@@ -229,16 +192,9 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                     if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
                         // if province exists 
                         wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
-                        
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
                             
-                            w.rhinoBadDebtAmount += Double.valueof(agr.get('amt'));
-                            w.rhinoBadDebtFileCount += integer.valueof(agr.get('file'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiBadDebtAmount += Double.valueof(agr.get('amt'));
-                            w.elfiBadDebtFileCount += integer.valueof(agr.get('file'));
-                        }
+                            w.BadDebtAmount += Double.valueof(agr.get('amt'));
+                            w.BadDebtFileCount += integer.valueof(agr.get('file'));
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                         
@@ -272,16 +228,9 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                     if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
                         // if province exists 
                         wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
-                        
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
                             
-                            w.rhinoShortfallAmount += Double.valueof(agr.get('amt'));
-                            w.rhinoShortfallFileCount += integer.valueof(agr.get('file'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiShortfallAmount += Double.valueof(agr.get('amt'));
-                            w.elfiShortfallFileCount += integer.valueof(agr.get('file'));
-                        }
+                            w.ShortfallAmount += Double.valueof(agr.get('amt'));
+                            w.ShortfallFileCount += integer.valueof(agr.get('file'));
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                         
@@ -314,16 +263,9 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                     if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
                         // if province exists 
                         wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
-                        
-                        if(String.valueof(agr.get('businessunit')) == 'Rhino'){
                             
-                            w.rhinoOverageAmount += Double.valueof(agr.get('amt'));
-                            w.rhinoOverageFileCount += integer.valueof(agr.get('file'));
-                        }else if(String.valueof(agr.get('businessunit')) == 'ELFI'){
-                            
-                            w.elfiOverageAmount += Double.valueof(agr.get('amt'));
-                            w.elfiOverageFileCount += integer.valueof(agr.get('file'));
-                        }
+                            w.OverageAmount += Double.valueof(agr.get('amt'));
+                            w.OverageFileCount += integer.valueof(agr.get('file'));
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
                         
@@ -430,82 +372,48 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
         @AuraEnabled
         public string firmId {get; set;}
         @AuraEnabled
-        public integer rhinoFileCount {get; set;}
+        public integer FileCount {get; set;}
         @AuraEnabled
-        public integer rhinoClosedFileCount {get; set;}
+        public integer ClosedFileCount {get; set;}
         @AuraEnabled
-        public integer rhinoShortfallFileCount {get; set;}
+        public integer ShortfallFileCount {get; set;}
         @AuraEnabled
-        public integer rhinoBadDebtFileCount {get; set;}
+        public integer BadDebtFileCount {get; set;}
         @AuraEnabled
-        public integer rhinoOverageFileCount {get; set;}
+        public integer OverageFileCount {get; set;}
         @AuraEnabled
-        public integer rhinoOpptyCount {get; set;}
+        public integer OpptyCount {get; set;}
         @AuraEnabled
-        public decimal rhinoClosedAmount {get; set;}
+        public decimal ClosedAmount {get; set;}
         @AuraEnabled
-        public decimal rhinoShortfallAmount {get; set;}
+        public decimal ShortfallAmount {get; set;}
         @AuraEnabled
-        public decimal rhinoBadDebtAmount {get; set;}
+        public decimal BadDebtAmount {get; set;}
         @AuraEnabled
-        public decimal rhinoOverageAmount {get; set;}
+        public decimal OverageAmount {get; set;}
         @AuraEnabled
-        public decimal rhinoAmount {get; set;}
-        @AuraEnabled
-        public integer elfiFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiClosedFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiShortfallFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiBadDebtFileCount {get; set;}
-        @AuraEnabled
-        public integer elfiOverageFileCount {get; set;}
-        @AuraEnabled        
-        public integer elfiOpptyCount {get; set;}
-        @AuraEnabled
-        public decimal elfiClosedAmount{get; set;}
-        @AuraEnabled
-        public decimal elfiShortfallAmount {get; set;}
-        @AuraEnabled
-        public decimal elfiBadDebtAmount {get; set;}
-        @AuraEnabled
-        public decimal elfiOverageAmount {get; set;}
-        @AuraEnabled
-        public decimal elfiAmount {get; set;}
+        public decimal Amount {get; set;}
         
-        wrapper(string l, string lawrId, string f, string frmId, integer rc, integer rcc, integer roc, decimal ra, integer ec, integer ecc, integer eoc, decimal ea){
+
+        wrapper(string l, string lawrId, string f, string frmId, integer rc, integer rcc, integer roc, decimal ra){
             
             lawyer = l;
             lawyerId = lawrId;
             firm = f;
             firmId = frmId;
             
-            rhinoFileCount = rc;
-            rhinoClosedFileCount = rcc;
-            rhinoOpptyCount = roc;
-            rhinoAmount = ra;
+            FileCount = rc;
+            ClosedFileCount = rcc;
+            OpptyCount = roc;
+            Amount = ra;
             
-            elfiFileCount = ec;
-            elfiClosedFileCount = ecc;
-            elfiOpptyCount = eoc;
-            elfiAmount = ea;
+            ShortfallFileCount = 0;
+            BadDebtFileCount = 0;
+            OverageFileCount = 0;
             
-            rhinoShortfallFileCount = 0;
-            rhinoBadDebtFileCount = 0;
-            rhinoOverageFileCount = 0;
-            
-            elfiShortfallFileCount = 0;
-            elfiBadDebtFileCount = 0;
-            elfiOverageFileCount = 0;
-            
-            rhinoShortfallAmount = 0.0;
-            rhinoBadDebtAmount = 0.0;
-            rhinoOverageAmount = 0.0;
-            
-            elfiShortfallAmount = 0.0;
-            elfiBadDebtAmount = 0.0;
-            elfiOverageAmount = 0.0;
+            ShortfallAmount = 0.0;
+            BadDebtAmount = 0.0;
+            OverageAmount = 0.0;
         }
         
     }

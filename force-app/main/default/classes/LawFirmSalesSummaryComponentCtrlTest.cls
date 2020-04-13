@@ -13,10 +13,10 @@
 public class LawFirmSalesSummaryComponentCtrlTest {
 	
     @TestSetup
-    static void initailizeTestData(){
+    public static void initailizeTestData(){
         List<Account> accountList = new List<Account>();
         List<Contact> contactList = new List<Contact>();
-        
+        system.debug('this si ');
         accountList.add( new Account(Name = 'Test Client Account', Authorization_Clause__c = 'No', 
                                              RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Client').getRecordTypeId()));
         accountList.add( new Account(Name = 'Test LawFirm Account', Authorization_Clause__c = 'No', 
