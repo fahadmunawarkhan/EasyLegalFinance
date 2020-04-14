@@ -258,6 +258,11 @@
             <field>Opportunity_Stage_Status__c</field>
             <table>Drawdown__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Opportunity__c.Account.BillingAddress</field>
+            <table>Drawdown__c</table>
+        </columns>
         <masterLabel>Drawdowns</masterLabel>
     </sections>
 </ReportType>
