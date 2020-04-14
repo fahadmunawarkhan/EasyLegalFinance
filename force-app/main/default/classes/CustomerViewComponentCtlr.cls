@@ -1063,10 +1063,13 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 }
             }
             
-            if(totalReversed[0] != null){
+            if(totalReversed[0] != null){                
                 if(totalReversed[0].get('interestReversed') != null){
-                    loanSummary.balancePrincipal += Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
-                    loanSummary.balanceInterest -= Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
+                    Decimal interestReversed = Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
+                    if (loanSummary.balancePrincipal != null)
+                    	loanSummary.balancePrincipal += interestReversed;
+                    if (loanSummary.balanceInterest != null)
+                    	loanSummary.balanceInterest -= interestReversed;
                 }        
             }
             
