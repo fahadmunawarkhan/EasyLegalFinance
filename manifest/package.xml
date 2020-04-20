@@ -1382,6 +1382,17 @@
         <members>Funding_Summary_Report__c.End_Date__c</members>
         <members>Funding_Summary_Report__c.Type_of_Loan__c</members>
         <members>User.Funding_Summary_Report__c</members>
+        <members>Banking_Details__c.Account__c</members>
+        <members>Banking_Details__c.Bank_Name__c</members>
+        <members>Banking_Details__c.Beneficiary_Name__c</members>
+        <members>Banking_Details__c.Branch__c</members>
+        <members>Banking_Details__c.Institution__c</members>       
+        <members>Account.Banking_Details_Branch__c</members>
+        <members>Account.Banking_Details_Account__c</members>
+        <members>Account.Banking_Details_Bank_Name__c</members>
+        <members>Account.Banking_Details_Beneficiary_Name__c</members>
+        <members>Account.Banking_Details_Institution__c</members>
+        <members>Account.Banking_Details_Branch__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1481,6 +1492,7 @@
         <members>Integration_Log__c</members>
         <members>Custom_Approval_History__c</members>
         <members>Funding_Summary_Report__c</members>
+        <members>Banking_Details__c</members>
         <name>CustomObject</name>
     </types>
     <types>
