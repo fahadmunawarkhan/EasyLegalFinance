@@ -1,3 +1,14 @@
+<!--
+  @File Name          : PaymentSummaryComponent.cmp
+  @Description        : 
+  @Author             : fahad.khan@toptal.com
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 4/17/2020, 4:10:20 PM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    4/17/2020   fahad.khan@toptal.com     Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="PaymentSummaryComponentCtlr" >
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -375,7 +386,20 @@
                                             <lightning:formattedNumber value="{!v.partialPayments.totalMisc}" style="currency" maximumFractionDigits="2"/>
                                         </div>
                                     </td>
-                                </tr>                                
+                                </tr> 
+                                <tr class="slds-hint-parent">
+                                    <td data-label="Total Refund">
+                                        <div class="slds-truncate makeBold" title="Total Refund">Total Refund</div>
+                                    </td>                                    
+                                    <td data-label="Total Refund">
+                                        <div class="slds-truncate makeBoldBlue" title="Total Refund" style="float:left;width:50%;">
+                                            <lightning:formattedNumber value="{!v.partialPayments.totalRefund}" style="currency" maximumFractionDigits="2"/>
+                                        </div>
+                                        <div title="This is the sum of the amount of drawdowns having reference notes 'Refund' in the selected date range." style="float:right;width:50%;">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr class="slds-hint-parent">
                                     <td data-label="Total Payments">
                                         <div class="slds-truncate makeBold" title="Total Payments">Total Payments</div>
@@ -384,7 +408,7 @@
                                         <div class="slds-truncate makeBoldBlue" title="Total Payments" style="float:left;width:50%;">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalPayments}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="Total payments is the sum of Total Principal Paid, Total Interest Paid, Total Other Paid and Total Admin Fee in the selected date range." style="float:right;width:50%;">
+                                        <div title="Total payments is the sum of (Total Principal Paid, Total Interest Paid, Total Other Paid and Total Admin Fee) Minus Total Refund in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
