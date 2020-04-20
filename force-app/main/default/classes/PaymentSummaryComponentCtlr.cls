@@ -107,7 +107,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             String clientRebate = 'Client Rebate';
             
             strQuery = 'Select'; 
-            strQuery += ' COUNT(Opportunity__c) payouts, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' COUNT_DISTINCT(Opportunity__c) payouts, Opportunity__r.Account.Business_Unit__c unit ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
@@ -271,6 +271,20 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += ' group by Opportunity__r.Account.Business_Unit__c';
             
             List<AggregateResult> aggResultInterestReceived = Database.query(strQuery);
+            
+            String Refund = 'Refund';
+            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) refund';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Reference_Notes__c =:Refund';
+            strQuery += ' AND Is_Rejected__c = false';
+            
+            List<AggregateResult> aggResultRefund = Database.query(strQuery);
 
             if(!aggResultPayouts.isEmpty()){
                 for(AggregateResult aggResult : aggResultPayouts)
@@ -337,8 +351,17 @@ public with sharing class PaymentSummaryComponentCtlr {
                 }                
             }
             
+            if(!aggResultRefund.isEmpty()){
+                for(AggregateResult aggResult : aggResultRefund)
+                {
+                    partialPaymentsW.totalRefund += aggResult.get('refund') != null? (Decimal)aggResult.get('refund') : 0.00;
+                }                
+            }
+            
             partialPaymentsW.totalPayments = partialPaymentsW.totalPrincipalPaid + partialPaymentsW.totalAdminFeePaid + 
                 partialPaymentsW.totalOther + partialPaymentsW.totalInterestPaid;
+            
+            partialPaymentsW.totalPayments -= partialPaymentsW.totalRefund;
             
             
             
@@ -446,6 +469,9 @@ public with sharing class PaymentSummaryComponentCtlr {
         public Decimal totalOther {get;set;}
         
         @AuraEnabled
+        public Decimal totalRefund {get;set;}
+        
+        @AuraEnabled
         public String congaViewAllURL {get;set;}
         
         @AuraEnabled
@@ -462,6 +488,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             totalSurplus = 0.0;
             totalShortfall = 0.0;
             totalMisc = 0.0;
+            totalRefund = 0.0;
             
             congaViewAllURL = null;
             congaPrintReportURL = null;

@@ -29,13 +29,14 @@ public with sharing class FundingSummaryReportCtlr {
             string activePartialPayment = 'Active - Partial Payment';
         	String closedWithLoan = 'Closed With Loan';
         	String statusActive = 'Active';
+            String reAssessment = 'Re-Assessment';
             
             strQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Account.ProvinceResidency__c province,'; 
             strQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
             strQuery += ' SUM(Amount__c) amt';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
-            strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
@@ -89,6 +90,7 @@ public with sharing class FundingSummaryReportCtlr {
         string adminFee = 'Admin Fee';
         string activePartialPayment = 'Active - Partial Payment';        
         String closedWithLoan = 'Closed With Loan';
+        String reAssessment = 'Re-Assessment';
         String active = 'Active';
         
         String filterByBusinessUnit = (!String.isEmpty(businessUnit) && businessUnit != null)? businessUnit : 'ELFI';
@@ -103,7 +105,7 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
+            strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';

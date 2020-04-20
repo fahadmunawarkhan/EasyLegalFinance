@@ -1,5 +1,16 @@
-<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="FundingSummaryReportCtlr" >
-    
+<!--
+  @File Name          : FundingSummaryReport.cmp
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 4/17/2020, 4:08:34 PM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    13/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="FundingSummaryReportCtlr">
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" />
@@ -9,24 +20,24 @@
     <aura:attribute name="fileTotal" type="integer" />
     <aura:attribute name="opptyTotal" type="integer" />
     <aura:attribute name="summarizeReportData" type="Object" />
-    
-    <aura:attribute name="customSetting" type="Object"/>
+
+    <aura:attribute name="customSetting" type="Object" />
     <aura:attribute name="spinner" type="Boolean" />
     <aura:attribute name="v.selectedBusinessUnit" type="string" />
-    
+
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
-    
+
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
-    
-    
+
+
     <aura:attribute name="dataByProvince" type="AggregateResult[]" />
-    
+
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
-            <lightning:layout horizontalAlign="center">                
+            <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="4">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                         <div class="slds-form-element__control">
@@ -38,8 +49,8 @@
                             </span>
                         </div>
                     </div>
-                </lightning:layoutItem> 
-                
+                </lightning:layoutItem>
+
                 <lightning:layoutItem size="4">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                         <div class="slds-form-element__control">
@@ -51,8 +62,8 @@
                             </span>
                         </div>
                     </div>
-                </lightning:layoutItem>               
-            </lightning:layout>            
+                </lightning:layoutItem>
+            </lightning:layout>
         </div>
     </lightning:card>
     <lightning:card title="Filter" variant="base">
@@ -91,53 +102,48 @@
                             </span>
                         </div>
                     </div>
-                </lightning:layoutItem>                            
+                </lightning:layoutItem>
             </lightning:layout>
         </div>
-    </lightning:card>    
+    </lightning:card>
     <lightning:card>
-        <lightning:layout horizontalAlign="center" >
-            <lightning:layoutItem >
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem>
                 <a href="{!v.summarizeReportData.congaViewAllURL}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="View All (Excel)" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="View All (Excel)" />
                 </a>
             </lightning:layoutItem>
-            <lightning:layoutItem >
+            <lightning:layoutItem>
                 <a href="{!v.summarizeReportData.congaViewAllURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="View All (PDF)" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="View All (PDF)" />
                 </a>
             </lightning:layoutItem>
-            <lightning:layoutItem >
+            <lightning:layoutItem>
                 <a href="{!v.summarizeReportData.congaPrintReportURL+'%26'+'DefaultPDF=1'}" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="neutral" type="button" label="Print Report (PDF)" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Print Report (PDF)" />
                 </a>
             </lightning:layoutItem>
         </lightning:layout>
-    </lightning:card> 
-    
+    </lightning:card>
+
     <lightning:card class="slds-card slds-card_boundary">
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
-                    <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Loans (Stage="Closed With Loan") Falling under Selected Range.<br/>
-                    <!--<span style="margin-left:40px;">Total payout is payout balnace as of ctitial date.</span>-->
+                    <span style="color:red;margin-left:10px;"> Note</span>: This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Loans (Stage="Closed With Loan") Falling under Selected Range.<br/>
+                <!--<span style="margin-left:40px;">Total payout is payout balnace as of ctitial date.</span>-->
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003n3paUAA/view" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                      variant="brand" type="button" label="Reference Report" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
                 </a>
             </div>
         </div>
         <div class="">
-            <!--<div class="slds-theme_shade">-->        
-            <lightning:card title="Funding Summary" iconName="standard:case" variant="base" >
+            <!--<div class="slds-theme_shade">-->
+            <lightning:card title="Funding Summary" iconName="standard:case" variant="base">
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
-                    <thead>                        
+                    <thead>
                         <tr class="slds-line-height_reset">
                             <th class="" scope="col">
                                 <div class="slds-truncate makeBold" title="Province">Province</div>
@@ -164,11 +170,9 @@
                                         <aura:if isTrue="{!item.fileCount == null}">
                                             0
                                             <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.fileCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
+                                                <lightning:formattedNumber value="{!item.fileCount}" style="decimal" maximumFractionDigits="0" />
                                             </aura:set>
-                                        </aura:if>   
+                                        </aura:if>
                                     </div>
                                 </td>
                                 <td data-label="File Total">
@@ -176,11 +180,9 @@
                                         <aura:if isTrue="{!item.opptyCount == null}">
                                             0
                                             <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.opptyCount}" style="decimal" 
-                                                                           maximumFractionDigits="0"/>
+                                                <lightning:formattedNumber value="{!item.opptyCount}" style="decimal" maximumFractionDigits="0" />
                                             </aura:set>
-                                        </aura:if>   
+                                        </aura:if>
                                     </div>
                                 </td>
                                 <td data-label="Amount">
@@ -188,14 +190,12 @@
                                         <aura:if isTrue="{!item.amount == null}">
                                             $0.00
                                             <aura:set attribute="else">
-                                                <lightning:formattedNumber 
-                                                                           value="{!item.amount}" style="currency" 
-                                                                           maximumFractionDigits="2"/>
+                                                <lightning:formattedNumber value="{!item.amount}" style="currency" maximumFractionDigits="2" />
                                             </aura:set>
                                         </aura:if>
                                     </div>
                                 </td>
-                            </tr>                             
+                            </tr>
                         </aura:iteration>
                         <!-- This section will be outside of the iteration above -->
                         <tr class="slds-hint-parent">
@@ -207,12 +207,10 @@
                                     <aura:if isTrue="{!v.fileTotal == null}">
                                         0
                                         <aura:set attribute="else">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.fileTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
+                                            <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
                                         </aura:set>
                                     </aura:if>
-                                    
+
                                 </div>
                             </td>
                             <td data-label="File Grand Total">
@@ -220,12 +218,10 @@
                                     <aura:if isTrue="{!v.opptyTotal == null}">
                                         0
                                         <aura:set attribute="else">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.opptyTotal}" style="decimal" 
-                                                                       maximumFractionDigits="0"/>
+                                            <lightning:formattedNumber value="{!v.opptyTotal}" style="decimal" maximumFractionDigits="0" />
                                         </aura:set>
                                     </aura:if>
-                                    
+
                                 </div>
                             </td>
                             <td data-label="Amount Grand Total">
@@ -233,13 +229,11 @@
                                     <aura:if isTrue="{!v.amountTotal == null}">
                                         $0.00
                                         <aura:set attribute="else">
-                                            <lightning:formattedNumber 
-                                                                       value="{!v.amountTotal}" style="currency" 
-                                                                       maximumFractionDigits="2"/>
+                                            <lightning:formattedNumber value="{!v.amountTotal}" style="currency" maximumFractionDigits="2" />
                                         </aura:set>
                                     </aura:if>
                                 </div>
-                            </td>                                        
+                            </td>
                         </tr>
                         <!-- / This section will be outside of the iteration above -->
                     </tbody>
@@ -248,7 +242,7 @@
             <lightning:card>
                 <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6">
-                        <lightning:card title="Totals" iconName="standard:case" variant="base" >
+                        <lightning:card title="Totals" iconName="standard:case" variant="base">
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                                 <thead>
                                 </thead>
@@ -256,10 +250,10 @@
                                     <tr class="slds-hint-parent">
                                         <td data-label="=">
                                             <div class="slds-truncate makeBold" title=""></div>
-                                        </td>                                        
+                                        </td>
                                         <td data-label="">
                                             <div class="slds-truncate makeBoldBlue" title="">
-                                                    Business Unit ({!v.selectedBusinessUnitFilter})
+                                                Business Unit ({!v.selectedBusinessUnitFilter})
                                             </div>
                                         </td>
                                     </tr>
@@ -269,7 +263,7 @@
                                         </td>
                                         <td data-label="Advanced Files">
                                             <div class="slds-truncate makeBoldBlue" title="Total Files">
-                                                <lightning:formattedNumber value="{!v.summarizeReportData.noOfFiles}" style="decimal" maximumFractionDigits="0"/>
+                                                <lightning:formattedNumber value="{!v.summarizeReportData.noOfFiles}" style="decimal" maximumFractionDigits="0" />
                                             </div>
                                         </td>
                                     </tr>
@@ -279,22 +273,22 @@
                                         </td>
                                         <td data-label="Advances Amount">
                                             <div class="slds-truncate makeBoldBlue" title="Advances Amount" style="float:left;width:50%;">
-                                                <lightning:formattedNumber value="{!v.summarizeReportData.amountOfAdvances}" style="currency" maximumFractionDigits="2"/>
+                                                <lightning:formattedNumber value="{!v.summarizeReportData.amountOfAdvances}" style="currency" maximumFractionDigits="2" />
                                             </div>
                                             <div title="This is the sum of the amount of payment methods 'eTransfer' and 'Cheque' in the selected date range." style="float:right;width:50%;">
                                                 <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                             </div>
-                                        </td>                                        
+                                        </td>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="Admin Fee">
                                             <div class="slds-truncate makeBold" title="Admin Fee">Admin Fee</div>
-                                        </td>                                        
+                                        </td>
                                         <td data-label="Admin Fee">
                                             <div class="slds-truncate makeBoldBlue" title="Admin Fee">
-                                                <lightning:formattedNumber value="{!v.summarizeReportData.adminFee}" style="currency" maximumFractionDigits="2"/>
+                                                <lightning:formattedNumber value="{!v.summarizeReportData.adminFee}" style="currency" maximumFractionDigits="2" />
                                             </div>
-                                        </td>                                       
+                                        </td>
                                     </tr>
                                     <tr class="slds-hint-parent">
                                         <td data-label="TOTAL">
@@ -302,22 +296,22 @@
                                         </td>
                                         <td data-label="Total">
                                             <div class="slds-truncate makeBoldBlue" style="float:left;width:50%;" title="Amount Grand Total">
-                                                <lightning:formattedNumber value="{!v.summarizeReportData.total}" style="currency" maximumFractionDigits="2"/>
+                                                <lightning:formattedNumber value="{!v.summarizeReportData.total}" style="currency" maximumFractionDigits="2" />
                                             </div>
                                             <div title="Total = (Total Amount of Advances + Admin Fee)" style="float:right;width:50%;">
                                                 <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
-                                            </div>                                
-                                        </td>                                        
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </lightning:card>
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6">
-                        
+
                     </lightning:layoutItem>
                 </lightning:layout>
-            </lightning:card>            
+            </lightning:card>
         </div>
     </lightning:card>
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
@@ -331,5 +325,5 @@
                 </div>
             </div>
         </div>
-    </aura:if> 
+    </aura:if>
 </aura:component>
