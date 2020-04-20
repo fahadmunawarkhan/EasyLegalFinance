@@ -9,6 +9,11 @@
         <operation>equals</operation>
         <value>Cheque, e-Transfer</value>
     </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Is_Rejected__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

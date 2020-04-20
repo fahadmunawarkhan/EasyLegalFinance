@@ -6,6 +6,7 @@ public with sharing class GenerateConsolidatedAssessmentPayoutCtlr {
     public Date today{get;set;}
     public Contact lawyer{get;set;}
     List<PayoutWrapper> clientPayouts;
+    public Banking_Details__c bankingDetail{get;set;}
     
     public GenerateConsolidatedAssessmentPayoutCtlr(){
         string businessUnitParam = Apexpages.currentPage().getParameters().get('businessUnit');
@@ -20,6 +21,8 @@ public with sharing class GenerateConsolidatedAssessmentPayoutCtlr {
         Assessment_Summary_Report__c customSettings = Assessment_Summary_Report__c.getInstance(UserInfo.getUserId());        
         payoutDate = customSettings.Payout_Date__c;
         today = Date.today();
+        
+        bankingDetail = Banking_Details__c.getOrgDefaults();
     }
     
     public List<PayoutWrapper> getPayOutData(){
