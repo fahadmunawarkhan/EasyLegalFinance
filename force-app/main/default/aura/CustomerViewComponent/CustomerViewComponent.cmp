@@ -376,7 +376,7 @@
                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large" style="margin-top:-70px;">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:combobox label="Province of Residency" name="ProvinceResidency" value="{!v.accountObj.ProvinceResidency__c}" 
+                                            <lightning:combobox label="Province of Residency/Claim" name="ProvinceResidency" value="{!v.accountObj.ProvinceResidency__c}" 
                                                                 placeholder="--None--" options="{! v.provinceResidencyOptions }" tabindex="18" />                                                      
                                         </span>
                                     </div>

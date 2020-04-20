@@ -148,8 +148,7 @@
         if(dateIsSet){
             var accObj = component.get('v.accountObj');          
             let loanOverView = component.get("v.LoanSummary");
-            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
-            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
+            let ofn = "&OFN=" + "Payout+Statement+" + accObj.Name.substring(0,accObj.Name.indexOf("- Account")) + "+-+" + loanOverView.payoutDate;
             
             var baseURL = accObj.Conga_Send_Payout_Email_URL__c;
             if(oppObj.Type_of_Loan__c == 'Assessment')
@@ -176,8 +175,7 @@
         if(dateIsSet){  
             var accObj = component.get('v.accountObj');            
             let loanOverView = component.get("v.LoanSummary");
-            let loan = oppObj.Type_of_Loan__c == 'Assessment'? "Assessment" : oppObj.Type_of_Loan__c == 'Lawyer Loan'? "Lawyer" : "Settlement";
-            let ofn = "&OFN=" + loan + "+Loan+Payout+Statement+-+" + accObj.Name.replace("#","+") + "+-+" + loanOverView.payoutDate;
+            let ofn = "&OFN=" + "Payout+Statement+" + accObj.Name.substring(0,accObj.Name.indexOf("- Account")) + "+-+" + loanOverView.payoutDate;
             
             var baseURL = accObj.Conga_Payouts_URL__c;
             if(oppObj.Type_of_Loan__c == 'Assessment')
