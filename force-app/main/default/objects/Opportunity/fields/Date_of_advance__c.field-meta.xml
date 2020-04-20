@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Date_of_advance__c</fullName>
+    <description>Update 16 April by Fahad:
+Changing criteria to only get records other than admin fee or assessment fee because ultimately its going to be cleaned up and mateched with first drawdown.</description>
     <externalId>false</externalId>
     <label>Date of advance</label>
     <summarizedField>Drawdown__c.Date__c</summarizedField>
+    <summaryFilterItems>
+        <field>Drawdown__c.Payment_Method__c</field>
+        <operation>notEqual</operation>
+        <value>Admin Fee</value>
+    </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>min</summaryOperation>
     <trackHistory>false</trackHistory>

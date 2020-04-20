@@ -162,6 +162,11 @@
                 <default>false</default>
                 <label>Payments Halted</label>
             </value>
+            <value>
+                <fullName>Invoice Pre-Approved</fullName>
+                <default>false</default>
+                <label>Invoice Pre-Approved</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Intake</controllingFieldValue>
@@ -207,6 +212,10 @@
             <controllingFieldValue>Loan Approved</controllingFieldValue>
             <controllingFieldValue>Re-Assessment</controllingFieldValue>
             <valueName>File Sent for EFT</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Loan Approved</controllingFieldValue>
+            <valueName>Invoice Pre-Approved</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
