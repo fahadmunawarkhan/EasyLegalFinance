@@ -5,10 +5,36 @@
         var min = '2010-01-01';
         component.set("v.calendarMin", min);
     },
+
     getCalendarMax: function(component) {
         var year = new Date().getFullYear() + 5;
         var max = year + '-12-31';
         component.set("v.calendarMax", max);
+    },
+
+    setCustomSettings: function(component) {
+        return new Promise($A.getCallback(function(resolve, reject) {
+            let action = component.get('c.saveCustomSettings');
+            action.setParams({
+                startDate: component.get('v.startDate'),
+                endDate: component.get('v.endDate'),
+                businessUnit: component.get('v.selectedBusinessUnitFilter'),
+                typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
+                searchByName: component.get('v.searchByName')
+
+            });
+            action.setCallback(this, function(response) {
+                let state = response.getState();
+                if (state === 'SUCCESS') {
+                    console.log('The start date and end date in custom settings have been updated.');
+                    resolve(true);
+                } else if (state === 'ERROR') {
+                    console.log('The start date and end date in custom settings could not be updated.');
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }));
     },
 
     getCustomSettings: function(component) {
@@ -133,5 +159,30 @@
             "type": type
         });
         toastEvent.fire();
+    },
+
+    getSummarizeReportData: function(component) {
+        return new Promise($A.getCallback(
+            function(resolve, reject) {
+                let action = component.get('c.getSummarizeData');
+                action.setParams({
+                    startDate: component.get('v.startDate'),
+                    endDate: component.get('v.endDate'),
+                    BusinessUnit: component.get("v.selectedBusinessUnitFilter"),
+                    typeOfLoan: component.get('v.selectedTypeOfLoanFilter')
+                });
+                action.setCallback(this, function(response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        console.log('#####RESULT#####');
+                        console.log(JSON.stringify(response.getReturnValue()));
+                        resolve(response.getReturnValue());
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
     }
 })
