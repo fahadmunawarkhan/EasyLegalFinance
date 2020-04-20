@@ -2,32 +2,32 @@
     <head>
         <style type="text/css" media="print">
             @page {
-                @top-center {
-                    content: element(header);
-                }
-                @bottom-left {
-                    content: element(footer);
-                }
+            @top-center {
+            content: element(header);
+            }
+            @bottom-left {
+            content: element(footer);
+            }
             }
             div.header {
-                padding: 10px;
-                position: running(header);
+            padding: 10px;
+            position: running(header);
             }
             div.footer {
-                display: block;
-                padding: 5px;
-                position: running(footer);
+            display: block;
+            padding: 5px;
+            position: running(footer);
             }
             .pagenumber:before {
-                content: counter(page);
+            content: counter(page);
             }
             .pagecount:before {
-                content: counter(pages);
+            content: counter(pages);
             }
             .content {
-                margin-top: 15px !important;
-                font-family: sans-serif;
-                font-size: 12px;
+            margin-top: 15px !important;
+            font-family: sans-serif;
+            font-size: 12px;
             }
         </style>
         
@@ -121,7 +121,53 @@
                     </span> and remit to the address on the bottom of this statement
                 </p>
                 <p>
-                    When sending funds, please take into account, mailing and receipt time (generally six (6) days), from the date of posting. Should you wish to bypass this, please contact us for EFT information.
+                    When sending funds, please take into account, mailing and receipt time (generally six (6) days), from the date of posting. Should you wish to bypass this, please use the EFT information below.
+                </p>
+                <p>
+                    <table style="width:50%; border:1px solid black; border-collapse: collapse;border-spacing: 0px; margin: auto;">
+                        <tbody>
+                            <tr>
+                                <td style="background-color:#d9d9d9; width:35%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">Beneficiary</span>
+                                </td>
+                                <td style="width:75%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">{!bankingDetail.Beneficiary_Name__c}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#d9d9d9;width:35%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">Bank Name</span>
+                                </td>
+                                <td style="width:75%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">{!bankingDetail.Bank_Name__c}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#d9d9d9;width:35%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">Institution #</span>
+                                </td>
+                                <td style="width:75%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">{!bankingDetail.Institution__c}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#d9d9d9;width:35%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">Branch</span>
+                                </td>
+                                <td style="width:75%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">{!bankingDetail.Branch__c}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#d9d9d9;width:35%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">Account</span>
+                                </td>
+                                <td style="width:75%;border:1px solid black;border-collapse: collapse;">
+                                    <span style="padding-left:5px;">{!bankingDetail.Account__c}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                </table>
                 </p>
                 <p>
                     Should you have any questions regarding this file, please contact our Client Service Team at 
