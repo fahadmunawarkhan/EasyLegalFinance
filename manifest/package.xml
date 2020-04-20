@@ -2090,6 +2090,47 @@
         <members>TroubleshootingReportsByFahad/Assessment_Provider_Summary_Report_KXp</members>
         <members>TroubleshootingReportsByFahad/Law_Firm_Summary_utN</members>
         <members>TroubleshootingReportsByFahad/Lawyer_Summary_0xk</members>
+        <members>Daily_Operations_Control_Reports/LoanSetup_Interest_Rate_not_24_pxn</members>
+        <members>Daily_Operations_Control_Reports/LoanSetup_Not_Compounding_Interest_woo</members>
+        <members>Daily_Operations_Control_Reports/LoanSetup_Comp_Freq_Not_SemiAnnual_vDK</members>
+        <members>Daily_Operations_Control_Reports/LoanSetup_Min_Interest_Period_not_6_Mon_2ly</members>
+        <members>Daily_Operations_Control_Reports/LoanSetup_With_Interest_Deferral_Period_Vky</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Negative_or_zero_Amount_f3R</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_With_neg_or_zero_payments_szV</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Without_Reference_Notes_6D4</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Scheduled_vs_Drawdown_Date_rLl</members>
+        <members>Daily_Operations_Control_Reports/LoanOver_Without_Interest_Rate_ivd</members>
+        <members>Daily_Operations_Control_Reports/LoanOver_Accounts_Without_outstanding_b_sIQ</members>
+        <members>Daily_Operations_Control_Reports/LoanOver_Accounts_without_A_Fees_txD</members>
+        <members>Daily_Operations_Control_Reports/LoanOver_Accounts_without_Loan_S_Date_9GC</members>
+        <members>Daily_Operations_Control_Reports/Accounts_Duplicate_Names_25l</members>
+        <members>Daily_Operations_Control_Reports/Accounts_Duplicate_File_Numbers_frr</members>
+        <members>Daily_Operations_Control_Reports/Accounts_Missing_Province_of_Residency_tLI</members>
+        <members>Daily_Operations_Control_Reports/Opps_Interest_Rate_other_than_24_1j7</members>
+        <members>Daily_Operations_Control_Reports/Opps_Compounding_Period_not_Comp_Inter_ArN</members>
+        <members>Daily_Operations_Control_Reports/Opps_Compounding_Freq_Not_SemiAnnual_6zx</members>
+        <members>Daily_Operations_Control_Reports/Opps_Min_Interest_Period_not_6_months_luY</members>
+        <members>Daily_Operations_Control_Reports/Opps_With_Interest_Deferral_Period_R5P</members>
+        <members>Daily_Operations_Control_Reports/Opps_with_special_fees_fzr</members>
+        <members>Daily_Operations_Control_Reports/Opps_Without_or_Zero_Admin_Fees_kBg</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Admin_Fee_DD_Date_not_same_as_Ndj</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Payment_to_Other_Lender_GJE</members>
+        <members>Daily_Operations_Control_Reports/Opps_With_Reversals_and_Corrections_hWy</members>
+        <members>Daily_Operations_Control_Reports/Opps_WO_Financing_Statement_Expiry_rfM</members>
+        <members>Daily_Operations_Control_Reports/Opps_Loans_WO_Drawdows_pau</members>
+        <members>Daily_Operations_Control_Reports/Drawdowns_Closed_Loans_with_PartialPymt_dyw</members>
+        <members>Daily_Operations_Control_Reports/Opps_With_Multiple_Admin_Fee_Drawdows_DNC</members>
+        <members>Daily_Operations_Control_Reports/Opps_Drawdowns_with_Wrong_Admin_Fee_PUL</members>
+        <members>Daily_Operations_Control_Reports/Opps_Closed_with_No_Loan_Status_3qV</members>
+        <members>Daily_Operations_Control_Reports/Opps_Invalid_Reassessments_dHg</members>
+        <members>Daily_Operations_Control_Reports/Opps_Closed_Paid_Without_Loan_Payout_THm</members>
+        <members>Daily_Operations_Control_Reports/Opps_Closed_Shortfall_Without_Partial_P_EqF</members>
+        <members>Daily_Operations_Control_Reports/Opps_Closed_Surplus_Without_Payment_Sur_aF9</members>
+        <members>Daily_Operations_Control_Reports/Opps_Missing_Stage_or_Stage_Status_T2d</members>
+        <members>Daily_Operations_Control_Reports/Assessments_Without_Assessment_Provider_8g3</members>
+        <members>Daily_Operations_Control_Reports/Assessments_Without_Invoice_Number_iBP</members>
+        <members>Daily_Operations_Control_Reports/Assessments_Without_Insurer_Name_nY3</members>
+        <members>Daily_Operations_Control_Reports/Opps_APR2_Outside_Range_pNa</members>
         <name>Report</name>
     </types>
     <types>
