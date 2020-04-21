@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 16/04/2020, 4:50:33 pm
+  @Last Modified On   : 21/04/2020, 1:35:06 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -79,9 +79,11 @@
                 </lightning:tab>
             </aura:if>
             <!--PPSA Expiry Report-->
-            <lightning:tab id="PPSA_Expiry_Summary" label="PPSA Expiry Summary">
-                <c:PpsaExpiryReport />
-            </lightning:tab>
+            <aura:if isTrue="{!v.currentUser.PPSA_Expiry_Summary_Report__c}">
+                <lightning:tab id="PPSA_Expiry_Summary" label="PPSA Expiry Summary">
+                    <c:PpsaExpiryReport />
+                </lightning:tab>
+            </aura:if>
             <!--PPSA Expiry Report-->
             <aura:if isTrue="{!v.currentUser.Payment_Summary_Report__c}">
                 <lightning:tab id="PAYMENT_SUMMARY" label="Payment Summary">
