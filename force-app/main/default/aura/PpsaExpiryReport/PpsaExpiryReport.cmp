@@ -1,0 +1,311 @@
+<!--
+  @File Name          : PpsaExpiryReport.cmp
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 22/04/2020, 1:59:51 pm
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="PpsaExpiryReportComponentCtrl">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="calendarMin" type="date" />
+    <aura:attribute name="calendarMax" type="date" />
+    <aura:attribute name="startDate" type="date" />
+    <aura:attribute name="endDate" type="date" />
+    <aura:attribute name="LoansList" type="Opportunity[]" />
+    <aura:attribute name="summarizeReportData" type="object" />
+    <aura:attribute name="expiryDateFilter" type="date" default="" />
+    <aura:attribute name="statusFilter" type="date" default="" />
+
+
+
+    <aura:attribute name="AmountByLawFirm" type="AggregateResult[]" />
+    <aura:attribute name="spinner" type="Boolean" />
+    <aura:attribute name="customSetting" type="Object" />
+    <aura:attribute name="ViewAllUrl" type="String" />
+    <aura:attribute name="PrintAllUrl" type="String" />
+    <aura:attribute name="sortField" type="String" default="Date_Financing_Statement_Expires__c" />
+    <aura:attribute name="sortOrder" type="String" default="DESC" />
+    <aura:attribute name="showWarning" type="Boolean" default="false" />
+    <aura:attribute name="searchByName" type="String" default="" />
+
+    <!--Funding Dashboard (Type of Loan)-->
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
+    <!-- <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Facility Loan" /> -->
+    <!--|==============================|-->
+
+    <aura:attribute name="ChosenFilter" type="string" />
+    <aura:attribute name="businessUnitOptions" type="List" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
+    <!-- <aura:attribute name="selectedBusinessUnitFilter" type="String" default="ELFI" /> -->
+
+    <!-- Start Date and End Date Card -->
+    <lightning:card title="Date Range" variant="base">
+        <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="4">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:input label="Start Date" type="date" value="{!v.startDate}" 
+                                                     min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="4">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:input label="End Date" type="date" value="{!v.endDate}" 
+                                                     min="{! v.calendarMin}" max="{! v.calendarMax}" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    <!-- Start Date and End Date Card -->
+    <!-- Filter (Name, Bussiness Unti, Type of Loan) -->
+    <lightning:card title="Filter" variant="base">
+        <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <!--<lightning:layoutItem size="4">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:input label="Search" value="{!v.searchByName}"  placeholder="Search by law firm or lawyer name..."/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>-->
+
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:button class="slds-theme_neutral" iconPosition="left"
+                                                      variant="neutral" type="button" label="Search" onclick="{!c.searchButton}" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </lightning:card>
+    <!-- Filter (Name, Bussiness Unti, Type of Loan) -->
+    <!-- Excel, PDF and print Report -->
+    <lightning:card>
+        <lightning:layout horizontalAlign="center">
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllReportButton}" variant="neutral" type="button" label="View Report (Excel)" />
+            </lightning:layoutItem>
+            <!--<lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.viewAllPDFReportButton}" variant="neutral" type="button" label="View All (PDF)" />
+            </lightning:layoutItem>-->
+            <lightning:layoutItem>
+                <lightning:button class="slds-theme_neutral" iconPosition="left" onclick="{!c.printPDFReportButton}" variant="neutral" type="button" label="Print Report (PDF)" />
+                <!--<a href="{!v.PrintAllUrl+'%26'+'DefaultPDF=1'}" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                      variant="neutral" type="button" label="Print Report (PDF)" />
+                </a>-->
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:card>
+    <!-- Excel, PDF and print Report -->
+
+    <!-- Note and Table -->
+    <lightning:card class="slds-card slds-card_boundary">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_9-of-12">
+                <span style="font-style:italic;font-size:smaller">
+                    <span style="color:red;margin-left:10px;"> Note</span>: This Shows Only "PPSA Expiry Loans" Falling under Selected Range.
+                <!--This Table Shows Only "e-Transfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and Opportunities being "Closed With Loan". <br/>-->
+                <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
+                </span>
+                <br />
+
+                <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK">
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
+                </a>
+            </div>
+        </div>
+
+
+        <lightning:card title="PPSA Loans Expiry Summary" iconName="standard:case" variant="base">
+            <div class="slds-table--header-fixed_container" style="padding-top: 4rem !important;">
+                <div style="overflow-y:auto !important; height:450px !important;">
+                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered slds-table--header-fixed">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="slds-is-sortable slds-is-resizable slds-is-sorted">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px;">
+                                                <span onclick="{!c.sort}" data-field="Date_Financing_Statement_Expires__c" style="font-size: 11px;" id="Clickable">{!'EXPIRY DATE'}</span>
+                                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Date_Financing_Statement_Expires__c')}">
+                                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Date_Financing_Statement_Expires__c')}">
+                                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                                </aura:if>
+                                                <lightning:input type="date" aura:id="expiryDateFilter" value="{!v.expiryDateFilter}" onchange="{!c.filter}" style="margin-top:-4px; font-size: 11px !important;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Primary_Contact__r.FirstName" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="FIRST NAME" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'FIRST NAME'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Primary_Contact__r.FirstName')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Primary_Contact__r.FirstName')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Primary_Contact__r.LastName" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="LAST NAME" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'LAST NAME'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Primary_Contact__r.LastName')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Primary_Contact__r.LastName')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Loan_No__c">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="# OF LOAN" style="padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'# OF LOAN'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Loan_No__c')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Loan_No__c')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </th>
+                                <th class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="stage_status">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="STAGE STATUS" style="padding-left: 7px;font-size: 11px;">
+                                        {!'STATUS'}
+                                        <div style="margin-top:-7px;">
+                                            <lightning:select aura:id="statusFilter" onchange="{!c.filter}">
+                                                <option value="">All</option>
+                                                <option value="overdue">Overdue</option>
+                                                <option value="active">Active</option>
+                                            </lightning:select>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="ppsaNo" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="PPSA #" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">{!'PPSA #'}</div>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="days_to_expire">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="DAYS TO EXPIRE" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">{!'DAYS TO EXPIRE'}</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.LoansList}" var="loans">
+                                <tr class="slds-hint-parent">
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputDate value="{!loans.ExpiryDate}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <a href="{! '/' + loans.AccId}">
+                                                <ui:outputText value="{!loans.FirstName}" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <a href="{! '/' + loans.AccId}">
+                                                <ui:outputText value="{!loans.LastName}" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.LoanNo}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.StageStatus}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.PPSANo}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            {!loans.DaysToExpire}
+                                            <ui:outputText value="{!' Days'}" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </lightning:card>
+    </lightning:card>
+    <!-- Note and Table -->
+
+    <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
+    <aura:if isTrue="{!v.spinner}">
+        <div class="demo-only demo--inverse" style="height: 6rem;">
+            <div class="slds-spinner_container slds-is-fixed">
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>
