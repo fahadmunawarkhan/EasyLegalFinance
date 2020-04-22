@@ -4,13 +4,15 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 20/04/2020, 5:40:58 pm
+ * @Last Modified On   : 22/04/2020, 10:48:48 am
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
 **/
 public with sharing class PpsaExpiryReportComponentCtrl {
     public class Wrapper {
+        @AuraEnabled
+        public String AccId {get; set;}
         @AuraEnabled
         public String ExpiryDate {get; set;}
         @AuraEnabled
@@ -27,6 +29,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
         public Decimal DaysToExpire {get; set;}
 
         public Wrapper(){
+            AccId = '';
             ExpiryDate = '';
             FirstName = '';
             LastName = '';
@@ -72,10 +75,11 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     // ===================================================================================================
 
     @AuraEnabled
-    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan){
+    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
+            Date ExpiryDtFilter = (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null ? Date.valueOf(expiryDateFilter) : null);
             List<Wrapper> ExpiryLoansWrapperList = new List<Wrapper>();
             
             
@@ -89,6 +93,8 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             query += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
             query += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
             query += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
+            query += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
+            query += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
             query += ' order by ' + field + ' ' + direction + ' NULLS LAST';
 
             List<Opportunity> PPSAExpiryListId = Database.query(query);
@@ -100,10 +106,12 @@ public with sharing class PpsaExpiryReportComponentCtrl {
 
             // =========== Expiry Loan Query ===========
                 String PPSAExpiryQuery = '';
-                PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
+                PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, AccountId, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
                 PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
                 PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
                 PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
+                PPSAExpiryQuery += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
+                PPSAExpiryQuery += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
                 PPSAExpiryQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
                 PPSAExpiryQuery += ' AND Id IN :LoansIdSets';
                 PPSAExpiryQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
@@ -112,8 +120,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 Map<String, Wrapper> ExpiryLoansList = new Map<String, Wrapper>();
                 for(Opportunity getOppo : PPSAExpiryList){
                     Wrapper w = new Wrapper();
-                    
-                    system.debug(getOppo.id);
+                    w.AccId += getOppo.AccountId;
                     if(getOppo.Date_Financing_Statement_Expires__c != null){
                         Datetime dt = Date.Valueof(getOppo.Date_Financing_Statement_Expires__c); 
                         w.ExpiryDate += dt.year() + '-' + dt.month() + '-' + dt.addDays(1).day();

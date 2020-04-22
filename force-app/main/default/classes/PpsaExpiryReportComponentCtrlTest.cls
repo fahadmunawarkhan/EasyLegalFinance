@@ -1,3 +1,14 @@
+/**
+ * @File Name          : PpsaExpiryReportComponentCtrlTest.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 22/04/2020, 12:44:03 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    22/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 @isTest(SeeAllData=true)
 public class PpsaExpiryReportComponentCtrlTest {
     @isTest static void mentod1(){
@@ -31,8 +42,9 @@ public class PpsaExpiryReportComponentCtrlTest {
             String BusinessUnit = 'Consolidated';
             String searchByName = '';
             String typeOfLoan = 'Consolidated';
-        
-        	PpsaExpiryReportComponentCtrl.getPPSExpiryLoans(startDate, endDate, field, direction, BusinessUnit, searchByName, typeOfLoan);
+            String expiryDateFilter = '';
+            String statusFilter = '';
+            PpsaExpiryReportComponentCtrl.getPPSExpiryLoans(startDate, endDate, field, direction, BusinessUnit, searchByName, typeOfLoan, expiryDateFilter, statusFilter);
         	PpsaExpiryReportComponentCtrl.getCustomSetting();
         	PpsaExpiryReportComponentCtrl.getPickListValues('Opportunity', 'Type_of_Loan__c');
         	PpsaExpiryReportComponentCtrl.saveCustomSettings(startdate, enddate, BusinessUnit, typeOfLoan, searchByName);

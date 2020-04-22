@@ -110,5 +110,28 @@
         if (!newWin || newWin.closed || typeof newWin.closed == 'undefined') {
             reject([{ message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!' }]);
         }
+    },
+
+    sort: function(component, event, helper) {
+
+        let selectedItem = event.currentTarget;
+        let field = selectedItem.dataset.field;
+        let sortOrder = component.get('v.sortOrder');
+        let oldField = component.get('v.sortField');
+        console.log(selectedItem + '|' + field + '|' + sortOrder + '|' + oldField);
+        sortOrder = (sortOrder == 'DESC' && oldField == field) ? 'ASC' : 'DESC';
+        component.set('v.sortField', field);
+        component.set('v.sortOrder', sortOrder);
+        component.set("v.spinner", true);
+        $A.enqueueAction(component.get('c.searchButton'));
+    },
+
+    filter: function(component, event, helper) {
+        var expiryDateFilterValue = component.find("expiryDateFilter").get("v.value");
+        var statusFilterValue = component.find("statusFilter").get("v.value");
+        component.set("v.expiryDateFilter", expiryDateFilterValue);
+        component.set("v.statusFilter", statusFilterValue);
+        component.set("v.spinner", true);
+        $A.enqueueAction(component.get('c.searchButton'));
     }
 })

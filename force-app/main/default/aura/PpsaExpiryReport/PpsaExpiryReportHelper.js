@@ -130,7 +130,9 @@
                 direction: component.get('v.sortOrder'),
                 BusinessUnit: component.get("v.selectedBusinessUnitFilter"),
                 searchByName: component.get('v.searchByName'),
-                typeOfLoan: component.get('v.selectedTypeOfLoanFilter')
+                typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
+                expiryDateFilter: component.get("v.expiryDateFilter"),
+                statusFilter: component.get("v.statusFilter")
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();

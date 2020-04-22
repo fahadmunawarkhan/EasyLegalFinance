@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 20/04/2020, 5:04:00 pm
+  @Last Modified On   : 22/04/2020, 1:59:51 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -18,6 +18,8 @@
     <aura:attribute name="endDate" type="date" />
     <aura:attribute name="LoansList" type="Opportunity[]" />
     <aura:attribute name="summarizeReportData" type="object" />
+    <aura:attribute name="expiryDateFilter" type="date" default="" />
+    <aura:attribute name="statusFilter" type="date" default="" />
 
 
 
@@ -26,7 +28,7 @@
     <aura:attribute name="customSetting" type="Object" />
     <aura:attribute name="ViewAllUrl" type="String" />
     <aura:attribute name="PrintAllUrl" type="String" />
-    <aura:attribute name="sortField" type="String" default="Loan_No__c" />
+    <aura:attribute name="sortField" type="String" default="Date_Financing_Statement_Expires__c" />
     <aura:attribute name="sortOrder" type="String" default="DESC" />
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="searchByName" type="String" default="" />
@@ -159,7 +161,7 @@
                 </span>
                 <br />
 
-                <a href="/lightning/r/Report/00O3J000000O8ILUA0/view" target="_BLANK">
+                <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
                 </a>
             </div>
@@ -167,76 +169,128 @@
 
 
         <lightning:card title="PPSA Loans Expiry Summary" iconName="standard:case" variant="base">
-            <div style="overflow-x:auto;height:450px;">
-                <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
-                    <thead>
-                        <tr class="slds-line-height_reset">
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="expiry_date">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="EXPIRY DATE">{!'EXPIRY DATE'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="first_name">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="FIRST NAME">{!'FIRST NAME'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="last_name">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="LAST NAME">{!'LAST NAME'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="NoOfloans">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF LOAN">{!'# OF LOAN'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="stage_status">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="STAGE STATUS">{!'STAGE STATUS'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="ppsaNo">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PPSA #">{!'PPSA #'}</span>
-                            </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="days_to_expire">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="DAYS TO EXPIRE">{!'DAYS TO EXPIRE'}</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <aura:iteration items="{!v.LoansList}" var="loans">
-                            <tr class="slds-hint-parent">
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputDate value="{!loans.ExpiryDate}" />
+            <div class="slds-table--header-fixed_container" style="padding-top: 4rem !important;">
+                <div style="overflow-y:auto !important; height:450px !important;">
+                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered slds-table--header-fixed">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="slds-is-sortable slds-is-resizable slds-is-sorted">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px;">
+                                                <span onclick="{!c.sort}" data-field="Date_Financing_Statement_Expires__c" style="font-size: 11px;" id="Clickable">{!'EXPIRY DATE'}</span>
+                                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Date_Financing_Statement_Expires__c')}">
+                                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                                </aura:if>
+                                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Date_Financing_Statement_Expires__c')}">
+                                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                                </aura:if>
+                                                <lightning:input type="date" aura:id="expiryDateFilter" value="{!v.expiryDateFilter}" onchange="{!c.filter}" style="margin-top:-4px; font-size: 11px !important;" />
+                                            </div>
+                                        </div>
                                     </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputText value="{!loans.FirstName}" />
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Primary_Contact__r.FirstName" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="FIRST NAME" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'FIRST NAME'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Primary_Contact__r.FirstName')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Primary_Contact__r.FirstName')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
                                     </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputText value="{!loans.LastName}" />
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Primary_Contact__r.LastName" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="LAST NAME" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'LAST NAME'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Primary_Contact__r.LastName')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Primary_Contact__r.LastName')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
                                     </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputText value="{!loans.LoanNo}" />
+                                </th>
+                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Loan_No__c">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="# OF LOAN" style="padding-top: 23px;font-size: 11px;">
+                                        <span id="Clickable">{!'# OF LOAN'}</span>
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Loan_No__c')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Loan_No__c')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
                                     </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputText value="{!loans.StageStatus}" />
+                                </th>
+                                <th class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="stage_status">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="STAGE STATUS" style="padding-left: 7px;font-size: 11px;">
+                                        {!'STATUS'}
+                                        <div style="margin-top:-7px;">
+                                            <lightning:select aura:id="statusFilter" onchange="{!c.filter}">
+                                                <option value="">All</option>
+                                                <option value="overdue">Overdue</option>
+                                                <option value="active">Active</option>
+                                            </lightning:select>
+                                        </div>
                                     </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <ui:outputText value="{!loans.PPSANo}" />
-                                    </div>
-                                </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        {!loans.DaysToExpire}
-                                        <ui:outputText value="{!' Days'}" />
-                                    </div>
-                                </td>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="ppsaNo" style="width: 186px;">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="PPSA #" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">{!'PPSA #'}</div>
+                                </th>
+                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="days_to_expire">
+                                    <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="DAYS TO EXPIRE" style="padding-left: 7px;padding-top: 23px;font-size: 11px;">{!'DAYS TO EXPIRE'}</div>
+                                </th>
                             </tr>
-                        </aura:iteration>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.LoansList}" var="loans">
+                                <tr class="slds-hint-parent">
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputDate value="{!loans.ExpiryDate}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <a href="{! '/' + loans.AccId}">
+                                                <ui:outputText value="{!loans.FirstName}" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <a href="{! '/' + loans.AccId}">
+                                                <ui:outputText value="{!loans.LastName}" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.LoanNo}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.StageStatus}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <ui:outputText value="{!loans.PPSANo}" />
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            {!loans.DaysToExpire}
+                                            <ui:outputText value="{!' Days'}" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </lightning:card>
     </lightning:card>

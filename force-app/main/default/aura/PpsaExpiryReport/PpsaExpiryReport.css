@@ -1,2 +1,7 @@
-.THIS {
+.THIS .slds-datepicker table {
+    table-layout: fixed;
+}
+
+.THIS #Clickable:hover {
+    cursor: pointer;
 }
