@@ -34,18 +34,22 @@ public with sharing class PaymentSummaryComponentCtlr {
             String PartialPayment = 'Partial Payment';
             String LoanPayout = 'Loan Payout';
             String clientRebate = 'Client Rebate';
+            String Surplus = 'Payment Surplus';
+            String Misc = 'Miscellaneous Payment';
+            String Refund = 'Refund';
             
-            strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c prov, Opportunity__r.Account.Business_Unit__c bunit, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
-            strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Amount__c) amt';
+            strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c prov, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
+            strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Payment_Summary_Report_Amount__c) amt';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit'; 
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate)';
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c, Opportunity__r.Account.Business_Unit__c ';
+            strQuery += ' AND ((Payment_Method__c =:payment';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout';
+            strQuery += ' OR Reference_Notes__c =:Surplus OR Reference_Notes__c =:Misc)) OR Reference_Notes__c =:Refund)';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c ';
             strQuery += ' Order by SUM(Amount__c) desc NULLS LAST';
             
               
@@ -92,6 +96,7 @@ public with sharing class PaymentSummaryComponentCtlr {
         PartialPaymentsWrapper partialPaymentsW = new PartialPaymentsWrapper();
         //List<AggregateResult> aggResult = new List<AggregateResult>();
         try{
+            AggregateResult aggResult = null;
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
             
@@ -105,98 +110,112 @@ public with sharing class PaymentSummaryComponentCtlr {
             String PartialPayment = 'Partial Payment';
             String LoanPayout = 'Loan Payout';
             String clientRebate = 'Client Rebate';
+            String Surplus = 'Payment Surplus';
+            String Misc = 'Miscellaneous Payment';
+            String Refund = 'Refund';
             
             strQuery = 'Select'; 
-            strQuery += ' COUNT_DISTINCT(Opportunity__c) payouts, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' COUNT_DISTINCT(Opportunity__c) payouts ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate)';
+            strQuery += ' AND ((Payment_Method__c =:payment';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout';
+            strQuery += ' OR Reference_Notes__c =:Surplus OR Reference_Notes__c =:Misc)) OR Reference_Notes__c =:Refund)';
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
             
-            List<AggregateResult> aggResultPayouts = Database.query(strQuery); 
+            aggResult = Database.query(strQuery); 
+            partialPaymentsW.noOfPayouts = aggResult.get('payouts') != null? (Integer)aggResult.get('payouts') : 0;
+            
             
             // Average number of days outstanding
-            strQuery = ''; 
-            
+            strQuery = '';             
             strQuery = 'Select'; 
-            strQuery += ' AVG(Outstanding_Days__c) outstanding, Account.Business_Unit__c unit ';
+            strQuery += ' AVG(Outstanding_Days__c) outstanding ';
             strQuery += ' FROM Opportunity WHERE id in ( Select Opportunity__c from Drawdown__c where Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c =:clientRebate))';
-            strQuery += ' group by Account.Business_Unit__c ';
+            strQuery += ' AND ((Payment_Method__c =:payment';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout';
+            strQuery += ' OR Reference_Notes__c =:Surplus OR Reference_Notes__c =:Misc)) OR Reference_Notes__c =:Refund))';
             
-            List<AggregateResult> aggResultOutstanding = Database.query(strQuery);
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.avgNoOfDaysOutstanding = aggResult.get('outstanding') != null? (Decimal)aggResult.get('outstanding') : 0;
+            
             
             // total principal paid
-            strQuery = '';
-            
-            String Cheque = 'Cheque';
-            String eTransfer = 'e-Transfer';
-            
+            strQuery = '';            
             strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) principalPaid, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' SUM(Principal_Repaid__c) principalPaid ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += ' AND Is_Rejected__c = false';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND (Payment_Method__c =:eTransfer OR Payment_Method__c =:Cheque)';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
-            //strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
-            
-            List<AggregateResult> aggResultPrincipal = Database.query(strQuery);
-            
-            // total interest paid
-               // yet to be decided, question marks added
-            
-			// total admin fee
-            strQuery = '';
-            
-            String AdminFee = 'Admin Fee';
-            
-            strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) adminFee, Opportunity__r.Account.Business_Unit__c unit ';
-            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
-            strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
-            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND (Payment_Method__c =:AdminFee)';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
-            //strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
-            
-            List<AggregateResult> aggResultAdminfee = Database.query(strQuery); 
-            
-            // total other changes
-            strQuery = '';
-            
-            String Other = 'Other';
-            
-            strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) other, Opportunity__r.Account.Business_Unit__c unit ';
-            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
-            strQuery += ' AND Date__c <= :endDt'; 
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND (Payment_Method__c =:Other)';
+            strQuery += ' AND Payment_Method__c =:payment';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
-            // strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout)';
             
-            List<AggregateResult> aggResultOther = Database.query(strQuery); 
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalPrincipalPaid = aggResult.get('principalPaid') != null? (Decimal)aggResult.get('principalPaid') : 0.00;
+                  
+            
+			// total Other 'Admin Fee'
+            strQuery = '';
+            String Other = 'Other';
+            String otherAdminFee = 'Admin Fee';
+            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) adminFee ';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += ' AND Is_Rejected__c = false';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Payment_Method__c =:Other AND Reference_Notes__c =:otherAdminFee';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';            
+            
+            aggResult = Database.query(strQuery); 
+            partialPaymentsW.totalOtherAdminFeePaid = aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.00;
+            
+            
+            // total other 'Referral Fee' changes
+            String ReferralFee = 'Referral Fee';
+            strQuery = '';            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) otherReferralFee ';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Payment_Method__c =:Other AND Reference_Notes__c =:ReferralFee';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalOtherReferralFee = aggResult.get('otherReferralFee') != null? (Decimal)aggResult.get('otherReferralFee') : 0.00;
+            
+            // total other 'Legal Fee' changes
+            String LegalFee = 'Legal Fee';
+            strQuery = '';            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) otherLegalFee';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Payment_Method__c =:Other AND Reference_Notes__c =:LegalFee';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalOtherLegalFee = aggResult.get('otherLegalFee') != null? (Decimal)aggResult.get('otherLegalFee') : 0.00;
             
             // total shortfall paid
             strQuery = '';
@@ -204,75 +223,65 @@ public with sharing class PaymentSummaryComponentCtlr {
             String Shortfall = 'Payment Shortfall';
             
             strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) shortfall, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' SUM(Amount__c) shortfall';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND Reference_Notes__c =:Shortfall';
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
+            strQuery += ' AND Payment_Method__c =:payment AND Reference_Notes__c =:Shortfall';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             
-            List<AggregateResult> aggResultShortfall = Database.query(strQuery); 
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalShortfall = aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.00; 
             
             // total surplus paid
             strQuery = '';
-
-            String Surplus = 'Payment Surplus';
-
             strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) surplus, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' SUM(Amount__c) surplus';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND Reference_Notes__c =:Surplus';
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
+            strQuery += ' AND Payment_Method__c =:payment AND Reference_Notes__c =:Surplus';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             
-            List<AggregateResult> aggResultSurplus = Database.query(strQuery);
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalSurplus = aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.00;
             
             // total misc paid
             strQuery = '';
-            
-            String Misc = 'Miscellaneous Payment';
-            
             strQuery = 'Select'; 
-            strQuery += ' SUM(Amount__c) misc, Opportunity__r.Account.Business_Unit__c unit ';
+            strQuery += ' SUM(Amount__c) misc ';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt'; 
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
-            strQuery += ' AND Reference_Notes__c =:Misc';
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c ';
+            strQuery += ' AND Payment_Method__c =:payment AND Reference_Notes__c =:Misc';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
             
-            List<AggregateResult> aggResultMisc = Database.query(strQuery);
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalMisc = aggResult.get('misc') != null? (Decimal)aggResult.get('misc') : 0.00;
             
             
             // Total Interest Received
-            strQuery = 'SELECT SUM(Interest_Repaid__c) interestReceived,';
-            strQuery += ' Opportunity__r.Account.Business_Unit__c unit';
+            strQuery = 'SELECT SUM(Interest_Repaid__c) interestReceived';
             strQuery += ' FROM Drawdown__c';
-            strQuery += ' WHERE Opportunity__r.Date_Applied__c >= :startDt';
-            strQuery += ' AND Opportunity__r.Date_Applied__c <= :endDt';
+            strQuery += ' WHERE Date__c >= :startDt';
+            strQuery += ' AND Date__c <= :endDt';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Interest_Repaid__c != null';
             strQuery += ' AND Payment_Method__c =:payment';
+            strQuery += ' AND (Reference_Notes__c =:PartialPayment OR Reference_Notes__c =:LoanPayout OR Reference_Notes__c = :Surplus)';
             strQuery += ' AND Reference_Notes__c != \'Payment Rejected\'';
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += ' AND Opportunity__r.Stage_Status__c like \'%Closed%\'';
-            strQuery += ' AND Opportunity__r.Stage_Status__c != \'Closed - Bad Debt\'';
-            strQuery += ' group by Opportunity__r.Account.Business_Unit__c';
             
-            List<AggregateResult> aggResultInterestReceived = Database.query(strQuery);
-            
-            String Refund = 'Refund';
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalInterestPaid = aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
             
             strQuery = 'Select'; 
             strQuery += ' SUM(Amount__c) refund';
@@ -282,84 +291,29 @@ public with sharing class PaymentSummaryComponentCtlr {
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             strQuery += ' AND Reference_Notes__c =:Refund';
+            strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
+            
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalRefund = aggResult.get('refund') != null? (Decimal)aggResult.get('refund') : 0.00;
+            
+            // total client Rebate
+            strQuery = '';            
+            strQuery = 'Select'; 
+            strQuery += ' SUM(Amount__c) clientRebate ';
+            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
+            strQuery += ' AND Date__c <= :endDt'; 
             strQuery += ' AND Is_Rejected__c = false';
+            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
+            strQuery += ' AND Reference_Notes__c =:clientRebate AND Reference_Notes__c != \'Payment Rejected\'';
             
-            List<AggregateResult> aggResultRefund = Database.query(strQuery);
-
-            if(!aggResultPayouts.isEmpty()){
-                for(AggregateResult aggResult : aggResultPayouts)
-                {
-                    partialPaymentsW.noOfPayouts += aggResult.get('payouts') != null? (Integer)aggResult.get('payouts') : 0;
-                }
-                
-            }
+            aggResult = Database.query(strQuery);
+            partialPaymentsW.totalClientRebate = aggResult.get('clientRebate') != null? (Decimal)aggResult.get('clientRebate') : 0.00;
             
-            if(!aggResultoutstanding.isEmpty()){
-                for(AggregateResult aggResult : aggResultoutstanding)
-                {
-                    partialPaymentsW.avgNoOfDaysOutstanding += aggResult.get('outstanding') != null? (Decimal)aggResult.get('outstanding') : 0;
-                }
-                
-            }
-            if(!aggResultPrincipal.isEmpty()){
-                for(AggregateResult aggResult : aggResultPrincipal)
-                {
-                    partialPaymentsW.totalPrincipalPaid += aggResult.get('principalPaid') != null? (Decimal)aggResult.get('principalPaid') : 0.00;
-                }
-                
-            }
-            if(!aggResultAdminfee.isEmpty()){
-                for(AggregateResult aggResult : aggResultAdminfee)
-                {
-                    partialPaymentsW.totalAdminFeePaid += aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.00;
-                }
-                
-            }
-            if(!aggResultOther.isEmpty()){
-                for(AggregateResult aggResult : aggResultOther)
-                {
-                    partialPaymentsW.totalOther += aggResult.get('other') != null? (Decimal)aggResult.get('other') : 0.00;
-                }
-                
-            }
-            if(!aggResultShortfall.isEmpty()){
-                for(AggregateResult aggResult : aggResultShortfall)
-                {
-                    partialPaymentsW.totalShortfall += aggResult.get('shortfall') != null? (Decimal)aggResult.get('shortfall') : 0.00;
-                }
-                
-            }
-            if(!aggResultSurplus.isEmpty()){
-                for(AggregateResult aggResult : aggResultSurplus)
-                {
-                    partialPaymentsW.totalSurplus += aggResult.get('surplus') != null? (Decimal)aggResult.get('surplus') : 0.00;
-                }
-                
-            }
-            if(!aggResultMisc.isEmpty()){
-                for(AggregateResult aggResult : aggResultMisc)
-                {
-                    partialPaymentsW.totalMisc += aggResult.get('misc') != null? (Decimal)aggResult.get('misc') : 0.00;
-                }
-                
-            }
             
-            if(!aggResultInterestReceived.isEmpty()){
-                for(AggregateResult aggResult : aggResultInterestReceived)
-                {
-                    partialPaymentsW.totalInterestPaid += aggResult.get('interestReceived') != null? (Decimal)aggResult.get('interestReceived') : 0.00;
-                }                
-            }
-            
-            if(!aggResultRefund.isEmpty()){
-                for(AggregateResult aggResult : aggResultRefund)
-                {
-                    partialPaymentsW.totalRefund += aggResult.get('refund') != null? (Decimal)aggResult.get('refund') : 0.00;
-                }                
-            }
-            
-            partialPaymentsW.totalPayments = partialPaymentsW.totalPrincipalPaid + partialPaymentsW.totalAdminFeePaid + 
-                partialPaymentsW.totalOther + partialPaymentsW.totalInterestPaid;
+            partialPaymentsW.totalPayments = partialPaymentsW.totalPrincipalPaid + partialPaymentsW.totalInterestPaid + partialPaymentsW.totalOtherAdminFeePaid +
+                partialPaymentsW.totalOtherReferralFee + partialPaymentsW.totalOtherLegalFee + partialPaymentsW.totalSurplus + partialPaymentsW.totalMisc;
             
             partialPaymentsW.totalPayments -= partialPaymentsW.totalRefund;
             
@@ -386,6 +340,7 @@ public with sharing class PaymentSummaryComponentCtlr {
                                                 Conga_Payment_Summary_Report_Print_All_2__c,
                                                 Conga_Payment_Summary_Report_Print_All_3__c,
                                                 Conga_Payment_Summary_Report_Print_All_4__c,
+                                                Conga_Payment_Summary_Report_Print_All_5__c,
                                                 Conga_Payment_Summary_Report_View_All__c 
                                             from Drawdown__c limit 1];
         	partialPaymentsW.congaViewAllURL = congaUrlHolder.isEmpty() ? '' 
@@ -394,7 +349,8 @@ public with sharing class PaymentSummaryComponentCtlr {
                 : congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All__c + 
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_2__c +
                     congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_3__c +
-                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_4__c;
+                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_4__c +
+                    congaUrlHolder[0].Conga_Payment_Summary_Report_Print_All_5__c;
             
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage()+e.getStackTraceString());
@@ -425,8 +381,7 @@ public with sharing class PaymentSummaryComponentCtlr {
         }catch(Exception ex){
             
             throw new AuraHandledException(ex.getMessage());
-        }
-        
+        }        
         
     }
     
@@ -451,7 +406,7 @@ public with sharing class PaymentSummaryComponentCtlr {
         public Decimal totalInterestPaid {get;set;}
         
         @AuraEnabled
-        public Decimal totalAdminFeePaid {get;set;}
+        public Decimal totalOtherAdminFeePaid {get;set;}
         
         @AuraEnabled
         public Decimal totalPayments {get;set;}
@@ -466,10 +421,16 @@ public with sharing class PaymentSummaryComponentCtlr {
         public Decimal totalMisc {get;set;}
         
         @AuraEnabled
-        public Decimal totalOther {get;set;}
+        public Decimal totalOtherReferralFee {get;set;}
+        
+        @AuraEnabled
+        public Decimal totalClientRebate{get;set;}
         
         @AuraEnabled
         public Decimal totalRefund {get;set;}
+        
+        @AuraEnabled
+        public Decimal totalOtherLegalFee {get;set;}
         
         @AuraEnabled
         public String congaViewAllURL {get;set;}
@@ -482,13 +443,15 @@ public with sharing class PaymentSummaryComponentCtlr {
             avgNoOfDaysOutstanding = 0;
             totalPrincipalPaid = 0.0;
             totalInterestPaid = 0.0;
-            totalAdminFeePaid = 0.0;
+            totalOtherAdminFeePaid = 0.0;
             totalPayments = 0.0;
-            totalOther = 0.00;
+            totalOtherReferralFee = 0.00;
             totalSurplus = 0.0;
             totalShortfall = 0.0;
             totalMisc = 0.0;
             totalRefund = 0.0;
+            totalOtherLegalFee = 0.0;
+            totalClientRebate = 0.0;
             
             congaViewAllURL = null;
             congaPrintReportURL = null;

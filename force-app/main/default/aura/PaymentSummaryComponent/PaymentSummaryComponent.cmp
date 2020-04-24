@@ -1,14 +1,3 @@
-<!--
-  @File Name          : PaymentSummaryComponent.cmp
-  @Description        : 
-  @Author             : fahad.khan@toptal.com
-  @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 4/17/2020, 4:10:20 PM
-  @Modification Log   : 
-  Ver       Date            Author      		    Modification
-  1.0    4/17/2020   fahad.khan@toptal.com     Initial Version
--->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="PaymentSummaryComponentCtlr" >
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -142,7 +131,7 @@
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
                     <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Shows Only "Payment" Drawdowns with Reference Notes being Partial Payments or Loan Payouts or Client Rebate Falling under Selected Range. <br/>
+                    This Table Shows "Payment" Drawdowns with Reference Notes being 'Partial Payment' or 'Loan Payout' or 'Payment Surplus' or 'Miscellaneous Payment' or 'Refund' Falling under Selected Range. <br/>
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003mrAjUAI/view" target="_BLANK">
@@ -307,13 +296,13 @@
                                 </tr>
                                 <tr class="slds-hint-parent">
                                     <td data-label="Total Principal Paid">
-                                        <div class="slds-truncate makeBold" title="Total Principal Paid">Total Principal Paid</div>
+                                        <div class="slds-truncate makeBold" title="Total Principal Paid">Total Principal Paid (Inc. of Admin Fee)</div>
                                     </td>
                                     <td data-label="Total Principal Paid">
                                         <div class="slds-truncate makeBoldBlue" title="Total Principal Paid" style="float:left;width:50%;">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalPrincipalPaid}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="This is the sum of the amount of drawdowns having payment methods 'Cheque' and 'e-Transfer' in the selected date range." style="float:right;width:50%;">
+                                        <div title="This is the sum of Principal Repaid on drawdowns having payment methods 'Payment' and Reference Notes equal 'Loan Payout' or 'Partial Payment' in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
@@ -326,37 +315,50 @@
                                         <div class="slds-truncate makeBoldBlue" title="Total Interest Paid" style="float:left;width:50%;">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalInterestPaid}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="{!'Sum of Interest Repaid\nFrom Drawdowns Where (Payment Method = \'Payment\')\nOpportunity Stage = \'Closed with Loan\' \nfor the selected Date Range and Business Unit'}" style="float:right;width:50%;">
+                                        <div title="{!'Sum of Interest Repaid\nFrom Drawdowns Where (Payment Method = \'Payment\')\nReference Notes (\'Partial Payment\' or \'Loan Payout\' or \'Payment Surplus\')\nOpportunity Stage = \'Closed with Loan\' \nfor the selected Date Range and Business Unit'}" style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
                                 </tr>
                                 <tr class="slds-hint-parent">
-                                    <td data-label="Total Admin Fee Paid">
-                                        <div class="slds-truncate makeBold" title="Total Admin Fee Paid">Total Admin Fee Paid</div>
+                                    <td data-label="Total Other Admin Fee">
+                                        <div class="slds-truncate makeBold" title="Total Other Admin Fee">Total Other Admin Fee</div>
                                     </td>
-                                    <td data-label="Total Admin Fee Paid">
+                                    <td data-label="Total Other Admin Fee">
                                         <div class="slds-truncate makeBoldBlue" title="Total Admin Fee Paid" style="float:left;width:50%;">
-                                            <lightning:formattedNumber value="{!v.partialPayments.totalAdminFeePaid}" style="currency" maximumFractionDigits="2"/>
+                                            <lightning:formattedNumber value="{!v.partialPayments.totalOtherAdminFeePaid}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="This is the sum of the amount of drawdowns having payment method 'Admin Fee' in the selected date range." style="float:right;width:50%;">
+                                        <div title="This is the sum of the amount of drawdowns having payment method 'Other' and reference notes 'Admin Fee' in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
                                 </tr>
                                 <tr class="slds-hint-parent">
-                                    <td data-label="Total Other Paid">
-                                        <div class="slds-truncate makeBold" title="Total Other Paid">Total Other Paid</div>
-                                    </td>                                    
-                                    <td data-label="Total Other Paid">
-                                        <div class="slds-truncate makeBoldBlue" title="Total Other Paid" style="float:left;width:50%;">
-                                            <lightning:formattedNumber value="{!v.partialPayments.totalOther}" style="currency" maximumFractionDigits="2"/>
+                                    <td data-label="Total Other Referral Fee">
+                                        <div class="slds-truncate makeBold" title="Total Other Referral Fee">Total Other Referral Fee</div>
+                                    </td>
+                                    <td data-label="Total Other Referral Fee">
+                                        <div class="slds-truncate makeBoldBlue" title="Total Other Referral Fee" style="float:left;width:50%;">
+                                            <lightning:formattedNumber value="{!v.partialPayments.totalOtherReferralFee}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="This is the sum of the amount of drawdowns having payment method 'Other' in the selected date range." style="float:right;width:50%;">
+                                        <div title="This is the sum of the amount of drawdowns having payment method 'Other' and reference notes 'Referral Fee' in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
-                                </tr>                                
+                                </tr>
+                                <tr class="slds-hint-parent">
+                                    <td data-label="Total Other Legal Fee">
+                                        <div class="slds-truncate makeBold" title="Total Other Legal Fee">Total Other Legal Fee</div>
+                                    </td>
+                                    <td data-label="Total Other Legal Fee">
+                                        <div class="slds-truncate makeBoldBlue" title="Total Other Legal Fee" style="float:left;width:50%;">
+                                            <lightning:formattedNumber value="{!v.partialPayments.totalOtherLegalFee}" style="currency" maximumFractionDigits="2"/>
+                                        </div>
+                                        <div title="This is the sum of the amount of drawdowns having payment method 'Other' and reference notes 'Legal Fee' in the selected date range." style="float:right;width:50%;">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                        </div>
+                                    </td>
+                                </tr>                                                                
                                 <tr class="slds-hint-parent">
                                     <td data-label="Total Surplus Paid">
                                         <div class="slds-truncate makeBold" title="Total Surplus Paid">Total Surplus Paid</div>
@@ -401,6 +403,19 @@
                                     </td>
                                 </tr>
                                 <tr class="slds-hint-parent">
+                                    <td data-label="Total Client Rebate">
+                                        <div class="slds-truncate makeBold" title="Total Client Rebate">Total Client Rebate</div>
+                                    </td>                                    
+                                    <td data-label="Total Client Rebate">
+                                        <div class="slds-truncate makeBoldBlue" title="Total Client Rebate" style="float:left;width:50%;">
+                                            <lightning:formattedNumber value="{!v.partialPayments.totalClientRebate}" style="currency" maximumFractionDigits="2"/>
+                                        </div>
+                                        <div title="This is the sum of the amount of drawdowns having reference notes 'Client Rebate' in the selected date range." style="float:right;width:50%;">
+                                            <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="slds-hint-parent">
                                     <td data-label="Total Payments">
                                         <div class="slds-truncate makeBold" title="Total Payments">Total Payments</div>
                                     </td>
@@ -408,7 +423,7 @@
                                         <div class="slds-truncate makeBoldBlue" title="Total Payments" style="float:left;width:50%;">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalPayments}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="Total payments is the sum of (Total Principal Paid, Total Interest Paid, Total Other Paid and Total Admin Fee) Minus Total Refund in the selected date range." style="float:right;width:50%;">
+                                        <div title="Total payments is the sum of (Total Principal Paid, Total Interest Paid, Total Other Admin Fee, Total Other Referral Fee, Total Other Legal Fee, Total Surplus Paid and Total Miscellaneous Paid) Minus Total Refund in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
