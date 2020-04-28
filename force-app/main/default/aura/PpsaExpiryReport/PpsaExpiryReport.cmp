@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 22/04/2020, 1:59:51 pm
+  @Last Modified On   : 28/04/2020, 2:55:06 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -33,10 +33,15 @@
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="searchByName" type="String" default="" />
 
-    <!--Funding Dashboard (Type of Loan)-->
+    <!--PPSA expiry summary report (Type of Loan)-->
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
     <!-- <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Facility Loan" /> -->
+    <!--|==============================|-->
+
+    <!--PPSA expiry summary report (Stage Status)-->
+    <aura:attribute name="stageStatusOptions" type="List" />
+    <aura:attribute name="slectedstageStatusFilter" type="String" default="{!v.customSetting.Stage_Status__c}" />
     <!--|==============================|-->
 
     <aura:attribute name="ChosenFilter" type="string" />
@@ -109,6 +114,17 @@
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
                                     <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <lightning:combobox aura:id="stagestatus" label="Stage Status" value="{!v.slectedstageStatusFilter}" placeholder="Stage Status" options="{! v.stageStatusOptions }"/>
                                 </div>
                             </span>
                         </div>

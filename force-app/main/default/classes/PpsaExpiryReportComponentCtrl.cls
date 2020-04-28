@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 22/04/2020, 10:48:48 am
+ * @Last Modified On   : 28/04/2020, 3:36:50 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -75,7 +75,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     // ===================================================================================================
 
     @AuraEnabled
-    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter){
+    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter, String stageStatus){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -95,6 +95,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             query += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
             query += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
             query += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
+            query += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName = : stageStatus' : ' AND Stage_Status__c = : stageStatus';
             query += ' order by ' + field + ' ' + direction + ' NULLS LAST';
 
             List<Opportunity> PPSAExpiryListId = Database.query(query);
@@ -114,6 +115,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 PPSAExpiryQuery += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
                 PPSAExpiryQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
                 PPSAExpiryQuery += ' AND Id IN :LoansIdSets';
+                PPSAExpiryQuery += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName = : stageStatus' : ' AND Stage_Status__c = : stageStatus';
                 PPSAExpiryQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
                 
                 List<Opportunity> PPSAExpiryList = Database.query(PPSAExpiryQuery);
@@ -148,6 +150,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                             ExpiryLoansWrapperList.add(ExpiryLoansList.get(key)); // this will add whole wrapper data to wrapper list.
                 }
             return ExpiryLoansWrapperList;
+            //return query;
 
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());
@@ -167,7 +170,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     }
 
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName){
+    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName, String stageStatus){
         system.debug(startDate+ '|' + endDate+ '|' + businessUnit+ '|' + typeOfLoan + '|' +searchByName);
         try{
             Date startDt = Date.valueOf(startDate);
@@ -178,6 +181,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             pesr.Business_Unit__c = businessUnit;
             pesr.Type_of_Loan__c = typeOfLoan;
             pesr.Search_By_Name__c = searchByName;
+            pesr.Stage_Status__c = stageStatus;
             update pesr; 
         }catch(Exception ex){
             throw new AuraHandledException(ex.getMessage());

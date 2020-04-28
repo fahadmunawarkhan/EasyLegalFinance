@@ -20,8 +20,8 @@
                 endDate: component.get('v.endDate'),
                 businessUnit: component.get('v.selectedBusinessUnitFilter'),
                 typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
-                searchByName: component.get('v.searchByName')
-
+                searchByName: component.get('v.searchByName'),
+                stageStatus: component.get('v.slectedstageStatusFilter')
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -95,6 +95,7 @@
                     });
                 }*/
                 for (var i = 0; i < allValues.length; i++) {
+
                     if (allValues[i].includes('===SEPERATOR===')) {
                         opts.push({
                             class: "optionClass",
@@ -120,6 +121,32 @@
         $A.enqueueAction(picklistgetter);
     },
 
+    getPickListCustomSpecifiedValues: function(component, allValues, attributeId) {
+        var opts = [];
+        for (var i = 0; i < allValues.length; i++) {
+
+            if (allValues[i].includes('===SEPERATOR===')) {
+                opts.push({
+                    class: "optionClass",
+                    label: allValues[i].split('===SEPERATOR===')[0],
+                    value: allValues[i].split('===SEPERATOR===')[1]
+                });
+            } else {
+                opts.push({
+                    class: "optionClass",
+                    label: allValues[i],
+                    value: allValues[i]
+                });
+            }
+        }
+        opts.push({
+            class: "optionClass",
+            label: 'Consolidated',
+            value: 'Consolidated'
+        });
+        component.set('v.' + attributeId, opts);
+    },
+
     getPPSExpiryLoans: function(component) {
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get("c.getPPSExpiryLoans");
@@ -132,7 +159,8 @@
                 searchByName: component.get('v.searchByName'),
                 typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
                 expiryDateFilter: component.get("v.expiryDateFilter"),
-                statusFilter: component.get("v.statusFilter")
+                statusFilter: component.get("v.statusFilter"),
+                stageStatus: component.get("v.slectedstageStatusFilter")
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
