@@ -147,6 +147,21 @@
         component.set('v.' + attributeId, opts);
     },
 
+    OrgCheck: function(component) {
+        var orgCheckResult = component.get("c.orgInstanceCheck");
+        orgCheckResult.setParams({});
+        orgCheckResult.setCallback(this, function(response) {
+            if (response.getState() == 'SUCCESS') {
+                // console.log("Org Is=====>");
+                // console.log(response.getReturnValue());
+                // console.log("Org Is=====>");
+                var result = response.getReturnValue();
+                component.set("v.OrgInstance", result);
+            }
+        });
+        $A.enqueueAction(orgCheckResult);
+    },
+
     getPPSExpiryLoans: function(component) {
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get("c.getPPSExpiryLoans");

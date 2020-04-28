@@ -12,6 +12,7 @@
         var stage_statuses = ['Closed - Paid', 'Closed - Surplus', 'Closed - Shortfall', 'Closed No Loan'];
         helper.getPickListCustomSpecifiedValues(component, stage_statuses, 'stageStatusOptions');
 
+        helper.OrgCheck(component);
 
         helper.getCustomSettings(component).then($A.getCallback(
             function(result) {

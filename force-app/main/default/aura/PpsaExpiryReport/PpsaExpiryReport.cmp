@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 28/04/2020, 2:55:06 pm
+  @Last Modified On   : 28/04/2020, 4:38:06 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -20,6 +20,7 @@
     <aura:attribute name="summarizeReportData" type="object" />
     <aura:attribute name="expiryDateFilter" type="date" default="" />
     <aura:attribute name="statusFilter" type="date" default="" />
+    <aura:attribute name="OrgInstance" type="Boolean" />
 
 
 
@@ -176,10 +177,16 @@
                 <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
                 </span>
                 <br />
-
-                <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
-                </a>
+                <aura:if isTrue="{!v.OrgInstance}">
+                    <a href="/lightning/r/Report/00O3J000000O8ILUA0/view" target="_BLANK">
+                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
+                    </a>
+                    <aura:set attribute="else">
+                        <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK">
+                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
+                        </a>
+                    </aura:set>
+                </aura:if>
             </div>
         </div>
 

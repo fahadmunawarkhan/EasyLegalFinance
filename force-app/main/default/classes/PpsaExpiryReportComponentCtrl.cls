@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 28/04/2020, 3:36:50 pm
+ * @Last Modified On   : 28/04/2020, 5:01:06 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -95,7 +95,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             query += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
             query += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
             query += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
-            query += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName = : stageStatus' : ' AND Stage_Status__c = : stageStatus';
+            query += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName != : stageStatus' : ' AND Stage_Status__c != : stageStatus';
             query += ' order by ' + field + ' ' + direction + ' NULLS LAST';
 
             List<Opportunity> PPSAExpiryListId = Database.query(query);
@@ -107,7 +107,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
 
             // =========== Expiry Loan Query ===========
                 String PPSAExpiryQuery = '';
-                PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, AccountId, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
+                PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, AccountId, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c, Stage_Status__c, StageName';
                 PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
                 PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
                 PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
@@ -115,7 +115,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 PPSAExpiryQuery += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
                 PPSAExpiryQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
                 PPSAExpiryQuery += ' AND Id IN :LoansIdSets';
-                PPSAExpiryQuery += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName = : stageStatus' : ' AND Stage_Status__c = : stageStatus';
+                PPSAExpiryQuery += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName != : stageStatus' : ' AND Stage_Status__c != : stageStatus';
                 PPSAExpiryQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
                 
                 List<Opportunity> PPSAExpiryList = Database.query(PPSAExpiryQuery);
@@ -132,6 +132,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                     w.FirstName += (!String.isEmpty(getOppo.Primary_Contact__r.FirstName) ? getOppo.Primary_Contact__r.FirstName : '');
                     w.LastName += getOppo.Primary_Contact__r.LastName;
                     w.LoanNo += (!String.isEmpty(getOppo.Loan_No__c) ? getOppo.Loan_No__c : '-');
+                    //w.StageStatus += getOppo.Stage_Status_Report__c + '(' + getOppo.StageName + ')';
                     w.StageStatus += getOppo.Stage_Status_Report__c;
                     w.PPSANo += (!String.isEmpty(getOppo.Registration_Number__c) ? getOppo.Registration_Number__c : '-');
                     w.DaysToExpire += ((getOppo.Days_To_Expire__c != null) ? getOppo.Days_To_Expire__c  : 0.00);
@@ -198,7 +199,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
         try{
             PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
             PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
-            PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
+            PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit';
             PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
 
             List<Opportunity> PPSAExpiryListSummary = Database.query(PPSAExpiryQuery);
@@ -227,10 +228,16 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 sdw.congaPrintReportURL = congaUrlHolder.isEmpty() ? '' : congaUrlHolder[0].Conga_PPSA_Summary_Report_Print__c;
             }
             return sdw;
-            
-            
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    @AuraEnabled
+    public static Boolean orgInstanceCheck(){
+        //OrgCheckResult
+        Boolean OrgCheckResult;
+        OrgCheckResult = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
+        return OrgCheckResult;
     }
 }
