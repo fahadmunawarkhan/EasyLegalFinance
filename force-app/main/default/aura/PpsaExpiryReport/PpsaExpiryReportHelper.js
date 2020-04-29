@@ -21,7 +21,6 @@
                 businessUnit: component.get('v.selectedBusinessUnitFilter'),
                 typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
                 searchByName: component.get('v.searchByName')
-
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -95,6 +94,7 @@
                     });
                 }*/
                 for (var i = 0; i < allValues.length; i++) {
+
                     if (allValues[i].includes('===SEPERATOR===')) {
                         opts.push({
                             class: "optionClass",
@@ -118,6 +118,47 @@
             }
         });
         $A.enqueueAction(picklistgetter);
+    },
+
+    getPickListCustomSpecifiedValues: function(component, allValues, attributeId) {
+        var opts = [];
+        for (var i = 0; i < allValues.length; i++) {
+
+            if (allValues[i].includes('===SEPERATOR===')) {
+                opts.push({
+                    class: "optionClass",
+                    label: allValues[i].split('===SEPERATOR===')[0],
+                    value: allValues[i].split('===SEPERATOR===')[1]
+                });
+            } else {
+                opts.push({
+                    class: "optionClass",
+                    label: allValues[i],
+                    value: allValues[i]
+                });
+            }
+        }
+        opts.push({
+            class: "optionClass",
+            label: 'Consolidated',
+            value: 'Consolidated'
+        });
+        component.set('v.' + attributeId, opts);
+    },
+
+    OrgCheck: function(component) {
+        var orgCheckResult = component.get("c.orgInstanceCheck");
+        orgCheckResult.setParams({});
+        orgCheckResult.setCallback(this, function(response) {
+            if (response.getState() == 'SUCCESS') {
+                // console.log("Org Is=====>");
+                // console.log(response.getReturnValue());
+                // console.log("Org Is=====>");
+                var result = response.getReturnValue();
+                component.set("v.OrgInstance", result);
+            }
+        });
+        $A.enqueueAction(orgCheckResult);
     },
 
     getPPSExpiryLoans: function(component) {

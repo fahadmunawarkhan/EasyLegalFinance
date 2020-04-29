@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 22/04/2020, 1:59:51 pm
+  @Last Modified On   : 29/04/2020, 1:29:08 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -20,6 +20,7 @@
     <aura:attribute name="summarizeReportData" type="object" />
     <aura:attribute name="expiryDateFilter" type="date" default="" />
     <aura:attribute name="statusFilter" type="date" default="" />
+    <aura:attribute name="OrgInstance" type="Boolean" />
 
 
 
@@ -33,7 +34,7 @@
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="searchByName" type="String" default="" />
 
-    <!--Funding Dashboard (Type of Loan)-->
+    <!--PPSA expiry summary report (Type of Loan)-->
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
     <!-- <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Facility Loan" /> -->
@@ -160,10 +161,16 @@
                 <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
                 </span>
                 <br />
-
-                <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK">
-                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
-                </a>
+                <aura:if isTrue="{!v.OrgInstance}">
+                    <a href="/lightning/r/Report/00O3J000000O8ILUA0/view" target="_BLANK" style="margin-left: 17px;">
+                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
+                    </a>
+                    <aura:set attribute="else">
+                        <a href="/lightning/r/Report/00O0L000003n4QgUAI/view" target="_BLANK" style="margin-left: 17px;">
+                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="brand" type="button" label="Reference Report" />
+                        </a>
+                    </aura:set>
+                </aura:if>
             </div>
         </div>
 
@@ -177,7 +184,7 @@
                                 <th class="slds-is-sortable slds-is-resizable slds-is-sorted">
                                     <div class="slds-grid slds-wrap">
                                         <div class="slds-col slds-size_12-of-12">
-                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px;">
+                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px; margin-top: -4px;">
                                                 <span onclick="{!c.sort}" data-field="Date_Financing_Statement_Expires__c" style="font-size: 11px;" id="Clickable">{!'EXPIRY DATE'}</span>
                                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Date_Financing_Statement_Expires__c')}">
                                                     <lightning:icon iconName="utility:arrowdown" size="xx-small" />
@@ -253,14 +260,14 @@
                                     </td>
                                     <td class="">
                                         <div class="slds-truncate">
-                                            <a href="{! '/' + loans.AccId}">
+                                            <a href="{! '/lightning/r/Account/' + loans.AccId + '/view#/OPPORTUNITY/' + loans.OppId}">
                                                 <ui:outputText value="{!loans.FirstName}" />
                                             </a>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="slds-truncate">
-                                            <a href="{! '/' + loans.AccId}">
+                                            <a href="{! '/lightning/r/Account/' + loans.AccId + '/view#/OPPORTUNITY/' + loans.OppId}">
                                                 <ui:outputText value="{!loans.LastName}" />
                                             </a>
                                         </div>

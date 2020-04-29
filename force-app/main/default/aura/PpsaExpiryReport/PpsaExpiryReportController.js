@@ -8,6 +8,7 @@
 
         helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
         helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
+        helper.OrgCheck(component);
 
         helper.getCustomSettings(component).then($A.getCallback(
             function(result) {
