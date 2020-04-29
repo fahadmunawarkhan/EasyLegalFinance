@@ -20,8 +20,7 @@
                 endDate: component.get('v.endDate'),
                 businessUnit: component.get('v.selectedBusinessUnitFilter'),
                 typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
-                searchByName: component.get('v.searchByName'),
-                stageStatus: component.get('v.slectedstageStatusFilter')
+                searchByName: component.get('v.searchByName')
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -174,8 +173,7 @@
                 searchByName: component.get('v.searchByName'),
                 typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
                 expiryDateFilter: component.get("v.expiryDateFilter"),
-                statusFilter: component.get("v.statusFilter"),
-                stageStatus: component.get("v.slectedstageStatusFilter")
+                statusFilter: component.get("v.statusFilter")
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();

@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 28/04/2020, 5:01:06 pm
+ * @Last Modified On   : 29/04/2020, 11:23:24 am
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -75,14 +75,17 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     // ===================================================================================================
 
     @AuraEnabled
-    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter, String stageStatus){
+    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
             Date ExpiryDtFilter = (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null ? Date.valueOf(expiryDateFilter) : null);
             List<Wrapper> ExpiryLoansWrapperList = new List<Wrapper>();
-            
-            
+
+            String ClosedPaid = 'Closed - Paid';
+            String ClosedSurplus = 'Closed - Surplus';
+            String ClosedShortFall = 'Closed - Shortfall';
+            String ClosedNoLoan = 'Closed No Loan';
 
             String query = '';
             BusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit)) ? BusinessUnit : 'ELFI';
@@ -95,7 +98,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             query += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
             query += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
             query += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
-            query += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName != : stageStatus' : ' AND Stage_Status__c != : stageStatus';
+            query += ' AND (Stage_Status__c != : ClosedPaid AND Stage_Status__c != : ClosedSurplus AND Stage_Status__c != : ClosedShortFall AND StageName != : ClosedNoLoan)';
             query += ' order by ' + field + ' ' + direction + ' NULLS LAST';
 
             List<Opportunity> PPSAExpiryListId = Database.query(query);
@@ -115,7 +118,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 PPSAExpiryQuery += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
                 PPSAExpiryQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
                 PPSAExpiryQuery += ' AND Id IN :LoansIdSets';
-                PPSAExpiryQuery += (String.isEmpty(stageStatus) || stageStatus == 'Consolidated') ? '' : (stageStatus == 'Closed No Loan') ? ' AND StageName != : stageStatus' : ' AND Stage_Status__c != : stageStatus';
+                PPSAExpiryQuery += ' AND (Stage_Status__c != : ClosedPaid AND Stage_Status__c != : ClosedSurplus AND Stage_Status__c != : ClosedShortFall AND StageName != : ClosedNoLoan)';
                 PPSAExpiryQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
                 
                 List<Opportunity> PPSAExpiryList = Database.query(PPSAExpiryQuery);
@@ -132,7 +135,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                     w.FirstName += (!String.isEmpty(getOppo.Primary_Contact__r.FirstName) ? getOppo.Primary_Contact__r.FirstName : '');
                     w.LastName += getOppo.Primary_Contact__r.LastName;
                     w.LoanNo += (!String.isEmpty(getOppo.Loan_No__c) ? getOppo.Loan_No__c : '-');
-                    //w.StageStatus += getOppo.Stage_Status_Report__c + '(' + getOppo.StageName + ')';
+                    //w.StageStatus += getOppo.Stage_Status_Report__c + '(' + getOppo.StageName + ')' + '(' + getOppo.Stage_Status__c + ')';
                     w.StageStatus += getOppo.Stage_Status_Report__c;
                     w.PPSANo += (!String.isEmpty(getOppo.Registration_Number__c) ? getOppo.Registration_Number__c : '-');
                     w.DaysToExpire += ((getOppo.Days_To_Expire__c != null) ? getOppo.Days_To_Expire__c  : 0.00);
@@ -171,7 +174,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     }
 
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName, String stageStatus){
+    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName){
         system.debug(startDate+ '|' + endDate+ '|' + businessUnit+ '|' + typeOfLoan + '|' +searchByName);
         try{
             Date startDt = Date.valueOf(startDate);
@@ -182,7 +185,6 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             pesr.Business_Unit__c = businessUnit;
             pesr.Type_of_Loan__c = typeOfLoan;
             pesr.Search_By_Name__c = searchByName;
-            pesr.Stage_Status__c = stageStatus;
             update pesr; 
         }catch(Exception ex){
             throw new AuraHandledException(ex.getMessage());
@@ -196,11 +198,17 @@ public with sharing class PpsaExpiryReportComponentCtrl {
         String PPSAExpiryQuery = '';
         Set<String> LoansIdSets = new Set<String>();
 
+        String ClosedPaid = 'Closed - Paid';
+        String ClosedSurplus = 'Closed - Surplus';
+        String ClosedShortFall = 'Closed - Shortfall';
+        String ClosedNoLoan = 'Closed No Loan';
+
         try{
             PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
             PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
             PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit';
             PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
+            PPSAExpiryQuery += ' AND (Stage_Status__c != : ClosedPaid AND Stage_Status__c != : ClosedSurplus AND Stage_Status__c != : ClosedShortFall AND StageName != : ClosedNoLoan)';
 
             List<Opportunity> PPSAExpiryListSummary = Database.query(PPSAExpiryQuery);
             SummaryDataWrapper sdw = new SummaryDataWrapper();

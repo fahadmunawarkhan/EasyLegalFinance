@@ -8,10 +8,6 @@
 
         helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
         helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
-
-        var stage_statuses = ['Closed - Paid', 'Closed - Surplus', 'Closed - Shortfall', 'Closed No Loan'];
-        helper.getPickListCustomSpecifiedValues(component, stage_statuses, 'stageStatusOptions');
-
         helper.OrgCheck(component);
 
         helper.getCustomSettings(component).then($A.getCallback(
