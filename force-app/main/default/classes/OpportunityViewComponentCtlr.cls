@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : Victoria Ventura
  * @Group              : 
- * @Last Modified By   : Seth Boyd
- * @Last Modified On   : 6/8/2019, 10:31:14 AM
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 4/28/2020, 1:39:28 PM
  * @Modification Log   : 
  *==============================================================================
  * Ver         Date                     Author      		      Modification
@@ -29,9 +29,9 @@ public class OpportunityViewComponentCtlr {
                                            Date_Applied__c, Have_you_ever_declared_bankruptcy__c, Bankruptcy_Details__c,
                                            Other_Lawyer_Law_Firm_that_acted__c, NOTE_For_Paralegals__c, Date_of_Loss__c,
                                            What_Happened_from_W2L__c, Nature_of_Injury_from_W2L__c, Existing_Litigation_Loans__c,
-                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c
+                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c
                                            from Opportunity
-                                           where AccountId = :accId AND Loan_Requests__c != null AND Lawyer__c != null ORDER BY Loan_Requests__c DESC LIMIT 1];
+                                           where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' AND Lawyer__c != null ORDER BY Loan_Requests__c DESC Nulls LAST LIMIT 1];
             oppInfo.Name = ''; 
             oppInfo.StageName='Prospecting';
             oppInfo.closeDate = Date.today(); 
@@ -60,6 +60,7 @@ public class OpportunityViewComponentCtlr {
             oppInfo.Funding_Requested__c = (lastOppty.isEmpty() ? null : lastOppty[0].Funding_Requested__c);
             oppInfo.Pre_Existing_Loan_Amount__c = (lastOppty.isEmpty() ? null : lastOppty[0].Pre_Existing_Loan_Amount__c);
             oppInfo.Name_of_Lender__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Name_of_Lender__c);
+            oppInfo.Accident_Location_from_W2L__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Accident_Location_from_W2L__c);
         }
         else
         {
