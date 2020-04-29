@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 22/04/2020, 12:44:03 pm
+ * @Last Modified On   : 29/04/2020, 3:01:46 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    22/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -48,7 +48,8 @@ public class PpsaExpiryReportComponentCtrlTest {
         	PpsaExpiryReportComponentCtrl.getCustomSetting();
         	PpsaExpiryReportComponentCtrl.getPickListValues('Opportunity', 'Type_of_Loan__c');
         	PpsaExpiryReportComponentCtrl.saveCustomSettings(startdate, enddate, BusinessUnit, typeOfLoan, searchByName);
-        	PpsaExpiryReportComponentCtrl.getSummarizeData(startDate, endDate, BusinessUnit, typeOfLoan);
+            PpsaExpiryReportComponentCtrl.getSummarizeData(startDate, endDate, BusinessUnit, typeOfLoan);
+            PpsaExpiryReportComponentCtrl.orgInstanceCheck();
         Test.stopTest();
     }
 }
