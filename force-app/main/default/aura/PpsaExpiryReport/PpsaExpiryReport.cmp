@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 29/04/2020, 11:27:37 am
+  @Last Modified On   : 29/04/2020, 1:29:08 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -184,7 +184,7 @@
                                 <th class="slds-is-sortable slds-is-resizable slds-is-sorted">
                                     <div class="slds-grid slds-wrap">
                                         <div class="slds-col slds-size_12-of-12">
-                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px;">
+                                            <div class="slds-truncate makeBold slds-m-right_xxx-small slds-cell-fixed" title="EXPIRY DATE" style="padding-left: 7px; margin-top: -4px;">
                                                 <span onclick="{!c.sort}" data-field="Date_Financing_Statement_Expires__c" style="font-size: 11px;" id="Clickable">{!'EXPIRY DATE'}</span>
                                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Date_Financing_Statement_Expires__c')}">
                                                     <lightning:icon iconName="utility:arrowdown" size="xx-small" />
@@ -260,14 +260,14 @@
                                     </td>
                                     <td class="">
                                         <div class="slds-truncate">
-                                            <a href="{! '/' + loans.AccId}">
+                                            <a href="{! '/lightning/r/Account/' + loans.AccId + '/view#/OPPORTUNITY/' + loans.OppId}">
                                                 <ui:outputText value="{!loans.FirstName}" />
                                             </a>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="slds-truncate">
-                                            <a href="{! '/' + loans.AccId}">
+                                            <a href="{! '/lightning/r/Account/' + loans.AccId + '/view#/OPPORTUNITY/' + loans.OppId}">
                                                 <ui:outputText value="{!loans.LastName}" />
                                             </a>
                                         </div>

@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 29/04/2020, 11:23:24 am
+ * @Last Modified On   : 29/04/2020, 1:37:00 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -13,6 +13,8 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     public class Wrapper {
         @AuraEnabled
         public String AccId {get; set;}
+        @AuraEnabled
+        public String OppId {get;set;}
         @AuraEnabled
         public String ExpiryDate {get; set;}
         @AuraEnabled
@@ -29,6 +31,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
         public Decimal DaysToExpire {get; set;}
 
         public Wrapper(){
+            OppId = '';
             AccId = '';
             ExpiryDate = '';
             FirstName = '';
@@ -126,6 +129,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 for(Opportunity getOppo : PPSAExpiryList){
                     Wrapper w = new Wrapper();
                     w.AccId += getOppo.AccountId;
+                    w.OppId += getOppo.Id;
                     if(getOppo.Date_Financing_Statement_Expires__c != null){
                         Datetime dt = Date.Valueof(getOppo.Date_Financing_Statement_Expires__c); 
                         w.ExpiryDate += dt.year() + '-' + dt.month() + '-' + dt.addDays(1).day();
@@ -144,7 +148,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             // ==================================
             
             // =========== Note ===========
-            //  just add values againest id by calling wrapper class variables
+            //  just add values against id by calling wrapper class variables and put wrapper in same list (ExpiryLoansList).
             // ============================
 
             
