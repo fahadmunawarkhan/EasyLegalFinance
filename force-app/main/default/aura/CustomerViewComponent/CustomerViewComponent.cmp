@@ -1,3 +1,14 @@
+<!--
+  @File Name          : CustomerViewComponent.cmp
+  @Description        : 
+  @Author             : fahad.khan@toptal.com
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 5/1/2020, 3:09:54 PM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction,force:hasRecordId" access="global" controller="CustomerViewComponentCtlr">
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -960,7 +971,7 @@
                             <aura:iteration items="{!v.notes}" var="n" indexVar="index">
                                 <tr class="slds-hint-parent">
                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">
-                                        <ui:outputDateTime  aura:id="startDateFilter" value="{!n.note.CreatedDate}" />
+                                        <ui:outputDateTime  aura:id="startDateFilter" value="{!n.noteDateTime}" />
                                     </td>            
                                     <td class="slds-cell-buffer_left slds-cell-buffer_right" style="white-space: pre-wrap;">
                                         <ui:outputRichText value="{!n.body}"/>
