@@ -1,3 +1,14 @@
+/**
+ * @File Name          : CustomerViewComponentCtlr.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 5/1/2020, 3:22:16 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
+**/
 public class CustomerViewComponentCtlr {
     
     public static Account accInfo {get;set;}
@@ -34,6 +45,7 @@ public class CustomerViewComponentCtlr {
     public class NoteWrapper{
         @AuraEnabled public String body{get;set;}
         @AuraEnabled public ContentNote note{get;set;}
+        @AuraEnabled public DateTime noteDateTime{get;set;}
     }
     
     @AuraEnabled
@@ -77,14 +89,28 @@ public class CustomerViewComponentCtlr {
         List<NoteWrapper> notes = new List<NoteWrapper>();
         for(ContentNote n : [Select id, Title, content, createddate, lastmodifiedbyId, LastModifiedBy.Name, createdbyId, createdBy.Name, TextPreview 
                              from ContentNote
-                             where id in:noteIds order by createdDate desc])
-        {
+                             where id in:noteIds order by Title desc, createdDate desc])
+        {            
             NoteWrapper w = new NoteWrapper();
             //21 august 2019: 
             //Fahad: 
             //removed escapeUnicode() because " was being replaced by \"
             w.body = n.content.toString().unescapeHtml4().unescapeHtml3().unescapeJava();
             w.note = n;
+
+            w.noteDateTime = n.CreatedDate;          
+            if(n.Title != null && n.Title != 'N/A'){
+                try{
+                    Date dt = Date.valueOf(n.Title);//In case if title is other then datetime it will through exception
+                    w.noteDateTime = DateTime.newInstance(dt.year(), dt.month(), dt.day());
+                }Catch(exception e){
+                    w.noteDateTime = n.CreatedDate;
+                }
+            }                
+            //01 May 2020:
+            //Fahad:
+            //Loaded some old Account notes (Seahold) in org with thier created date stored in Title field because
+            //createddate can not be modified for old notes therefor stored the date in title for old notes.
             notes.add(w);
         }
         
