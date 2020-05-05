@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/5/2020, 12:53:40 PM
+ * @Last Modified On   : 5/5/2020, 1:49:24 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/5/2020   fahad.khan@toptal.com     Initial Version
@@ -26,7 +26,7 @@ public class AccountNotesPrintableCtrl {
         contentNotes = new List<NoteWrapper>();
         for(ContentNote n : [Select id, Title, content, createddate, createdbyId, createdBy.Name, TextPreview , Owner.Name 
                              from ContentNote
-                             where id in:noteIds order by Title desc, createdDate desc])
+                             where id in:noteIds order by createdDate desc, Title desc])
         {   
             NoteWrapper w = new NoteWrapper();
             w.content = n.content.toString().unescapeHtml4().unescapeHtml3().unescapeJava();
