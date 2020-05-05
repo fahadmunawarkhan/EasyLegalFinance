@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/1/2020, 3:22:16 PM
+ * @Last Modified On   : 5/5/2020, 12:47:54 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -42,10 +42,17 @@ public class CustomerViewComponentCtlr {
         return accInfo;
     } 
     
-    public class NoteWrapper{
+    public class NoteWrapper implements Comparable{
         @AuraEnabled public String body{get;set;}
         @AuraEnabled public ContentNote note{get;set;}
         @AuraEnabled public DateTime noteDateTime{get;set;}
+
+        public Integer compareTo(Object compareTo){
+            NoteWrapper noteWrapper = (NoteWrapper) compareTo;
+            if (noteDateTime == noteWrapper.noteDateTime) return 0;
+            if (noteDateTime < noteWrapper.noteDateTime) return 1;
+            return -1;        
+        }
     }
     
     @AuraEnabled
@@ -86,18 +93,19 @@ public class CustomerViewComponentCtlr {
         {
             noteIds.add(n.Id);
         }
+        
         List<NoteWrapper> notes = new List<NoteWrapper>();
         for(ContentNote n : [Select id, Title, content, createddate, lastmodifiedbyId, LastModifiedBy.Name, createdbyId, createdBy.Name, TextPreview 
                              from ContentNote
-                             where id in:noteIds order by Title desc, createdDate desc])
-        {            
+                             where id in:noteIds order by createdDate desc, Title desc])
+        {
             NoteWrapper w = new NoteWrapper();
             //21 august 2019: 
             //Fahad: 
             //removed escapeUnicode() because " was being replaced by \"
             w.body = n.content.toString().unescapeHtml4().unescapeHtml3().unescapeJava();
             w.note = n;
-
+            
             w.noteDateTime = n.CreatedDate;          
             if(n.Title != null && n.Title != 'N/A'){
                 try{
@@ -112,9 +120,9 @@ public class CustomerViewComponentCtlr {
             //Loaded some old Account notes (Seahold) in org with thier created date stored in Title field because
             //createddate can not be modified for old notes therefor stored the date in title for old notes.
             notes.add(w);
-        }
-        
-        
+            
+        }        
+        notes.sort();
         return notes;
     }
     
