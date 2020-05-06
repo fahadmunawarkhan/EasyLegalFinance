@@ -69,6 +69,7 @@
                     <lightning:select aura:id="businessUnitOptions" label="Business Unit" value="{!v._selectedBusinessUnit}" class="slds-p-left_xx-small">
                         <option value="ELFI">ELFI</option>
                         <option value="Rhino">Rhino</option>
+                        <option value="Seahold">Seahold</option>
                         <option value="Consolidated">Consolidated</option>
                     </lightning:select>  
                 </lightning:layoutItem>
