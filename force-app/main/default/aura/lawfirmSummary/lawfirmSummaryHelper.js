@@ -225,10 +225,11 @@
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
         
         let selectedIds = [];
-        
+        let lawfirmId;
         for(let i=0; i<accountList.length; i++){
             if(accountList[i].checked == true){
-                selectedIds.push("'" + accountList[i].account.Id + "'");                
+                selectedIds.push("'" +accountList[i].account.Id +"'");
+                lawfirmId = accountList[i].account.Id;     
             }
         }
         if(selectedIds.length == 0){
@@ -238,18 +239,24 @@
             //alert("Total " + selectedIds.length);
             var action = component.get('c.generatePayoutBalance');
             action.setParams({
-                selectedIds : selectedIds, 
-                payoutDate : payoutDate
+                lawfirmId : lawfirmId, 
+                payoutDate : payoutDate,
+                LoanFilter :loanFilterValue,
+                businessUnitFilter : businessUnitFilterValue,
+               	typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 
                 if (state === 'SUCCESS') {
+                    console.log('SUCCESS');
                     component.set('v.spinner', false);
                     this.showToast('SUCCESS', 'Payout Balance Generated Successfully!', 'success');
                     
                 } else if (state === 'ERROR') {
                     var errors = response.getError();
+                    console.log('ERROR');
+                    console.log(JSON.stringify(errors));
                     if (errors) {
                         if (errors[0] && errors[0].message) {
                             this.errorsHandler(errors)

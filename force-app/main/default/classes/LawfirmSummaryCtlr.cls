@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawfirmSummaryCtlr.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 5/7/2020, 12:25:54 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
+**/
 public with sharing class LawfirmSummaryCtlr {
     
     /******************* Method to get all picklists values for Account *********************/  
@@ -158,22 +169,30 @@ public with sharing class LawfirmSummaryCtlr {
     }
     
     @AuraEnabled
-    public static void generatePayoutBalance(List<String> selectedIds, String payoutDate){
+    public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
         try{
             
+            LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
+            businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             Date pDate = Date.valueOf(payoutDate);
+            
             String strQuery = 'SELECT Id, Payout_Date__c';
             strQuery += ' FROM Opportunity WHERE StageName != \'Closed No Loan\' ';
-            strQuery += ' AND Law_Firm__c IN :selectedIds';
+            strQuery += LoanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
+            strQuery += (businessUnitFilter == '' || businessUnitFilter == null)? ' AND Account.Business_Unit__c = \'ELFI\'' : 'AND Account.Business_Unit__c = :businessUnitFilter';
+            strQuery += (typeOfLoan == null || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = :typeOfLoan';
+            strQuery += ' AND Law_Firm__c = :lawfirmId';
             
             List<Opportunity> oppList = Database.query(strQuery);
             
-            for(Opportunity opp : oppList)
+            for(Opportunity opp : oppList){
                 opp.Payout_Date__c = pDate;
+            }
             
             if(!oppList.isEmpty()) update oppList;
             
         }catch(exception e){
+            system.debug('Error Message' + e.getMessage()+e.getStackTraceString());
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
     }
