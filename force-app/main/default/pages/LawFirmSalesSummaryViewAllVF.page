@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 03/04/2020, 5:11:22 pm
+  @Last Modified On   : 07/05/2020, 3:30:14 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -31,7 +31,7 @@
                     <td colspan="11">
                         <apex:outputPanel rendered="{!if(renderAs == 'PDF', false, true)}">
                             <span style="">
-                                <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png')}" />
+                                <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png', 'https://i.imgur.com/pK4CKgz.png')}" />
                                 </font>
                             </span>
                         </apex:outputPanel>

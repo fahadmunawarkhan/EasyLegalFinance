@@ -31,7 +31,8 @@
                         <td colspan="11">
                             <apex:outputPanel rendered="{!if(renderAs == 'PDF', false, true)}">
                                 <span style="">
-                                    <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(businessUnit == 'Rhino', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png', 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png')}" />
+                                    <font size="48" face="Arial Unicode MS"> 
+                                        <apex:image width="250" height="75" value="{!if(businessUnit == 'Rhino', 'https://i.imgur.com/pK4CKgz.png', 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png')}" />
                                     </font>
                                 </span>
                             </apex:outputPanel>
