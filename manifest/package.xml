@@ -200,6 +200,8 @@
         <members>LawyerSummaryGeneratePayoutBalanceTest</members>
         <members>FundingSummaryReportCtlr<members>
         <members>FundingSummaryReportCtlrTest</members>
+        <members>LawfirmSummaryGeneratePayoutBalance<members>
+        <members>LawfirmSummaryGeneratePayoutBalanceTest</members>
         <name>ApexClass</name>
     </types>
     <types>
