@@ -1,3 +1,14 @@
+/**
+ * @File Name          : LawfirmSummaryCtlr.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 5/7/2020, 12:25:54 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
+**/
 public with sharing class LawfirmSummaryCtlr {
     
     /******************* Method to get all picklists values for Account *********************/  
@@ -158,24 +169,40 @@ public with sharing class LawfirmSummaryCtlr {
     }
     
     @AuraEnabled
-    public static void generatePayoutBalance(List<String> selectedIds, String payoutDate){
+    public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
         try{
             
+            LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
+            businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             Date pDate = Date.valueOf(payoutDate);
-            String strQuery = 'SELECT Id, Payout_Date__c';
-            strQuery += ' FROM Opportunity WHERE StageName != \'Closed No Loan\' ';
-            strQuery += ' AND Law_Firm__c IN :selectedIds';
             
-            List<Opportunity> oppList = Database.query(strQuery);
-            
-            for(Opportunity opp : oppList)
-                opp.Payout_Date__c = pDate;
-            
-            if(!oppList.isEmpty()) update oppList;
+            LawfirmSummaryGeneratePayoutBalance lfSummaryJob = new LawfirmSummaryGeneratePayoutBalance(new Set<Id>{lawfirmId}, pDate, loanFilter, businessUnitFilter, typeOfLoan);
+            Database.executeBatch(lfSummaryJob, 50);
             
         }catch(exception e){
+            system.debug('Error Message' + e.getMessage()+e.getStackTraceString());
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
+    }
+    
+    @AuraEnabled
+    public static AsyncApexJob getBatchJobStatus(){
+        List<AsyncApexJob> aaj = null;
+        try{
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+                   WHERE ApexClass.Name = 'LawfirmSummaryGeneratePayoutBalance' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
+        }catch(Exception e){
+            throw new AuraHandledException(e.getMessage());
+        }        
+        return (aaj.size() > 0 )? aaj[0] : null;
+    }
+    
+    @AuraEnabled 
+    public static void abortBatchJobs(){
+        for(AsyncApexJob aJob : [SELECT id FROM AsyncApexJob WHERE Status!='Aborted' AND Status!='Completed'
+                                 AND ApexClass.Name = 'LawfirmSummaryGeneratePayoutBalance'] ){                                     
+                                     System.AbortJob(aJob.Id);                                     
+                                 }
     }
     
     public class AccountInfo{

@@ -28,6 +28,13 @@
         helper.setDefaultDates(component);
         helper.getLawfirmList(component,event);
         
+        let intervalId = window.setInterval(
+            $A.getCallback(function() { 
+                helper.pingBatchJobStatus(component, helper);
+            }), 2000
+        ); 
+        component.set('v.intervalId', intervalId);
+        
 	},
     searchButton: function(component, event, helper) {
         component.set("v.recordSelected", false);
@@ -71,7 +78,24 @@
         helper.generateForSelected(component);
     },
     generateBalanceForSelected: function(component, event, helper) {
-        helper.generateBalanceForSelected(component);
+        component.set('v.spinner', true);
+        helper.generateBalanceForSelected(component).then(
+            function(result){
+                component.set('v.spinner', false);
+                window.clearInterval(component.get('v.intervalId'));
+                let intervalId = window.setInterval(
+                    $A.getCallback(function() { 
+                        helper.pingBatchJobStatus(component, helper);
+                    }), 2000
+                ); 
+                component.set('v.intervalId', intervalId);
+            }
+        ).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
     },
     hideLookupInput: function(component, event, helper)
     {
@@ -111,5 +135,8 @@
         {
             reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
         }
+    },
+    handleDestroy : function( component, event, helper ) {
+        window.clearInterval(component.get("v.intervalId"));
     }
 })

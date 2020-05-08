@@ -28,6 +28,18 @@
     <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Consolidated" />
     <aura:attribute name="selectedCount" type="Integer" default="0"/>
     
+    <aura:attribute name="batchJobItems" type="String" default="" />
+    <aura:attribute name="batchJobItemsProcessed" type="integer" default="0" />
+    <aura:attribute name="batchTotalJobItems" type="integer" default="0" />    
+    <aura:attribute name="batchJobProgress" type="Decimal" default="0.0" />
+    <aura:attribute name="batchJobStatus" type="String" default="" />    
+    <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
+    <aura:attribute name="intervalId" type="Integer"/>
+    <aura:attribute name="disablePrintButtn" type="Boolean" default="false" />
+    <aura:attribute name="showZeroBatchError" type="Boolean" default="false" />
+    
+    <aura:handler event="aura:locationChange" action="{!c.handleDestroy}"/>
+    
     <lightning:card title="Information" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -185,6 +197,22 @@
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Payout Document" onclick="{!c.sendToSelected}" />
             </lightning:layoutItem>
         </lightning:layout>
+    </lightning:card>
+    
+    <!-- Batch Job Status Card -->
+    <lightning:card>
+        <div class="slds-card__body_inner">
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="10">
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
+                    <div style="margin-right:20px;">
+                        <span style="margin-left:5px;">{!v.batchJobItems} - ({!v.batchJobItemsProcessed}/{!v.batchTotalJobItems})</span>
+                        <lightning:progressBar value="{!v.batchJobProgress}" />
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
     </lightning:card>
     
     <lightning:card class="slds-card slds-card_boundary" title="{!'Showing '+ v.accountsList.length + ' records.'}" variant="base">

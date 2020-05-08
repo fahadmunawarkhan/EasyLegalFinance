@@ -109,7 +109,7 @@ public class LawfirmSummaryCtlrTest {
         Contact cc = [SELECT Id, AccountId from Contact WHERE Name = 'Test Lawyer Contact' limit 1];
         List<String> selId = new List<String>{cc.AccountId};
             
-            LawfirmSummaryCtlr.generatePayoutBalance(selId, ''+ Date.today());
+            LawfirmSummaryCtlr.generatePayoutBalance(cc.AccountId, ''+ Date.today(),'All', 'ELFI', 'Facility Loan');
             
         LawfirmSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', 'Facility Loan');
         
