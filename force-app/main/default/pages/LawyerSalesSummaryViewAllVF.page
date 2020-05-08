@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 4/7/2020, 5:56:53 PM
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 07/05/2020, 5:15:18 pm
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    4/7/2020   fahad.khan@toptal.com     Initial Version
@@ -31,7 +31,8 @@
                         <td colspan="11">
                             <apex:outputPanel rendered="{!if(renderAs == 'PDF', false, true)}">
                                 <span style="">
-                                    <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(businessUnit == 'Rhino', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png', 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png')}" />
+                                                                                    <font size="48" face="Arial Unicode MS"> <apex:image width="250" height="75" value="{!if(businessUnit == 'Rhino', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png', 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png')}" />
+
                                     </font>
                                 </span>
                             </apex:outputPanel>
