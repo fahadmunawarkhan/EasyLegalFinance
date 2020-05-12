@@ -4,10 +4,10 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/5/2020, 12:47:54 PM
+ * @Last Modified On   : 5/12/2020, 4:23:45 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
- * 1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
+ * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
 **/
 public class CustomerViewComponentCtlr {
     
@@ -1095,9 +1095,9 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 } else {
                     loanSummary.balancePrincipal = 0;
                 }
-            }
-            
-            if(totalReversed[0] != null){                
+            } 
+
+            if(totalReversed[0] != null){
                 if(totalReversed[0].get('interestReversed') != null){
                     Decimal interestReversed = Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
                     if (loanSummary.balancePrincipal != null)
@@ -1228,6 +1228,7 @@ return allOpts;*/
         try {
             RDS_CustomerCtlr.runFirstTime = true;
             upsert opp; 
+            setLawyerLawfirmOnActiveLoans(opp);
             RDS_CustomerCtlr.runFirstTime = false;
         } catch (Exception e){
             throw new AuraHandledException(e.getMessage());
@@ -1253,6 +1254,26 @@ return allOpts;*/
             Account acc = new Account(Id=accountId);
             delete acc;
         }
+    }
+    
+    /******************* Method to set/update Lawyer and Lawfirm on all active Opportunities *********************/
+    public static void setLawyerLawfirmOnActiveLoans(Opportunity currentOpp){
+        List<Id> newOppsIds = new List<Id>();
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();  
+        
+        if(currentOpp.AccountId != null && (currentOpp.Law_Firm__c != null || currentOpp.Lawyer__c != null)){
+            for(Opportunity opp : [SELECT Id, AccountId, Lawyer__c, Law_Firm__c 
+                                   FROM Opportunity 
+                                   WHERE AccountId = :currentOpp.AccountId
+                                   AND stageName = 'Closed With Loan'
+                                   AND stage_status__c LIKE '%Active%'
+                                   AND (Lawyer__c != :currentOpp.Lawyer__c OR Law_Firm__c != :currentOpp.Law_Firm__c)]){                                                                                      
+                                       opp.Lawyer__c = currentOpp.Lawyer__c;
+                                       opp.Law_Firm__c = currentOpp.Law_Firm__c;
+                                       oppsToUpdate.add(opp);
+                                   }            
+        }
+        if(!oppsToUpdate.isEmpty()) update oppsToUpdate;
     }
     
     /******************* Wrapper Class for Loan Summary *********************/    
@@ -1589,7 +1610,7 @@ return allOpts;*/
         system.debug(result);
         return result;
     }
-	
+    	
     public Class ApprovalHistoryWrapper{
         
         @AuraEnabled
@@ -1619,6 +1640,6 @@ return allOpts;*/
             RequestedBy = reqBy;
             
         }
-        
-    }    
+
+    }     
 }
