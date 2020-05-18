@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/8/2020, 2:41:28 PM
+ * @Last Modified On   : 5/7/2020, 12:25:54 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
@@ -171,7 +171,27 @@ public with sharing class LawfirmSummaryCtlr {
     @AuraEnabled
     public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
         try{
-            abortBatchJobs();
+            List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
+            Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
+            for(Payout_Bath_Job__mdt pJob : payoutJobs){
+                devNameToPayoutJobsMap.put(pJob.DeveloperName, pJob);
+            }
+            
+            
+            List<AsyncApexJob> currentJobs = [SELECT Id ,Status, ApexClass.Name, CreatedBy.Name, CreatedDate
+                                              FROM AsyncApexJob
+                                              WHERE Status!='Aborted'
+                                              AND ApexClass.Name IN :devNameToPayoutJobsMap.keySet()
+                                              AND Status!='Completed'
+                                              ORDER BY CreatedDate DESC];
+            if(!currentJobs.isEmpty()){
+                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
+                m += '\nPlease try again later.';
+                
+                AuraHandledException e = new AuraHandledException(m);
+                e.setMessage(m);
+                throw e;
+            }
             LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
             businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             Date pDate = Date.valueOf(payoutDate);
@@ -181,7 +201,7 @@ public with sharing class LawfirmSummaryCtlr {
             
         }catch(exception e){
             system.debug('Error Message' + e.getMessage()+e.getStackTraceString());
-            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+            throw new AuraHandledException('' + e.getMessage());
         }
     }
     
@@ -189,7 +209,7 @@ public with sharing class LawfirmSummaryCtlr {
     public static AsyncApexJob getBatchJobStatus(){
         List<AsyncApexJob> aaj = null;
         try{
-            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdBy.Name, createdDate, CompletedDate FROM AsyncApexJob
                    WHERE ApexClass.Name = 'LawfirmSummaryGeneratePayoutBalance' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());

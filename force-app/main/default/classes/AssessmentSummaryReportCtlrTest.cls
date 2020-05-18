@@ -107,9 +107,9 @@ public class AssessmentSummaryReportCtlrTest {
         
         //system.assert(conductorId != null);
         
-        Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'ELFI', new Map<String,List<Id>>());
+        //Id condutorIDTest = AssessmentSummaryReportCtlr.generate(new List<string>{'\'' + lawyerId + '\''}, dt + '', dt.addDays(5) + '', 'ELFI', new Map<String,List<Id>>());
         //system.assertEquals(conductorId, condutorIDTest);
-        AssessmentSummaryReportCtlr.setConductorURLfield(condutorIDTest, true);
+        AssessmentSummaryReportCtlr.setConductorURLfield(conductorId, true);
         
         AssessmentSummaryReportCtlr.getBatchJobStatus();
         
