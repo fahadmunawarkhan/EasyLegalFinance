@@ -35,7 +35,7 @@
     <aura:attribute name="batchJobStatus" type="String" default="" />    
     <aura:attribute name="apexBatchJobOBJ" type="AsyncApexJob" />
     <aura:attribute name="intervalId" type="Integer"/>
-    <aura:attribute name="disablePrintButtn" type="Boolean" default="false" />
+    <aura:attribute name="disableButtons" type="Boolean" default="false" />
     <aura:attribute name="showZeroBatchError" type="Boolean" default="false" />
     
     <aura:handler event="aura:locationChange" action="{!c.handleDestroy}"/>
@@ -106,7 +106,7 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                    <lightning:inputRichText label="Test" value="{!v.emailBody}"  placeholder="Email body"/>
+                                    <lightning:textarea maxlength="220" label="" value="{!v.emailBody}"  placeholder="Additional Email Notes..."/>
                                 </div>
                             </span>
                         </div>
@@ -188,13 +188,13 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center">
             <lightning:layoutItem>
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for selected" onclick="{!c.generateBalanceForSelected}" />                
+                <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for selected" onclick="{!c.generateBalanceForSelected}" />                
             </lightning:layoutItem>
             <lightning:layoutItem>
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Document for selected" onclick="{!c.generateForSelected}" />                
+                <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Document for selected" onclick="{!c.generateForSelected}" />                
             </lightning:layoutItem>
             <lightning:layoutItem>
-                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Payout Document" onclick="{!c.sendToSelected}" />
+                <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Payout Document" onclick="{!c.sendToSelected}" />
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>
@@ -209,6 +209,18 @@
                     <div style="margin-right:20px;">
                         <span style="margin-left:5px;">{!v.batchJobItems} - ({!v.batchJobItemsProcessed}/{!v.batchTotalJobItems})</span>
                         <lightning:progressBar value="{!v.batchJobProgress}" />
+                    </div>
+                    <div style="margin-top:5px;margin-right:20px;">
+                        <span><strong>Started by: </strong> {!v.apexBatchJobOBJ.CreatedBy.Name}</span><br/>
+                        <span><strong>Started time: </strong> <lightning:formattedDateTime value="{!v.apexBatchJobOBJ.CreatedDate}" month="short" day="2-digit" hour="2-digit" minute="2-digit"/></span><br/>
+                        <span><strong>Completed at: </strong> 
+                            <aura:if isTrue="{!v.apexBatchJobOBJ.Status != 'Completed'}">
+                                In Progress
+                                <aura:set attribute="else">
+                                    <lightning:formattedDateTime value="{!v.apexBatchJobOBJ.CompletedDate}" month="short" day="2-digit" hour="2-digit" minute="2-digit"/>
+                                </aura:set>
+                            </aura:if>
+                        </span>
                     </div>
                 </lightning:layoutItem>
             </lightning:layout>

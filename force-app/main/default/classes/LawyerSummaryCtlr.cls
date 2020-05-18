@@ -164,7 +164,7 @@ public class LawyerSummaryCtlr {
             return conductor.id;	
         }
         catch(Exception e){
-            throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
+            throw new AuraHandledException(e.getMessage() + '');
         }
     }
     
@@ -179,8 +179,30 @@ public class LawyerSummaryCtlr {
     @AuraEnabled
     public static void generatePayoutBalance(List<Id> selectedIds, String payoutDate, String searchByName, String loanFilter, String businessUnitFilter, String typeOfLoan){
         try{
-            abortBatchJobs();
+            
             Set<Id> contactIds = new Set<Id>(selectedIds);
+            
+            List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
+            Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
+            for(Payout_Bath_Job__mdt pJob : payoutJobs){
+                devNameToPayoutJobsMap.put(pJob.DeveloperName, pJob);
+            }
+            
+            
+            List<AsyncApexJob> currentJobs = [SELECT Id ,Status, ApexClass.Name, CreatedBy.Name, CreatedDate
+                                              FROM AsyncApexJob
+                                              WHERE Status!='Aborted'
+                                              AND ApexClass.Name IN :devNameToPayoutJobsMap.keySet()
+                                              AND Status!='Completed'
+                                              ORDER BY CreatedDate DESC];
+            if(!currentJobs.isEmpty()){
+                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
+                m += '\nPlease try again later.';
+                
+                AuraHandledException e = new AuraHandledException(m);
+                e.setMessage(m);
+                throw e;
+            }
             
             if(selectedIds.isEmpty()){
                 
@@ -216,7 +238,7 @@ public class LawyerSummaryCtlr {
     public static AsyncApexJob getBatchJobStatus(){
         List<AsyncApexJob> aaj = null;
         try{
-            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdDate FROM AsyncApexJob
+            aaj = [SELECT Id, ApexClassId, Status, NumberOfErrors, TotalJobItems, JobItemsProcessed, createdBy.Name, createdDate, CompletedDate FROM AsyncApexJob
                    WHERE ApexClass.Name = 'LawyerSummaryGeneratePayoutBalance' AND Status != 'Aborted' order by CreatedDate DESC LIMIT 1];
         }catch(Exception e){
             throw new AuraHandledException(e.getMessage());

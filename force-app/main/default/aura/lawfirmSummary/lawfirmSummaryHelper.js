@@ -273,6 +273,7 @@
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");
         let emailBody = component.get("v.emailBody");
+        emailBody = emailBody != undefined && emailBody != null && emailBody != ''? emailBody.split("\n").join("<br/>") : '';
         let emailRecipient = component.get("v.emailRecipient");    
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
         let loanFilterValue = component.get("v.selectedLoanFilter");
@@ -344,6 +345,7 @@
         let reportDate = component.get("v.reportDate");
 		let emailRecipient = component.get("v.emailRecipient");        
         let emailBody = component.get("v.emailBody");
+        emailBody = emailBody != undefined && emailBody != null && emailBody != ''? emailBody.split("\n").join("<br/>") : '';
         let loanFilterValue = component.get("v.selectedLoanFilter");
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";        
@@ -444,6 +446,7 @@
     },
     updateProgress : function (component){
         return new Promise(function(resolve, reject){
+            component.set('v.disableButtons',true);
             let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
             if(apexBatchJobOBJ != null){
                 component.set('v.batchJobStatus',apexBatchJobOBJ.Status);
@@ -460,9 +463,11 @@
             }
             if(apexBatchJobOBJ != null && apexBatchJobOBJ.Status == 'Completed'){
                 window.clearInterval(component.get('v.intervalId'));
+                component.set('v.disableButtons',false);
                 resolve(true);
             }else if(apexBatchJobOBJ == null){
                 window.clearInterval(component.get('v.intervalId'));
+                component.set('v.disableButtons',false);
                 resolve(true);
             }else{
                 resolve(false);
