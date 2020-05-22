@@ -4,7 +4,7 @@
  * @Author             : Victoria Ventura
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 4/28/2020, 1:39:28 PM
+ * @Last Modified On   : 4/28/2020, 1:28:57 PM
  * @Modification Log   : 
  *==============================================================================
  * Ver         Date                     Author      		      Modification
@@ -29,7 +29,7 @@ public class OpportunityViewComponentCtlr {
                                            Date_Applied__c, Have_you_ever_declared_bankruptcy__c, Bankruptcy_Details__c,
                                            Other_Lawyer_Law_Firm_that_acted__c, NOTE_For_Paralegals__c, Date_of_Loss__c,
                                            What_Happened_from_W2L__c, Nature_of_Injury_from_W2L__c, Existing_Litigation_Loans__c,
-                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c
+                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c 
                                            from Opportunity
                                            where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' AND Lawyer__c != null ORDER BY Loan_Requests__c DESC Nulls LAST LIMIT 1];
             oppInfo.Name = ''; 
@@ -598,5 +598,29 @@ public class OpportunityViewComponentCtlr {
         }catch (Exception e){
             throw new AuraHandledException('Error:'+e.getMessage());
         }
+    }
+    
+    @AuraEnabled
+    public static Opportunity applyReserveOpp(Id oppId, Boolean isReserveApplied, Boolean stopInterest, Date reserveDate, Decimal reserveAmount){
+        try{
+            Map<String, Object> reserveInfoMap = new Map<String, Object>();
+            reserveInfoMap.put('Id', oppId);
+            reserveInfoMap.put('Is_Reserve_Applied__c', isReserveApplied);
+            reserveInfoMap.put('Stop_Interest__c', stopInterest);
+            reserveInfoMap.put('Reserve_Date__c', reserveDate);
+            reserveInfoMap.put('Reserve_Amount__c', reserveAmount);
+            List<Map<String, Object>> reserveInfos = new List<Map<String, Object>>();
+            reserveInfos.add(reserveInfoMap);
+            List<Opportunity> opps = ReserveHelper.applyReserveOpps(reserveInfos);
+            if (opps != null && !opps.isEmpty())
+                return opps[0];
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }
+        catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+        return null;
     }
 }

@@ -1642,5 +1642,40 @@
                   $A.enqueueAction(action);
               }
           ));  
+    },
+    applyReserve : function(component) {
+        var oppObj = component.get("v.oppObj");
+        var action = component.get('c.applyReserveOpp');        
+        console.log('applyReserve');
+        action.setParams({ oppId: oppObj.Id, isReserveApplied: oppObj.Is_Reserve_Applied__c, stopInterest: oppObj.Stop_Interest__c,
+                          reserveDate: oppObj.Reserve_Date__c, reserveAmount: oppObj.Reserve_Amount__c});
+        
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            
+            if (state === 'SUCCESS') {
+                console.log(response.getReturnValue());
+                component.set("v.spinner", false);                                
+                var res = response.getReturnValue();
+                component.set("v.oppObj.Reserve_Principal_Advanced__c", res.Reserve_Principal_Advanced__c);
+                component.set("v.oppObj.Accrued_Interest_as_of_Reserve_Date__c", res.Accrued_Interest_as_of_Reserve_Date__c);
+                component.set("v.oppObj.Reserve_Exposure__c", res.Reserve_Exposure__c);                                
+                var loanReserved = component.getEvent("loanReserved");
+                loanReserved.fire(); 
+                component.set("v.reserveInfoChanged", false);
+                this.showToast('SUCCESS','Your changes were successfully saved!','SUCCESS');           
+            } else if (state === 'ERROR') {
+                component.set("v.spinner", false);
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action);   
     }
 })

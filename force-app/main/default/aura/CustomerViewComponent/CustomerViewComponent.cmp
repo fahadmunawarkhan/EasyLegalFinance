@@ -50,6 +50,8 @@
     <aura:handler name="change" value="{!v.oppObj.Lawyer__r.Phone}" action="{!c.formatLawPhone}" />
     <aura:handler event="aura:locationChange" action="{!c.onLocationChange}"/>
 
+    <aura:handler name="resetClickedEvent" event="c:CustomTableResetClickedEvent" action="{!c.handleCustomTableResetClicked}"/>
+    <aura:handler name="saveClickedEvent" event="c:customTableSaveClickedEvent" action="{!c.handleCustomTableSaveClicked}"/>
     
     <aura:attribute name="paymentSearchTypeSelected" type="String" /> 
     <aura:attribute name="paymentPayoutSearch" type="boolean" /> 
@@ -134,6 +136,8 @@
     <aura:attribute name="_columns" type="List" description="List of columns for a table." />
     <aura:attribute name="_selectedTabId" type="String" default="ACCOUNT" />
     <aura:attribute name="_selectedSecondaryTabId" type="String" default="" />
+    <aura:attribute name="_reserveColumns" type="List" description="List of columns for the Reserve table." />    
+    <aura:attribute name="_reserveData" type="List"  />
     <!-- PRIVATE ATTRIBUTES -->
     
     <aura:attribute name="paymentsSearchTypes" type="List" default="[
@@ -164,7 +168,22 @@
                 </lightning:buttonGroup>
             </div>
         </div>     
-        
+        <aura:if isTrue="{!and(v.currentUser.Reserve__c, v.accountObj.Reserved_Loans_Count__c)}">
+                                    <lightning:layout>
+                                        <lightning:layoutItem size="12">  
+                                            <div class="slds-m-bottom_x-none">
+                                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                                                    <span class="slds-assistive-text">warning</span>
+                                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                                                        <lightning:icon iconName="utility:warning" variant="inverse" alternativeText="help!" size="xx-small" />
+                                                    </span>
+                                                    <h1>Loan(s) Marked as Reserve
+                                                    </h1>
+                                                </div>   
+                                            </div>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </aura:if>
         <lightning:tabset aura:id="primaryTabs" selectedTabId="{!v._selectedTabId}" onselect="{!c.onPrimaryTabSelect}" variant="default">
             <lightning:tab id="ACCOUNT" label="ACCOUNT" onactive="{!c.onfocusAccountTab}">
                 
@@ -927,7 +946,7 @@
                     
                     <aura:iteration items="{!v.oppList}" var="opp" indexVar="i">                        
                         <lightning:tab id="{!if(opp.Id==null,'NEW',opp.Id)}" label="{!if(opp.Opportunity_Long_Name__c == null,'+ NEW',opp.Opportunity_Long_Name__c) }" onactive="{!c.refreshOptTab}">                            
-                            <c:OpportunityViewComponent aura:Id="oppIdx" currentUser="{!v.currentUser}" recordId="{!opp.Id}" accountId="{!v.recordId}"  refreshAllOppties="{!c.refreshOpportunityList}" />
+                            <c:OpportunityViewComponent aura:Id="oppIdx" currentUser="{!v.currentUser}" recordId="{!opp.Id}" accountId="{!v.recordId}"  refreshAllOppties="{!c.refreshOpportunityList}" loanReserved="{!c.handleReserveLoan}"/>
                         </lightning:tab>                        
                     </aura:iteration>
                     <lightning:tab id="NEW" >
@@ -1063,6 +1082,13 @@
                                 </a>
                             </li> 
                         </aura:if>
+                        <aura:if isTrue="{!v.currentUser.Reserve__c}">
+                            <li class="slds-tabs--scoped__item customClassForTab" title="Reserve" role="presentation" aura:id="reserveId">
+                                <a class="slds-tabs_scoped__link reserve-tab-link" href="javascript:void(0);" onclick="{!c.reserveTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-4" aura:id="reserveTabLinkId">
+                                    Reserve
+                                </a>
+                            </li> 
+                        </aura:if>                        
                     </ul>
                     <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show customClassForTabData" role="tabpanel" aria-labelledby="tab-default-1" aura:id="loanSummaryTabDataId">
                         <!-- <<<<<<<<<< LOAN SUMMARY >>>>>>>>>> -->
@@ -2027,7 +2053,12 @@
 
                         </aura:if>
                     </div>
-                    
+                    <!-- <<<<<<<<<< RESERVE TAB >>>>>>>>>> -->
+                    <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="reserveTabDataId">
+                        <lightning:card class="slds-card slds-card_boundary" title="Reserve Applied" variant="base">                            
+                            <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}"/>
+                        </lightning:card>                        						
+                    </div>                        
                 </div>       
                 
             </lightning:tab>  

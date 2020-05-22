@@ -4,7 +4,7 @@
     <category>accounts</category>
     <deployed>true</deployed>
     <description>Report Type built to aggregate and report on loans at an Account level.</description>
-    <label>ELFI 1</label>
+    <label>ELFI 1 With Reserve</label>
     <sections>
         <columns>
             <checkedByDefault>false</checkedByDefault>
@@ -280,7 +280,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Outstanding Balance</displayNameOverride>
+            <displayNameOverride>Outstanding Balance To Date</displayNameOverride>
             <field>Outstanding_Balance_as_of_To_Date__c</field>
             <table>Account</table>
         </columns>
@@ -484,7 +484,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Principal</displayNameOverride>
+            <displayNameOverride>Principal Non Repaid</displayNameOverride>
             <field>Principal_Non_Repaid_as_of_To_Date__c</field>
             <table>Account</table>
         </columns>
@@ -496,7 +496,20 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Reserve Applied</displayNameOverride>
             <field>Is_Reserve_Applied__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Outstanding Balance</displayNameOverride>
+            <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Principal</displayNameOverride>
+            <field>Principal_With_Reserve_To_Date__c</field>
             <table>Account</table>
         </columns>
         <masterLabel>Accounts</masterLabel>

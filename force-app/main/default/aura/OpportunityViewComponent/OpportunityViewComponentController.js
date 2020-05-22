@@ -108,8 +108,9 @@
         helper.saveOppty(component).then(
             $A.getCallback(function(result) {
                 helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
-                helper.getOpportunityInfo(component);
+                var getOppInfoPromise = helper.getOpportunityInfo(component);
                 helper.getReAssessmentOpportunitiesList(component);
+                return getOppInfoPromise;
             }),
             $A.getCallback(function(errors) {
                 if (errors[0] && errors[0].message) {
@@ -118,7 +119,24 @@
                     helper.unknownErrorsHandler();
                 }
                 
-            }));
+            }))
+        .then(
+            $A.getCallback(function(result) {
+                helper.updateDrawdownList(component); 
+				var reserveInfoChanged = component.get("v.reserveInfoChanged");  
+                if (reserveInfoChanged){
+                    component.set("v.spinner", true);
+                	helper.applyReserve(component);
+                }
+            }),
+            $A.getCallback(function(errors) {
+                if (errors[0] && errors[0].message) {
+                    helper.errorsHandler(errors)
+                }else {
+                    helper.unknownErrorsHandler();
+                }                
+            })
+        );
     } ,
     
     saveDrawdowns : function(component, event, helper){
@@ -551,5 +569,44 @@
             oppObj.Restrict_Communication__c = false;
         }
         component.set("v.oppObj", oppObj);
+    },
+    handleReserveAppliedChanged : function(component, event, helper) {
+        component.set("v.reserveInfoChanged", true);
+        let oppObj = component.get("v.oppObj");
+        var reserveApplied = component.get("v.oppObj.Is_Reserve_Applied__c");
+        if (reserveApplied){
+            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");        	
+            oppObj.Reserve_Date__c = today;
+            oppObj.Reserve_Amount__c = 0.0;
+            var expandedSections = component.get('v.expandedSections') || {};
+            expandedSections['reserve'] = true;
+            component.set('v.expandedSections', expandedSections);
+        }
+        else{
+            oppObj.Reserve_Date__c = null;
+            oppObj.Reserve_Amount__c = null;
+        }
+        console.log(oppObj.Reserve_Date__c);
+        component.set("v.oppObj", oppObj);
+    },
+    handleStopInterestChanged : function(component, event, helper) {
+        component.set("v.reserveInfoChanged", true);
+        var stopInterest = component.get("v.oppObj.Stop_Interest__c");
+        if (stopInterest){
+            var expandedSections = component.get('v.expandedSections') || {};
+            expandedSections['reserve'] = true;
+            component.set('v.expandedSections', expandedSections);
     }
+    },    
+    handleReserveDateChanged : function(component, event, helper) {
+        component.set("v.reserveInfoChanged", true);
+    },
+    handleReserveAmountChanged : function(component, event, helper) {
+        component.set("v.reserveInfoChanged", true);
+    },
+    applyReserve : function(component, event, helper){
+        component.set("v.spinner", true);
+        helper.applyReserve(component);
+    } ,
+
 })

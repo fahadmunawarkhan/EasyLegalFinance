@@ -73,6 +73,9 @@
         helper.getLoanSummaryInfo(component); 
         helper.getLatestOpportunity(component);
         helper.getOpportunityTransactions(component);
+        var currentUser = component.get("v.currentUser");
+        if (currentUser && currentUser.Reserve__c)
+            helper.reloadReserveTable(component);
         
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentMiscSearch", false);
@@ -132,6 +135,13 @@
         component.find("paymentsId").getElement().className = 'slds-tabs--scoped__item slds-active customClassForTab';
         component.find("paymentsTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
     },        
+    reserveTab: function(component, event, helper) {        
+        helper.clearAllTabs(component, event);
+        component.find("reserveId").getElement().className = 'slds-tabs--scoped__item slds-active customClassForTab';
+        component.find("reserveTabLinkId").getElement().className = 'slds-tabs_scoped__link reserve-tab-link-active';
+        component.find("reserveTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
+        helper.reloadReserveTable(component);
+    },     
     showPrintableView:function(component, event, helper) {
         var accObj = component.get('v.accountObj');
         var baseURL = accObj.Conga_Printable_Preview_URL__c;
@@ -771,6 +781,41 @@ handlePaymentActionSelected : function(component, event, helper) {
     },
     projectedLoanValueChanged : function(component, event, helper){
     	helper.setReasonForLTVOptions(component);
+    },
+    handleReserveLoan : function(component, event, helper){
+    	console.log('reserveLoan');   
+        helper.onLoanReserveStateChanged(component);
+    },
+    handleCustomTableResetClicked : function(component, event, helper){
+        console.log('handleCustomTableResetClicked');         
+        helper.reloadReserveTable(component);
+    },
+    handleCustomTableSaveClicked : function(component, event, helper){
+        console.log('handleCustomTableSaveClicked'); 
+        component.set("v.spinner", true);
+        var changedRecords = event.getParam('changedRecords');   
+        console.log(changedRecords);        
+        helper.saveReserveTable(component, changedRecords)
+        .then(
+            (result) => {
+                helper.showToast('SUCCESS','Your changes were successfully saved!', 'SUCCESS');
+                return helper.getOpportunitiesList(component);
+            },
+            (error) => {
+                component.set("v.spinner", false);
+            }
+        )
+        .then(
+            (result) => {
+                component.set("v.spinner", false);
+            	helper.populateReserveTableColumns(component);
+        		helper.populateReserveTableData(component); 
+                helper.onLoanReserveStateChanged(component);
+            },
+            (error) => {
+                component.set("v.spinner", false);
+            }                
+        );
     }
 
 })

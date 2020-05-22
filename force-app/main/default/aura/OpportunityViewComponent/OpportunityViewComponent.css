@@ -54,4 +54,9 @@
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     margin-left: 0px;
+}.THIS .toggle-reserve  .slds-checkbox_faux {
+    border-color:  #ad321c !important;
+}
+.THIS .toggle-reserve .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux {
+    background-color: #ad321c !important;
 }

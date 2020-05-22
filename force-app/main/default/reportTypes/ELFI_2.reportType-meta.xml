@@ -28,7 +28,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Principle Borrowed</displayNameOverride>
+            <displayNameOverride>Advance</displayNameOverride>
             <field>Amount__c</field>
             <table>Drawdown__c</table>
         </columns>
@@ -111,7 +111,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Outstanding Balance</displayNameOverride>
+            <displayNameOverride>Total Amount Owing</displayNameOverride>
             <field>Outstanding_Balance_as_of_To_Date__c</field>
             <table>Drawdown__c</table>
         </columns>
@@ -171,7 +171,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>File No</displayNameOverride>
+            <displayNameOverride>Case File Number</displayNameOverride>
             <field>Opportunity__c.Account.AccountNumber</field>
             <table>Drawdown__c</table>
         </columns>
@@ -235,6 +235,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Originating Firm</displayNameOverride>
             <field>Opportunity__c.Account.Business_Unit__c</field>
             <table>Drawdown__c</table>
         </columns>
@@ -260,7 +261,118 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Opportunity__c.Law_Firm_Province__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Opportunity__c.Law_Firm_City__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Opportunity: Principal Repaid</displayNameOverride>
+            <field>Opportunity__c.Principal_Repaid_as_of_To_Date__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Amount_Adjusted_for_Payments_b4_Temp_Dt__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Total Principal Outstanding</displayNameOverride>
+            <field>Principal_Non_Repaid_as_of_To_Date__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <field>Opportunity__c.Account.BillingAddress</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Obligor First Name</displayNameOverride>
+            <field>Opportunity__c.Primary_Contact__c.FirstName</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Obligor Last Name</displayNameOverride>
+            <field>Opportunity__c.Primary_Contact__c.LastName</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law City</displayNameOverride>
+            <field>Opportunity__c.Law_Firm__c.BillingCity</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm Province</displayNameOverride>
+            <field>Opportunity__c.Law_Firm__c.BillingState</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm Postal Code</displayNameOverride>
+            <field>Opportunity__c.Law_Firm__c.BillingPostalCode</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm Rep</displayNameOverride>
+            <field>Opportunity__c.Law_Firm__c.Name</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Lawyer Phone Number</displayNameOverride>
+            <field>Opportunity__c.Lawyer__c.Phone</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Lawyer Rep</displayNameOverride>
+            <field>Opportunity__c.Lawyer__c.Contact_Name__c</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>City</displayNameOverride>
+            <field>Opportunity__c.Account.BillingCity</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Province</displayNameOverride>
+            <field>Opportunity__c.Account.BillingState</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Address</displayNameOverride>
+            <field>Opportunity__c.Account.BillingStreet</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Postal Code</displayNameOverride>
+            <field>Opportunity__c.Account.BillingPostalCode</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm Address</displayNameOverride>
+            <field>Opportunity__c.Law_Firm__c.BillingStreet</field>
+            <table>Drawdown__c</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Opportunity #</displayNameOverride>
+            <field>Opportunity__c.Loan_Requests__c</field>
             <table>Drawdown__c</table>
         </columns>
         <masterLabel>Drawdowns</masterLabel>

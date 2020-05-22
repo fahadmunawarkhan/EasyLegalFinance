@@ -1,0 +1,39 @@
+<aura:component >    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+	<aura:attribute name="columns" type="List" />
+    <aura:attribute name="data" type="List" />    
+    <aura:attribute name="changedRecordIdsMap" type="Map" default="{}"/>    
+
+    <aura:registerEvent name="resetClickedEvent" type="c:CustomTableResetClickedEvent"/>
+    <aura:registerEvent name="saveClickedEvent" type="c:customTableSaveClickedEvent"/>
+    
+    <aura:handler name="cellChangedEvent" event="c:CustomCellChangedEvent" action="{!c.handleCustomCellChanged}"/>
+
+    <div >
+        <table class="slds-table slds-table_bordered ">
+            <thead>
+                <tr >
+                    <aura:iteration items="{!v.columns}" var="column">
+                        <th class="{!column.align == 'center' ? 'slds-text-align_center' :  (column.align == 'left' ? 'slds-text-align_left' : 'slds-text-align_right')}">
+                            <div class="slds-truncate">{!column.label}</div>
+                        </th>
+                    </aura:iteration>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.data}" var="row">
+                    <tr>
+                        <aura:iteration items="{!row.items}" var="item">                        
+                                <c:CustomTableCellComponent cellItem="{!item}" recordId="{!row.id}" />                            
+                        </aura:iteration>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+        <div class="slds-m-top_large slds-text-align_center">
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Reset" onclick="{!c.reset}" />
+            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.save}" />
+        </div>
+
+    </div>
+</aura:component>

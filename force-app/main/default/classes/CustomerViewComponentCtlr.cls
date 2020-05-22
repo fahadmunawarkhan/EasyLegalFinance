@@ -1390,7 +1390,7 @@ return allOpts;*/
         User currentUser = [SELECT Id,isActive,ProfileId, Custom_Reports__c, Drawdowns__c, Loan_Overview_Edit__c,
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, 
                             Treatment_Providers__c,Payments_tab__c, Schedule_Payments__c,
-                            Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c
+                            Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c, Reserve__c
                             FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
@@ -1611,6 +1611,25 @@ return allOpts;*/
         return result;
     }
     	
+    @AuraEnabled
+    public static Account getAccountReserveInfo(String accountId) {
+        Account acc = [select Reserved_Loans_Count__c from Account where Id=:accountId];
+        return acc;
+    }
+    
+    @AuraEnabled
+    public static void applyReserve(List<Map<String, Object>> reserveInfos){ 
+        try{
+        	ReserveHelper.applyReserveOpps(reserveInfos);
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }
+        catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }            
+    }
+	
     public Class ApprovalHistoryWrapper{
         
         @AuraEnabled

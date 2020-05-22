@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event template" >
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="changedRecords" type="List"/>
+</aura:event>

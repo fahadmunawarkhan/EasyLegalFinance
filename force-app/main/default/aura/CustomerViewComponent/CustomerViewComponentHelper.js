@@ -959,6 +959,8 @@
             getAllLI[i].className = "slds-tabs--scoped__item customClassForTab";
             getAllDiv[i].className = "slds-tabs--scoped__content slds-hide customClassForTabData";
         }
+        if (component.find('reserveTabLinkId'))
+        	component.find("reserveTabLinkId").getElement().className = 'slds-tabs_scoped__link reserve-tab-link';
     }, 
     
     getPickListValues: function(component, object, field, attributeId)
@@ -1410,5 +1412,150 @@
                             }else
                                 resolve(true);
                         });
+                },
+	onLoanReserveStateChanged: function(component){
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.getAccountReserveInfo'); 
+        component.set("v.spinner", true);
+        action.setParams({ accountId : recordId})                        
+        action.setCallback(this, function (response) {
+            var state = response.getState();            
+            if (state === 'SUCCESS') {
+                component.set("v.spinner", false);
+                var acc = response.getReturnValue();
+                component.set("v.accountObj.Reserved_Loans_Count__c", acc.Reserved_Loans_Count__c); 
+            } else if (state === 'ERROR') {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action); 
+    },
+    populateReserveTableColumns: function(component){
+        component.set("v._reserveColumns",[{label:'Reserve',fieldName:'Is_Reserve_Applied__c',type:'boolean', editable: false, align: 'center'},
+									{label:'Stop Interest',fieldName:'Stop_Interest__c',type:'boolean', editable: false, align: 'center'},                                           
+                                    {label:'Loan',fieldName:'Name',type:'text', align: 'left'}, 
+									{label:'Reserve Date',fieldName:'Reserve_Date__c',type:'date-local', editable: true, align: 'right'},                                          
+                                    {label:'Principal Advanced',fieldName:'Reserve_Principal_Advanced__c',type:'currency', align: 'right'},
+                                    {label:'Accrued Interest',fieldName:'Accrued_Interest_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
+									{label:'Value at Reserve Date',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
+                                    {label:'Reserve Amount',fieldName:'Reserve_Amount__c',type:'currency', editable: true, align: 'right'},
+                                    {label:'Exposure',fieldName:'Reserve_Exposure__c',type:'currency', align: 'right'}]);        
+    },
+    populateReserveTableData: function(component){
+        var oppsList = component.get("v.oppList");
+        var data = [];
+        var totalPrincipal = 0.0;
+        var totalAccruedInterest = 0.0;
+        var valueAtReserveDate = 0.0;
+        var totalReserveAmount = 0.0;
+        var totalExposure = 0.0;
+        for (var i = 0; i < oppsList.length; i++){
+            var opp = oppsList[i];            
+            var name = opp.Name;
+            if (opp.Loan_Requests__c)
+                name += ' - ' + opp.Loan_Requests__c;
+            var items = [{value: opp.Is_Reserve_Applied__c, align: 'center', type: 'boolean', editable: true},
+                  {value: opp.Stop_Interest__c, align: 'center', type: 'boolean', editable: true},                       
+                  {value: name, align: 'left', type: 'text', editable: false},
+                  {value: opp.Reserve_Date__c, align: 'right', type: 'date', editable: true},
+                  {value: opp.Reserve_Principal_Advanced__c, align: 'right', type: 'currency', editable: false},
+                  {value: opp.Accrued_Interest_as_of_Reserve_Date__c, align: 'right', type: 'currency', editable: false},                  
+                  {value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
+                  {value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
+                  {value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false}];
+            var row = {id: opp.Id, items: items};
+            data.push(row);
+            if (opp.Reserve_Principal_Advanced__c)
+            	totalPrincipal += opp.Reserve_Principal_Advanced__c;
+            if (opp.Accrued_Interest_as_of_Reserve_Date__c)
+            	totalAccruedInterest += opp.Accrued_Interest_as_of_Reserve_Date__c;
+            if (opp.Value_At_Reserve_Date__c)
+            	valueAtReserveDate += opp.Value_At_Reserve_Date__c;
+            if (opp.Reserve_Amount__c)
+            	totalReserveAmount += opp.Reserve_Amount__c;
+            if (opp.Reserve_Exposure__c)
+            	totalExposure += opp.Reserve_Exposure__c;
+        }
+        var totalItems = [{value: '', align: 'center', type: 'text', editable: false, bold: true},
+				  {value: '', align: 'right', type: 'text', editable: false, bold: true},                          
+                  {value: 'Total', align: 'right', type: 'text', editable: false, bold: true},
+                  {value: '', align: 'right', type: 'text', editable: false, bold: true},
+                  {value: totalPrincipal, align: 'right', type: 'currency', editable: false, bold: true},
+                  {value: totalAccruedInterest, align: 'right', type: 'currency', editable: false, bold: true},                  
+				  {value: valueAtReserveDate, align: 'right', type: 'currency', editable: false, bold: true},                          
+                  {value: totalReserveAmount, align: 'right', type: 'currency', editable: false, bold: true},
+                  {value: totalExposure, align: 'right', type: 'currency', editable: false, bold: true}];
+        var totalRow = {id: '', items: totalItems};
+        data.push(totalRow);
+        component.set("v._reserveData", data);        
+    },
+    getReserveInfoMaps : function(component, changedRecords){
+    	var records = [];
+        var columns = component.get("v._reserveColumns");
+        for (var i = 0; i < changedRecords.length; i++){            
+            var rec = changedRecords[i];
+            var mapToSend = {};
+            mapToSend["Id"] = rec.id;
+            for (var j = 0; j < rec.items.length; j++){
+                var item = rec.items[j];
+                if (item.editable){
+                    var column = columns[j];                    
+                    mapToSend[column.fieldName] = item.value;
+                }
+            }
+            records.push(mapToSend);
+        }
+        
+        return records;
+    },
+    saveReserveTable : function(component, changedRecords){  
+        var records = this.getReserveInfoMaps(component, changedRecords);
+		console.log(records);
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                var action = component.get('c.applyReserve');        
+                action.setParams({ reserveInfos : records});
+                action.setCallback(this, function (response) {
+                    var state = response.getState(); 
+                    console.log(state);
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());               
+                    } else if (state === 'ERROR') {
+                        var errors = response.getError();
+                        if (errors) {
+                            if (errors[0] && errors[0].message) {
+                                self.errorsHandler(errors)
+                            }
+                        } else {
+                            self.unknownErrorsHandler();
+                        }
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));                
+    },
+    reloadReserveTable : function(component){
+        component.set("v.spinner", true);
+        this.getOpportunitiesList(component)
+        .then(
+            (result) => {
+                component.set("v.spinner", false);
+                this.populateReserveTableColumns(component);
+        		this.populateReserveTableData(component);        
+            },
+            (error) => {
+				component.set("v.spinner", false);            
+            }
+        ); 
                 }
 })

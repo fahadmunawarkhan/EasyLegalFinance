@@ -17,6 +17,7 @@
 
     <c:auraPubsub aura:id="pubsub"/>
 
+	<aura:registerEvent name="loanReserved" type="c:ReserveLoanStateChangedEvent"/>
     <aura:attribute name="accountId" type="String" access="public" />
     <aura:attribute name="recordId" type="String" /> 
     <aura:attribute name="oppObj" type="Opportunity" default="{ 'sobjectType': 'Opportunity' }"/> 
@@ -42,6 +43,7 @@
     <aura:attribute name="spShowHideText" type="String" default="Show"/> 
     <aura:attribute name="spShowHideIcon" type="String" default="utility:chevrondown"/> 
     
+    <aura:attribute name="reserveInfoChanged" type="boolean" default="false" />
     
     <!-- DEPENDENT PICKLISTS ATTRIBUTES -->
     <aura:attribute name="objDetail" type="opportunity" default="{'sobjectType' : 'opportunity'}"/>
@@ -529,6 +531,114 @@
         </lightning:card>    
 
 
+        <!-- <<<<<<<<<< RESERVE >>>>>>>>>> -->
+        <aura:if isTrue="{!v.currentUser.Reserve__c}">
+            <lightning:card>
+                <div class="{!v.expandedSections.reserve? 'slds-section slds-card__body_inner slds-is-open': 'slds-section slds-card__body_inner slds-is-closed'}">
+                    <h3 class="slds-section__title">
+                        <button aria-expanded="true" class="slds-button slds-section__title-action" data-section="reserve" onclick="{!c.toggleSection}">
+                            <lightning:icon
+                                iconName="utility:switch"
+                                size="x-small"
+                                class="slds-section__title-action-icon slds-button__icon_left"
+                                alternativeText="button icon" 
+                            />
+                            <lightning:icon
+                                iconName="utility:warning"
+                                variant="error"
+                                size="small"
+                                class="slds-button__icon_left slds-m-horizontal__small reserve-icon"
+                                alternativeText="" 
+                            />
+                            <span class=" slds-m-right_large" title="Reserve">Reserve</span>
+                            <div class="slds-media slds-media_center slds-m-left_large">
+                                <lightning:input name="toggle"
+                                             label=""
+                                             type="toggle"
+                                             messageToggleActive=""
+                                             messageToggleInactive=""
+                                             onchange="{!c.handleReserveAppliedChanged}"
+                                             checked="{!v.oppObj.Is_Reserve_Applied__c}"
+                                             class="toggle-reserve">
+                                </lightning:input>
+                                <span class="slds-form-element__label slds-m-bottom_none slds-m-left_small">Reserve Applied</span>                                
+                            </div> 
+							<div class="slds-media slds-media_center slds-m-left_large">
+                                <lightning:input name="toggle"
+                                             label=""
+                                             type="toggle"
+                                             messageToggleActive=""
+                                             messageToggleInactive=""
+                                             onchange="{!c.handleStopInterestChanged}"
+                                             checked="{!v.oppObj.Stop_Interest__c}"
+                                             class="toggle-reserve">
+                                </lightning:input>
+                                <span class="slds-form-element__label slds-m-bottom_none slds-m-left_small">Stop Interest</span>                                
+                            </div>                            
+                        </button>                    
+                        
+                    </h3>
+                    <div aria-hidden="{! !v.expandedSections.reserve }" class="slds-section__content">
+                        <lightning:layout class="slds-m-left_xx-large">
+                            <lightning:layoutItem size="4" class="slds-m-left_xx-large">                            
+                                                                                    
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control"><span class="">
+                                        <lightning:input tabindex="5" label="Reserve Date" type="date" value="{!v.oppObj.Reserve_Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" disabled="{!!v.oppObj.Is_Reserve_Applied__c}" onchange="{!c.handleReserveDateChanged}"/>
+                                        </span>
+                                    </div>
+                                </div>                            
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Reserve_Amount__c}" step="0.01" 
+                                                             label="Reserve Amount" disabled="{!!v.oppObj.Is_Reserve_Applied__c}" onchange="{!c.handleReserveAmountChanged}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <br/>
+                                    <div class="slds-text-align_right">
+                                        
+                                			<lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Apply" onclick="{!c.applyReserve}" />
+                                        
+                                    </div>
+                                            
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4" class="slds-m-left_xx-large ">                            
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Reserve_Principal_Advanced__c}" step="0.01" 
+                                                             label="Principal Advanced" disabled="true"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Accrued_Interest_as_of_Reserve_Date__c}" step="0.01" 
+                                                             label="Accrued Interest To Reserve Date" disabled="true"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Reserve_Exposure__c}" step="0.01" 
+                                                             label="Exposure" disabled="true"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+    
+                </div>
+                
+            </lightning:card>    
+        </aura:if>
         <!-- <<<<<<<<<< LOAN DETAILS >>>>>>>>>> -->
         <lightning:card>
             <div class="{!v.expandedSections.loanDetails? 'slds-section slds-card__body_inner slds-is-open': 'slds-section slds-card__body_inner slds-is-closed'}">

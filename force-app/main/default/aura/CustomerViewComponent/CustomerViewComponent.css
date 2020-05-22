@@ -29,3 +29,12 @@
 .THIS .customRadioCls .slds-form-element__control .slds-radio{
     display : inline-block !important;
 }
+.THIS  .reserve-tab-link {
+    background: #ffcdc0  !important;
+    color: #3E3E3C !important;
+}
+
+.THIS  .reserve-tab-link-active {
+    background: #ad321c !important;
+    color: #fff !important;
+}
