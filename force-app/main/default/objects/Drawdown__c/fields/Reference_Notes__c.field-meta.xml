@@ -151,6 +151,11 @@
                 <default>false</default>
                 <label>Client Rebate</label>
             </value>
+            <value>
+                <fullName>Admin Fee - No Interest</fullName>
+                <default>false</default>
+                <label>Admin Fee - No Interest</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -228,6 +233,10 @@
         <valueSettings>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
             <valueName>Assessment Fee</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Admin Fee</controllingFieldValue>
+            <valueName>Admin Fee - No Interest</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
