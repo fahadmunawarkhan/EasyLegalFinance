@@ -310,7 +310,7 @@
     errorsHandler : function(errors){
         if (errors[0] && errors[0].message) {
             console.log('Error message: ' + errors[0].message);
-            this.showToast('Error', errors[0].message);
+            this.showToast('Error', errors[0].message, 'error');
         }
     },
     showToast : function(title, message,type) {

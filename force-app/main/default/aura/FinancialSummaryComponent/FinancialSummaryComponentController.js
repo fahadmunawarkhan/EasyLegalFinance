@@ -83,6 +83,7 @@
                 }
                 
                 window.clearInterval(component.get('v.intervalId'));
+                $A.get('e.force:refreshView').fire();
                 return helper.getCustomSettings(component);                
             }
         })).then($A.getCallback(function(result){
@@ -155,65 +156,38 @@
         /*if(customSetting.Start_Date__c == component.get('v.startDate') && customSetting.End_Date__c == component.get('v.endDate')){
             
         }*/
+        component.set("v.spinner", true);
+        component.set("v.showZeroBatchError", true);
         let apexBatchJobOBJ = component.get('v.apexBatchJobOBJ');
         if(apexBatchJobOBJ != null && (apexBatchJobOBJ.Status != 'Completed' && apexBatchJobOBJ.Status != 'Aborted' && apexBatchJobOBJ.Status != 'Failed')){
-            if(confirm('Another Job is already in progress. Do you want to cancel and run a new one?')) {
-                component.set("v.spinner", true);
-                component.set("v.showZeroBatchError", true);
-                window.clearInterval(component.get('v.intervalId'));
-                helper.executeBatchJob(component).then(
-                    function(result){
-                        return helper.getBatchJobStatus(component);
-                    }
-                ).then(
-                    function(result){
-                        component.set('v.apexBatchJobOBJ', result);                        
-                        return helper.updateProgress(component);
-                    }
-                ).then(
-                    function(resut){
-                        return helper.pingForBatchJobStatus(component);
-                    }
-                ).then(
-                    function(){
-                        component.set("v.spinner", false);
-                    }
-                ).catch(
-                    function(errors){
-                        component.set("v.spinner", false);
-                        helper.errorsHandler(errors);
-                    }
-                );
-            }else{
-                return false;
+            window.clearInterval(component.get('v.intervalId'));
+        }
+        
+        
+        
+        helper.executeBatchJob(component).then(
+            function(result){
+                return helper.getBatchJobStatus(component);
             }
-        }else{
-            component.set("v.spinner", true);
-            component.set("v.showZeroBatchError", true);
-            helper.executeBatchJob(component).then(
-                function(result){
-                    return helper.getBatchJobStatus(component);
-                }
-            ).then(
-                function(result){
-                    component.set('v.apexBatchJobOBJ', result);
-                    return helper.updateProgress(component);
-                }
-            ).then(
-                function(resut){
-                    return helper.pingForBatchJobStatus(component);
-                }
-            ).then(
-                function(){
-                    component.set("v.spinner", false);
-                }
-            ).catch(
-                function(errors){
-                    component.set("v.spinner", false);
-                    helper.errorsHandler(errors);
-                }
-            );
-        }        
+        ).then(
+            function(result){
+                component.set('v.apexBatchJobOBJ', result);                        
+                return helper.updateProgress(component);
+            }
+        ).then(
+            function(resut){
+                return helper.pingForBatchJobStatus(component);
+            }
+        ).then(
+            function(){
+                component.set("v.spinner", false);
+            }
+        ).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );        
     },
     sinceInceptionClicked : function(component, event, helper){
         let adhocAsOfDate = component.get("v.adhocAsOfDate");
