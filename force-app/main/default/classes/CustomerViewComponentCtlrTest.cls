@@ -404,7 +404,7 @@ public class CustomerViewComponentCtlrTest {
         String accId = [select id from account where name = 'account' limit 1].id;  
         String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
         test.startTest();
-        CustomerViewComponentCtlr.applyPartialPayments(OppId, accId, '2018-01-01', 'eft', 'chq');
+        CustomerViewComponentCtlr.applyPartialPayments(OppId, accId, 'Payout', '2018-01-01', 'eft', 'chq');
         test.stopTest();
     }
     public static testmethod void test_Process9(){
@@ -678,7 +678,7 @@ public class CustomerViewComponentCtlrTest {
         test.startTest();        
         decimal amount = 900;
         List<Opportunity> opps = CustomerViewComponentCtlr.calculatePayments(opp.AccountId, amount, 'Payout');  
-        CustomerViewComponentCtlr.applyPartialPayments(opp.Id, opp.AccountId, Datetime.newInstance(opp.Payout_Date__c, Time.newInstance(0,0,0,0)).format('yyyy-MM-dd'), '', '');
+        CustomerViewComponentCtlr.applyPartialPayments(opp.Id, opp.AccountId, 'Payout', Datetime.newInstance(opp.Payout_Date__c, Time.newInstance(0,0,0,0)).format('yyyy-MM-dd'), '', '');
         Drawdown__c paymentDrawdown = [select Id, Amount__c, Surplus__c from Drawdown__c where Payment_Method__c = 'Payment' and Reference_Notes__c = 'Partial Payment'];
         System.assertEquals(paymentDrawdown.Amount__c, 800);
         System.assertEquals(paymentDrawdown.Surplus__c, 100);

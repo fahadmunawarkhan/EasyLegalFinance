@@ -265,7 +265,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         List<Opportunity> openOpsList = new List<Opportunity>();
         for(Opportunity opp : optsList){
             System.debug(searchType + ' '  + opp.Stage_Status__c);
-            if ((searchType == 'Payout' && opp.Stage_Status__c != 'Paid Off') ||
+            if (((searchType == 'Payout' || searchType == 'Payout - Interest First') && opp.Stage_Status__c != 'Paid Off') ||
                 (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt')) ||
                 (searchType == 'Refund')){
                     openOpsList.add(opp);
@@ -387,7 +387,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
     
     /******************* Method to save a partial payment *********************/
     @AuraEnabled
-    public static void applyPartialPayments(String oppId, String accountId, String payoutDate, String eft, String chq){            
+    public static void applyPartialPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -407,6 +407,8 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             Drawdown__c clientRebateDrawdown = createClientRebateDrawdown(opp, payoutDate);
             insert clientRebateDrawdown;
         }
+        if (searchType == 'Payout - Interest First')
+            dd.Payout_Interest_First__c = true;
         insert dd;
         
         opp = getSingleOpportunity(oppId);
@@ -438,13 +440,15 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         dd.Amount__c = opp.Temp_Payment_Received__c;
         dd.Payment_Method__c = 'Payment';        
-        dd.Reference_Notes__c = searchType == 'Payout' ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
+        dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
             dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;        
+        if (searchType == 'Payout - Interest First')
+            dd.Payout_Interest_First__c = true;
         drawdowns.add(dd);
-        if ((searchType == 'Payout') && (opp.Client_Rebate_Amount__c > 0))
+        if ((searchType == 'Payout' || searchType == 'Payout - Interest First') && (opp.Client_Rebate_Amount__c > 0))
             drawdowns.add(createClientRebateDrawdown(opp, payoutDate));
         insert drawdowns;
         
@@ -509,7 +513,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 Drawdown__c dd = new Drawdown__c();
                 dd.Amount__c = opportunity.Temp_Payment_Received__c;
                 dd.Payment_Method__c = 'Payment';        
-                dd.Reference_Notes__c = searchType == 'Payout' ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
+                dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
                     dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
                 dd.Opportunity__c = opportunity.Id;   
                 drawdownsToCreate.add(dd);
@@ -1445,7 +1449,7 @@ return allOpts;*/
             sp = Database.setSavepoint();
             System.debug('AP: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
             if (action == 'Partial Payment'){
-                applyPartialPayments(oppId, accountId, payoutDate, eft, chq);
+                applyPartialPayments(oppId, accountId, searchType, payoutDate, eft, chq);
             }
             else if (action == 'Misc Income Payment'){
                 applyMiscPayments(oppId, accountId, payoutDate, eft, chq);

@@ -138,4 +138,61 @@ public class PaymentAllocatorTest {
         Test.stopTest();
     }
     
+    public static testMethod void allocateToPrincipalFirstTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity 0' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));        
+        insert dlistOriginal;        
+        Test.startTest();        
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today().addDays(300), Opportunity__c = clientOpportunity.id,
+                                             Amount__c = 3000, Payment_Method__c ='Payment', 
+                                             Reference_Notes__c = 'Partial Payment'));
+        insert payments;
+        payments = [select Principal_Repaid__c, Interest_Repaid__c from Drawdown__c where Opportunity__c = :clientOpportunity.id and Payment_Method__c='Payment'];
+        System.assertEquals(3000.0,payments[0].Principal_Repaid__c);
+        System.assertEquals(0.0,payments[0].Interest_Repaid__c);
+        List<Drawdown__c> updatedAdvances = [select Payout_Date__c, Advance_Principal_Repaid__c, Accrued_Interest_as_of_Payout_Date__c 
+                                             from Drawdown__c where Opportunity__c = :clientOpportunity.id and Payment_Method__c!='Payment'];
+        Decimal advancePrincipalRepaidSum = 0.0;
+        for (Drawdown__c advance : updatedAdvances){
+            advancePrincipalRepaidSum += advance.Advance_Principal_Repaid__c;            
+		}
+        System.assertEquals(3000.0,advancePrincipalRepaidSum);
+        Test.stopTest();
+    }
+
+    public static testMethod void allocateToInterestFirstTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity 0' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));        
+        insert dlistOriginal;        
+        Test.startTest();        
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today().addDays(300), Opportunity__c = clientOpportunity.id,
+                                             Amount__c = 400, Payment_Method__c ='Payment', Payout_Interest_First__c = true,
+                                             Reference_Notes__c = 'Partial Payment'));
+        insert payments;
+        payments = [select Principal_Repaid__c, Interest_Repaid__c from Drawdown__c where Opportunity__c = :clientOpportunity.id and Payment_Method__c='Payment'];
+        System.assertEquals(0.0,payments[0].Principal_Repaid__c);
+        System.assertEquals(400.0,payments[0].Interest_Repaid__c);
+        List<Drawdown__c> updatedAdvances = [select Payout_Date__c, Advance_Principal_Repaid__c, Accrued_Interest_as_of_Payout_Date__c 
+                                             from Drawdown__c where Opportunity__c = :clientOpportunity.id and Payment_Method__c!='Payment'];
+        Decimal advancePrincipalRepaidSum = 0.0;
+        for (Drawdown__c advance : updatedAdvances){
+            advancePrincipalRepaidSum += advance.Advance_Principal_Repaid__c;            
+		}
+        System.assertEquals(0.0,advancePrincipalRepaidSum);
+        Test.stopTest();
+    }    
 }
