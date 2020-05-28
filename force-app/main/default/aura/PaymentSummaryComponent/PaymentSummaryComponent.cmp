@@ -141,7 +141,7 @@
             </div>
         </div>
         <div class="">
-            <lightning:card title="Payment Summary" iconName="standard:case" variant="base">
+            <lightning:card title="Payment Summary By Province" iconName="standard:case" variant="base">
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered">
                     <thead>
                         <tr class="slds-line-height_reset">
@@ -257,7 +257,7 @@
                     </tbody>
                 </table>                
             </lightning:card>
-            <lightning:card title="Partial Payments" iconName="standard:case" variant="base">
+            <lightning:card title="Payment Summary" iconName="standard:case" variant="base">
                 <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6">
                         <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">

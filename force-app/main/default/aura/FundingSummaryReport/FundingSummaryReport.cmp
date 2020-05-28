@@ -130,7 +130,7 @@
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
-                    <span style="color:red;margin-left:10px;"> Note</span>: This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Loans (Stage="Closed With Loan") Falling under Selected Range.<br/>
+                    <span style="color:red;margin-left:10px;"> Note</span>: This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Loans (Stage="Closed With Loan" or "Re-Assessment") Falling under Selected Range.<br/>
                 <!--<span style="margin-left:40px;">Total payout is payout balnace as of ctitial date.</span>-->
                 </span>
                 <br />
@@ -141,7 +141,7 @@
         </div>
         <div class="">
             <!--<div class="slds-theme_shade">-->
-            <lightning:card title="Funding Summary" iconName="standard:case" variant="base">
+            <lightning:card title="Funding Summary By Province" iconName="standard:case" variant="base">
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                     <thead>
                         <tr class="slds-line-height_reset">
@@ -242,7 +242,7 @@
             <lightning:card>
                 <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6">
-                        <lightning:card title="Totals" iconName="standard:case" variant="base">
+                        <lightning:card title="Funding Summary" iconName="standard:case" variant="base">
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                                 <thead>
                                 </thead>

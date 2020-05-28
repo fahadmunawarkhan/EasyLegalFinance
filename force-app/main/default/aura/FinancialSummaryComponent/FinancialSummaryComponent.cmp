@@ -294,7 +294,7 @@
         </div>
         <div class="">
             <!--<div class="slds-theme_shade">-->        
-            <lightning:card title="Financial Summary" iconName="standard:case" variant="base" >
+            <lightning:card title="Financial Summary By Province" iconName="standard:case" variant="base" >
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                     <thead>                        
                         <tr class="slds-line-height_reset">
@@ -407,7 +407,7 @@
             <lightning:card>
                 <lightning:layout horizontalAlign="center">
                     <lightning:layoutItem size="6">
-                        <lightning:card title="Totals" iconName="standard:case" variant="base" >
+                        <lightning:card title="Financial Summary" iconName="standard:case" variant="base" >
                             <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
                                 <thead>
                                 </thead>

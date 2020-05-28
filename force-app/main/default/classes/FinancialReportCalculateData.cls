@@ -25,7 +25,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
         strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
         strQuery += ' AND (Opportunity__r.Stage_Status__c =\'Active\' OR Opportunity__r.Stage_Status__c = \'Active - Partial Payment\'';
         strQuery += ' OR Opportunity__r.Stage_Status__c =\'Closed - Paid\' OR Opportunity__r.Stage_Status__c = \'Closed - Shortfall\'';
-        strQuery += ' OR Opportunity__r.Stage_Status__c =\'Closed - Surplus\')';
+        strQuery += ' OR Opportunity__r.Stage_Status__c =\'Closed - Surplus\' OR Opportunity__r.Stage_Status__c =\'Closed - Bad Debt\')';
         strQuery += ' AND (Payment_Method__c =\'Cheque\' or Payment_Method__c = \'e-Transfer\')';
         
         
@@ -47,6 +47,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
         String closedSurplus = 'Closed - Surplus';
         String closedShortfall = 'Closed - Shortfall';
         String closedPaid = 'Closed - Paid';
+        String closedBadDebt = 'Closed - Bad Debt';
                 
         query='SELECT id,date__c,Reporting_From_Date__c,Outstanding_Balance_as_of_From_Date__c,Accrued_Interest_as_of_From_Date__c,' +
             'Reporting_To_Date__c,Outstanding_Balance_as_of_To_Date__c,Accrued_Interest_as_of_To_Date__c,'+
@@ -56,7 +57,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
         query += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
         query += ' AND (Opportunity__r.Stage_Status__c =:none OR Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:partialPayment';
         query += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
-        query += ' OR Opportunity__r.Stage_Status__c =:closedSurplus)';
+        query += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
         query += ' AND Interest_Rate__c > 0 AND Payment_Method__c != \'Payment\' ';
         
         /**
