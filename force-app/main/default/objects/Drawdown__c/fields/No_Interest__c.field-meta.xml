@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>No_Interest__c</fullName>
     <externalId>false</externalId>
-    <formula>ISPICKVAL(Reference_Notes__c,&quot;Admin Fee - No Interest&quot;)</formula>
+    <formula>ISPICKVAL(Reference_Notes__c,&quot;Other fee - no interest&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>No Interest</label>
     <trackHistory>false</trackHistory>

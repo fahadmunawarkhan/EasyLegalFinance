@@ -152,9 +152,9 @@
                 <label>Client Rebate</label>
             </value>
             <value>
-                <fullName>Admin Fee - No Interest</fullName>
+                <fullName>Other fee - no interest</fullName>
                 <default>false</default>
-                <label>Admin Fee - No Interest</label>
+                <label>Other fee - no interest</label>
             </value>
         </valueSetDefinition>
         <valueSettings>
@@ -236,7 +236,7 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
-            <valueName>Admin Fee - No Interest</valueName>
+            <valueName>Other fee - no interest</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
