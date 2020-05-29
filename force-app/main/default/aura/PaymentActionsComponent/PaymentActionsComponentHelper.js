@@ -20,7 +20,7 @@
         var actions = new Array();
         var searchType = component.get('v.searchType');
         if (searchType == 'Payout' || searchType == 'Payout - Interest First'){
-            if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && surplus != 0 && tempPaymentReceived != totalPayout && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+            if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && surplus != 0 && (tempPaymentReceived != totalPayout || surplus > 0) && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
                 actions.push({label:'Partial Payment', value:'Partial Payment'});
             }
             else{
