@@ -79,7 +79,7 @@
         
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentPayoutInterestFirstSearch", false);
-        component.set("v.paymentMiscSearch", false);
+        component.set("v.paymentBadDebtRecoverySearch", false);
         component.set("v.paymentRefundSearch", false);
         component.set("v.paymentSearchTypeSelected", "Payout");        
         component.set("v.paymentSearchDisabled", false);
@@ -528,7 +528,7 @@
         var paymentDate = component.get("v.paymentDate");
         component.set("v.paymentAmount", null);
 
-        component.set("v.paymentMiscSearch", false);
+        component.set("v.paymentBadDebtRecoverySearch", false);
         component.set("v.paymentPayoutSearch", false);
         component.set("v.paymentPayoutInterestFirstSearch", false);
         component.set("v.paymentRefundSearch", false);                
@@ -540,8 +540,8 @@
                 else if(searchType == 'Payout - Interest First') {
                     component.set("v.paymentPayoutInterestFirstSearch", true);
                 }
-                else if(searchType == 'Misc Income Payment') {
-                    component.set("v.paymentMiscSearch", true);
+                else if(searchType == 'Bad Debt Recovery') {
+                    component.set("v.paymentBadDebtRecoverySearch", true);
                 }
                 else if(searchType == 'Refund') {
                     component.set("v.paymentRefundSearch", true);

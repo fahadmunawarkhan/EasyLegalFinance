@@ -127,9 +127,9 @@
                 <label>Waived Fee</label>
             </value>
             <value>
-                <fullName>Miscellaneous Payment</fullName>
+                <fullName>Bad Debt Recovery</fullName>
                 <default>false</default>
-                <label>Miscellaneous Payment</label>
+                <label>Bad Debt Recovery</label>
             </value>
             <value>
                 <fullName>Legal Fee</fullName>
@@ -264,7 +264,7 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>
-            <valueName>Miscellaneous Payment</valueName>
+            <valueName>Bad Debt Recovery</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>

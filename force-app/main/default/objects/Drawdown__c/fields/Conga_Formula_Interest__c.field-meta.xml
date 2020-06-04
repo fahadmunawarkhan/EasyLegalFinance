@@ -3,7 +3,7 @@
     <fullName>Conga_Formula_Interest__c</fullName>
     <externalId>false</externalId>
     <formula>IF(ISPICKVAL(Payment_Method__c, &#39;Payment&#39;),
-	IF( OR(ISPICKVAL(Reference_Notes__c, &#39;Payment Surplus&#39;), ISPICKVAL(Reference_Notes__c, &#39;Miscellaneous Payment&#39;)),
+	IF( OR(ISPICKVAL(Reference_Notes__c, &#39;Payment Surplus&#39;), ISPICKVAL(Reference_Notes__c, &#39;Bad Debt Recovery&#39;)),
 		Total_Amount__c,
 		(0 - Interest_Repaid__c )
 	),

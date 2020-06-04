@@ -276,8 +276,8 @@
                 }
                 component.set("v.oppList", oppsList);   
                 this.getLoanSummaryInfo(component);
-                if (sType == 'Misc Income Payment' && !closedLoanExist){
-                    this.showToast('Closed loans not found', 'Misc Income Payments can only be applied to  closed loans');                
+                if (sType == 'Bad Debt Recovery' && !closedLoanExist){
+                    this.showToast('Closed loans not found', 'Bad Debt Recovery can only be applied to  closed loans');                
                 }
             } else if (state === 'ERROR') {
                 component.set("v.spinner", false);
@@ -1324,7 +1324,7 @@
           //  console.log(opp);
             //console.log(sType + ' ' + opp.Stage_Status__c);
             if ( ((sType=='Payout' || sType == 'Payout - Interest First') && (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') ) ||
-               ( sType=='Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt') ) ||
+               ( sType=='Bad Debt Recovery' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt') ) ||
                ( sType=='Refund'))
                 	return true;
         }

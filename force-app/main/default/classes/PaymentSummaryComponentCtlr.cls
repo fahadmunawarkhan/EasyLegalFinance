@@ -35,7 +35,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             String LoanPayout = 'Loan Payout';
             String clientRebate = 'Client Rebate';
             String Surplus = 'Payment Surplus';
-            String Misc = 'Miscellaneous Payment';
+            String Misc = 'Bad Debt Recovery';
             String Refund = 'Refund';
             
             strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c prov, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
@@ -111,7 +111,7 @@ public with sharing class PaymentSummaryComponentCtlr {
             String LoanPayout = 'Loan Payout';
             String clientRebate = 'Client Rebate';
             String Surplus = 'Payment Surplus';
-            String Misc = 'Miscellaneous Payment';
+            String Misc = 'Bad Debt Recovery';
             String Refund = 'Refund';
             
             strQuery = 'Select'; 

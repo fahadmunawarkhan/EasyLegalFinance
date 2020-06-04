@@ -266,7 +266,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         for(Opportunity opp : optsList){
             System.debug(searchType + ' '  + opp.Stage_Status__c);
             if (((searchType == 'Payout' || searchType == 'Payout - Interest First') && opp.Stage_Status__c != 'Paid Off') ||
-                (searchType == 'Misc Income Payment' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt')) ||
+                (searchType == 'Bad Debt Recovery' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt')) ||
                 (searchType == 'Refund')){
                     openOpsList.add(opp);
                 }
@@ -440,7 +440,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         dd.Amount__c = opp.Temp_Payment_Received__c;
         dd.Payment_Method__c = 'Payment';        
-        dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
+        dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Bad Debt Recovery' ? 'Bad Debt Recovery' : null);        
             dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
@@ -462,13 +462,13 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
     }    
     
     @AuraEnabled
-    public static void applyMiscPayments(String oppId, String accountId, String payoutDate, String eft, String chq){            
+    public static void applyBadDebtRecovery(String oppId, String accountId, String payoutDate, String eft, String chq){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
         dd.Amount__c = opp.Temp_Payment_Received__c;
         dd.Payment_Method__c = 'Payment';        
-        dd.Reference_Notes__c = 'Miscellaneous Payment';        
+        dd.Reference_Notes__c = 'Bad Debt Recovery';        
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
@@ -513,7 +513,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 Drawdown__c dd = new Drawdown__c();
                 dd.Amount__c = opportunity.Temp_Payment_Received__c;
                 dd.Payment_Method__c = 'Payment';        
-                dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Misc Income Payment' ? 'Miscellaneous Payment' : null);        
+                dd.Reference_Notes__c = (searchType == 'Payout' || searchType == 'Payout - Interest First') ? 'Loan Payout' : (searchType == 'Bad Debt Recovery' ? 'Bad Debt Recovery' : null);        
                     dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
                 dd.Opportunity__c = opportunity.Id;   
                 drawdownsToCreate.add(dd);
@@ -681,7 +681,7 @@ t.adminFee =  d.Amount__c;
                     t.outstandingBalance = d.Total_Outstanding_Balance__c;
                     t.perDiem = d.Total_Per_Diem__c;
                 } else {                    
-                    if(t.referenceNotes == 'Payment Surplus' || t.referenceNotes == 'Miscellaneous Payment'){                        
+                    if(t.referenceNotes == 'Payment Surplus' || t.referenceNotes == 'Bad Debt Recovery'){                        
                         t.paymentAmount = 0;    
                         t.accruedInterest = d.Total_Amount__c;
                     } 
@@ -1451,8 +1451,8 @@ return allOpts;*/
             if (action == 'Partial Payment'){
                 applyPartialPayments(oppId, accountId, searchType, payoutDate, eft, chq);
             }
-            else if (action == 'Misc Income Payment'){
-                applyMiscPayments(oppId, accountId, payoutDate, eft, chq);
+            else if (action == 'Bad Debt Recovery'){
+                applyBadDebtRecovery(oppId, accountId, payoutDate, eft, chq);
             }
             else if (action == 'Refund'){
                 applyRefund(oppId, accountId, payoutDate, eft, chq);

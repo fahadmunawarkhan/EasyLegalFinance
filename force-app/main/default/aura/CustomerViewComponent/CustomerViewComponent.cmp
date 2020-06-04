@@ -56,7 +56,7 @@
     <aura:attribute name="paymentSearchTypeSelected" type="String" /> 
     <aura:attribute name="paymentPayoutSearch" type="boolean" /> 
     <aura:attribute name="paymentPayoutInterestFirstSearch" type="boolean" /> 
-    <aura:attribute name="paymentMiscSearch" type="boolean" /> 
+    <aura:attribute name="paymentBadDebtRecoverySearch" type="boolean" /> 
 	<aura:attribute name="paymentRefundSearch" type="boolean" />     
     <aura:attribute name="paymentDate" type="date" /> 
     <aura:attribute name="paymentAmount" type="decimal" /> 
@@ -144,7 +144,7 @@
     <aura:attribute name="paymentsSearchTypes" type="List" default="[
                                                                     {'label': 'Payout', 'value': 'Payout'},
                                                                     {'label': 'Payout - Interest First', 'value': 'Payout - Interest First'},
-                                                                    {'label': 'Misc Income Payment', 'value': 'Misc Income Payment'},
+                                                                    {'label': 'Bad Debt Recovery', 'value': 'Bad Debt Recovery'},
                                                                     {'label': 'Refund', 'value': 'Refund'},
                                                                     ]"/>    
     
@@ -1905,8 +1905,8 @@
                         </aura:if>
                         
                         
-                        <!-- MISC INCOME PAYMENT CHART -->  
-                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Misc Income Payment' &amp;&amp; v.paymentMiscSearch}">
+                        <!-- BAD DEBT RECOVERY PAYMENT CHART -->  
+                        <aura:if isTrue="{!v.paymentSearchTypeSelected == 'Bad Debt Recovery' &amp;&amp; v.paymentBadDebtRecoverySearch}">
                             <lightning:layout>
                                 <lightning:layoutItem size="3" class="slds-m-left_xx-large">
                                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -2023,7 +2023,7 @@
                                                         </tr>                                                       
                                                         <tr class="slds-text-title_caps">
                                                             <th>
-                                                                <div class="slds-cell-wrap" title="Column 1">Payment to Misc Income</div>
+                                                                <div class="slds-cell-wrap" title="Column 1">Bad Debt Recovery</div>
                                                             </th>
                                                             <aura:if isTrue="{!opp.Stage_Status__c != 'Paid Off'}">
                                                                 <td class="slds-border_top">

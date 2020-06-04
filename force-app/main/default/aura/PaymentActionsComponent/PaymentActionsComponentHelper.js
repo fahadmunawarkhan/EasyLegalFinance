@@ -41,10 +41,10 @@
                 }
             }
         }
-        else if (searchType == 'Misc Income Payment'){
+        else if (searchType == 'Bad Debt Recovery'){
             if (stageName == 'Closed With Loan' && (stageStatus == 'Closed - Paid' || stageStatus == 'Closed - Surplus' || stageStatus == 'Closed - Shortfall' || stageStatus == 'Closed - Bad Debt')){
                 if (tempPaymentReceived != null && tempPaymentReceived > 0){                    
-                    actions.push({label:'Misc Income Payment', value:'Misc Income Payment'});
+                    actions.push({label:'Bad Debt Recovery', value:'Bad Debt Recovery'});
                 }
                 else{                    
                     actions.push({label:'No Action', value:'No Action'});

@@ -420,7 +420,7 @@ public class CustomerViewComponentCtlrTest {
         String accId = [select id from account where name = 'account' limit 1].id;  
         String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
         test.startTest();
-        CustomerViewComponentCtlr.applyMiscPayments(OppId, accId, '2018-01-01', 'eft', 'chq');
+        CustomerViewComponentCtlr.applyBadDebtRecovery(OppId, accId, '2018-01-01', 'eft', 'chq');
         CustomerViewComponentCtlr.getTransactions(accId);
         test.stopTest();
     }
@@ -581,16 +581,16 @@ public class CustomerViewComponentCtlrTest {
         Test.stopTest();
     }
     
-    public static testMethod void testApplyMiscPayment(){
+    public static testMethod void testBadDebtRecovery(){
         Test.startTest();
         Account account = [select Id from Account where Name='account'];
         //List<Opportunity> oppsAfterCalculation = CustomerViewComponentCtlr.calculatePayments(account.Id, 1000.0, 'eft', 'chq');
         List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Misc Income Payment', 'eft', 'chq', opps[0].Id, 'Misc Income Payment', true);
+        List<Opportunity> oppsAfterApplying = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Bad Debt Recovery', 'eft', 'chq', opps[0].Id, 'Bad Debt Recovery', true);
         List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Payment'];
-        System.assertEquals('Miscellaneous Payment', drawdowns[0].Reference_Notes__c);
+        System.assertEquals('Bad Debt Recovery', drawdowns[0].Reference_Notes__c);
         Test.stopTest();
     }
 	

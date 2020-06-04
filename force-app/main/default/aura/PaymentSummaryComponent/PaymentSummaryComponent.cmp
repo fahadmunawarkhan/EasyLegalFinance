@@ -131,7 +131,7 @@
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
                     <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Shows "Payment" Drawdowns with Reference Notes being 'Partial Payment' or 'Loan Payout' or 'Payment Surplus' or 'Miscellaneous Payment' or 'Refund' Falling under Selected Range. <br/>
+                    This Table Shows "Payment" Drawdowns with Reference Notes being 'Partial Payment' or 'Loan Payout' or 'Payment Surplus' or 'Bad Debt Recovery' or 'Refund' Falling under Selected Range. <br/>
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003mrAjUAI/view" target="_BLANK">
@@ -380,11 +380,11 @@
                                     </td>
                                 </tr>
                                 <tr class="slds-hint-parent">
-                                    <td data-label="Total Miscellaneous Paid">
-                                        <div class="slds-truncate makeBold" title="Total Miscellaneous Paid">Total Miscellaneous Paid</div>
+                                    <td data-label="Total Bad Debt Recovery Paid">
+                                        <div class="slds-truncate makeBold" title="Total Bad Debt Recovery Paid">Total Bad Debt Recovery Paid</div>
                                     </td>
-                                    <td data-label="Total Miscellaneous Paid">
-                                        <div class="slds-truncate makeBoldBlue" title="Total Miscellaneous Paid">
+                                    <td data-label="Total Bad Debt Recovery Paid">
+                                        <div class="slds-truncate makeBoldBlue" title="Total Bad Debt Recovery Paid">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalMisc}" style="currency" maximumFractionDigits="2"/>
                                         </div>
                                     </td>
@@ -423,7 +423,7 @@
                                         <div class="slds-truncate makeBoldBlue" title="Total Payments" style="float:left;width:50%;">
                                             <lightning:formattedNumber value="{!v.partialPayments.totalPayments}" style="currency" maximumFractionDigits="2"/>
                                         </div>
-                                        <div title="Total payments is the sum of (Total Principal Paid, Total Interest Paid, Total Other Admin Fee, Total Other Referral Fee, Total Other Legal Fee, Total Surplus Paid and Total Miscellaneous Paid) Minus Total Refund in the selected date range." style="float:right;width:50%;">
+                                        <div title="Total payments is the sum of (Total Principal Paid, Total Interest Paid, Total Other Admin Fee, Total Other Referral Fee, Total Other Legal Fee, Total Surplus Paid and Total Bad Debt Recovery Paid) Minus Total Refund in the selected date range." style="float:right;width:50%;">
                                             <lightning:icon style="float:right;" iconName="utility:info_alt" alternativeText="help!" size="xx-small" />
                                         </div>
                                     </td>
