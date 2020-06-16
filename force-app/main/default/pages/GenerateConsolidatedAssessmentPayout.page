@@ -4,10 +4,10 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 16/06/2020, 11:19:16 am
+  @Last Modified On   : 16/06/2020, 11:54:29 am
   @Modification Log   : 
-  Ver       Date            Author      		    Modification
-  1.0    15/06/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+  Ver       Date            Author                  Modification
+  1.0    16/06/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
 -->
 <apex:page renderAs="PDF" controller="GenerateConsolidatedAssessmentPayoutCtlr" applyBodyTag="false">
     <head>
@@ -83,8 +83,7 @@
                                 <span style="{!if(businessUnit == 'Rhino', '','display:none;')}">T. 1-888-291-4488<br/>
                                     F. 1-780-428-4488
                                 </span>
-                                <span style="{!if(businessUnit == 'Seahold', '','display:none;')}">T. 1-888-285-7333<br/>
-                                </span>
+                                <span style="{!if(businessUnit == 'Seahold', '','display:none;')}">T. 1-888-285-7333</span>
                             </span>
                         </td>
                     </tr>
@@ -127,10 +126,11 @@
             <div style="text-align:justify;">
                 <p>
                     As requested, please note the payout amount required to fully satisfy your above-noted client's loan obligation to our firm, as of 
-                    <span style="font-weight:bold;"><apex:outputText value="{0, date, MMMM d','  yyyy}">
+                    <span style="font-weight:bold;"> 
+                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
                             <apex:param value="{!payoutDate}" />
-                        </apex:outputText></span>. The amount owing at this date is 
-                    <span style="font-weight:bold;">
+                        </apex:outputText></span>. The amount owing at this date is
+                        <span style="font-weight:bold;">
                         <apex:outputText value="{0, Number, Currency}">
                             <apex:param value="{!item.totalOutstandingBalance}" />
                         </apex:outputText></span>.
