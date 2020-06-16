@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 15/06/2020, 6:53:28 pm
+  @Last Modified On   : 16/06/2020, 11:19:16 am
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    15/06/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -65,8 +65,14 @@
                         </td>
                         <td align="center">
                             <span style="font-size: 11px;">
-                                500 St. George Street Moncton, <br/>
-                                New Brunswick E1C 1Y3
+                                <span style="{!if(businessUnit != 'Seahold', '','display:none;')}">
+                                    TD Canada Trust Tower, 161 Bay Street, 27th Floor
+                                    PO Box 508, Toronto, Ontario M5J 2S1
+                                </span>
+                                <span style="{!if(businessUnit == 'Seahold', '','display:none;')}">
+                                    500 St. George Street Moncton, <br/>
+                                    New Brunswick E1C 1Y3
+                                </span>
                             </span>
                         </td>
                         <td style="width:30%;" align="right" valign="top">
@@ -121,16 +127,13 @@
             <div style="text-align:justify;">
                 <p>
                     As requested, please note the payout amount required to fully satisfy your above-noted client's loan obligation to our firm, as of 
-                    <span style="font-weight:bold;"> 
-                        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                    <span style="font-weight:bold;"><apex:outputText value="{0, date, MMMM d','  yyyy}">
                             <apex:param value="{!payoutDate}" />
-                        </apex:outputText>
-                    </span>. The amount owing at this date is 
-                    <span style="font-weight:bold;"> 
+                        </apex:outputText></span>. The amount owing at this date is 
+                    <span style="font-weight:bold;">
                         <apex:outputText value="{0, Number, Currency}">
                             <apex:param value="{!item.totalOutstandingBalance}" />
-                        </apex:outputText>
-                    </span>
+                        </apex:outputText></span>.
                 </p>
                 <p>
                     For payments after this date, please include additional interest to the payment delivery date to our offices, as per the per diem listed below within the chart. 
