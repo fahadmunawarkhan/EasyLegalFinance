@@ -1,3 +1,14 @@
+<!--
+  @File Name          : GenerateConsolidatedAssessmentPayout.page
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 15/06/2020, 6:53:28 pm
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    15/06/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
 <apex:page renderAs="PDF" controller="GenerateConsolidatedAssessmentPayoutCtlr" applyBodyTag="false">
     <head>
         <style type="text/css" media="print">
@@ -49,12 +60,13 @@
                             <span style="font-size: 11px;">
                                 <span style="{!if(businessUnit == 'ELFI', '','display:none;')}">www.easylegal.ca</span> 
                                 <span style="{!if(businessUnit == 'Rhino', '','display:none;')}">www.rhinofinance.com</span>
+                                <span style="{!if(businessUnit == 'Seahold', '','display:none;')}">www.seahold.ca</span>
                             </span>
                         </td>
                         <td align="center">
                             <span style="font-size: 11px;">
-                                TD Canada Trust Tower, 161 Bay Street, 27th Floor
-                                PO Box 508, Toronto, Ontario M5J 2S1
+                                500 St. George Street Moncton, <br/>
+                                New Brunswick E1C 1Y3
                             </span>
                         </td>
                         <td style="width:30%;" align="right" valign="top">
@@ -64,6 +76,8 @@
                                 </span> 
                                 <span style="{!if(businessUnit == 'Rhino', '','display:none;')}">T. 1-888-291-4488<br/>
                                     F. 1-780-428-4488
+                                </span>
+                                <span style="{!if(businessUnit == 'Seahold', '','display:none;')}">T. 1-888-285-7333<br/>
                                 </span>
                             </span>
                         </td>
@@ -111,7 +125,12 @@
                         <apex:outputText value="{0, date, MMMM d','  yyyy}">
                             <apex:param value="{!payoutDate}" />
                         </apex:outputText>
-                    </span>.
+                    </span>. The amount owing at this date is 
+                    <span style="font-weight:bold;"> 
+                        <apex:outputText value="{0, Number, Currency}">
+                            <apex:param value="{!item.totalOutstandingBalance}" />
+                        </apex:outputText>
+                    </span>
                 </p>
                 <p>
                     For payments after this date, please include additional interest to the payment delivery date to our offices, as per the per diem listed below within the chart. 
@@ -131,7 +150,7 @@
                                     <span style="padding-left:5px;">Beneficiary</span>
                                 </td>
                                 <td style="width:75%;border:1px solid black;border-collapse: collapse;">
-                                    <span style="padding-left:5px;">{!bankingDetail.Beneficiary_Name__c}</span>
+                                    <span style="padding-left:5px;">{!bankingDetail.ELFI_Beneficiary_Name__c}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -139,7 +158,7 @@
                                     <span style="padding-left:5px;">Bank Name</span>
                                 </td>
                                 <td style="width:75%;border:1px solid black;border-collapse: collapse;">
-                                    <span style="padding-left:5px;">{!bankingDetail.Bank_Name__c}</span>
+                                    <span style="padding-left:5px;">{!bankingDetail.ELFI_Bank_Name__c}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -147,7 +166,7 @@
                                     <span style="padding-left:5px;">Institution #</span>
                                 </td>
                                 <td style="width:75%;border:1px solid black;border-collapse: collapse;">
-                                    <span style="padding-left:5px;">{!bankingDetail.Institution__c}</span>
+                                    <span style="padding-left:5px;">{!bankingDetail.ELFI_Institution__c}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -155,7 +174,7 @@
                                     <span style="padding-left:5px;">Branch</span>
                                 </td>
                                 <td style="width:75%;border:1px solid black;border-collapse: collapse;">
-                                    <span style="padding-left:5px;">{!bankingDetail.Branch__c}</span>
+                                    <span style="padding-left:5px;">{!bankingDetail.ELFI_Branch__c}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -163,7 +182,7 @@
                                     <span style="padding-left:5px;">Account</span>
                                 </td>
                                 <td style="width:75%;border:1px solid black;border-collapse: collapse;">
-                                    <span style="padding-left:5px;">{!bankingDetail.Account__c}</span>
+                                    <span style="padding-left:5px;">{!bankingDetail.ELFI_Account__c}</span>
                                 </td>
                             </tr>
                         </tbody>
