@@ -170,7 +170,7 @@
                 </lightning:buttonGroup>
             </div>
         </div>     
-        <aura:if isTrue="{!and(v.currentUser.Reserve__c, v.accountObj.Reserved_Loans_Count__c)}">
+        <aura:if isTrue="{!and(v.currentUser.Reserve__c, v.accountObj.Is_Reserve_Applied__c)}">
                                     <lightning:layout>
                                         <lightning:layoutItem size="12">  
                                             <div class="slds-m-bottom_x-none">

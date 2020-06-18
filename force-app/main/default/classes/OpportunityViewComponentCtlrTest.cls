@@ -354,35 +354,31 @@ public class OpportunityViewComponentCtlrTest {
     }
     
     public static testMethod void applyReserveOnTest() {        
-        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c
+                                         FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         Test.startTest();
         OpportunityViewComponentCtlr.applyReserveOpp(clientOpportunity.Id, true, true, Date.today().addDays(120), 1000.0);
-        clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c, Interest_Accrued_as_of_Payout_Date__c, Drawdown_Principal_Total__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c,
+                               Interest_Accrued_as_of_Payout_Date__c, Drawdown_Principal_Total__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         System.assertEquals(true, clientOpportunity.Is_Reserve_Applied__c);
         System.assertEquals(Date.today().addDays(120), clientOpportunity.Reserve_Date__c);
 		System.assertEquals(1000, clientOpportunity.Reserve_Amount__c);
-        System.assertEquals(clientOpportunity.Interest_Accrued_as_of_Payout_Date__c, clientOpportunity.Accrued_Interest_as_of_Reserve_Date__c);
-        System.assertEquals(clientOpportunity.Drawdown_Principal_Total__c, clientOpportunity.Reserve_Principal_Advanced__c);
 
         Test.stopTest();
     }
     
     public static testMethod void applyReserveOffTest() {        
-        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c
+                               FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         Test.startTest();
         OpportunityViewComponentCtlr.applyReserveOpp(clientOpportunity.Id, false, false, Date.today().addDays(120), 1000.0);
-        clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c
+                               FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         System.assertEquals(false, clientOpportunity.Is_Reserve_Applied__c);
         System.assertEquals(null, clientOpportunity.Reserve_Date__c);
 		System.assertEquals(null, clientOpportunity.Reserve_Amount__c);
-        System.assertEquals(null, clientOpportunity.Accrued_Interest_as_of_Reserve_Date__c);
-        System.assertEquals(null, clientOpportunity.Reserve_Principal_Advanced__c);
+        //System.assertEquals(null, clientOpportunity.Accrued_Interest_as_of_Reserve_Date__c);
 
         Test.stopTest();
     }    
-    
 }

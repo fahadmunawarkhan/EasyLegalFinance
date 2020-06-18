@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Non_Repaid_Drawdown_Principal_Total__c</fullName>
     <externalId>false</externalId>
-    <formula>Drawdown_Principal_Total__c - Principal_Repaid_Roll_up__c</formula>
+    <formula>Drawdown_Total__c - Principal_Repaid_Roll_up__c - Principal_Reversed__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Non Repaid Drawdown Principal Total</label>
     <precision>18</precision>
@@ -10,6 +10,5 @@
     <scale>2</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Number</type>
-    <unique>false</unique>
+    <type>Currency</type>
 </CustomField>

@@ -69,19 +69,18 @@ public class ReserveHelperTest {
     }
     public static testMethod void testPrepareReserveMap2() { 
         Map<String, Object> reserveInfoMap = new Map<String, Object>();
-        reserveInfoMap.put('Is_Reserve_Applied__c', true);        
+        reserveInfoMap.put('Is_Reserve_Applied__c', true);                
         Test.startTest();
         ReserveHelper.prepareReserveMap(reserveInfoMap);
-        System.assertEquals(0.0, reserveInfoMap.get('Reserve_Amount__c'));
-        System.assertEquals(Date.today(), reserveInfoMap.get('Reserve_Date__c'));
+        System.assertEquals(0.0, reserveInfoMap.get('Reserve_Amount__c'));        
+        System.assertEquals(false, reserveInfoMap.get('Stop_Interest__c'));
         Test.stopTest();
     }
     public static testMethod void testUpdateReserveFields1() { 
         Opportunity opp = new Opportunity();
         opp.Reserve_Date__c = Date.today();            
         opp.Reserve_Amount__c = 100.0;
-        opp.Accrued_Interest_as_of_Reserve_Date__c = 100.0;
-        opp.Reserve_Principal_Advanced__c = 100.0;
+        //opp.Accrued_Interest_as_of_Reserve_Date__c = 100.0;
         Map<String, Object> reserveInfoMap = new Map<String, Object>();
         reserveInfoMap.put('Is_Reserve_Applied__c', false);        
         reserveInfoMap.put('Stop_Interest__c', false);        
@@ -89,8 +88,7 @@ public class ReserveHelperTest {
         ReserveHelper.updateOppReserveFields(opp, reserveInfoMap);
         System.assertEquals(null, opp.Reserve_Date__c);
         System.assertEquals(null, opp.Reserve_Amount__c);
-        System.assertEquals(null, opp.Accrued_Interest_as_of_Reserve_Date__c);
-        System.assertEquals(null, opp.Reserve_Principal_Advanced__c);
+        //System.assertEquals(null, opp.Accrued_Interest_as_of_Reserve_Date__c);
         Test.stopTest();        
     }
     public static testMethod void testUpdateReserveFields2() { 
@@ -102,15 +100,13 @@ public class ReserveHelperTest {
         reserveInfoMap.put('Reserve_Amount__c', 100.0);        
         Test.startTest();
         ReserveHelper.updateOppReserveFields(opp, reserveInfoMap);
-        System.assertEquals(Date.today(), opp.Reserve_Date__c);
-        System.assertEquals(Date.today(), opp.Payout_Date__c);
+        System.assertEquals(Date.today(), opp.Reserve_Date__c);        
         System.assertEquals(100.0, opp.Reserve_Amount__c);
         Test.stopTest();        
     }
     
     public static testMethod void testApplyReserveOn() {        
-        List<Opportunity> clientOpportunities = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity  LIMIT 2];
+        List<Opportunity> clientOpportunities = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 2];
         List<Map<String, Object>> reserveInfos = new List<Map<String, Object>>();
         reserveInfos.add( new Map<String, Object>() );
         reserveInfos.add( new Map<String, Object>() );
@@ -137,8 +133,7 @@ public class ReserveHelperTest {
     }
 
     public static testMethod void testApplyReserveOff() {        
-        List<Opportunity> clientOpportunities = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity  LIMIT 2];
+        List<Opportunity> clientOpportunities = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 2];
         List<Map<String, Object>> reserveInfos = new List<Map<String, Object>>();
         reserveInfos.add( new Map<String, Object>() );
         reserveInfos.add( new Map<String, Object>() );
@@ -159,6 +154,47 @@ public class ReserveHelperTest {
         System.assertEquals(null, opp1.Reserve_Date__c);        
         Test.stopTest();
     }
-    
+    private static User insertUser(){
+        User testUser = new User(
+            ProfileId = [SELECT Id FROM Profile WHERE Name = 'ELFI - Case Management'].Id,
+            LastName = 'last',
+            Email = 'testuser@example.com',
+            Username = 'testuser@example.com' + System.currentTimeMillis(),
+            CompanyName = 'TEST',
+            Title = 'title',
+            Alias = 'alias',
+            TimeZoneSidKey = 'America/Los_Angeles',
+            EmailEncodingKey = 'UTF-8',
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US',            
+			Reserve__c = true
+        );
+        insert testUser;
+        
+        return testUser;
+    }
+    public static testMethod void testCreateTaskUponPayment(){
+        User testUser = insertUser();        
+        Test.startTest();        	
+        Account account = [select Id, Is_Reserve_Applied__c from Account where Name='Test Client Account'];
+        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        clientOpportunity.Is_Reserve_Applied__c = true;
+        clientOpportunity.Reserve_Date__c = Date.today();
+        update clientOpportunity;
+        ReserveHelper.createTaskUponPayment(account.Id);
+        Task task = [select Id, Subject from Task where OwnerId=:testUser.Id];
+        system.assertEquals('Payment received on account marked "Reserve"', task.Subject);
+        Test.stopTest();
+    }
+
+    public static testMethod void testCreateTaskUponPaymentWithoutReserve(){
+        User testUser = insertUser();        
+        Test.startTest();        	
+        Account account = [select Id, Is_Reserve_Applied__c from Account where Name='Test Client Account'];
+        ReserveHelper.createTaskUponPayment(account.Id);
+        List<Task> tasks = [select Id, Subject from Task where OwnerId=:testUser.Id];
+        system.assertEquals(true, tasks.isEmpty());
+        Test.stopTest();
+    }
     
 }

@@ -610,7 +610,7 @@
                                 <div class="slds-form-element slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Reserve_Principal_Advanced__c}" step="0.01" 
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Non_Repaid_Drawdown_Principal_Total__c}" step="0.01" 
                                                              label="Principal Advanced" disabled="true"/>
                                         </span>
                                     </div>
@@ -618,7 +618,7 @@
                                 <div class="slds-form-element slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Accrued_Interest_as_of_Reserve_Date__c}" step="0.01" 
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Interest_Accrued_as_of_Reserve_Date__c}" step="0.01" 
                                                              label="Accrued Interest To Reserve Date" disabled="true"/>
                                         </span>
                                     </div>

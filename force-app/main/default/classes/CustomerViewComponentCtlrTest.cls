@@ -724,8 +724,8 @@ public class CustomerViewComponentCtlrTest {
     }
     
     public static testmethod void test_applyReserve(){
-        List<Opportunity> opps = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity where name = 'Test Opportunity 3' LIMIT 1];
+        List<Opportunity> opps = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c
+                                  FROM Opportunity where name = 'Test Opportunity 3' LIMIT 1];
         List<Map<String, Object>> reserveInfos = new List<Map<String, Object>>();
         reserveInfos.add( new Map<String, Object>() );        
         reserveInfos[0].put('Id', opps[0].Id);
@@ -734,8 +734,8 @@ public class CustomerViewComponentCtlrTest {
         reserveInfos[0].put('Reserve_Date__c', Date.today());
         Test.startTest();
         CustomerViewComponentCtlr.applyReserve(reserveInfos);
-        opps = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Accrued_Interest_as_of_Reserve_Date__c,
-                               Reserve_Principal_Advanced__c FROM Opportunity where name = 'Test Opportunity 3' LIMIT 1];
+        opps = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c
+                FROM Opportunity where name = 'Test Opportunity 3' LIMIT 1];
         System.assertEquals(1, opps.size());
         System.assertEquals(true, opps[0].Is_Reserve_Applied__c);
         System.assertEquals(1000.0, opps[0].Reserve_Amount__c);

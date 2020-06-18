@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Principal_With_Reserve_To_Date__c</fullName>
+    <fullName>Interest_up_to_Last_Repymt_b4_Reserve_Dt__c</fullName>
     <externalId>false</externalId>
-    <formula>Principal_Non_Repaid_as_of_To_Date__c</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Principal With Reserve To Date</label>
+    <inlineHelpText>Sum of all Interest Accrued up to the point of last repayment but before Reserve Date. This is a roll-up summary field (DLRS) and should not be updated directly.</inlineHelpText>
+    <label>Interest up to Last Repymt b4 Reserve Dt</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>

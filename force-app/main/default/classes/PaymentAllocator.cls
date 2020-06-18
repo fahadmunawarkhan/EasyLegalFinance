@@ -31,7 +31,7 @@ History
     public static void allocate (List<ID> paymentIds, Boolean isFirstIteration) {
         // Get the Payments
 		list<Drawdown__c> payments = [select name, Outstanding_Balance_as_of_Payout_Date__c,Date__c,Reference_Notes__c, Id,Opportunity__c,
-                                      Opportunity__r.Payout_Date__c,Payout_Interest_First__c
+                                      Opportunity__r.Payout_Date__c,Payout_Interest_First__c, Opportunity__r.Reserve_Date__c
 									  from Drawdown__c where (id in :paymentIds) and (Reference_Notes__c != 'Payment Rejected') and (Reference_Notes__c != 'Payment Halted')];
 		// Get all Opportunities
 		list<ID> opportunityIds = new List<ID>();
@@ -82,7 +82,7 @@ History
 															payout_date__c=a.payout_date__c, temp_payout_date__c=a.temp_payout_date__c, 
 															Transaction_Date__c=p.date__c, opportunity__c=p.opportunity__c,
 															Interest_Accrued_to_Transaction_Date__c = a.Accrued_Interest_as_of_Payout_Date__c,
-															Interest_End_Date__c = a.Interest_End_Date__c);
+															Interest_End_Date__c = a.Interest_End_Date__c, Reserve_Date__c = p.Opportunity__r.Reserve_Date__c);
                     if (allocateToPrincipal){
                         newAllocation.Principal_Repaid__c = AllocationAmount;
                         newAllocation.Interest_Repaid__c = 0.0;
@@ -99,8 +99,8 @@ History
         insert allocations;
     }
     public static void allocateRejectionDrawdowns(List<Id> rejectionDrawdownIds){
-        List<Drawdown__c> rejectionDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, Opportunity__c,Opportunity__r.Payout_Date__c 
-									  from Drawdown__c where id in :rejectionDrawdownIds];
+        List<Drawdown__c> rejectionDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, 
+                                                Opportunity__c,Opportunity__r.Payout_Date__c, Opportunity__r.Reserve_Date__c from Drawdown__c where id in :rejectionDrawdownIds];
         List<Id> drawdownToReverseIds = new List<Id>();
         for (Drawdown__c rejectionDrawdown : rejectionDrawdowns){
 			drawdownToReverseIds.add(rejectionDrawdown.Payment_To_Reverse__c);            
@@ -128,7 +128,7 @@ History
                                                                 payout_date__c=drawdownToReverse.payout_date__c, temp_payout_date__c=drawdownToReverse.temp_payout_date__c, 
                                                                 Transaction_Date__c=rejectionDrawdown.date__c, opportunity__c=rejectionDrawdown.opportunity__c,
                                                                 Interest_Accrued_to_Transaction_Date__c = drawdownToReverse.Accrued_Interest_as_of_Payout_Date__c,
-                                                                Interest_End_Date__c = drawdownToReverse.Interest_End_Date__c);
+                                                                Interest_End_Date__c = drawdownToReverse.Interest_End_Date__c, Reserve_Date__c=rejectionDrawdown.Opportunity__r.Reserve_Date__c);
                 //System.debug('allocateRejectionDrawdowns ' + newAllocation.Amount__c  + ' ' + drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c + ' ' + rejectionDrawdown.Principal_Reversed__c);
                 if (newAllocation.Amount__c < drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c ){
                     newAllocation.Principal_Repaid__c = newAllocation.Amount__c;

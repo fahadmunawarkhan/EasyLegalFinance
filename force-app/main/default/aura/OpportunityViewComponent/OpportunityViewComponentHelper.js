@@ -1646,7 +1646,11 @@
     applyReserve : function(component) {
         var oppObj = component.get("v.oppObj");
         var action = component.get('c.applyReserveOpp');        
-        console.log('applyReserve');
+        if (oppObj.Is_Reserve_Applied__c && !oppObj.Reserve_Date__c){
+            this.showToast('ERROR', 'Reserve Date cannot be empty', 'ERROR');
+            component.set("v.spinner", false);
+            return;
+        }
         action.setParams({ oppId: oppObj.Id, isReserveApplied: oppObj.Is_Reserve_Applied__c, stopInterest: oppObj.Stop_Interest__c,
                           reserveDate: oppObj.Reserve_Date__c, reserveAmount: oppObj.Reserve_Amount__c});
         
@@ -1657,8 +1661,8 @@
                 console.log(response.getReturnValue());
                 component.set("v.spinner", false);                                
                 var res = response.getReturnValue();
-                component.set("v.oppObj.Reserve_Principal_Advanced__c", res.Reserve_Principal_Advanced__c);
-                component.set("v.oppObj.Accrued_Interest_as_of_Reserve_Date__c", res.Accrued_Interest_as_of_Reserve_Date__c);
+                component.set("v.oppObj.Non_Repaid_Drawdown_Principal_Total__c", res.Non_Repaid_Drawdown_Principal_Total__c);
+                component.set("v.oppObj.Interest_Accrued_as_of_Reserve_Date__c", res.Interest_Accrued_as_of_Reserve_Date__c);
                 component.set("v.oppObj.Reserve_Exposure__c", res.Reserve_Exposure__c);                                
                 var loanReserved = component.getEvent("loanReserved");
                 loanReserved.fire(); 
@@ -1677,5 +1681,14 @@
             }
         });
         $A.enqueueAction(action);   
+    },
+    handleErrors : function(errors){
+        if (errors) {
+            if (errors[0] && errors[0].message) {
+                this.errorsHandler(errors)
     }
+        } else {
+            this.unknownErrorsHandler();
+        }
+	},
 })

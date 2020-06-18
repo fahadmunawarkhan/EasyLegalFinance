@@ -1424,6 +1424,7 @@
                 component.set("v.spinner", false);
                 var acc = response.getReturnValue();
                 component.set("v.accountObj.Reserved_Loans_Count__c", acc.Reserved_Loans_Count__c); 
+                component.set("v.accountObj.Is_Reserve_Applied__c", acc.Is_Reserve_Applied__c); 
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -1443,7 +1444,7 @@
                                     {label:'Loan',fieldName:'Name',type:'text', align: 'left'}, 
 									{label:'Reserve Date',fieldName:'Reserve_Date__c',type:'date-local', editable: true, align: 'right'},                                          
                                     {label:'Principal Advanced',fieldName:'Reserve_Principal_Advanced__c',type:'currency', align: 'right'},
-                                    {label:'Accrued Interest',fieldName:'Accrued_Interest_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
+                                    {label:'Accrued Interest',fieldName:'Interest_Accrued_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
 									{label:'Value at Reserve Date',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
                                     {label:'Reserve Amount',fieldName:'Reserve_Amount__c',type:'currency', editable: true, align: 'right'},
                                     {label:'Exposure',fieldName:'Reserve_Exposure__c',type:'currency', align: 'right'}]);        
@@ -1465,17 +1466,17 @@
                   {value: opp.Stop_Interest__c, align: 'center', type: 'boolean', editable: true},                       
                   {value: name, align: 'left', type: 'text', editable: false},
                   {value: opp.Reserve_Date__c, align: 'right', type: 'date', editable: true},
-                  {value: opp.Reserve_Principal_Advanced__c, align: 'right', type: 'currency', editable: false},
-                  {value: opp.Accrued_Interest_as_of_Reserve_Date__c, align: 'right', type: 'currency', editable: false},                  
+                  {value: opp.Non_Repaid_Drawdown_Principal_Total__c, align: 'right', type: 'currency', editable: false},
+                  {value: opp.Interest_Accrued_as_of_Reserve_Date__c, align: 'right', type: 'currency', editable: false},                  
                   {value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
                   {value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
                   {value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false}];
             var row = {id: opp.Id, items: items};
             data.push(row);
-            if (opp.Reserve_Principal_Advanced__c)
-            	totalPrincipal += opp.Reserve_Principal_Advanced__c;
-            if (opp.Accrued_Interest_as_of_Reserve_Date__c)
-            	totalAccruedInterest += opp.Accrued_Interest_as_of_Reserve_Date__c;
+            if (opp.Non_Repaid_Drawdown_Principal_Total__c)
+            	totalPrincipal += opp.Non_Repaid_Drawdown_Principal_Total__c;
+            if (opp.Interest_Accrued_as_of_Reserve_Date__c)
+            	totalAccruedInterest += opp.Interest_Accrued_as_of_Reserve_Date__c;
             if (opp.Value_At_Reserve_Date__c)
             	valueAtReserveDate += opp.Value_At_Reserve_Date__c;
             if (opp.Reserve_Amount__c)

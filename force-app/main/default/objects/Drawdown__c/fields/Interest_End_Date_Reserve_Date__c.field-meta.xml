@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Principal_With_Reserve_To_Date__c</fullName>
+    <fullName>Interest_End_Date_Reserve_Date__c</fullName>
     <externalId>false</externalId>
-    <formula>Principal_Non_Repaid_as_of_To_Date__c</formula>
+    <formula>IF( Reserve_Date__c &gt;Date__c + 30*Minimum_Interest_Period__c - 1,Reserve_Date__c,Date__c + 30*Minimum_Interest_Period__c - 1)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Principal With Reserve To Date</label>
-    <precision>18</precision>
+    <label>Interest End Date - Reserve Date</label>
     <required>false</required>
-    <scale>2</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Currency</type>
+    <type>Date</type>
 </CustomField>

@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/12/2020, 4:23:45 PM
+ * @Last Modified On   : 6/10/2020, 5:04:34 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -1469,8 +1469,11 @@ return allOpts;*/
             else if (action == 'Shortfall'){
                 changeToShortfallStage(oppId, accountId, payoutDate);
             }
-            if (isLastPayment)   
+            if (isLastPayment){
                 deletePaymentTasks(accountId);
+                if (action == 'Closed Paid' || action == 'Partial Payment')                
+                	ReserveHelper.createTaskUponPayment(accountId);
+            }
             deletePaymentApplyingErrorTasks(accountId, oppId);
             System.debug('AP1: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
         }
@@ -1617,7 +1620,8 @@ return allOpts;*/
     	
     @AuraEnabled
     public static Account getAccountReserveInfo(String accountId) {
-        Account acc = [select Reserved_Loans_Count__c from Account where Id=:accountId];
+        Account acc = [select Reserved_Loans_Count__c, Is_Reserve_Applied__c from Account where Id=:accountId];
+        System.debug(acc);
         return acc;
     }
     
