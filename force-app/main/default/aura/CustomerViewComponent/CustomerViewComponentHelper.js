@@ -1443,7 +1443,7 @@
 									{label:'Stop Interest',fieldName:'Stop_Interest__c',type:'boolean', editable: false, align: 'center'},                                           
                                     {label:'Loan',fieldName:'Name',type:'text', align: 'left'}, 
 									{label:'Reserve Date',fieldName:'Reserve_Date__c',type:'date-local', editable: true, align: 'right'},                                          
-                                    {label:'Principal Advanced',fieldName:'Reserve_Principal_Advanced__c',type:'currency', align: 'right'},
+                                    {label:'Principal Advanced',fieldName:'Non_Repaid_Drawdown_Principal_Total__c',type:'currency', align: 'right'},
                                     {label:'Accrued Interest',fieldName:'Interest_Accrued_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
 									{label:'Value at Reserve Date',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
                                     {label:'Reserve Amount',fieldName:'Reserve_Amount__c',type:'currency', editable: true, align: 'right'},
