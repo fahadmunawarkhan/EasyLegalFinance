@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/10/2020, 5:04:34 PM
+ * @Last Modified On   : 6/18/2020, 1:02:27 PM
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -1099,9 +1099,9 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 } else {
                     loanSummary.balancePrincipal = 0;
                 }
-            } 
-
+            }            
             if(totalReversed[0] != null){
+                System.debug(totalReversed[0].get('interestReversed'));
                 if(totalReversed[0].get('interestReversed') != null){
                     Decimal interestReversed = Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
                     if (loanSummary.balancePrincipal != null)
@@ -1666,7 +1666,6 @@ return allOpts;*/
             LTV = loanToValue/100;
             RequestedBy = reqBy;
             
-        }
-
+        }        
     }     
 }

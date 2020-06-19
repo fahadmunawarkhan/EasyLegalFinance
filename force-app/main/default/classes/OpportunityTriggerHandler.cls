@@ -170,4 +170,13 @@ public with sharing class OpportunityTriggerHandler {
         if(!lawyersToUpdate.isEmpty())
             update lawyersToUpdate;
     }
+    
+    public static void updateLoanStatus(List<Opportunity> oppList, Map<Id,Opportunity> oldMap){
+        for (Opportunity opp : oppList){
+            if ((opp.Stage_Status__c != oldMap.get(opp.Id).Stage_Status__c) && (opp.Stage_Status__c == 'Active' || opp.Stage_Status__c == 'Active - Collections')){
+                opp.Loan_Status__c = opp.Stage_Status__c;
+            }
+        }
+    }
+    
 }

@@ -358,4 +358,47 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
         }  
     }
     */
+    
+    public static void setDrawdownNumber(List<Drawdown__c> drawdowns, Map<Id, Drawdown__c> oldMap, Boolean isInsert){
+        
+        Set<Id> oppIds = new Set<Id>();
+        for(Drawdown__c dd : drawdowns){
+            if(dd.Opportunity__c != null && (isInsert || (!isInsert && (dd.Date__c != oldMap.get(dd.Id).Date__c)))){
+                oppIds.add(dd.Opportunity__c);
+            }
+        }
+        system.debug('oppIds ' + oppIds);
+        //system.scheduleBatch(batchable, jobName, minutesFromNow, scopeSize)
+        
+        if(!oppIds.isEmpty()){
+            try{
+                String jobName = 'ReNumberDrawdowns';
+                if(oppIds.size() == 1){                    
+                    jobName += new List<Id>(oppIds)[0];
+                    for(CronTrigger obj : [SELECT Id, CronJobDetail.Name, CronJobDetail.Id, State FROM CronTrigger where CronJobDetail.Name = :jobName]){
+                        System.abortJob(obj.Id);
+                    }
+                    system.scheduleBatch(new Batch_ReNumberDrawdown(oppIds), jobName, 2, 1);
+                }else{
+                    jobName += '' + DateTime.now();
+                    system.scheduleBatch(new Batch_ReNumberDrawdown(oppIds), jobName, 2, 1);
+                }
+            }catch(exception ex){
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.setToAddresses(new String[] {'bilalmmalik10@gmail.com'});//fahad.khan@toptal.com
+                mail.setSubject('Exception: Batch Renumber Drawdown');
+                mail.setPlainTextBody(
+                    String.format('*** Exception: Batch Renumber Drawdown ***\n\nException Type: {0}\nException Message: {1}\nStack Trace String: {2}\n\n',
+                                  new String[]{
+                                      ex.getTypeName(),
+                                          ex.getMessage(),
+                                          ex.getStackTraceString()
+                                          }
+                                 )
+                );
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+
+            }
+        }        
+    }
 }

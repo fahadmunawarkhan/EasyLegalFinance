@@ -7,22 +7,22 @@
 &quot;&amp;Id=&quot;&amp; Id &amp;
 
 &quot;&amp;QueryId=&quot;&amp;
-&quot;[AllLeads]a0p19000002P2Vb%3F&quot;&amp;
-&quot;pv0%3D&quot;&amp; $Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c &amp;
+&quot;[AllLeads]a0p0L00000J0NLxQAN%3F&quot;&amp;
+&quot;pv0%3D&quot;&amp; IF($Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c)&amp;
 &quot;~pv1%3D&quot;&amp; Act_Sale_by_Month_Report_Start_Date__c &amp;
 &quot;~pv2%3D&quot;&amp; Act_Sale_by_Month_Report_End_Date__c &amp;
 
-&quot;,[ConvertedLeads]a0p19000002P2Vg%3F&quot;&amp;
-&quot;pv0%3D&quot;&amp; $Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c &amp;
+&quot;,[ConvertedLeads]a0p0L00000J0NM2QAN%3F&quot;&amp;
+&quot;pv0%3D&quot;&amp; IF($Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c) &amp;
 &quot;~pv1%3D&quot;&amp; Act_Sale_by_Month_Report_Start_Date__c &amp;
 &quot;~pv2%3D&quot;&amp; Act_Sale_by_Month_Report_End_Date__c &amp;
 
-&quot;,[drawdowns]a0p19000002P2Vv%3F&quot;&amp;
-&quot;pv0%3D&quot;&amp; $Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c &amp;
+&quot;,[drawdowns]a0p0L00000J0NM7QAN%3F&quot;&amp;
+&quot;pv0%3D&quot;&amp; IF($Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Actual_Sales_by_Month_Report__c.Business_Unit__c) &amp;
 &quot;~pv1%3D&quot;&amp; Act_Sale_by_Month_Report_Start_Date__c &amp;
 &quot;~pv2%3D&quot;&amp; Act_Sale_by_Month_Report_End_Date__c &amp;
 
-&quot;&amp;TemplateId=a0x190000013s3P,a0x190000013tTl,a0x190000013tTq&quot;&amp;
+&quot;&amp;TemplateId=a0x0L00000PEbNGQA1,a0x0L00000PEbNLQA1,a0x0L00000PEbNQQA1&quot;&amp;
 
 &quot;&amp;OFN={Template.Label}&quot;&amp;
 &quot;&amp;APDF=1&amp;DS7=3&quot;</formula>

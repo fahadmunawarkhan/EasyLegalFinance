@@ -28,9 +28,9 @@
                 <label>File for Review</label>
             </value>
             <value>
-                <fullName>Add&#39;l Docs Required</fullName>
+                <fullName>Add&apos;l Docs Required</fullName>
                 <default>false</default>
-                <label>Add&#39;l Docs Required</label>
+                <label>Add&apos;l Docs Required</label>
             </value>
             <value>
                 <fullName>In Progress</fullName>
@@ -138,6 +138,11 @@
                 <label>Active - Partial Payment</label>
             </value>
             <value>
+                <fullName>Active - Collections</fullName>
+                <default>false</default>
+                <label>Active - Collections</label>
+            </value>
+            <value>
                 <fullName>Closed - Bad Debt</fullName>
                 <default>false</default>
                 <label>Closed - Bad Debt</label>
@@ -228,6 +233,10 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <valueName>Active - Collections</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed With Loan</controllingFieldValue>
             <valueName>Closed - Bad Debt</valueName>
         </valueSettings>
         <valueSettings>
@@ -278,7 +287,7 @@
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Assessor</controllingFieldValue>
-            <valueName>Add&#39;l Docs Required</valueName>
+            <valueName>Add&apos;l Docs Required</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Assessor</controllingFieldValue>
