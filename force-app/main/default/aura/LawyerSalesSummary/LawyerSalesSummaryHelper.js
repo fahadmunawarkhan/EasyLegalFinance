@@ -226,7 +226,6 @@
                 //ElfiOverageAmtTotal += (paymentData[i].elfiOverageAmount == null) ? 0 : paymentData[i].elfiOverageAmount;
                 
                 /*if(paymentData[i].businessunit == "Rhino"){
-
                 RhinofileTotal += (paymentData[i].file == null) ? 0 : paymentData[i].file;
                 RhinoamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
             }else if(paymentData[i].businessunit == "ELFI"){

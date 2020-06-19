@@ -109,6 +109,7 @@ public class FundingDashboardCtrl {
                                             Opportunity__r.Stage_Status__c = 'Closed - Shortfall' OR 
                                             Opportunity__r.Stage_Status__c = 'Closed - Surplus')
                                             AND Is_Rejected__c = false
+
                                        And Opportunity__r.Account.business_unit__c like:Businessunit
                                        AND Opportunity__r.Type_of_Loan__c like:typeOfLoan
                                        Group by opportunity__r.AccountId])
@@ -329,7 +330,6 @@ public class FundingDashboardCtrl {
                                                               and Date_Applied__c <= :endDt
                                                              AND Stage_Status__c In ('Active',
                                                                                     'Active - Partial Payment',
-                                                                                    'Active - Collections',                                                                                     
                                                                                     'Closed - Paid',
                                                                                     'Closed - Surplus',
                                                                                     'Closed - Shortfall',

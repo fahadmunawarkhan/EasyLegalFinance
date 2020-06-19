@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Victoria Ventura
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 6/18/2020, 12:57:51 PM
+  @Last Modified By   : Seth Boyd
+  @Last Modified On   : 5/13/2019, 10:34:52 AM
   @Modification Log   : 
   ===============================================================================
   Ver         Date                     Author      		      Modification
@@ -16,6 +16,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <c:auraPubsub aura:id="pubsub"/>
+
 	<aura:registerEvent name="loanReserved" type="c:ReserveLoanStateChangedEvent"/>
     <aura:attribute name="accountId" type="String" access="public" />
     <aura:attribute name="recordId" type="String" /> 
@@ -329,9 +330,7 @@
                                                   label="Stage Status"
                                                   tabindex="13" >
                                     <aura:iteration items="{!v.listDependingValues}" var="val">
-                                        <aura:if isTrue="{!!and(!v.oppObj.Is_Reserve_Applied__c, val=='Active - Collections')}">
                                         <option value="{!val}" selected="{!val == v.oppObj.Stage_Status__c}">{!val}</option>
-                                        </aura:if>
                                     </aura:iteration>
                                 </lightning:select>		                                       
                             </div>
@@ -1340,7 +1339,7 @@
                                                                     <tbody>
                                                                         <aura:iteration items="{!p.Drawdowns__r}" var="d" indexVar="i">                                    
                                                                             <tr >
-                                                                                <td class="slds-text-align_right"><a href="{!'/lightning/r/Drawdown__c/' + d.Id + '/view'}" class="slds-text-align_right">{!d.Drawdown_Full_Number__c}</a></td>
+                                                                                <td class="slds-text-align_right"><a href="{!'/lightning/r/Drawdown__c/' + d.Id + '/view'}" class="slds-text-align_right">{!d.Name}</a></td>
                                                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!d.Amount__c}" disabled="{!if(v.currentUser.Drawdowns__c, false, true)}"/></td>
                                                                                 <td class="slds-cell-buffer_left slds-cell-buffer_right">                                                                        
                                                                                     <lightning:input type="date" value="{!d.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, false, true)}"/>
@@ -1591,7 +1590,7 @@
                                         <tbody>
                                             <aura:iteration items="{!v.drawDownList}" var="item" indexVar="i">
                                                 <tr class="slds-hint-parent">
-                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Drawdown_Full_Number__c}</a></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Lump_Sum_drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Lump_Sum_drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">
@@ -1681,7 +1680,7 @@
                                         <tbody>
                                             <aura:iteration items="{!v.drawDownList}" var="item" indexVar="i">
                                                 <tr class="slds-hint-parent">
-                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Drawdown_Full_Number__c}</a></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">
@@ -1775,7 +1774,7 @@
                                         <tbody>
                                             <aura:iteration items="{!v.drawDownList}" var="item" indexVar="i">
                                                 <tr class="slds-hint-parent">
-                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning//' + item.Id + '/view'}" >{!item.Drawdown_Full_Number__c}</a></td>
+                                                    <td class="slds-cell-buffer_left slds-cell-buffer_right"><a href="{!'/lightning/r/Drawdown__c/' + item.Id + '/view'}" >{!item.Name}</a></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCurrency value="{!item.Amount__c}" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right"><lightning:input type="date" value="{!item.Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" style="margin-top:-20px;" disabled="{!if(v.currentUser.Drawdowns__c, False, True)}" /></td>
                                                     <td class="slds-cell-buffer_left slds-cell-buffer_right">

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Only_Loan_w_Reserve_can_be_in_Collection</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(ISPICKVAL(Stage_Status__c, &apos;Active - Collections&apos;), NOT(Is_Reserve_Applied__c))</errorConditionFormula>
-    <errorMessage>Loan is in Active/Collections. Please change the loan status to Active before clearing the Reserve</errorMessage>
-</ValidationRule>

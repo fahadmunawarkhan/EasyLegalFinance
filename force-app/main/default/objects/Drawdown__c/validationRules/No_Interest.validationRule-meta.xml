@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>No_Interest</fullName>
-    <active>false</active>
-    <description>The interest rate of this drawdown shoud be equal to 0</description>
-    <errorConditionFormula>AND(No_Interest__c, NOT(ISBLANK(Interest_Rate__c)), (Interest_Rate__c &lt;&gt; 0))</errorConditionFormula>
-    <errorMessage>The interest rate of this drawdown shoud be equal to 0</errorMessage>
-</ValidationRule>

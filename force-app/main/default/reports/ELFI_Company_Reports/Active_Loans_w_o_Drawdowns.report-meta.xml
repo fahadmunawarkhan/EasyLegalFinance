@@ -47,17 +47,15 @@
     <filter>
         <criteriaItems>
             <column>Opportunity.Drawdown_Total__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Loan_Status__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment,Active - Collections</value>
+            <value>Active,Active - Partial Payment</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

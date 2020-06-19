@@ -202,7 +202,6 @@
         <members>FundingSummaryReportCtlrTest</members>
         <members>LawfirmSummaryGeneratePayoutBalance<members>
         <members>LawfirmSummaryGeneratePayoutBalanceTest</members>
-        <members>Batch_ReNumberDrawdown</members>
         <name>ApexClass</name>
     </types>
     <types>

@@ -229,7 +229,6 @@
                     console.log(selectedDrawdowns);  
                     if (selectedDrawdowns.length == 1 ){                                                          
                     	dd.Can_Be_Reversed__c = selectedDrawdowns[0].Can_Be_Reversed__c;
-                    	dd.Drawdown_Full_Number__c = selectedDrawdowns[0].Drawdown_Full_Number__c;
                     	console.log(selectedDrawdowns[0].Can_Be_Reversed__c);
                 	}                
                 });
@@ -762,7 +761,7 @@
     },
     
     saveOppty : function(component) {
-        console.log('saveOppty');        
+        console.log('saveOppty');
         var p = new Promise ($A.getCallback( function( resolve, reject){
             
             //setting lookups
@@ -783,7 +782,6 @@
     
             
             var oppObj = component.get('v.oppObj');
-            console.log(oppObj.Is_Reserve_Applied__c);
             console.log('oppObj ' + oppObj.Discount_Rate__c);
             var action = component.get('c.saveOpportunity');
             action.setParams({ opportunity : oppObj});
@@ -792,6 +790,7 @@
                 var state = response.getState();
                 
                 if (state === 'SUCCESS') {
+                    
                     component.set("v.spinner", false);
                     resolve(true);
                     //if new

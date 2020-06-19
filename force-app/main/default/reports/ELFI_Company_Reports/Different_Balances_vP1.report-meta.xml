@@ -29,17 +29,15 @@
     <filter>
         <criteriaItems>
             <column>Opportunity.Different_Balances__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>1</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Stage_Status__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment,Active - Collections,Closed - Paid</value>
+            <value>Active,Active - Partial Payment,Closed - Paid,Closed Paid</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

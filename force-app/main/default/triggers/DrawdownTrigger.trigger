@@ -13,11 +13,6 @@
 **/
 trigger DrawdownTrigger on Drawdown__c (before insert , before update, after insert , after update, before delete, after delete) {
 
-    if(Trigger.isBefore && (Trigger.isInsert || Trigger.isUpdate || Trigger.isDelete)){
-        DrawdownTriggerHandler.setDrawdownNumber(Trigger.isDelete? Trigger.old: Trigger.new,
-                                                 Trigger.isUpdate? Trigger.oldMap : null,
-                                                 Trigger.isInsert || Trigger.isDelete);
-    }
     if (trigger.isBefore && trigger.isInsert && !TriggerHelper.runOnce('DrawdownTrigger')) {
         TriggerHelper.add('DrawdownTrigger');
         // send with empty "old map" as this isn't available in insert trigger

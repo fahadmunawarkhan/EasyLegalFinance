@@ -112,7 +112,7 @@
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         
-        let fv6 = 'Active,Active - Partial Payment,Active - Collections';
+        let fv6 = 'Active,Active - Partial Payment';
         if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
             fv6 = '';
             for(let i=6; i< oppStageStatus.length; i++){

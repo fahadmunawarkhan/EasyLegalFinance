@@ -29,7 +29,6 @@ public with sharing class FundingSummaryReportCtlr {
             string activePartialPayment = 'Active - Partial Payment';
         	String closedWithLoan = 'Closed With Loan';
         	String statusActive = 'Active';
-            String statusActiveCollections = 'Active - Collections';
             String reAssessment = 'Re-Assessment';
             
             strQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Account.ProvinceResidency__c province,'; 
@@ -39,7 +38,7 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
@@ -93,7 +92,6 @@ public with sharing class FundingSummaryReportCtlr {
         String closedWithLoan = 'Closed With Loan';
         String reAssessment = 'Re-Assessment';
         String active = 'Active';
-        String activeCollections = 'Active - Collections';
         
         String filterByBusinessUnit = (!String.isEmpty(businessUnit) && businessUnit != null)? businessUnit : 'ELFI';
         
@@ -108,30 +106,17 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';			
-            AggregateResult aggResult = Database.query(strQuery);
-            
-            strQuery = 'Select SUM(Amount__c) adminFee';
-            strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
-            strQuery += ' AND Date__c <= :endDt';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
-            strQuery += ' AND (Payment_Method__c =:adminFee or Reference_Notes__c =:adminFee)'; 
-            strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';			
-            AggregateResult adminFeeAggResult = Database.query(strQuery);
+            AggregateResult aggResult = Database.query(strQuery); 
             
             if(aggResult != null){
                 reportDataW.noOfFiles = aggResult.get('noOfFiles') != null? (Integer)aggResult.get('noOfFiles') : 0;
-                reportDataW.amountOfAdvances = aggResult.get('amt') != null? (Decimal)aggResult.get('amt') : 0.0;                
+                reportDataW.amountOfAdvances = aggResult.get('amt') != null? (Decimal)aggResult.get('amt') : 0.0;
+                reportDataW.adminFee = aggResult.get('adminFee') != null? (Decimal)aggResult.get('adminFee') : 0.0;                
             }
-            
-            if(adminFeeAggResult != null)
-                reportDataW.adminFee = adminFeeAggResult.get('adminFee') != null? (Decimal)adminFeeAggResult.get('adminFee') : 0.0;
             
             reportDataW.total = reportDataW.amountOfAdvances;
             reportDataW.total += reportDataW.adminFee;

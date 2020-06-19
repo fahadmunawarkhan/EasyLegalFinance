@@ -1,14 +1,3 @@
-/**
- * @File Name          : OpportunityViewComponentCtlrTest.cls
- * @Description        : 
- * @Author             : fahad.khan@toptal.com
- * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/18/2020, 1:03:26 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    6/18/2020   fahad.khan@toptal.com     Initial Version
-**/
 @isTest
 public class OpportunityViewComponentCtlrTest {
     

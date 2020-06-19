@@ -29,7 +29,7 @@
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment,Active - Collections</value>
+            <value>Active,Active - Partial Payment</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>

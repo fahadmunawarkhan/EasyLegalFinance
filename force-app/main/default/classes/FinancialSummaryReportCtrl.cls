@@ -1,14 +1,3 @@
-/**
- * @File Name          : FinancialSummaryReportCtrl.cls
- * @Description        : 
- * @Author             : fahad.khan@toptal.com
- * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/18/2020, 1:03:08 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    6/18/2020   fahad.khan@toptal.com     Initial Version
-**/
 public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled
     public static void saveDateCustomSettings(String startDate, String endDate, String typeOfLoan){
@@ -189,7 +178,7 @@ public with sharing class FinancialSummaryReportCtrl {
                                                                           fSR_CustomSetting.End_Date__c, 
                                                                           fSR_CustomSetting.Since_Inception__c,
                                                                           fSR_CustomSetting.Type_of_Loan__c,
-                                                                          fSR_CustomSetting.Adhoc_as_of_Date__c), 50);
+                                                                          fSR_CustomSetting.Adhoc_as_of_Date__c));
         }catch (Exception e){
             throw new AuraHandledException(e.getMessage());
         }
@@ -209,7 +198,6 @@ public with sharing class FinancialSummaryReportCtrl {
         String partialPayment = 'Partial Payment';
         String closedWithLoan = 'Closed With Loan';
         String active = 'Active';
-        String activeCollections = 'Active - Collections';
         String closedSurplus = 'Closed - Surplus';
         String closedShortfall = 'Closed - Shortfall';
         String closedPaid = 'Closed - Paid';
@@ -228,7 +216,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
@@ -250,7 +238,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:payment AND Reference_Notes__c =:partialPayment)'; 

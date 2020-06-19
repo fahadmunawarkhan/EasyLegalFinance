@@ -18,31 +18,21 @@
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Type_of_Loan__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Lump-Sum</value>
         </criteriaItems>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>Closed No Loan</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.Loan_Status__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Active,Active - Partial Payment,Active - Collections</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

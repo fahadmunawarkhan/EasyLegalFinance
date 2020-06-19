@@ -1,14 +1,3 @@
-/**
- * @File Name          : CustomerViewComponentCtlrTest.cls
- * @Description        : 
- * @Author             : fahad.khan@toptal.com
- * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/18/2020, 1:02:50 PM
- * @Modification Log   : 
- * Ver       Date            Author      		    Modification
- * 1.0    6/18/2020   fahad.khan@toptal.com     Initial Version
-**/
 @isTest
 public class CustomerViewComponentCtlrTest {
     
@@ -426,7 +415,6 @@ public class CustomerViewComponentCtlrTest {
         CustomerViewComponentCtlr.applyFullPayments(OppId, accId, null, '2018-01-01', 'eft', 'chq');
         test.stopTest();
     }
-    
     public static testmethod void test_Process10(){
         
         String accId = [select id from account where name = 'account' limit 1].id;  
