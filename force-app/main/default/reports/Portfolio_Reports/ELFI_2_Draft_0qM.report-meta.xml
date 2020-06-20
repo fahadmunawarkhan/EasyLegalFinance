@@ -1,26 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
-        <field>Drawdown__c$Opportunity__c</field>
+        <field>Drawdown__c$Opportunity__c.Account.Business_Unit__c</field>
     </columns>
     <columns>
         <field>Drawdown__c$Opportunity__c.Account.AccountNumber</field>
     </columns>
     <columns>
-        <field>Drawdown__c$Opportunity__c.Account.Business_Unit__c</field>
+        <field>Drawdown__c$Opportunity__c.Loan_Type__c</field>
     </columns>
     <columns>
-        <field>Drawdown__c$Opportunity_Stage_Status__c</field>
+        <field>Drawdown__c$Opportunity__c</field>
     </columns>
     <columns>
-        <field>Drawdown__c$Opportunity__c.Account.Date_of_Advance__c</field>
+        <field>Drawdown__c$Opportunity__c.Loan_Requests__c</field>
     </columns>
     <columns>
-        <aggregateTypes>Average</aggregateTypes>
-        <field>Drawdown__c$Interest_Rate__c</field>
+        <field>Drawdown__c$Name</field>
     </columns>
     <columns>
-        <field>Drawdown__c$Opportunity__c.Compounding_Interest__c</field>
+        <field>Drawdown__c$Opportunity__c.Primary_Contact__c.LastName</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Primary_Contact__c.FirstName</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Account.BillingStreet</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Account.BillingCity</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Account.BillingState</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Account.BillingPostalCode</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Law_Firm__c.Name</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Lawyer__c.Contact_Name__c</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Law_Firm__c.BillingStreet</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Law_Firm__c.BillingCity</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Law_Firm__c.BillingState</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Law_Firm__c.BillingPostalCode</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Lawyer__c.Phone</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
@@ -30,6 +65,22 @@
     </columns>
     <columns>
         <field>Drawdown__c$Date__c</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity__c.Account.Date_of_Advance__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Drawdown__c$Principal_Non_Repaid_as_of_To_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <aggregateTypes>Average</aggregateTypes>
+        <aggregateTypes>Maximum</aggregateTypes>
+        <field>Drawdown__c$Outstanding_Balance_as_of_To_Date__c</field>
+    </columns>
+    <columns>
+        <field>Drawdown__c$Opportunity_Stage_Status__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
@@ -47,53 +98,34 @@
         <aggregateTypes>Sum</aggregateTypes>
         <aggregateTypes>Average</aggregateTypes>
         <aggregateTypes>Maximum</aggregateTypes>
-        <field>Drawdown__c$Outstanding_Balance_as_of_To_Date__c</field>
-    </columns>
-    <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <aggregateTypes>Average</aggregateTypes>
-        <aggregateTypes>Maximum</aggregateTypes>
         <field>Drawdown__c$Reporting_Days_Outstanding__c</field>
     </columns>
     <columns>
         <field>Drawdown__c$Reference_Notes__c</field>
     </columns>
-    <columns>
-        <field>Drawdown__c$Opportunity__c.Payout_Date__c</field>
-    </columns>    
-    <columns>
-        <field>Drawdown__c$Name</field>
-    </columns>
-    <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <field>Drawdown__c$Row_Count__c</field>
-    </columns>
     <description>ELFI 2 - Accrued Interest on Active Loan Drawdowns - (Date range dependent on Portfolio dates selected), (Only Drawdowns associated with Active Loans included)</description>
     <filter>
         <criteriaItems>
             <column>Drawdown__c$Accrued_Interest_In_Reporting_Period__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>false</isUnlocked>
-            <operator>greaterThan</operator>
+            <operator>greaterOrEqual</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c$Outstanding_Balance_as_of_To_Date__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>false</isUnlocked>
             <operator>greaterThan</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c$Reporting_To_Date__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>lessOrEqual</operator>
-            <value>12/31/2018</value>
+            <value>12/31/2020</value>
         </criteriaItems>
-        <criteriaItems>
-            <column>Drawdown__c$Opportunity_Stage_Status__c</column>
-            <isUnlocked>true</isUnlocked>
-            <operator>equals</operator>
-            <value>Active</value>
-        </criteriaItems>        
     </filter>
     <format>Tabular</format>
     <name>ELFI 2 (Accrued Interest)</name>
@@ -109,7 +141,9 @@
     <sortColumn>Drawdown__c$Opportunity__c.Account.AccountNumber</sortColumn>
     <sortOrder>Desc</sortOrder>
     <timeFrameFilter>
-        <dateColumn>Drawdown__c$CreatedDate</dateColumn>
+        <dateColumn>Drawdown__c$Date__c</dateColumn>
+        <endDate>2020-04-30</endDate>
         <interval>INTERVAL_CUSTOM</interval>
+        <startDate>2010-01-01</startDate>
     </timeFrameFilter>
 </Report>

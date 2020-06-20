@@ -375,6 +375,12 @@
             <field>Opportunity__c.Loan_Requests__c</field>
             <table>Drawdown__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Incident Type</displayNameOverride>
+            <field>Opportunity__c.Loan_Type__c</field>
+            <table>Drawdown__c</table>
+        </columns>
         <masterLabel>Drawdowns</masterLabel>
     </sections>
 </ReportType>
