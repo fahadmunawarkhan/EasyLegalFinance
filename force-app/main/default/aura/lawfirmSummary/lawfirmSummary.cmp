@@ -22,10 +22,9 @@
     <aura:attribute name="emailRecipient" type="Contact" default="{}" />
     
     <aura:attribute name="oppStageStatus" type="List" />
-    <aura:attribute name="oppTypeOfLoans" type="List" />
     
     <aura:attribute name="typeOfLoanOptions" type="List" />
-    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Consolidated" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="List" />
     <aura:attribute name="selectedCount" type="Integer" default="0"/>
     
     <aura:attribute name="batchJobItems" type="String" default="" />
@@ -159,17 +158,20 @@
                     </div>
                 </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large slds-m-right_x-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                    <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
+                                                   showClearButton="false" showRefreshButton="false" 
+                                                   mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                   selectedOptions="{!v.selectedTypeOfLoanFilter}" />
                                 </div>
                             </span>
                         </div>
                     </div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="1">
+                <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_x-large slds-m-top_large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
@@ -229,6 +231,10 @@
     
     <lightning:card class="slds-card slds-card_boundary" title="{!'Showing '+ v.accountsList.length + ' records.'}" variant="base">
         <aura:set attribute="actions">
+            <a href="/lightning/n/APXT_BPM__Conductor_Dashboard2" target="_BLANK">
+                <lightning:button class="slds-theme_neutral" iconPosition="left" 
+                                                      variant="brand" type="button" label="Conga Logs" />
+            </a>
             <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                                       variant="neutral" type="button" label="Refresh" onclick="{!c.searchButton}" />            
             <!-- <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate for all" onclick="{!c.GenerateForAll}" />            

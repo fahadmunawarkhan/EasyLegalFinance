@@ -1,11 +1,16 @@
 ({
     getCalendarMin : function(component){
-        component.set("v.calendarMin", '2010-01-01');                  
+        component.set("v.calendarMin", '1980-01-01');                  
     },
     getCalendarMax : function(component){
-        var year = new Date().getFullYear() + 5;
+        var year = new Date().getFullYear() + 10;
         var max = year+'-12-31';
         component.set("v.calendarMax", max);                
+    },
+    setDefaultTypeOfLoan : function(component){
+        let selectedTypeOfLoanFilter = [];
+        selectedTypeOfLoanFilter.push({Id:"Facility Loan",Name:"Facility Loan"});
+        component.set("v.selectedTypeOfLoanFilter", selectedTypeOfLoanFilter);  
     },
     setDefaultDates : function(component){
         let dt = new Date();
@@ -16,6 +21,18 @@
         let defaultReportDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + dt.getDate() + '';
         component.set("v.reportDate", defaultReportDate); 
         
+    },
+    validation : function(component){
+        const selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    reject([{message: 'Please select at least one type of loan filter from dropdown.'}]);
+                }
+            })
+        );
     },
     getPickListValues : function(component, object, field, attributeId){
         var picklistgetter = component.get('c.getPickListValues');
@@ -65,8 +82,15 @@
         let sortOrder = component.get('v.sortOrder');
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
-        let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
+        let selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
         let strQuery = "SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\'"; 
+        
+        let typeOfLoanArr = [];
+        for(let i=0; i<selectedTypeOfLoanOptions.length; i++){
+            typeOfLoanArr.push("\'" + selectedTypeOfLoanOptions[i].Name + "\'");
+        }
+        let typeOfLoanStr = typeOfLoanArr.length >0 ? typeOfLoanArr.join(',') : "";
+        console.log('typeOfLoanStr ' + typeOfLoanStr);
         
         searchString = searchString ? "'%"+searchString+"%'" : "'%%'";
         sortOrder = sortOrder? sortOrder : "ASC";
@@ -78,7 +102,7 @@
         strQuery += " AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0 ";
         strQuery += businessUnitFilterValue == 'All'? "" : " AND Account.Business_Unit__c = \'"+businessUnitFilterValue+"\'";
         strQuery += loanFilterValue == "Active"? " AND Stage_Status__c LIKE \'%Active%\'" : "";
-        strQuery += typeOfLoan == "Consolidated"? "" : " AND Type_of_Loan__c = \'"+typeOfLoan+"\'";
+        strQuery += typeOfLoanStr == ""? "" : " AND Type_of_Loan__c IN ("+typeOfLoanStr+")";
         strQuery += ")"
         strQuery += " order by " + field + " " + sortOrder + " limit 10000";
         console.log(strQuery);
@@ -86,7 +110,8 @@
         return strQuery;
     },
     
-    getLawyersList : function(component) {        
+    getLawyersList : function(component) {
+		let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "");       
         return new Promise($A.getCallback(
             function(resolve,reject){
                 let action = component.get('c.getLawyersContacts');
@@ -96,7 +121,7 @@
                     sortOrder : component.get('v.sortOrder'),
                     loanFilter: component.get("v.selectedLoanFilter"),
                     businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
-                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                    typeOfLoan : typeOfLoanArr
                 });
                 
                 action.setCallback(this, function (response) {
@@ -160,6 +185,7 @@
         let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";
         businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+        let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "'");
         
         let selectedIds = [];
         let conList = [];
@@ -182,7 +208,7 @@
                 reportDate : reportDate,
                 LoanFilter: loanFilterValue,
                 businessUnitFilter: businessUnitFilterValue,
-                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                typeOfLoan : typeOfLoanArr
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -222,6 +248,7 @@
     
     sendToSelected: function (component){
         component.set('v.spinner', true);
+        let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "'");
         let contactList = component.get("v.contactsList");
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");
@@ -257,7 +284,7 @@
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
                 businessUnitFilter: businessUnitFilterValue,
-                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                typeOfLoan : typeOfLoanArr
             });            
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -295,6 +322,7 @@
     
     sendToIndividual: function(component, event){
         component.set('v.spinner', true);
+        let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "'");
         let contactId = event.currentTarget.dataset.selected;
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");        
@@ -314,7 +342,7 @@
                 emailBody : emailBody,
                 LoanFilter: loanFilterValue,
                 businessUnitFilter: businessUnitFilterValue,
-                typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                typeOfLoan : typeOfLoanArr
             });
         
             action.setCallback(this, function (response) {
@@ -350,6 +378,7 @@
     
     GenerateForAll: function (component){
         component.set('v.spinner', true);
+        let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "'");
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");
         let query = this.getQueryString(component);
@@ -366,7 +395,7 @@
             reportDate : reportDate,
             LoanFilter: loanFilterValue,
             businessUnitFilter: businessUnitFilterValue,
-            typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+            typeOfLoan : typeOfLoanArr
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -402,6 +431,7 @@
     
     sendAll: function (component){
         component.set('v.spinner', true);
+        let typeOfLoanArr = this.getSelectedTypeOfLoanArr(component, "'");
         let payoutDate = component.get("v.payoutDate");
         let reportDate = component.get("v.reportDate");
         let query = this.getQueryString(component);
@@ -421,7 +451,7 @@
             emailBody : emailBody,
             LoanFilter: loanFilterValue,
             businessUnitFilter: businessUnitFilterValue,
-            typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+            typeOfLoan : typeOfLoanArr
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -477,7 +507,10 @@
         });
         toastEvent.fire();
     },
-    generatePayoutBalanceForSelected: function(component){
+    generatePayoutBalanceForSelected: function(component, helper){
+        console.log('generatePayoutBalanceForSelected');
+        let typeOfLoanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        console.log('typeOfLoanArr ' + typeOfLoanArr);
         return new Promise($A.getCallback(
             function(resolve, reject){
                 let contactList = component.get("v.contactsList");
@@ -495,7 +528,7 @@
                     searchByName : component.get('v.searchString'),
                     loanFilter: component.get("v.selectedLoanFilter"),
                     businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
-                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                    typeOfLoan : typeOfLoanArr
                 });
                 
                 action.setCallback(this, function (response) {
@@ -510,7 +543,8 @@
             }
         ));
     },
-    generatePayoutBalanceForAll : function(component){
+    generatePayoutBalanceForAll : function(component,helper){
+        let typeOfLoanArr = helper.getSelectedTypeOfLoanArr(component, "");
         return new Promise($A.getCallback(
             function(resolve, reject){
                 let selectedIds = [];
@@ -522,7 +556,7 @@
                     searchByName : component.get('v.searchString'),
                     loanFilter: component.get("v.selectedLoanFilter"),
                     businessUnitFilter: component.get('v.selectedBusinessUnitFilter'),
-                    typeOfLoan : component.get('v.selectedTypeOfLoanFilter')
+                    typeOfLoan : typeOfLoanArr
                 });
                 
                 action.setCallback(this, function (response) {
@@ -603,5 +637,55 @@
                 $A.enqueueAction(action);
             }
         ));
+    },
+    getTypeofLoanPickList : function(component, object, field, attributeId){
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            let selectedTypeOfLoanFilter = component.get("v.selectedTypeOfLoanFilter");
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
+                        });
+                    }
+                }
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedTypeOfLoanFilter.length; j++){
+                        if(opts[i].Name == selectedTypeOfLoanFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
+    getSelectedTypeOfLoanArr : function(component, quote){
+        let selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        let typeOfLoanArr = [];
+        for(let i=0; i<selectedTypeOfLoanOptions.length; i++){
+            typeOfLoanArr.push(quote + selectedTypeOfLoanOptions[i].Name + quote);
+        }
+        return typeOfLoanArr;
     }
 })

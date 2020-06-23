@@ -1,12 +1,13 @@
 ({
 	doInit : function(component, event, helper) {
         component.set("v.spinner", true);
+        helper.setDefaultTypeOfLoan(component);
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
         component.set("v.payOutDate", today);        
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
-        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getPickListValues(component, 'Opportunity','Stage_Status__c','oppStageStatus');
-        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','oppTypeOfLoans');
+        helper.getTypeofLoanPickList(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
+        //helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.setDefaultDates(component);
@@ -33,11 +34,18 @@
         
 	},
     searchButton: function(component, event, helper) {
+        console.log('### Search ###');
+        const selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        console.log(JSON.stringify(selectedTypeOfLoanOptions));
         component.set("v.spinner", true);
         component.set("v.selectedCount", 0);
         component.find("selectAllcheckbox").set("v.value", false);
         
-        helper.getLawyersList(component).then(
+        helper.validation(component).then(
+            function(result){
+                return helper.getLawyersList(component);
+            }
+        ).then(
             function(result){
                 component.set("v.spinner", false);
                 component.set('v.contactsList', result);
@@ -110,7 +118,7 @@
         if(helperToCall != null){
             component.set('v.spinner', true);
             component.set("v.showZeroBatchError", true);
-            helperToCall(component).then(
+            helperToCall(component, helper).then(
                 function(result){
                     component.set('v.spinner', false);
                     window.clearInterval(component.get('v.intervalId'));
@@ -159,7 +167,7 @@
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         
-        let fv7 = 'Active,Active - Partial Payment';
+        let fv7 = 'Active,Active - Partial Payment,Active - Collections';
         if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
             fv7 = '';
             for(let i=0; i< oppStageStatus.length; i++){
@@ -176,7 +184,7 @@
         let fv6 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : typeOfLoan;
         
         let newWin;
-        let url = '/lightning/r/Report/00O0L000003n3kgUAA/view';
+        let url = '/lightning/r/Report/00O3J000000O7g7UAC/view';
         
         try{                       
             newWin = window.open(url + '?fv3=' + lawyerId.substring(0,15) + '&fv4=' + lawfirmid.substring(0,15) + '&fv5=' + businessUnitFilter + '&fv6=' + fv6 + '&fv7=' + fv7);

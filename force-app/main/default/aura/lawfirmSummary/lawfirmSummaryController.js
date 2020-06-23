@@ -1,6 +1,7 @@
 ({
 	doInit : function(component, event, helper) {        
         
+        helper.setDefaultTypeOfLoan(component);
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
         //var endOfMonth = $A.localizationService.formatDate(new Date(2008, today.getMonth() + 1, 0), "YYYY-MM-DD");
         component.set("v.payOutDate", today);
@@ -15,18 +16,28 @@
         fieldSet.push("Id");
         fieldSet.push("Name");        
         fieldSet.push("(Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 )");
-        fieldSet.push("(Select id,createddate from tasks where type='Email' and createddate = today order by createddate desc limit 1 )");
+        fieldSet.push("(Select id,createddate from tasks where subject LIKE \'%Clients Summary%\' and type = \'Email\' and createddate = today order by createddate desc limit 1 )");
         let strQuery = "SELECT " + fieldSet.join(",");
             strQuery += " FROM Account WHERE RecordType.Name = \'Law Firm\' ";
         component.set("v.query", strQuery); 
-        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
+        
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
         helper.getPickListValues(component, 'Opportunity','Stage_Status__c','oppStageStatus');
-        helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','oppTypeOfLoans');
+        helper.getTypeofLoanPickList(component, 'Opportunity','Type_of_Loan__c','typeOfLoanOptions');
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.setDefaultDates(component);
-        helper.getLawfirmList(component,event);
+        helper.getLawfirmList(component,event).then(
+            function(result){
+                component.set("v.spinner", false);
+                component.set('v.accountsList', result);
+            }
+        ).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
         
         let intervalId = window.setInterval(
             $A.getCallback(function() { 
@@ -36,9 +47,24 @@
         component.set('v.intervalId', intervalId);
         
 	},
-    searchButton: function(component, event, helper) {
-        component.set("v.recordSelected", false);
-        helper.getLawfirmList(component,event);
+    searchButton: function(component, event, helper) {        
+        
+        helper.validation(component).then(
+            function(result){
+                component.set("v.recordSelected", false);
+                return helper.getLawfirmList(component, event);
+            }
+        ).then(
+            function(result){
+                component.set("v.spinner", false);
+                component.set('v.accountsList', result);
+            }
+        ).catch(
+            function(errors){
+                component.set("v.spinner", false);
+                helper.errorsHandler(errors);
+            }
+        );
     },
     sort: function(component, event, helper) {  
         
@@ -51,9 +77,7 @@
         
         component.set('v.sortField',field);   
         component.set('v.sortOrder',sortOrder);
-        component.set("v.recordSelected", false);
-        
-        helper.getLawyersList(component,event);         
+        $A.enqueueAction(component.get('c.searchButton'));     
 	},
     check:function(component, event, helper) {
         helper.check(component, event);
@@ -93,6 +117,9 @@
         ).catch(
             function(errors){
                 component.set("v.spinner", false);
+                console.log('errors');
+                console.log(errors);
+                console.log(JSON.stringify(errors));
                 helper.errorsHandler(errors);
             }
         );
@@ -112,7 +139,7 @@
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         
-        let fv6 = 'Active,Active - Partial Payment';
+        let fv6 = 'Active,Active - Partial Payment,Active - Collections';
         if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
             fv6 = '';
             for(let i=6; i< oppStageStatus.length; i++){

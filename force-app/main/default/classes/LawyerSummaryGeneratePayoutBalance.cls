@@ -3,11 +3,11 @@ global class LawyerSummaryGeneratePayoutBalance implements Database.Batchable<sO
     Public String query;
     Public String loanFilter;
     Public String businessUnitFilter;
-    Public String typeOfLoan;
+    Public List<String> typeOfLoan;
     public Date payoutDate;
     public Set<Id> selectedIds;
     
-    public LawyerSummaryGeneratePayoutBalance(Set<Id> ids, Date pDate, String lFilter, String bUnitFilter, String typOfLoan){
+    public LawyerSummaryGeneratePayoutBalance(Set<Id> ids, Date pDate, String lFilter, String bUnitFilter, List<String> typOfLoan){
         query = 'SELECT Id, Payout_Date__c';
         query += ' FROM Opportunity WHERE StageName != \'Closed No Loan\' ';
         
@@ -23,7 +23,7 @@ global class LawyerSummaryGeneratePayoutBalance implements Database.Batchable<sO
         
         query += ' AND Account.Business_Unit__c =:businessUnitFilter';
         query += loanFilter == 'Active'? ' AND isClosed = true AND isWon = true AND Stage_Status__c NOT IN (\'Closed - Paid\', \'Closed - Surplus\', \'Closed - Shortfall\', \'Closed - BadDebt\')' : '';
-        query += (typeOfLoan == null || String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated')? '' : ' AND Type_of_Loan__c =:typeOfLoan';
+        query += typeOfLoan.isEmpty()? '' : ' AND Type_of_Loan__c IN:typeOfLoan';
         query += !selectedIds.isEmpty()? ' AND Lawyer__c IN :selectedIds' : '';        
         return Database.getQueryLocator(query);
     }
