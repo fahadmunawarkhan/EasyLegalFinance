@@ -74,8 +74,8 @@ public class LawyerSummaryCtlrTest {
         Test.startTest();
         
         String strQuery = 'SELECT Id, Name, Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
-        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', 'Facility Loan');
-        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'Active', 'Rhino', 'Facility Loan');
+        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', new List<String>{'Facility Loan'});
+        LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'Active', 'Rhino', new List<String>{'Facility Loan'});
         LawyerSummaryCtlr.getPickListValues('Account', 'Business_Unit__c');
         
         LawyerSummaryCtlr.ContactInfo conInfo = new LawyerSummaryCtlr.ContactInfo();
@@ -85,7 +85,7 @@ public class LawyerSummaryCtlrTest {
         strQuery = 'SELECT Id, Name Account.Name FROM Contact WHERE RecordType.Name = \'Lawyers\' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null)';
         
         try{
-            LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', 'Facility Loan');
+            LawyerSummaryCtlr.getLawyersContacts('', 'Name', 'ASC', 'All', 'ELFI', new List<String>{'Facility Loan'});
         }catch(Exception e){
             System.debug('success');
         }
@@ -100,9 +100,9 @@ public class LawyerSummaryCtlrTest {
         Contact cc = [SELECT Id from Contact limit 1];
         List<Id> selId = new List<Id>{cc.Id};
             
-            LawyerSummaryCtlr.generatePayoutBalance(selId, Date.today() + '', '', 'All', 'Rhino', 'Facility Loan');
+            LawyerSummaryCtlr.generatePayoutBalance(selId, Date.today() + '', '', 'All', 'Rhino', new List<String>{'Facility Loan'});
         LawyerSummaryCtlr.abortBatchJobs();
-        LawyerSummaryCtlr.generatePayoutBalance(new List<Id>(), Date.today() + '', '', 'All', 'Rhino', 'Facility Loan');
+        LawyerSummaryCtlr.generatePayoutBalance(new List<Id>(), Date.today() + '', '', 'All', 'Rhino', new List<String>{'Facility Loan'});
         LawyerSummaryCtlr.getBatchJobStatus();
         
         Test.stopTest();
@@ -116,12 +116,12 @@ public class LawyerSummaryCtlrTest {
         
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
-            LawyerSummaryCtlr.send(strQuery, selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', 'Facility Loan');
+            LawyerSummaryCtlr.send(strQuery, selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', new List<String>{'Facility Loan'});
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
         
-        LawyerSummaryCtlr.send('', selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', 'Facility Loan');
+        LawyerSummaryCtlr.send('', selId, Date.today() + '', Date.today() + '', 'Email body', 'All', 'ELFI', new List<String>{'Facility Loan'});
         
         Test.stopTest();
     }
@@ -135,12 +135,12 @@ public class LawyerSummaryCtlrTest {
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
             
-            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI','Facility Loan');
+            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
         
-        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI','Facility Loan');
+        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
         
         Test.stopTest();
     }

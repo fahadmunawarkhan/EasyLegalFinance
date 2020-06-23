@@ -73,7 +73,7 @@ public class LawfirmSummaryGeneratePayoutBalanceTest {
         
         Test.startTest();
         
-        LawfirmSummaryGeneratePayoutBalance lsg_BatchJob = new LawfirmSummaryGeneratePayoutBalance(new Set<Id>(), Date.today(), 'All', 'Rhino', 'Consolidated');
+        LawfirmSummaryGeneratePayoutBalance lsg_BatchJob = new LawfirmSummaryGeneratePayoutBalance(new Set<Id>(), Date.today(), 'All', 'Rhino', new List<String>{'Facility Loan'});
         
         Database.executeBatch(lsg_BatchJob);
         

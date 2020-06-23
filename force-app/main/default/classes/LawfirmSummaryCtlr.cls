@@ -20,7 +20,7 @@ public with sharing class LawfirmSummaryCtlr {
     
     /******************* Method to return all lawyers *********************/
     @AuraEnabled
-    public static List<AccountInfo> getLawfirmAccounts(String strQuery, String LoanFilter, String businessUnitFilter, String typeOfLoan) {
+    public static List<AccountInfo> getLawfirmAccounts(String strQuery, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan) {
         try{
             system.debug('Query ' + strQuery);
             LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
@@ -46,7 +46,7 @@ public with sharing class LawfirmSummaryCtlr {
             strQuery = 'Select Law_firm__c, Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Law_firm__c in :accountIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
             strQuery += LoanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
             strQuery += (businessUnitFilter == '' || businessUnitFilter == null)? ' AND Account.Business_Unit__c = \'ELFI\'' : 'AND Account.Business_Unit__c = :businessUnitFilter';
-            strQuery += (typeOfLoan == null || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = :typeOfLoan';
+            strQuery += typeOfLoan.isEmpty() ? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
             
             List<Opportunity> oppties = new List<Opportunity>();
             oppties = Database.query(strQuery);
@@ -78,7 +78,7 @@ public with sharing class LawfirmSummaryCtlr {
         }
     }    
     @AuraEnabled
-    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailRecipientId, String emailBody, String LoanFilter, String businessUnitFilter, String typeOfLoan){       
+    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailRecipientId, String emailBody, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan){       
         try{
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
@@ -96,7 +96,7 @@ public with sharing class LawfirmSummaryCtlr {
             customSettings.Email_To_Id_Law_Firm_Summary__c = (!String.isEmpty(emailRecipientId) && emailRecipientId != null) ? emailRecipientId : '';
             customSettings.Query_Selector_Law_Firm_Report__c = LoanFilter;
             customSettings.Business_Unit_Lawfirm_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
-            customSettings.Type_of_Loan_Law_Firm__c = typeOfLoan;
+            customSettings.Type_of_Loan_Law_Firm__c = String.join(typeOfLoan, '|');
             
             if(String.isEmpty(customSettings.Conductor_Id_Law_Firm_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Law firm summary conductor query - ' + UserInfo.getName(),
@@ -124,7 +124,7 @@ public with sharing class LawfirmSummaryCtlr {
     }
     
     @AuraEnabled
-    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
+    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan){
 		
         try{
             APXT_BPM__Conductor__c conductor;
@@ -141,7 +141,7 @@ public with sharing class LawfirmSummaryCtlr {
             //customSettings.Email_To_Id_Law_Firm_Summary__c = (!String.isEmpty(emailRecipientId) && emailRecipientId != null) ? emailRecipientId : '';
             customSettings.Query_Selector_Law_Firm_Report__c = LoanFilter;
             customSettings.Business_Unit_Lawfirm_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
-            customSettings.Type_of_Loan_Law_Firm__c = typeOfLoan;
+            customSettings.Type_of_Loan_Law_Firm__c = String.join(typeOfLoan, '|');
             
             if(String.isEmpty(customSettings.Conductor_Id_Law_Firm_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Law firm summary conductor query - ' + UserInfo.getName(),
@@ -169,7 +169,7 @@ public with sharing class LawfirmSummaryCtlr {
     }
     
     @AuraEnabled
-    public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, String typeOfLoan){
+    public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan){
         try{
             List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
             Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
