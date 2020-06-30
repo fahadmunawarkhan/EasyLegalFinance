@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
-({    
-    doInit : function(component, event, helper) {
+({
+    doInit: function(component, event, helper) {
         helper.getOpportunityInfo(component);
         /*helper.getCriticalDatesList(component).then(
             $A.getCallback(function(result) {                
@@ -14,13 +14,13 @@
                 
             }));
         helper.getPickListValues(component, 'Critical_Date__c','Name__c','criticalDateName');*/
-        
+
         helper.getDrawdownList(component);
         helper.getDrawdownPaymentsList(component);
         helper.getServiceProvidersList(component);
         helper.getReAssessmentOpportunitiesList(component);
         helper.getCalendarMin(component);
-        helper.getCalendarMax(component); 
+        helper.getCalendarMax(component);
         helper.getSingleContactHistory(component);
         helper.getPickListValues(component, 'Service_Provider_Drawdown__c','Reference_Notes__c','providerRefNotesOptions');
         helper.getPickListValues(component, 'Service_Provider_Drawdown__c','Payment_Method__c','providerPaymentMethod');
@@ -38,117 +38,121 @@
         helper.getPickListValues(component, 'Opportunity','Minimum_Interest_Period__c','minimumInterestPeriod');
         helper.getPickListValues(component, 'Opportunity','Fixed_Amount__c','fixedAmount');
         //helper.getPickListValues(component, 'Opportunity','Scheduled_Date__c','paymentDateOptions');
-        helper.getPickListValues(component, 'Opportunity','Existing_Litigation_Loans__c','paymentScheduleOptions');
-        helper.getPickListValues(component, 'Opportunity','Loan_Requests__c','loanRequestOptions');
-        helper.getPickListValues(component, 'Opportunity','StageName','ReAssessmentStageOptions');        
-        helper.getPickListValues(component, 'Opportunity_Service_Provider__c','Status__c','treatmentStatusOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Existing_Litigation_Loans__c', 'paymentScheduleOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Loan_Requests__c', 'loanRequestOptions');
+        helper.getPickListValues(component, 'Opportunity', 'StageName', 'ReAssessmentStageOptions');
+        helper.getPickListValues(component, 'Opportunity_Service_Provider__c', 'Status__c', 'treatmentStatusOptions');
         helper.getPickListValues(component, 'Opportunity', 'Interest_Deferral_Period__c', 'interestDeferralOptions');
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule__c', 'Payment_Schedule__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Payment_Schedule_Mode__c', 'Payment_Schedule_Mode__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Day_of_Month__c', 'Day_of_Month__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Invoice_Type__c', 'invoiceTypeOptions');
-        helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');        
-        
+        helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');
+        helper.getPickListValues(component, 'Opportunity', 'Bad_Debt_Reason__c', 'BadDebtReasons');
+
         helper.getBankAccountOptions(component);
-        
+
         // get the fields API name and pass it to helper function  
-        var controllingFieldAPI = component.get("v.controllingFieldAPI");        
+        var controllingFieldAPI = component.get("v.controllingFieldAPI");
         var dependingFieldAPI = component.get("v.dependingFieldAPI");
-        var objDetails = component.get("v.objDetail");        
-        helper.fetchPicklistValues(component,objDetails,controllingFieldAPI, dependingFieldAPI);  
+        var objDetails = component.get("v.objDetail");
+        helper.fetchPicklistValues(component, objDetails, controllingFieldAPI, dependingFieldAPI);
         //console.log('listControllingValues' + component.get("v.listControllingValues")); 
         helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap');
         /*
         setTimeout(function(){
            // helper.fetchTreatmentRefNotesDepValues(component);
         },3000);
         */
     },
-    reInitSomeData:function(component, event, helper) {
+    reInitSomeData: function(component, event, helper) {
         helper.reInitSomeData(component, helper);
     },
-    
-    onControllerFieldChange: function(component, event, helper) { 
-        
+    StageStatusCheck: function(component, event, helper) {
+        var selectedStageStatus = event.getSource().get("v.value");
+        component.set("v.BadDebtReasonsStatus", (selectedStageStatus == 'Closed - Bad Debt') ? true : false);
+    },
+    onControllerFieldChange: function(component, event, helper) {
+
         var controllerValueKey = event.getSource().get("v.value"); // get selected controller field value
         var depnedentFieldMap = component.get("v.depnedentFieldMap");
-        
-        console.log(controllerValueKey);        
+
+        console.log(controllerValueKey);
         if (controllerValueKey != '--- None ---') {
             var ListOfDependentFields = depnedentFieldMap[controllerValueKey];
-            
+
             console.log(ListOfDependentFields);
-            
-            if(ListOfDependentFields.length > 0){
-                component.set("v.bDisabledDependentFld" , false);                 
-                helper.fetchDepValues(component, ListOfDependentFields, 'listDependingValues');    
-            }else{
-                component.set("v.bDisabledDependentFld" , true); 
+
+            if (ListOfDependentFields.length > 0) {
+                component.set("v.bDisabledDependentFld", false);
+                helper.fetchDepValues(component, ListOfDependentFields, 'listDependingValues');
+            } else {
+                component.set("v.bDisabledDependentFld", true);
                 component.set("v.listDependingValues", ['--- None ---']);
-            }  
-            
+            }
+
         } else {
             component.set("v.listDependingValues", ['--- None ---']);
-            component.set("v.bDisabledDependentFld" , true);
+            component.set("v.bDisabledDependentFld", true);
         }
-    },    
-    
-    saveOpp : function(component, event, helper){
+    },
+
+    saveOpp: function(component, event, helper) {
         var success;
-        
-        
+
+        (component.get("v.BadDebtReasonsStatus") == false ? component.get("v.oppObj").Bad_Debt_Reason__c = '' : '');
         success = helper.validateRequired(component, "Name");
-        if(!success)	return;
-        
+        if (!success) return;
+
         success = helper.validateRequired(component, "selectedLookUpPrimaryContact");
-        if(!success)	return;
-        
+        if (!success) return;
+
         component.set("v.spinner", true);
         helper.saveOppty(component).then(
-            $A.getCallback(function(result) {
-                helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
-                var getOppInfoPromise = helper.getOpportunityInfo(component);
-                helper.getReAssessmentOpportunitiesList(component);
-                return getOppInfoPromise;
-            }),
-            $A.getCallback(function(errors) {
-                if (errors[0] && errors[0].message) {
-                    helper.errorsHandler(errors)
-                }else {
-                    helper.unknownErrorsHandler();
-                }
-                
-            }))
-        .then(
-            $A.getCallback(function(result) {
-                helper.updateDrawdownList(component); 
-				var reserveInfoChanged = component.get("v.reserveInfoChanged");  
-                if (reserveInfoChanged){
-                    component.set("v.spinner", true);
-                	helper.applyReserve(component);
-                }
-            }),
-            $A.getCallback(function(errors) {
-                if (errors[0] && errors[0].message) {
-                    helper.errorsHandler(errors)
-                }else {
-                    helper.unknownErrorsHandler();
-                }                
-            })
-        );
-    } ,
-    
-    saveDrawdowns : function(component, event, helper){
+                $A.getCallback(function(result) {
+                    helper.showToast('SUCCESS', 'Your changes were saved!', 'SUCCESS');
+                    var getOppInfoPromise = helper.getOpportunityInfo(component);
+                    helper.getReAssessmentOpportunitiesList(component);
+                    return getOppInfoPromise;
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    } else {
+                        helper.unknownErrorsHandler();
+                    }
+
+                }))
+            .then(
+                $A.getCallback(function(result) {
+                    helper.updateDrawdownList(component);
+                    var reserveInfoChanged = component.get("v.reserveInfoChanged");
+                    if (reserveInfoChanged) {
+                        component.set("v.spinner", true);
+                        helper.applyReserve(component);
+                    }
+                }),
+                $A.getCallback(function(errors) {
+                    if (errors[0] && errors[0].message) {
+                        helper.errorsHandler(errors)
+                    } else {
+                        helper.unknownErrorsHandler();
+                    }
+                })
+            );
+    },
+
+    saveDrawdowns: function(component, event, helper) {
         component.set("v.spinner", true);
         helper.saveDrawdownsAndUpdateList(component);
     },
-    
-    savePaymentDrawdowns : function(component, event, helper){
+
+    savePaymentDrawdowns: function(component, event, helper) {
         component.set("v.spinner", true);
         helper.savePaymentDrawdowns(component);
     },
-    
+
     /*saveCriticalDates : function(component, event, helper){
         component.set("v.spinner", true);
         
@@ -171,7 +175,7 @@
         
         
     },*/
-    
+
     /*addNewCriticalDate : function(component, event, helper){
         try{
             component.set("v.spinner", true);            
@@ -181,294 +185,284 @@
             component.set("v.spinner", false);
         }        
     },*/
-    
-    addNewDrawdown : function(component, event, helper){
-        try{
+
+    addNewDrawdown: function(component, event, helper) {
+        try {
             component.set("v.spinner", true);
-            
+
             helper.saveDrawdowns(component);
-            helper.addNewDrawdown(component);  
-        }catch(e){
-            
+            helper.addNewDrawdown(component);
+        } catch (e) {
+
         }
         //helper.getRefNotesDependantPicklistMapAsync(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
     },
-    
-    addNewPaymentDrawdown : function(component, event, helper){
-        try{
+
+    addNewPaymentDrawdown: function(component, event, helper) {
+        try {
             component.set("v.spinner", true);
-            
+
             helper.savePaymentDrawdowns(component);
-            helper.addNewPaymentDrawdown(component);  
-        }catch(e){
-            
+            helper.addNewPaymentDrawdown(component);
+        } catch (e) {
+
         }
         //helper.getRefNotesDependantPicklistMapAsync(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
     },
-    
-    onTypeOfLoanChange: function(component, event, helper){
-        component.set("v.spinner", true);    
+
+    onTypeOfLoanChange: function(component, event, helper) {
+        component.set("v.spinner", true);
         //helper.getRefNotesDependantPicklistMap(component);
-        helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap'); 
-        component.set("v.spinner", false);    
+        helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
+        component.set("v.spinner", false);
         document.getElementsByTagName('body')[0].focus();
     },
-    
-   /* deleteCriticalDateItem : function(component, event, helper){
+
+    /* deleteCriticalDateItem : function(component, event, helper){
+         component.set("v.spinner", true);
+         let itemIndex = event.target.getElementsByClassName('criticalDate-item-index')[0].value;
+         
+         if(confirm('Are you sure?')) {
+             try{
+                 helper.deleteCriticalDateItem(component, itemIndex).then($A.getCallback(
+                     (result) => {
+                         helper.showToast('SUCCESS',result,'SUCCESS');
+                         //return helper.getCriticalDatesList(component);
+                     }
+                 )).catch((errors) => {
+                     component.set("v.spinner", false);
+                     if (errors[0] && errors[0].message) {
+                         helper.errorsHandler(errors)
+                     }else {
+                         helper.unknownErrorsHandler();
+                     }
+                 }); 
+             }catch(e){
+                 
+             }       
+             
+         } else {
+             component.set("v.spinner", false);
+             return false;
+         }
+     },*/
+
+    deleteDrawdownItem: function(component, event, helper) {
         component.set("v.spinner", true);
-        let itemIndex = event.target.getElementsByClassName('criticalDate-item-index')[0].value;
-        
-        if(confirm('Are you sure?')) {
-            try{
-                helper.deleteCriticalDateItem(component, itemIndex).then($A.getCallback(
-                    (result) => {
-                        helper.showToast('SUCCESS',result,'SUCCESS');
-                        //return helper.getCriticalDatesList(component);
-                    }
-                )).catch((errors) => {
-                    component.set("v.spinner", false);
-                    if (errors[0] && errors[0].message) {
-                        helper.errorsHandler(errors)
-                    }else {
-                        helper.unknownErrorsHandler();
-                    }
-                }); 
-            }catch(e){
-                
-            }       
-            
-        } else {
-            component.set("v.spinner", false);
-            return false;
-        }
-    },*/
-    
-    deleteDrawdownItem : function(component, event, helper){
-        component.set("v.spinner", true);
-        var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;           
-        
-        if(confirm('Are you sure?')) {
-            try{
-                helper.deleteDrawdownItem(component, itemDescription); 
-            }catch(e){
-                
+        var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;
+
+        if (confirm('Are you sure?')) {
+            try {
+                helper.deleteDrawdownItem(component, itemDescription);
+            } catch (e) {
+
             }
             //helper.getRefNotesDependantPicklistMapAsync(component, 'drawDownObj', 'referenceNotesDepPicklistMap');            
-            
-            
+
+
         } else {
             component.set("v.spinner", false);
             return false;
         }
     },
-    
-    deleteServiceProviderDrawdownItem : function(component, event, helper){
+
+    deleteServiceProviderDrawdownItem: function(component, event, helper) {
         component.set("v.spinner", true);
-        var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;           
-        
-        if(confirm('Are you sure?')) {            
-            helper.deleteServiceProviderDrawdownItem(component, itemDescription); 
+        var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;
+
+        if (confirm('Are you sure?')) {
+            helper.deleteServiceProviderDrawdownItem(component, itemDescription);
             helper.fetchTreatmentRefNotesDepValuesAsync(component);
         } else {
             component.set("v.spinner", false);
             return false;
         }
-    },    
-    
-    deleteReassessment : function(component, event, helper){
+    },
+
+    deleteReassessment: function(component, event, helper) {
         component.set("v.spinner", true);
-        var itemDescription = event.target.getElementsByClassName('reassess-item-id')[0].value;           
-        
-        if(confirm('Are you sure?')) {            
-            helper.deleteReassessment(component, itemDescription);            
+        var itemDescription = event.target.getElementsByClassName('reassess-item-id')[0].value;
+
+        if (confirm('Are you sure?')) {
+            helper.deleteReassessment(component, itemDescription);
         } else {
             component.set("v.spinner", false);
             return false;
         }
     },
 
-    handleInvoicesChanged : function(component, event, helper) {
+    handleInvoicesChanged: function(component, event, helper) {
         helper.getServiceProvidersList(component);
     },
-    
-    addNewServiceProvider : function(component, event, helper){
+
+    addNewServiceProvider: function(component, event, helper) {
         var firm = component.get("v.selectedLookUpServiceProvider");
         helper.addTreatment(component, firm);
     },
-    
-    addNewServiceProviderDrawdown : function(component, event, helper){
+
+    addNewServiceProviderDrawdown: function(component, event, helper) {
         component.set("v.spinner", true);
-        var itemDescription = event.target.getElementsByClassName('treatment-insert-id')[0].value; 
+        var itemDescription = event.target.getElementsByClassName('treatment-insert-id')[0].value;
         helper.saveDrawdowns(component);
-        helper.addNewServiceProviderDrawdown(component, itemDescription);    
+        helper.addNewServiceProviderDrawdown(component, itemDescription);
         helper.fetchTreatmentRefNotesDepValuesAsync(component);
     },
-    
-    deleteTreatment : function(component, event, helper){
+
+    deleteTreatment: function(component, event, helper) {
         component.set("v.spinner", true);
-        var itemDescription = event.target.getElementsByClassName('treatment-delete-id')[0].value;           
-        
-        if(confirm('Are you sure?')) {            
-            helper.deleteTreatment(component, itemDescription);            
+        var itemDescription = event.target.getElementsByClassName('treatment-delete-id')[0].value;
+
+        if (confirm('Are you sure?')) {
+            helper.deleteTreatment(component, itemDescription);
         } else {
             component.set("v.spinner", false);
             return false;
         }
-    },    
-    
-    saveReassessments : function(component, event, helper){
+    },
+
+    saveReassessments: function(component, event, helper) {
         component.set("v.spinner", true);
         helper.saveReassessments(component);
     },
 
-    saveServiceProvidersList : function(component, event, helper){
+    saveServiceProvidersList: function(component, event, helper) {
         component.set("v.spinner", true);
-        helper.saveServiceProvidersList(component); 
+        helper.saveServiceProvidersList(component);
         //alert('refreshing');
         //helper.fetchTreatmentRefNotesDepValuesAsync(component);
     },
-    
-    redirectUserToStandardView : function (component, event, helper){
+
+    redirectUserToStandardView: function(component, event, helper) {
         // Redirect to the default Opportunity Lightning Page
-        var recordId = component.get("v.recordId");        
+        var recordId = component.get("v.recordId");
         var url = "/lightning/r/Opportunity/" + recordId + "/view?nooverride=1";
         window.location.href = url;
     },
-    
-    doCancel : function(component, event, helper){
+
+    doCancel: function(component, event, helper) {
         var accountId = component.get("v.accountId");
         var url = "/lightning/r/Account/" + accountId + "/view";
         window.location.href = url;
     },
-    
-    doRefresh : function(component, event, helper){
+
+    doRefresh: function(component, event, helper) {
         window.location.reload();
     },
-    
-    doDelete : function(component, event, helper){
+
+    doDelete: function(component, event, helper) {
         component.set("v.spinner", true);
-        
-        if(confirm('Are you sure?')) {            
+
+        if (confirm('Are you sure?')) {
             helper.deleteOpportunity(component);
             //helper.getOpportunityInfo(component);
             // Redirect to Account Record
             //var a = component.get('c.doCancel');
             //$A.enqueueAction(a);         
         } else {
-            component.set("v.spinner", false); 
-            return false;            
-        }      
-    },
-    generateLoanDocuments: function(component, event, helper)
-    {
-        var currentOppSObj = component.get('v.oppObj');
-        if (currentOppSObj.Generate_Loan_Doc_Check__c==true){
-            
-            window.open(currentOppSObj.Conga_URL_Doc_Generate__c, "_parent","width=650,height=250,menubar=0");
+            component.set("v.spinner", false);
+            return false;
         }
-        else{
+    },
+    generateLoanDocuments: function(component, event, helper) {
+        var currentOppSObj = component.get('v.oppObj');
+        if (currentOppSObj.Generate_Loan_Doc_Check__c == true) {
+
+            window.open(currentOppSObj.Conga_URL_Doc_Generate__c, "_parent", "width=650,height=250,menubar=0");
+        } else {
             //alert(currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Generate Loan Documents').replace(/\\n/g, '\n'));
             helper.showToast('ERROR', currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Generate Loan Documents').replace(/\\n/g, '\n'));
         }
     },
-    generateReplacementCounselDocuments: function(component, event, helper)
-    {
+    generateReplacementCounselDocuments: function(component, event, helper) {
         var currentOppSObj = component.get('v.oppObj');
-        if (currentOppSObj.Generate_Loan_Doc_Check__c==true){
-            
-            window.open(currentOppSObj.Replacement_Counsel_Document_Generate__c, "_parent","width=650,height=250,menubar=0");
+        if (currentOppSObj.Generate_Loan_Doc_Check__c == true) {
+
+            window.open(currentOppSObj.Replacement_Counsel_Document_Generate__c, "_parent", "width=650,height=250,menubar=0");
         }
     },
-    SendLoanDocuments: function(component, event, helper)
-    {
+    SendLoanDocuments: function(component, event, helper) {
         var currentOppSObj = component.get('v.oppObj');
-        if (currentOppSObj.Send_Loan_Doc_Check__c==true){
-            window.open(currentOppSObj.Conga_URL_Doc_Send__c, "_parent","width=650,height=250,menubar=0");
-        }
-        else{
+        if (currentOppSObj.Send_Loan_Doc_Check__c == true) {
+            window.open(currentOppSObj.Conga_URL_Doc_Send__c, "_parent", "width=650,height=250,menubar=0");
+        } else {
             //alert(currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Send Loan Documents').replace(/\\n/g, '\n'));
             helper.showToast('ERROR', currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Send Loan Documents').replace(/\\n/g, '\n'));
-        } 
-    },
-    sendReplacementCounselDocuments: function(component, event, helper)
-    {
-        var currentOppSObj = component.get('v.oppObj');
-        if (currentOppSObj.Send_Loan_Doc_Check__c==true){
-            window.open(currentOppSObj.Replacement_Counsel_Document_Send__c, "_parent","width=650,height=250,menubar=0");
         }
     },
-    onPaymentMethodChange: function(component, event, helper)
-    {
+    sendReplacementCounselDocuments: function(component, event, helper) {
+        var currentOppSObj = component.get('v.oppObj');
+        if (currentOppSObj.Send_Loan_Doc_Check__c == true) {
+            window.open(currentOppSObj.Replacement_Counsel_Document_Send__c, "_parent", "width=650,height=250,menubar=0");
+        }
+    },
+    onPaymentMethodChange: function(component, event, helper) {
         var index = event.target.nextElementSibling.dataset.index;
         var newPaymentMethod = event.getSource().get("v.value");
         console.log('index:'+index);
         console.log('newPaymentMethod:'+newPaymentMethod);
         helper.fetchRefNotesDepValues(component, newPaymentMethod, index);
     },
-    onPaymentMethodChangeTreatment: function(component, event, helper)
-    {
+    onPaymentMethodChangeTreatment: function(component, event, helper) {
         helper.fetchTreatmentRefNotesDepValues(component);
     },
-    inlineEditName : function(component,event,helper){       
+    inlineEditName: function(component, event, helper) {
         var clickSource = event.currentTarget.dataset.source;
         // show the name edit field popup 
-        
-        component.set("v.clickSource", clickSource); 
+
+        component.set("v.clickSource", clickSource);
         var selectedRecVar = event.currentTarget.dataset.recvar;
-        console.log('var:'+selectedRecVar)
-        if(selectedRecVar){
-            component.set("v."+selectedRecVar,{});
+        console.log('var:' + selectedRecVar)
+        if (selectedRecVar) {
+            component.set("v." + selectedRecVar, {});
             console.log('nullfied');
         }
-        
+
         // after the 100 millisecond set focus to input field   
-        setTimeout(function(){ 
-            try
-            {
+        setTimeout(function() {
+            try {
                 component.find(clickSource).focus();
                 component.find(clickSource).click();
-            }
-            catch(e){ }
+            } catch (e) {}
         }, 100);
     },
-    hideLookupInput : function(component, event, helper) {	
+    hideLookupInput: function(component, event, helper) {
         console.log('hideLookupInput');
         let clickSource = component.get("v.clickSource");
         console.log('clickSource = ' + clickSource);
-        component.set("v.clickSource", "none");   
+        component.set("v.clickSource", "none");
         var oppObjId = component.get("v.oppObj.Id");
-        if(oppObjId && clickSource != 'none'){
+        if (oppObjId && clickSource != 'none') {
             console.log('call');
             component.set("v.spinner", true);
             helper.saveOppty(component).then(
                 $A.getCallback(function(result) {
-                    helper.showToast('SUCCESS','Your changes were saved!','SUCCESS');
+                    helper.showToast('SUCCESS', 'Your changes were saved!', 'SUCCESS');
                     helper.getOpportunityInfo(component);
                 }),
                 $A.getCallback(function(errors) {
                     if (errors[0] && errors[0].message) {
                         helper.errorsHandler(errors)
-                    }else {
+                    } else {
                         helper.unknownErrorsHandler();
                     }
-                    
+
                 }));
         }
     },
-    handlePaymentScheduleChange : function(component, event, helper) {  
-        
+    handlePaymentScheduleChange: function(component, event, helper) {
+
     },
-    handleViewPayments : function(component, event, helper) {  
+    handleViewPayments: function(component, event, helper) {
         helper.viewPayments(component, event);
     },
-    handlePrintPayments : function(component, event, helper) {  
+    handlePrintPayments: function(component, event, helper) {
         helper.printPayments(component, event);
     },
-    handleNewScheduledPaymentClick : function(component, event, helper) {  
+    handleNewScheduledPaymentClick: function(component, event, helper) {
         var spTable = component.find('spTable');
         spTable.showCreateModal();
     },
-    handleShowHideScheduledPaymentClick : function(component, event, helper) {  
+    handleShowHideScheduledPaymentClick: function(component, event, helper) {
         var spTable = component.find('spTable');
         var shown = spTable.toggleShown();
         if (shown) {
@@ -479,7 +473,7 @@
             component.set('v.spShowHideIcon', 'utility:chevrondown');
         }
     },
-    handleTreatmentActionSelect : function(component, event, helper) {  
+    handleTreatmentActionSelect: function(component, event, helper) {
         var action = event.getParam("value");
         var providerId = event.getSource().get("v.name");
         switch (action) {
@@ -490,14 +484,14 @@
             case 'drawdown':
                 component.set("v.spinner", true);
                 helper.saveDrawdowns(component);
-                helper.addNewServiceProviderDrawdown(component, providerId);    
+                helper.addNewServiceProviderDrawdown(component, providerId);
                 helper.fetchTreatmentRefNotesDepValuesAsync(component);
                 break;
             case 'delete':
                 component.set("v.spinner", true);
-                
-                if(confirm('Are you sure?')) {            
-                    helper.deleteTreatment(component, providerId);            
+
+                if (confirm('Are you sure?')) {
+                    helper.deleteTreatment(component, providerId);
                 } else {
                     component.set("v.spinner", false);
                     return false;
@@ -506,7 +500,7 @@
                 break;
         }
     },
-    toggleSection: function(component, event, helper){
+    toggleSection: function(component, event, helper) {
         var section = event.currentTarget.getAttribute('data-section');
         var expandedSections = component.get('v.expandedSections') || {};
         expandedSections[section] = !expandedSections[section];
@@ -517,8 +511,8 @@
     },
     handleReverseClick: function(component, event, helper) {
         helper.showReverseModal(component, event.getParam("Id"));
-    },    
-    handleReverseSuccess : function(component, event, helper) {
+    },
+    handleReverseSuccess: function(component, event, helper) {
         helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
         //helper.getServiceProvidersList(component);
@@ -527,7 +521,7 @@
         //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
     },
-	handleRejectSuccess : function(component, event, helper) {
+    handleRejectSuccess: function(component, event, helper) {
         helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
         //helper.getServiceProvidersList(component);
@@ -535,23 +529,23 @@
     handleRejectCancel: function(component, event, helper) {
         //helper.reInitSomeData(component, event, helper);
         helper.hideReverseModal(component);
-    },      
-    refreshDiscountButton : function(component, event, helper){
-        
+    },
+    refreshDiscountButton: function(component, event, helper) {
+
         var confirm = window.confirm('Are you sure you want to apply the recent discount rate of lawyer by assessment provider?');
         if (confirm) {
             component.set("v.spinner", true);
             helper.setLatestDiscountRateLaywer(component).then(
-                function(result){
+                function(result) {
                     helper.getOpportunityInfo(component);
                 }
             ).then(
-                function(){
-                    helper.showToast('SUCCESS','New discount rate is applied successfully.','success');
+                function() {
+                    helper.showToast('SUCCESS', 'New discount rate is applied successfully.', 'success');
                     component.set("v.spinner", false);
                 }
             ).catch(
-                function(errors){
+                function(errors) {
                     component.set("v.spinner", false);
                     console.log('error : ' + errors);
                     helper.errorsHandler(errors);
@@ -559,23 +553,23 @@
             );
         }
     },
-    
-    setSendToGoogleReview : function(component, event, helper) {
-        
+
+    setSendToGoogleReview: function(component, event, helper) {
+
         let oppObj = component.get("v.oppObj");
-        if(event.getSource().get("v.label") == 'Yes'){
-			oppObj.Restrict_Communication__c = true;           
-        }else{
+        if (event.getSource().get("v.label") == 'Yes') {
+            oppObj.Restrict_Communication__c = true;
+        } else {
             oppObj.Restrict_Communication__c = false;
         }
         component.set("v.oppObj", oppObj);
     },
-    handleReserveAppliedChanged : function(component, event, helper) {
+    handleReserveAppliedChanged: function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
         let oppObj = component.get("v.oppObj");
         var reserveApplied = component.get("v.oppObj.Is_Reserve_Applied__c");
         if (reserveApplied){
-            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");        	
+            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
             oppObj.Reserve_Date__c = today;
             oppObj.Reserve_Amount__c = 0.0;
             var expandedSections = component.get('v.expandedSections') || {};
@@ -589,22 +583,22 @@
         console.log(oppObj.Reserve_Date__c);
         component.set("v.oppObj", oppObj);
     },
-    handleStopInterestChanged : function(component, event, helper) {
+    handleStopInterestChanged: function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
         var stopInterest = component.get("v.oppObj.Stop_Interest__c");
-        if (stopInterest){
+        if (stopInterest) {
             var expandedSections = component.get('v.expandedSections') || {};
             expandedSections['reserve'] = true;
             component.set('v.expandedSections', expandedSections);
-    }
-    },    
-    handleReserveDateChanged : function(component, event, helper) {
+        }
+    },
+    handleReserveDateChanged: function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
     },
-    handleReserveAmountChanged : function(component, event, helper) {
+    handleReserveAmountChanged: function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
     },
-    applyReserve : function(component, event, helper){
+    applyReserve: function(component, event, helper) {
         component.set("v.spinner", true);
         helper.applyReserve(component);
     } ,
