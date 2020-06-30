@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/10/2020, 5:04:34 PM
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 30/06/2020, 5:08:30 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -337,7 +337,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Loan_Status__c = 'Closed - Bad Debt';
         update opp;
         
-        
+
     }
     
     /******************* Method to change an opportunity to surplus stage *********************/
@@ -458,7 +458,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Total_Service_Providers_Allowance__c = 0;
         opp.Loan_Status__c = 'Closed - Paid';
         update opp;
-        
+
     }    
     
     @AuraEnabled
@@ -477,7 +477,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         opp.Temp_Payment_Received__c = 0;
         update opp;
-        
+
     }    
     
     @AuraEnabled
@@ -496,7 +496,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         opp.Temp_Payment_Received__c = 0;
         update opp;
-        
+
     }    
     
     
@@ -1100,7 +1100,6 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                     loanSummary.balancePrincipal = 0;
                 }
             } 
-
             if(totalReversed[0] != null){
                 if(totalReversed[0].get('interestReversed') != null){
                     Decimal interestReversed = Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
@@ -1353,7 +1352,7 @@ return allOpts;*/
         @AuraEnabled
         public string paymentMethod {get;set;}   
         @AuraEnabled
-        public string referenceNotes {get;set;}          
+        public string referenceNotes {get;set;}                  
     }  
     /*******************get Latest oppty orderd by Loan request*******************/
     @AuraEnabled
@@ -1394,10 +1393,21 @@ return allOpts;*/
         User currentUser = [SELECT Id,isActive,ProfileId, Custom_Reports__c, Drawdowns__c, Loan_Overview_Edit__c,
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, 
                             Treatment_Providers__c,Payments_tab__c, Schedule_Payments__c,
-                            Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c, Reserve__c
+                            Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c, Reserve__c, Assign_Details__c
                             FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
+
+    @AuraEnabled
+    public static Boolean isAvailableCreditApplicable(String accountId){
+        List<opportunity> opps = [SELECT Id, Name 
+                                  FROM Opportunity 
+                                  WHERE accountId =:accountId
+                                  AND (Type_of_Loan__c = 'Assessment' 
+                                       OR Type_of_Loan__c = 'Lump-Sum')
+                                  AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity'];
+        return opps.isEmpty()? True : False;
+    }
     
     /******************* Method to get the critical dates list *********************/
     @AuraEnabled
@@ -1637,6 +1647,48 @@ return allOpts;*/
             throw new AuraHandledException('Error:'+e.getMessage());
         }            
     }
+    
+    @AuraEnabled
+    public static List<Task> CreateTasksForNoticeAssignJudgementCollection(String accountId , Account AccountObj){
+        try{
+            String query = 'SELECT Id, Subject FROM Task Where AccountId =: accountId  And Subject LIKE \'%Notice of Assignment%\' And ActivityDate >= TODAY And Status != \'Completed\'';
+            List<Task> TasksList = database.query(query);
+            if(TasksList.size() > 0){
+                delete TasksList;
+            }
+            if(AccountObj.Notice_of_assignment__c == 'Yes'){
+                TaskCreator(accountId , '1st Notice', AccountObj.Assignment_1st_Notice__c);
+                TaskCreator(accountId , 'Follow up', AccountObj.Assignment_Follow_Up__c);
+            }
+            if(AccountObj.Judgement__c == 'Yes'){
+                TaskCreator(accountId , 'Judgment', AccountObj.Judgement_Date__c);
+            }
+            if(AccountObj.Collections__c == 'Yes'){
+                TaskCreator(accountId , 'Collections', AccountObj.Collections_Date__c);
+            }
+            return TasksList;
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }
+        catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
+    }
+
+    public static void TaskCreator(String accountId, String SubjectLine, Date DueDate){
+        Task task = new Task();
+        task.Priority = 'Normal';
+        task.Status = 'Open';
+        task.WhatId = accountId;
+        task.Subject = 'Notice of Assignment - ' + SubjectLine;
+        task.ActivityDate = DueDate;
+        task.ReminderDateTime = DueDate - (1);
+        task.ownerId = UserInfo.getUserId();
+        task.IsReminderSet = true;
+        System.debug(task.Subject);
+        insert task;
+    }
 	
     public Class ApprovalHistoryWrapper{
         
@@ -1668,5 +1720,5 @@ return allOpts;*/
             
         }
 
-    }     
+    } 
 }
