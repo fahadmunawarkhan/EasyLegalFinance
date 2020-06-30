@@ -816,7 +816,7 @@
     },
     handleReserveLoan: function(component, event, helper) {
         console.log('reserveLoan');
-        helper.loadAccountReserveInfo(component);
+        helper.onLoanReserveStateChanged(component);
     },
     handleCustomTableResetClicked: function(component, event, helper) {
         console.log('handleCustomTableResetClicked');
