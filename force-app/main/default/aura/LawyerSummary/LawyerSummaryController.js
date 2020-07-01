@@ -179,12 +179,15 @@
             for(let i=0; i< oppTypeOfLoans.length; i++){
                 loanTypes.push(oppTypeOfLoans[i].value);
             }
+        } else {
+            for(let i=0; i< typeOfLoan.length; i++){
+                loanTypes.push(typeOfLoan[i].Name);
+            }
         }
-        
-        let fv6 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : typeOfLoan;
+        let fv6 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : (loanTypes.join(',') + ',');
         
         let newWin;
-        let url = '/lightning/r/Report/00O3J000000O7g7UAC/view';
+        let url = '/lightning/r/Report/00O0L000003n3kgUAA/view';
         
         try{                       
             newWin = window.open(url + '?fv3=' + lawyerId.substring(0,15) + '&fv4=' + lawfirmid.substring(0,15) + '&fv5=' + businessUnitFilter + '&fv6=' + fv6 + '&fv7=' + fv7);
