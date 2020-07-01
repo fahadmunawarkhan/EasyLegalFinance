@@ -151,9 +151,13 @@
             for(let i=0; i< oppTypeOfLoans.length; i++){
                 loanTypes.push(oppTypeOfLoans[i].value);
             }
+        } else {
+            for(let i=0; i< typeOfLoan.length; i++){
+                loanTypes.push(typeOfLoan[i].Name);
+            }
         }
         
-        let fv5 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : typeOfLoan;
+        let fv5 = (typeOfLoan == "Consolidated")? (loanTypes.join(',') + ',') : (loanTypes.join(',') + ',');
         
         try{                       
             newWin = window.open(url + '?fv3=' + lawfirmid.substring(0,15) + '&fv4=' + businessUnitFilter + '&fv5=' + fv5 + '&fv6=' + fv6);

@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/11/2020, 6:16:19 PM
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 01/07/2020, 4:25:35 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    6/11/2020   fahad.khan@toptal.com     Initial Version
@@ -14,7 +14,7 @@ public class LawyerSummaryCtlr {
     @AuraEnabled
     public static List<ContactInfo> getLawyersContacts(String searchByName, String sortField, String sortOrder, String loanFilter, String businessUnitFilter, List<String> typeOfLoan) {
         try{
-            
+            Boolean ExcludeFromPayout = false;
             loanFilter = String.isEmpty(loanFilter) ? 'All' : loanFilter;
             businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             searchByName = (searchByName == null || String.isEmpty(searchByName))? '' : searchByName;
@@ -48,6 +48,7 @@ public class LawyerSummaryCtlr {
             }
             
             strQuery = 'Select Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Lawyer__c in :contactIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
+            strQuery += ' AND Account.Exclude_from_Payout__c =: ExcludeFromPayout';
             strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
             strQuery += (businessUnitFilter == '' || businessUnitFilter == null) ? ' AND Account.Business_Unit__c = \'ELFI\'' : ' AND Account.Business_Unit__c = :businessUnitFilter';
             strQuery += typeOfLoan.isEmpty() ? '' : ' AND Type_of_Loan__c IN:typeOfLoan';

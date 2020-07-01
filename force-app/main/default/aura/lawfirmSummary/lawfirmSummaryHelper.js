@@ -369,7 +369,7 @@
         let emailBody = component.get("v.emailBody");
         emailBody = emailBody != undefined && emailBody != null && emailBody != ''? emailBody.split("\n").join("<br/>") : '';
         let loanFilterValue = component.get("v.selectedLoanFilter");
-        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : "ELFI";
+        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter") ? component.get("v.selectedBusinessUnitFilter") : "ELFI";
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";        
         
         var action = component.get('c.send');
