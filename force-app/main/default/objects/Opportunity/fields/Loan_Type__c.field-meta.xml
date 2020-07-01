@@ -83,6 +83,11 @@
                 <label>14 - Lawyer Loan</label>
             </value>
             <value>
+                <fullName>15 - Lawyer Loan-Contingency Fee Acceleration</fullName>
+                <default>false</default>
+                <label>15 - Lawyer Loan-Contingency Fee Acceleration</label>
+            </value>
+            <value>
                 <fullName>Other</fullName>
                 <default>false</default>
                 <isActive>false</isActive>
