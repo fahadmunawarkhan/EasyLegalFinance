@@ -1,3 +1,14 @@
+/**
+ * @File Name          : FinancialSummaryReportCtrl.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 6/12/2020, 12:14:17 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    6/12/2020   fahad.khan@toptal.com     Initial Version
+**/
 public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled
     public static void saveDateCustomSettings(String startDate, String endDate, String typeOfLoan){
@@ -38,6 +49,7 @@ public with sharing class FinancialSummaryReportCtrl {
             string activePartialPayment = 'Active - Partial Payment';
             String closedWithLoan = 'Closed With Loan';
             String statusActive = 'Active';
+            String statusActiveCollections = 'Active - Collections';
             String closedSurplus = 'Closed - Surplus';
             String closedShortfall = 'Closed - Shortfall';
             String closedPaid = 'Closed - Paid';
@@ -51,7 +63,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)';
@@ -144,28 +156,7 @@ public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled 
     public static Id executeBatchJob(Boolean sinceInception, String startDate, String endDate, String typeOfLoan, string adhocAsOfDate){
         try{
-            
-            List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
-            Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
-            for(Payout_Bath_Job__mdt pJob : payoutJobs){
-                devNameToPayoutJobsMap.put(pJob.DeveloperName, pJob);
-            }
-            
-            
-            List<AsyncApexJob> currentJobs = [SELECT Id ,Status, ApexClass.Name, CreatedBy.Name, CreatedDate
-                                              FROM AsyncApexJob
-                                              WHERE Status!='Aborted'
-                                              AND ApexClass.Name IN :devNameToPayoutJobsMap.keySet()
-                                              AND Status!='Completed'
-                                              ORDER BY CreatedDate DESC];
-            if(!currentJobs.isEmpty()){
-                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
-                m += '\nPlease try again later.';
-                
-                AuraHandledException e = new AuraHandledException(m);
-                e.setMessage(m);
-                throw e;
-            }
+            PayoutJobsHelper.checkJobs();
             Financial_Summary_Report__c fSR_CustomSetting = Financial_Summary_Report__c.getOrgDefaults();
             fSR_CustomSetting.Start_Date__c = !String.isEmpty(startDate) && startDate != null? Date.valueOf(startDate) : fSR_CustomSetting.Start_Date__c;
             fSR_CustomSetting.End_Date__c =  !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : fSR_CustomSetting.End_Date__c;
@@ -178,7 +169,7 @@ public with sharing class FinancialSummaryReportCtrl {
                                                                           fSR_CustomSetting.End_Date__c, 
                                                                           fSR_CustomSetting.Since_Inception__c,
                                                                           fSR_CustomSetting.Type_of_Loan__c,
-                                                                          fSR_CustomSetting.Adhoc_as_of_Date__c));
+                                                                          fSR_CustomSetting.Adhoc_as_of_Date__c), 50);
         }catch (Exception e){
             throw new AuraHandledException(e.getMessage());
         }
@@ -198,6 +189,7 @@ public with sharing class FinancialSummaryReportCtrl {
         String partialPayment = 'Partial Payment';
         String closedWithLoan = 'Closed With Loan';
         String active = 'Active';
+        String activeCollections = 'Active - Collections';
         String closedSurplus = 'Closed - Surplus';
         String closedShortfall = 'Closed - Shortfall';
         String closedPaid = 'Closed - Paid';
@@ -216,7 +208,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
@@ -238,7 +230,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:payment AND Reference_Notes__c =:partialPayment)'; 
@@ -256,7 +248,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' FROM Drawdown__c'; 
             strQuery += ' WHERE Opportunity__r.StageName =:closedWithLoan';
             strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)'; 
             strQuery += ' AND Is_Rejected__c = false AND Reference_Notes__c != \'Payment Rejected\'';
