@@ -1,3 +1,14 @@
+/**
+ * @File Name          : GenerateConsolidatedAssessmentPayoutCtlr.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 02/07/2020, 11:21:49 am
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    02/07/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public with sharing class GenerateConsolidatedAssessmentPayoutCtlr {
     
     public String businessUnit{get; set;}
@@ -36,6 +47,7 @@ public with sharing class GenerateConsolidatedAssessmentPayoutCtlr {
              Total_Outstanding__c, Total_Rebate_Discount__c
              FROM Account
              WHERE Selected_for_Assessment_Payout__c = true 
+             AND Exclude_from_Payout__c = false
              AND Id In (SELECT AccountId FROM Opportunity WHERE Lawyer__c =:lawyerId 
                         AND isClosed = true AND isWon = true 
                         AND Stage_Status__c != 'Paid Off' 
