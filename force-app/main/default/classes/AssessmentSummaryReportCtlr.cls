@@ -1,3 +1,14 @@
+/**
+ * @File Name          : AssessmentSummaryReportCtlr.cls
+ * @Description        : 
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Group              : 
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 02/07/2020, 12:05:18 pm
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    02/07/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+**/
 public with sharing class AssessmentSummaryReportCtlr {
     
     public class AssessmentWrapper{
@@ -230,7 +241,7 @@ public with sharing class AssessmentSummaryReportCtlr {
     
     @AuraEnabled
     public static List<Account> getClientAccounts(String lawyerId, String businessUnitFilter){
-        
+        Boolean ExcludeFromPayout = false;
         String filterByBusinessUnit = '';
         if(businessUnitFilter == 'ELFI'){                
             filterByBusinessUnit = 'ELFI';
@@ -245,6 +256,7 @@ public with sharing class AssessmentSummaryReportCtlr {
         query += ' Total_Amount_Loaned__c, All_Payout_Balance__c, Total_Rebate_Discount__c';
         query += ' FROM Account';
         query += ' WHERE Id in (SELECT AccountId FROM Opportunity WHERE Lawyer__c = :lawyerId';
+        query += ' AND Account.Exclude_from_Payout__c =: ExcludeFromPayout';
         query += ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'';
         query += filterByBusinessUnit != 'Consolidated'? ' AND Account.Business_Unit__c =:filterByBusinessUnit' : '';
         query += ' AND Type_of_Loan__c = \'Assessment\')';
