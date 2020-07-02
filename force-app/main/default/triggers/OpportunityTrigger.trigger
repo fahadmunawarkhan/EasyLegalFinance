@@ -2,6 +2,8 @@ trigger OpportunityTrigger on Opportunity (before insert, before update, after i
     
     if(trigger.isBefore && (trigger.isInsert || trigger.isUpdate)){
         OpportunityTriggerHandler.setDiscountschedule(Trigger.new, Trigger.oldMap, Trigger.isInsert);
+        if (trigger.isUpdate)
+            OpportunityTriggerHandler.updateLoanStatus(Trigger.new, Trigger.oldMap);
     }
     
     if(Trigger.isAfter && (Trigger.isUpdate || Trigger.isInsert || Trigger.isDelete)){

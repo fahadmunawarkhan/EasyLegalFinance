@@ -742,4 +742,13 @@ public class CustomerViewComponentCtlrTest {
         System.assertEquals(Date.today(), opps[0].Reserve_Date__c);
         Test.stopTest();        
     }
+
+    public static testmethod void test_excludeFromLawyerStmts(){
+        Account acc = [select Id from Account where Name='account' LIMIT 1];
+        Test.startTest();        
+        CustomerViewComponentCtlr.excludeFromLawyerStmts(acc.Id, true);
+        acc = [select Exclude_from_Payout__c from Account where Name='account' LIMIT 1];
+        System.assertEquals(true, acc.Exclude_from_Payout__c);
+        Test.stopTest();        
+    }
 }

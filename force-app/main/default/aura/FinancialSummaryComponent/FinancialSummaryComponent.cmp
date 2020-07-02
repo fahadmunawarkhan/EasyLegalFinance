@@ -282,7 +282,7 @@
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
                     <span style="color:red;margin-left:10px;"> Note</span>: 
-                    This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Active Loans (Stage="Closed With Loan" and Stage Status = Active/Active - Partial Payment) Falling under Selected Range. <br/>
+                    This Table Shows Only "e-Transfer" and "Cheque" Drawdowns for Closed Active Loans (Stage="Closed With Loan" and Stage Status = Active/Active - Partial Payment/Active - Collections) Falling under Selected Range. <br/>
                     <!--<span style="margin-left:40px;">Total payout is payout balnace as of ctitial date.</span>-->
                 </span>
                 <br />

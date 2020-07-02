@@ -16,27 +16,28 @@
         var tempPaymentReceived= component.get('v.tempPaymentReceived');
         var surplus = component.get('v.surplus');
         var stageStatus = component.get('v.stageStatus');
+		var isStageStatusActive = (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active' || stageStatus == 'Active - Collections');
         var stageName = component.get('v.stageName');
         var actions = new Array();
         var searchType = component.get('v.searchType');
         if (searchType == 'Payout' || searchType == 'Payout - Interest First'){
-            if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && surplus != 0 && (tempPaymentReceived != totalPayout || surplus > 0) && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+            if ( tempPaymentReceived != null && totalPayout != null && tempPaymentReceived != 0 && surplus != 0 && (tempPaymentReceived != totalPayout || surplus > 0) && isStageStatusActive){
                 actions.push({label:'Partial Payment', value:'Partial Payment'});
             }
             else{
-                if ((tempPaymentReceived == null ||  tempPaymentReceived == 0) && totalPayout != 0  && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+                if ((tempPaymentReceived == null ||  tempPaymentReceived == 0) && totalPayout != 0  && isStageStatusActive){
                     actions.push({label:'No Action', value:'No Action'});
                 }
-                if ( totalPayout != 0 && tempPaymentReceived != totalPayout && surplus < 0 && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+                if ( totalPayout != 0 && tempPaymentReceived != totalPayout && surplus < 0 && isStageStatusActive){
                     actions.push({label:'Bad Debt', value:'Bad Debt'});
                 }
-                if ( surplus == 0 && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+                if ( surplus == 0 && isStageStatusActive){
                     actions.push({label:'Closed Paid', value:'Closed Paid'});
                 }
-                if ( surplus > 0 && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+                if ( surplus > 0 && isStageStatusActive){
                     actions.push({label:'Surplus', value:'Surplus'});
                 }
-                if ( surplus < 0 && (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active')){
+                if ( surplus < 0 && isStageStatusActive){
                     actions.push({label:'Shortfall', value:'Shortfall'});
                 }
             }

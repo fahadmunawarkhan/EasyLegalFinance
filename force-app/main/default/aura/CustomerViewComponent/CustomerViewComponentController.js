@@ -816,7 +816,7 @@
     },
     handleReserveLoan: function(component, event, helper) {
         console.log('reserveLoan');
-        helper.onLoanReserveStateChanged(component);
+        helper.loadAccountReserveInfo(component);
     },
     handleCustomTableResetClicked: function(component, event, helper) {
         console.log('handleCustomTableResetClicked');
@@ -833,8 +833,12 @@
                     helper.showToast('SUCCESS','Your changes were successfully saved!', 'SUCCESS');
                     return helper.getOpportunitiesList(component);
                 },
-                (error) => {
+                (errors) => {
                     component.set("v.spinner", false);
+                    if (errors && typeof errors == 'string')
+                        helper.showToast('ERROR', errors, 'ERROR');
+                    else
+                        helper.handleErrors(errors);
                 }
             )
             .then(
@@ -842,11 +846,26 @@
                     component.set("v.spinner", false);
                     helper.populateReserveTableColumns(component);
                     helper.populateReserveTableData(component);
-                    helper.onLoanReserveStateChanged(component);
+                    helper.loadAccountReserveInfo(component);
                 },
                 (error) => {
                     component.set("v.spinner", false);
                 }
             );
-    }
+    },
+    excludeFromLawyerStatementsChanged: function(component, event, helper) {
+        component.set("v.spinner", true);
+        helper.excludeFromLawyerStatements(component)
+            .then(
+                (result) => {
+                    component.set("v.spinner", false);
+                    helper.showToast('SUCCESS', 'Your changes were successfully saved!', 'SUCCESS');
+                },
+                (errors) => {
+                    component.set("v.spinner", false);
+                    helper.handleErrors(errors);
+                    helper.loadAccountReserveInfo(component);
+                }
+            )
+    },
 })

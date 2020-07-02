@@ -2133,6 +2133,17 @@
                     <!-- <<<<<<<<<< RESERVE TAB >>>>>>>>>> -->
                     <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="reserveTabDataId">
                         <lightning:card class="slds-card slds-card_boundary" title="Reserve Applied" variant="base">                                                        
+                            <div class="slds-card__body_inner">
+                                <div class="slds-media__body slds-m-bottom_xx-small">
+                                	<h2 class="slds-text-heading--small slds-truncate hd-lbl">Lawyer Payout Statements</h2>
+                                </div>
+                                <div class="slds-m-left_medium">
+                                	<lightning:input  type="checkbox" label="Exclude from Lawyer Statements" disabled="{!!v.accountObj.Is_Reserve_Applied__c}" checked="{!v.accountObj.Exclude_from_Payout__c}" onchange="{!c.excludeFromLawyerStatementsChanged}"/>
+                                </div>
+                                <div class="slds-media__body slds-m-top_large slds-m-bottom_medium">
+                                	<h2 class="slds-text-heading--small slds-m-top_medium slds-truncate hd-lbl">Reserve Applied</h2>
+                                </div>
+                            </div>
                             <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}"/>
                         </lightning:card>                        						
                     </div>                        

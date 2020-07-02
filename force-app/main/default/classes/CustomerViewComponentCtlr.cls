@@ -1630,7 +1630,7 @@ return allOpts;*/
     	
     @AuraEnabled
     public static Account getAccountReserveInfo(String accountId) {
-        Account acc = [select Reserved_Loans_Count__c, Is_Reserve_Applied__c from Account where Id=:accountId];
+        Account acc = [select Reserved_Loans_Count__c, Is_Reserve_Applied__c, Exclude_From_Payout__c from Account where Id=:accountId];
         System.debug(acc);
         return acc;
     }
@@ -1647,6 +1647,21 @@ return allOpts;*/
             throw new AuraHandledException('Error:'+e.getMessage());
         }            
     }
+
+    @AuraEnabled
+    public static void excludeFromLawyerStmts(String accountId, Boolean needExclude){ 
+        try{
+        	Account acc = [select Exclude_from_Payout__c from Account where Id=:accountId];
+            acc.Exclude_from_Payout__c = needExclude;
+            update acc;
+        }
+        catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }
+        catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }            
+    }    
     
     @AuraEnabled
     public static List<Task> CreateTasksForNoticeAssignJudgementCollection(String accountId , Account AccountObj){

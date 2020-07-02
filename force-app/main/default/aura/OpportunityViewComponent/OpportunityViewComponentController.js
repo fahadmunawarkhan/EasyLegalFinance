@@ -570,19 +570,24 @@
         }
         component.set("v.oppObj", oppObj);
     },
-    handleReserveAppliedChanged : function(component, event, helper) {
+    handleReserveAppliedChanged: function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
         let oppObj = component.get("v.oppObj");
         var reserveApplied = component.get("v.oppObj.Is_Reserve_Applied__c");
-        if (reserveApplied){
-            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");        	
+        if (reserveApplied) {
+            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
             oppObj.Reserve_Date__c = today;
             oppObj.Reserve_Amount__c = 0.0;
             var expandedSections = component.get('v.expandedSections') || {};
             expandedSections['reserve'] = true;
             component.set('v.expandedSections', expandedSections);
-        }
-        else{
+        } else{
+            if (oppObj.Stage_Status__c == 'Active - Collections'){
+                helper.showToast('ERROR', 'Loan is in Active/Collections. Please change the loan status to Active before clearing the Reserve', 'ERROR');             
+                component.set("v.oppObj.Is_Reserve_Applied__c", true);
+                return;
+            }
+
             oppObj.Reserve_Date__c = null;
             oppObj.Reserve_Amount__c = null;
         }
