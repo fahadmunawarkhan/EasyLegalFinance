@@ -325,14 +325,13 @@
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                             <div class="slds-form-element__control">
-                                <lightning:select name="dependentFld"
-                                                  value="{!v.oppObj.Stage_Status__c}"
-                                                  label="Stage Status"
-                                                  tabindex="13" >
+                                <lightning:select name="dependentFld" value="{!v.oppObj.Stage_Status__c}" label="Stage Status" tabindex="13">
                                     <aura:iteration items="{!v.listDependingValues}" var="val">
-                                        <option value="{!val}" selected="{!val == v.oppObj.Stage_Status__c}">{!val}</option>
+                                        <aura:if isTrue="{!!and(!v.oppObj.Is_Reserve_Applied__c, val=='Active - Collections')}">
+                                            <option value="{!val}" selected="{!val == v.oppObj.Stage_Status__c}">{!val}</option>
+                                        </aura:if>
                                     </aura:iteration>
-                                </lightning:select>		                                       
+                                </lightning:select>
                             </div>
                         </div>
                     </lightning:layoutItem>                    

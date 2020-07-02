@@ -180,4 +180,43 @@ public class OpportunityTriggerHandlerTest {
         
         Test.stopTest();
     }
+
+	public static testMethod void updateLoanStatusTest() {        
+        Account NewTestAcc = new Account();
+        NewTestAcc.Name = 'Test LawFirm Account';
+        NewTestAcc.Authorization_Clause__c = 'No';
+        NewTestAcc.RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Law Firm').getRecordTypeId();
+        Insert NewTestAcc;
+        
+        Contact ClientCon = new Contact();
+        ClientCon.FirstName = 'Test';
+        ClientCon.LastName = 'Client Contact';
+        ClientCon.AccountId = NewTestAcc.Id;
+        ClientCon.RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName().get('Client Contact').getRecordTypeId();
+        Insert ClientCon;
+
+        Opportunity NewTestOpp = new Opportunity();
+        NewTestOpp.Type_of_Loan__c = 'Facility Loan';
+        NewTestOpp.Name = 'Test Opportunity';
+        NewTestOpp.RecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Client Opportunity Record Type').getRecordTypeId();        
+        NewTestOpp.CloseDate = Date.today().addDays(14);
+        NewTestOpp.StageName = 'Closed With Loan';        
+        NewTestOpp.Stage_Status__c = 'Active';
+        NewTestOpp.Primary_Contact__c = ClientCon.Id;
+        NewTestOpp.Minimum_Interest_Period__c = '0 months';
+        NewTestOpp.Compounding_Interest__c = 'Monthly';
+        NewTestOpp.Interest_Rate__c = 15.0;
+        NewTestOpp.Interest_Compounding_Period__c = 'Simple Interest';
+        NewTestOpp.Interest_Deferral_Period__c = '0';
+        NewTestOpp.Is_Reserve_Applied__c = true;
+        NewTestOpp.Reserve_Date__c = Date.today();
+        Insert NewTestOpp;
+        Opportunity opp = [SELECT Id FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Test.startTest();
+        opp.Stage_Status__c = 'Active - Collections';
+        update opp;
+        opp = [SELECT Id, Stage_Status__c, Loan_Status__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];        
+        System.assertEquals('Active - Collections', opp.Loan_Status__c);
+        Test.stopTest();
+    }    
 }

@@ -1265,7 +1265,7 @@
         for (var oppIndex in opps){
             var opp = opps[oppIndex];
             //  console.log(opp);
-            if ( (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') )
+            if (opp.Is_Stage_Status_Active__c)
             	estTotalBalance += opp.Total_Payout__c;
         }
 
@@ -1319,7 +1319,7 @@
             var opp = opps[oppIndex];
             //  console.log(opp);
             //console.log(sType + ' ' + opp.Stage_Status__c);
-            if ( ((sType=='Payout' || sType == 'Payout - Interest First') && (opp.Stage_Status__c == 'Active - Partial Payment' || opp.Stage_Status__c == 'Active') ) ||
+            if ( ((sType=='Payout' || sType == 'Payout - Interest First') && opp.Is_Stage_Status_Active__c ) ||
                ( sType=='Bad Debt Recovery' && opp.StageName == 'Closed With Loan' && (opp.Stage_Status__c == 'Closed - Paid' || opp.Stage_Status__c == 'Closed - Surplus' || opp.Stage_Status__c == 'Closed - Shortfall' || opp.Stage_Status__c == 'Closed - Bad Debt') ) ||
                ( sType=='Refund'))
                 	return true;
@@ -1408,7 +1408,8 @@
                     resolve(true);
             });
     },
-    onLoanReserveStateChanged: function(component){
+    loadAccountReserveInfo: function(component) {
+
         var recordId = component.get("v.recordId");
         var action = component.get('c.getAccountReserveInfo');
         component.set("v.spinner", true);
@@ -1420,6 +1421,7 @@
                 var acc = response.getReturnValue();
                 component.set("v.accountObj.Reserved_Loans_Count__c", acc.Reserved_Loans_Count__c);
                 component.set("v.accountObj.Is_Reserve_Applied__c", acc.Is_Reserve_Applied__c);
+                component.set("v.accountObj.Exclude_from_Payout__c", acc.Exclude_from_Payout__c);
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -1442,7 +1444,7 @@
                                     {label:'Accrued Interest',fieldName:'Interest_Accrued_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
 									{label:'Value at Reserve Date',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
                                     {label:'Reserve Amount',fieldName:'Reserve_Amount__c',type:'currency', editable: true, align: 'right'},
-                                    {label:'Exposure',fieldName:'Reserve_Exposure__c',type:'currency', align: 'right'}]);
+                                    { label: 'Exposure', fieldName: 'Reserve_Exposure__c', type: 'currency', align: 'right' }]);
     },
     populateReserveTableData: function(component){
         var oppsList = component.get("v.oppList");
@@ -1465,7 +1467,7 @@
                 {value: opp.Interest_Accrued_as_of_Reserve_Date__c, align: 'right', type: 'currency', editable: false},                  
                 {value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
                 {value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
-                {value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false}];
+                { value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false }];
           var row = {id: opp.Id, items: items};
             data.push(row);
             if (opp.Non_Repaid_Drawdown_Principal_Total__c)
@@ -1487,7 +1489,7 @@
                   {value: totalAccruedInterest, align: 'right', type: 'currency', editable: false, bold: true},                  
 				  {value: valueAtReserveDate, align: 'right', type: 'currency', editable: false, bold: true},                          
                   {value: totalReserveAmount, align: 'right', type: 'currency', editable: false, bold: true},
-                  {value: totalExposure, align: 'right', type: 'currency', editable: false, bold: true}];
+                  { value: totalExposure, align: 'right', type: 'currency', editable: false, bold: true }];
         var totalRow = {id: '', items: totalItems};
         data.push(totalRow);
         component.set("v._reserveData", data);
@@ -1517,6 +1519,13 @@
         var self = this;
         return new Promise($A.getCallback(
             function(resolve, reject){
+                for (var i = 0; i < records.length; i++) {
+                    console.log(records[i]);
+                    if (records[i]["Is_Reserve_Applied__c"] && !records[i]["Reserve_Date__c"]) {
+                        reject('Reserve Date cannot be empty');
+                        return;
+                    }
+                }
                 var action = component.get('c.applyReserve');
                 action.setParams({ reserveInfos : records});
                 action.setCallback(this, function (response) {
@@ -1525,14 +1534,6 @@
                     if (state === 'SUCCESS') {
                         resolve(response.getReturnValue());
                     } else if (state === 'ERROR') {
-                        var errors = response.getError();
-                        if (errors) {
-                            if (errors[0] && errors[0].message) {
-                                self.errorsHandler(errors)
-                            }
-                        } else {
-                            self.unknownErrorsHandler();
-                        }
                         reject(response.getError());
                     }
                 });
@@ -1553,6 +1554,37 @@
                     component.set("v.spinner", false);
                 }
             );
+    },
+    excludeFromLawyerStatements : function(component){
+
+        let accountObj = component.get("v.accountObj");
+
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.excludeFromLawyerStmts');
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject) {
+                action.setParams({ accountId: recordId, needExclude: accountObj.Exclude_from_Payout__c })
+                action.setCallback(this, function(response) {
+                    var state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve('SUCCESS');
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        ));
+    },
+    handleErrors: function(errors) {
+        if (errors) {
+            if (errors[0] && errors[0].message) {
+                this.errorsHandler(errors)
+            }
+        } else {
+            this.unknownErrorsHandler();
+        }
     },
     isAvailableCreditApplicable: function(component) {
         var recordId = component.get("v.recordId");
