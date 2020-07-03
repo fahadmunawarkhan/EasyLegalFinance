@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 01/07/2020, 4:35:24 pm
+ * @Last Modified On   : 02/07/2020, 7:11:49 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
@@ -47,7 +47,7 @@ public with sharing class LawfirmSummaryCtlr {
             strQuery = 'Select Law_firm__c, Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Law_firm__c in :accountIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
             strQuery += ' AND Account.Exclude_from_Payout__c =: ExcludeFromPayout';
             strQuery += LoanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
-            strQuery += (businessUnitFilter == '' || businessUnitFilter == null)? ' AND Account.Business_Unit__c = \'ELFI\'' : 'AND Account.Business_Unit__c = :businessUnitFilter';
+            strQuery += (businessUnitFilter == '' || businessUnitFilter == null)? ' AND Account.Business_Unit__c = \'ELFI\'' : ' AND Account.Business_Unit__c =: businessUnitFilter';
             strQuery += typeOfLoan.isEmpty() ? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
             
             List<Opportunity> oppties = new List<Opportunity>();
