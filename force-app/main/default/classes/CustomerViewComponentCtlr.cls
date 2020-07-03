@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 03/07/2020, 4:59:54 pm
+ * @Last Modified On   : 03/07/2020, 5:29:51 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -1665,7 +1665,7 @@ return allOpts;*/
     
     @AuraEnabled
     public static void CreateTasksForNoticeAssignJudgementCollection(String accountId , Account AccountObj){
-        
+        try{
             map<String, Date> SubjectToDate = new map<String, Date>();
             
             if(AccountObj.Notice_of_assignment__c == 'Yes'){
@@ -1695,7 +1695,11 @@ return allOpts;*/
 
             if(SubjectToDate.size() > 0)
             TaskCreator(accountId, SubjectToDate);
-        
+        }catch (DMLException e){
+            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+        }catch (Exception e){
+            throw new AuraHandledException('Error:'+e.getMessage());
+        }
     }
 
     public static Boolean TaskCheckingNoticeAssignJudgementCollection(String accountId, String SubjectLine, Date DueDate){
