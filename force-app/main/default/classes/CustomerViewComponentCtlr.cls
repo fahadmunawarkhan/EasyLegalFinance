@@ -4,7 +4,7 @@
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 30/06/2020, 5:08:30 pm
+ * @Last Modified On   : 03/07/2020, 5:29:51 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -1664,45 +1664,86 @@ return allOpts;*/
     }    
     
     @AuraEnabled
-    public static List<Task> CreateTasksForNoticeAssignJudgementCollection(String accountId , Account AccountObj){
+    public static void CreateTasksForNoticeAssignJudgementCollection(String accountId , Account AccountObj){
         try{
-            String query = 'SELECT Id, Subject FROM Task Where AccountId =: accountId  And Subject LIKE \'%Notice of Assignment%\' And ActivityDate >= TODAY And Status != \'Completed\'';
-            List<Task> TasksList = database.query(query);
-            if(TasksList.size() > 0){
-                delete TasksList;
-            }
+            map<String, Date> SubjectToDate = new map<String, Date>();
+            
             if(AccountObj.Notice_of_assignment__c == 'Yes'){
-                TaskCreator(accountId , '1st Notice', AccountObj.Assignment_1st_Notice__c);
-                TaskCreator(accountId , 'Follow up', AccountObj.Assignment_Follow_Up__c);
+                if(TaskCheckingNoticeAssignJudgementCollection(accountId , '1st Notice', AccountObj.Assignment_1st_Notice__c) != true){
+                    TaskDeletionNoticeAssignJudgementCollection(accountId , '1st Notice', AccountObj.Assignment_1st_Notice__c);
+                    SubjectToDate.put('1st Notice', AccountObj.Assignment_1st_Notice__c);
+                }
+
+                if(TaskCheckingNoticeAssignJudgementCollection(accountId , 'Follow up', AccountObj.Assignment_Follow_Up__c) != true){
+                    TaskDeletionNoticeAssignJudgementCollection(accountId , 'Follow up', AccountObj.Assignment_Follow_Up__c);
+                    SubjectToDate.put('Follow up', AccountObj.Assignment_Follow_Up__c);
+                }
             }
             if(AccountObj.Judgement__c == 'Yes'){
-                TaskCreator(accountId , 'Judgment', AccountObj.Judgement_Date__c);
+                if(TaskCheckingNoticeAssignJudgementCollection(accountId , 'Judgment', AccountObj.Judgement_Date__c) != true){
+                    TaskDeletionNoticeAssignJudgementCollection(accountId , 'Judgment', AccountObj.Judgement_Date__c);
+                    SubjectToDate.put('Judgment', AccountObj.Judgement_Date__c);
+                }
             }
             if(AccountObj.Collections__c == 'Yes'){
-                TaskCreator(accountId , 'Collections', AccountObj.Collections_Date__c);
+                if(TaskCheckingNoticeAssignJudgementCollection(accountId , 'Collections', AccountObj.Collections_Date__c) != true){
+                    TaskDeletionNoticeAssignJudgementCollection(accountId , 'Collections', AccountObj.Collections_Date__c);
+                    SubjectToDate.put('Collections', AccountObj.Collections_Date__c);
+                }
             }
-            return TasksList;
-        }
-        catch (DMLException e){
+            // >>>>>>>======= | Add just condition if need to add more tasks | ========<<<<<<<<<<
+
+            if(SubjectToDate.size() > 0)
+            TaskCreator(accountId, SubjectToDate);
+        }catch (DMLException e){
             throw new AuraHandledException('Error:'+e.getDmlMessage(0));
-        }
-        catch (Exception e){
+        }catch (Exception e){
             throw new AuraHandledException('Error:'+e.getMessage());
         }
     }
 
-    public static void TaskCreator(String accountId, String SubjectLine, Date DueDate){
-        Task task = new Task();
-        task.Priority = 'Normal';
-        task.Status = 'Open';
-        task.WhatId = accountId;
-        task.Subject = 'Notice of Assignment - ' + SubjectLine;
-        task.ActivityDate = DueDate;
-        task.ReminderDateTime = DueDate - (1);
-        task.ownerId = UserInfo.getUserId();
-        task.IsReminderSet = true;
-        System.debug(task.Subject);
-        insert task;
+    public static Boolean TaskCheckingNoticeAssignJudgementCollection(String accountId, String SubjectLine, Date DueDate){
+        String Subject = 'Notice of Assignment - ' + SubjectLine;
+        String query = 'SELECT Id FROM Task Where AccountId =: accountId';
+        query += ' AND Subject LIKE \'%'+Subject+'%\'';
+        query += ' AND ActivityDate =: DueDate';
+        query += ' AND (Status = \'Open\' OR Status = \'Completed\')';
+        List<Task> tasks = database.query(query);
+        if(tasks.size() > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void TaskDeletionNoticeAssignJudgementCollection(String accountId, String SubjectLine, Date DueDate){
+        String Subject = 'Notice of Assignment - ' + SubjectLine;
+        String query = 'SELECT Id, Subject FROM Task Where AccountId =: accountId';
+        query += ' AND Subject LIKE \'%'+Subject+'%\'';
+        query += ' AND ActivityDate !=: DueDate AND Status != \'Completed\'';
+        List<Task> TasksList = database.query(query);
+        if(TasksList.size() > 0){
+            delete TasksList;
+        }
+    }
+
+    public static void TaskCreator(String accountId, map<String, Date> SubjectToDate){
+        List<Task> TasksToCreate = new List<Task>();
+        for(String SubjectLine : SubjectToDate.keySet()){
+            Task task = new Task();
+            task.Priority = 'Normal';
+            task.Status = 'Open';
+            task.WhatId = accountId;
+            task.Subject = 'Notice of Assignment - ' + SubjectLine;
+            task.ActivityDate = SubjectToDate.get(SubjectLine);
+            task.ReminderDateTime = SubjectToDate.get(SubjectLine) - (1);
+            task.ownerId = UserInfo.getUserId();
+            task.IsReminderSet = true;
+            TasksToCreate.add(task);
+        }
+        if(TasksToCreate.size() > 0){
+            Insert TasksToCreate;
+        }
     }
 	
     public Class ApprovalHistoryWrapper{
