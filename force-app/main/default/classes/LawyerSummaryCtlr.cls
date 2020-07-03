@@ -231,7 +231,7 @@ public class LawyerSummaryCtlr {
                 strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name LIKE \'%' + searchByName + '%\' OR Account.Name LIKE \'%' + searchByName + '%\' )' : '';
                 strQuery += ' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
                 strQuery += ' AND Account.Business_Unit__c =:businessUnitFilter';
-                strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'Active\'' : '';
+                strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
                 strQuery += typeOfLoan.isEmpty() ? ')' : ' AND Type_of_Loan__c IN:typeOfLoan)';
                 strQuery += ' limit 10000';
                 
