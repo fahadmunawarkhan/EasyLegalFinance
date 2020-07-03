@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 6/12/2020, 12:14:17 PM
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 03/07/2020, 5:33:12 pm
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    6/12/2020   fahad.khan@toptal.com     Initial Version
@@ -156,7 +156,6 @@ public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled 
     public static Id executeBatchJob(Boolean sinceInception, String startDate, String endDate, String typeOfLoan, string adhocAsOfDate){
         try{
-            PayoutJobsHelper.checkJobs();
             Financial_Summary_Report__c fSR_CustomSetting = Financial_Summary_Report__c.getOrgDefaults();
             fSR_CustomSetting.Start_Date__c = !String.isEmpty(startDate) && startDate != null? Date.valueOf(startDate) : fSR_CustomSetting.Start_Date__c;
             fSR_CustomSetting.End_Date__c =  !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : fSR_CustomSetting.End_Date__c;
