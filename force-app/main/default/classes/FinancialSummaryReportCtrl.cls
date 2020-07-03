@@ -1,3 +1,14 @@
+/**
+ * @File Name          : FinancialSummaryReportCtrl.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 6/12/2020, 12:14:17 PM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    6/12/2020   fahad.khan@toptal.com     Initial Version
+**/
 public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled
     public static void saveDateCustomSettings(String startDate, String endDate, String typeOfLoan){
@@ -145,28 +156,7 @@ public with sharing class FinancialSummaryReportCtrl {
     @AuraEnabled 
     public static Id executeBatchJob(Boolean sinceInception, String startDate, String endDate, String typeOfLoan, string adhocAsOfDate){
         try{
-            
-            List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
-            Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
-            for(Payout_Bath_Job__mdt pJob : payoutJobs){
-                devNameToPayoutJobsMap.put(pJob.DeveloperName, pJob);
-            }
-            
-            
-            List<AsyncApexJob> currentJobs = [SELECT Id ,Status, ApexClass.Name, CreatedBy.Name, CreatedDate
-                                              FROM AsyncApexJob
-                                              WHERE Status!='Aborted'
-                                              AND ApexClass.Name IN :devNameToPayoutJobsMap.keySet()
-                                              AND Status!='Completed'
-                                              ORDER BY CreatedDate DESC];
-            if(!currentJobs.isEmpty()){
-                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
-                m += '\nPlease try again later.';
-                
-                AuraHandledException e = new AuraHandledException(m);
-                e.setMessage(m);
-                throw e;
-            }
+            PayoutJobsHelper.checkJobs();
             Financial_Summary_Report__c fSR_CustomSetting = Financial_Summary_Report__c.getOrgDefaults();
             fSR_CustomSetting.Start_Date__c = !String.isEmpty(startDate) && startDate != null? Date.valueOf(startDate) : fSR_CustomSetting.Start_Date__c;
             fSR_CustomSetting.End_Date__c =  !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : fSR_CustomSetting.End_Date__c;
