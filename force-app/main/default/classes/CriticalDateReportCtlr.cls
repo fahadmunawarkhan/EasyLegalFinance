@@ -123,6 +123,7 @@ public with sharing class CriticalDateReportCtlr {
         string filterByBusinessUnit = '';
         string Elfi = 'ELFI';
         string Rhino = 'Rhino';
+        string Seahold = 'Seahold';
         
         if(businessUnit == 'ELFI'){            
             filterByBusinessUnit = 'ELFI';
@@ -130,6 +131,8 @@ public with sharing class CriticalDateReportCtlr {
             filterByBusinessUnit = 'Rhino';
         }else if(businessUnit == 'Consolidated'){            
             filterByBusinessUnit = 'Consolidated';
+        }else if(businessUnit == 'Seahold'){
+            filterByBusinessUnit = 'Seahold';
         }
         
         String strQuery = 'Select Account__c, Name__c, Account__r.Business_Unit__c businessUnit,'+
@@ -140,7 +143,7 @@ public with sharing class CriticalDateReportCtlr {
             'Loan_Status__c != \'Closed - Bad Debt - Making Payments\')'; 
         strQuery += ' AND Date__c >= :startDt AND Date__c <= :endDt';
         strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino)':
+            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino OR Account__r.Business_Unit__c =:Seahold)':
         ' AND Account__r.Business_Unit__c =:filterByBusinessUnit';
         strQuery += ' Group by Account__c, Name__c, Account__r.Business_Unit__c, Account__r.AccountNumber,'+ 
             'Account__r.Name, Date__c';
@@ -158,6 +161,7 @@ public with sharing class CriticalDateReportCtlr {
         string filterByBusinessUnit = '';
         string Elfi = 'ELFI';
         string Rhino = 'Rhino';
+        string Seahold = 'Seahold';
         
         if(businessUnit == 'ELFI'){            
             filterByBusinessUnit = 'ELFI';
@@ -165,12 +169,14 @@ public with sharing class CriticalDateReportCtlr {
             filterByBusinessUnit = 'Rhino';
         }else if(businessUnit == 'Consolidated'){            
             filterByBusinessUnit = 'Consolidated';
+        }else if(businessUnit == 'Seahold'){
+            filterByBusinessUnit = 'Seahold';
         }
         
         String strQuery = 'SELECT Name__c FROM Critical_Date__c WHERE Date__c >= :startDt AND Date__c <= :endDt';
         strQuery += ' AND Account__c in (Select AccountId From Opportunity WHERE Loan_Status__c != \'Closed - Paid\' AND Loan_Status__c != \'Closed - Bad Debt\' AND Loan_Status__c != \'Closed - Bad Debt - Making Payments\')';
         strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino)':
+            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino OR Account__r.Business_Unit__c =:Seahold)':
         ' AND Account__r.Business_Unit__c =:filterByBusinessUnit';
         strQuery += (CriticalDateName == 'Consolidated') ? '' : ' AND Name__c =: CriticalDateName';
         strQuery += ' Group by Name__c Order by Name__c';
