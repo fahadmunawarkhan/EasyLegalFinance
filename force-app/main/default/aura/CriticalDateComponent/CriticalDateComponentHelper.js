@@ -162,7 +162,8 @@
         return new Promise($A.getCallback(function(resolve, reject){
             let action = component.get('c.saveBusinessUnitCustomSettings');
             action.setParams({
-                BusinessUnit : component.get('v.selectedBusinessUnitFilter')
+                BusinessUnit : component.get('v.selectedBusinessUnitFilter'),
+                CriticalDateName : component.get("v.criticaldatesFilter")
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -239,7 +240,7 @@
         return new Promise($A.getCallback(
             function (resolve, reject){
                 let action = component.get('c.getCriticalDateNames');
-                action.setParams({startDate:component.get('v.startDate'),endDate:component.get('v.endDate'),businessUnit: component.get('v.selectedBusinessUnitFilter')});
+                action.setParams({startDate:component.get('v.startDate'),endDate:component.get('v.endDate'),businessUnit: component.get('v.selectedBusinessUnitFilter'), CriticalDateName : component.get("v.criticaldatesFilter")});
                 action.setCallback(this, function(response){
                     let state = response.getState();
                     if(state === 'SUCCESS'){                        

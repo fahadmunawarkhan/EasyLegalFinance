@@ -32,6 +32,8 @@
     <aura:attribute name="customSetting" type="Object"/>
     
     <aura:attribute name="businessUnitOptions" type="List" />
+    <aura:attribute name="criticaldates" type="List" />
+    <aura:attribute name="criticaldatesFilter" type="String" default="{!v.customSetting.Critical_Dates_Name__c}" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
     
     <div style="background: White !important;">
@@ -115,8 +117,19 @@
                         </div>
                     </div>
                 </lightning:layoutItem>
+                <lightning:layoutItem size="3">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="criticaldatesFilter" label="Critical Dates" value="{!v.criticaldatesFilter}" placeholder="Critical Dates" options="{! v.criticaldates }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large" style="margin-left: 0px !important;">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">

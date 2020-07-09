@@ -7,6 +7,7 @@
         
         
         helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Critical_Date__c','Name__c','criticaldates');
         
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){
