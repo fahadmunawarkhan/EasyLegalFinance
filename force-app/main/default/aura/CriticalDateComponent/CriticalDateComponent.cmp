@@ -2,7 +2,7 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 07-09-2020
+  @last modified on  : 07-10-2020
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
   Modifications Log 
   Ver   Date         Author                               Modification
@@ -122,7 +122,7 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="criticaldatesFilter" label="Critical Dates" value="{!v.criticaldatesFilter}" placeholder="Critical Dates" options="{! v.criticaldates }"/>
+                                    <lightning:combobox aura:id="criticaldatesFilter" label="Critical Date Name" value="{!v.criticaldatesFilter}" placeholder="Critical Dates" options="{! v.criticaldates }"/>
                                 </div>
                             </span>
                         </div>
