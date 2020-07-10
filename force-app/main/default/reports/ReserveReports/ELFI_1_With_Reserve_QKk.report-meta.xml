@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report xmlns="http://soap.sforce.com/2006/04/metadata">
     <columns>
-        <field>Account$BillingAddress</field>
-    </columns>
-    <columns>
         <field>Account$Name</field>
     </columns>
     <columns>
@@ -17,10 +14,6 @@
         <field>Account$Active_Loan_Count__c</field>
     </columns>
     <columns>
-        <aggregateTypes>Sum</aggregateTypes>
-        <field>Account$Outstanding_Balance_With_Reserve_To_Date__c</field>
-    </columns>
-    <columns>
         <field>Account$Date_of_Advance__c</field>
     </columns>
     <columns>
@@ -29,7 +22,22 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Value_at_To_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Reserve_Amount__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Outstanding_Balance_With_Reserve_To_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
         <field>Account$Admin_Fee_as_of_To_Date__c</field>
+    </columns>
+    <columns>
+        <field>Account$BillingAddress</field>
     </columns>
     <columns>
         <field>Account$Reporting_To_Date__c</field>
@@ -38,13 +46,6 @@
     <filter>
         <criteriaItems>
             <column>Account$Active_Loan_Count__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterOrEqual</operator>
-            <value>0</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Account$Outstanding_Balance_With_Reserve_To_Date__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>greaterOrEqual</operator>
@@ -62,11 +63,9 @@
     <showDetails>true</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
-    <sortColumn>Account$AccountNumber</sortColumn>
-    <sortOrder>Asc</sortOrder>
     <timeFrameFilter>
         <dateColumn>Account$Date_of_Advance__c</dateColumn>
-        <endDate>2020-04-27</endDate>
+        <endDate>2019-12-31</endDate>
         <interval>INTERVAL_CUSTOM</interval>
         <startDate>2000-01-01</startDate>
     </timeFrameFilter>

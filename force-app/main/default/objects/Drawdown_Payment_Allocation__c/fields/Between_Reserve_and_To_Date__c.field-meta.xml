@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Between_Reserve_and_To_Date__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND( Transaction_Date__c &gt;  Reserve_Date__c, Transaction_Date__c &lt;=  Reporting_To_Date__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Between Reserve and To Date</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

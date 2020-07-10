@@ -1254,6 +1254,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Exposure</displayNameOverride>
             <field>Reserve_Exposure__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1410,6 +1411,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Payout To Reserve Date</displayNameOverride>
             <field>Value_At_Reserve_Date__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1450,26 +1452,35 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <field>Principal_With_Reserve_To_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Ending_Balance_To_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Accrued Interest To Date</displayNameOverride>
             <field>Accrued_Interest_To_Date_With_Reserve__c</field>
             <table>Opportunity</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Principal Advanced</displayNameOverride>
-            <field>Principal_With_Reserve_To_Date__c</field>
-            <table>Opportunity</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Exposure</displayNameOverride>
-            <field>Ending_Balance_To_Date__c</field>
-            <table>Opportunity</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Payout To Reserve Date</displayNameOverride>
             <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Principal Advanced</displayNameOverride>
+            <field>Non_Repaid_Drawdown_Principal_Total__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Accrued Interest To Reserve Date</displayNameOverride>
+            <field>Interest_Accrued_as_of_Reserve_Date__c</field>
             <table>Opportunity</table>
         </columns>
         <masterLabel>Opportunities</masterLabel>

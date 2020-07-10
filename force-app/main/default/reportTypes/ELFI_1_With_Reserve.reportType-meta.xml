@@ -2,7 +2,7 @@
 <ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
     <baseObject>Account</baseObject>
     <category>accounts</category>
-    <deployed>true</deployed>
+    <deployed>false</deployed>
     <description>Report Type built to aggregate and report on loans at an Account level.</description>
     <label>ELFI 1 With Reserve</label>
     <sections>
@@ -490,6 +490,12 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Value at Reserve Date</displayNameOverride>
+            <field>Value_at_To_Date__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Principal Repaid</displayNameOverride>
             <field>Principal_Repaid_as_of_To_Date__c</field>
             <table>Account</table>
@@ -498,6 +504,12 @@
             <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Reserve Applied</displayNameOverride>
             <field>Is_Reserve_Applied__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Reserve</displayNameOverride>
+            <field>Reserve_Amount__c</field>
             <table>Account</table>
         </columns>
         <columns>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Outstanding_Balance_With_Reserve_To_Date__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(AND(Is_Reserve_Applied__c, Stop_Interest__c, Reporting_To_Date__c &gt;= Reserve_Date__c), MAX(Principal_Non_Repaid_as_of_To_Date__c + Accrued_Interest_as_of_Reserve_Date__c-Interest_Repaid_with_Reserve_To_Date__c, 0.0), Outstanding_Balance_as_of_To_Date__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Outstanding Balance With Reserve To Date</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>
