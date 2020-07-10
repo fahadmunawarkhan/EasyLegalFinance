@@ -89,12 +89,14 @@ public class ReserveHelper {
 	}*/
     
     private static void updateAdvances(List<Id> oppIds, Map<Id, Opportunity> idToOppMap){
-        List<Drawdown__c> advances = [select Id, Opportunity__c, Reserve_Date__c from Drawdown__c where Opportunity__c in :oppIds];
+        List<Drawdown__c> advances = [select Id, Opportunity__c, Reserve_Date__c, Is_Reserve_Applied__c, Stop_Interest__c from Drawdown__c where Opportunity__c in :oppIds];
         List<Drawdown__c> advancesToUpdate = new List<Drawdown__c>();
         for (Drawdown__c advance : advances){
             Opportunity opp = idToOppMap.get(advance.Opportunity__c);
-            if (advance.Reserve_Date__c !=opp.Reserve_Date__c){
+            if ((advance.Reserve_Date__c != opp.Reserve_Date__c) || (advance.Is_Reserve_Applied__c != opp.Is_Reserve_Applied__c) || (advance.Stop_Interest__c != opp.Stop_Interest__c)){
                 advance.Reserve_Date__c = opp.Reserve_Date__c;
+                advance.Is_Reserve_Applied__c = opp.Is_Reserve_Applied__c;
+                advance.Stop_Interest__c = opp.Stop_Interest__c;
                 advancesToUpdate.add(advance);
             }
         }

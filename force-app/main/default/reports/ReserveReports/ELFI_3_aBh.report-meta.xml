@@ -89,20 +89,6 @@
     </columns>
     <filter>
         <criteriaItems>
-            <column>Opportunity$Outstanding_Balance_With_Reserve_To_Date__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterOrEqual</operator>
-            <value>0</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity$Accrued_Interest_To_Date_With_Reserve__c</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterOrEqual</operator>
-            <value>0</value>
-        </criteriaItems>
-        <criteriaItems>
             <column>Opportunity$Reporting_From_Date__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>

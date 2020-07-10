@@ -953,12 +953,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Total Outstanding Balance</displayNameOverride>
-            <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
-            <table>Opportunity</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Outstanding_Days__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1528,14 +1522,20 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Ending Balance</displayNameOverride>
+            <field>Ending_Balance_To_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Accrued Interest To Date</displayNameOverride>
             <field>Accrued_Interest_To_Date_With_Reserve__c</field>
             <table>Opportunity</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Ending Balance</displayNameOverride>
-            <field>Ending_Balance_To_Date__c</field>
+            <displayNameOverride>Total Outstanding Balance</displayNameOverride>
+            <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
             <table>Opportunity</table>
         </columns>
         <masterLabel>Opportunities</masterLabel>

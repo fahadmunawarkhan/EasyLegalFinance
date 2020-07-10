@@ -2,13 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Outstanding_Balance_With_Reserve_To_Date__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(AND(Is_Reserve_Applied__c, Stop_Interest__c), Value_At_Reserve_Date__c, Outstanding_Balance_as_of_To_Date__c)</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Outstanding Balance With Reserve To Date</label>
-    <precision>18</precision>
-    <required>false</required>
-    <scale>2</scale>
+    <summarizedField>Drawdown__c.Outstanding_Balance_With_Reserve_To_Date__c</summarizedField>
+    <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Currency</type>
+    <type>Summary</type>
 </CustomField>
