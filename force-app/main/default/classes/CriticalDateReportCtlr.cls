@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 07-09-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   07-09-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public with sharing class CriticalDateReportCtlr {
 
     // Batch Job
@@ -113,6 +123,7 @@ public with sharing class CriticalDateReportCtlr {
         string filterByBusinessUnit = '';
         string Elfi = 'ELFI';
         string Rhino = 'Rhino';
+        string Seahold = 'Seahold';
         
         if(businessUnit == 'ELFI'){            
             filterByBusinessUnit = 'ELFI';
@@ -120,6 +131,8 @@ public with sharing class CriticalDateReportCtlr {
             filterByBusinessUnit = 'Rhino';
         }else if(businessUnit == 'Consolidated'){            
             filterByBusinessUnit = 'Consolidated';
+        }else if(businessUnit == 'Seahold'){
+            filterByBusinessUnit = 'Seahold';
         }
         
         String strQuery = 'Select Account__c, Name__c, Account__r.Business_Unit__c businessUnit,'+
@@ -130,7 +143,7 @@ public with sharing class CriticalDateReportCtlr {
             'Loan_Status__c != \'Closed - Bad Debt - Making Payments\')'; 
         strQuery += ' AND Date__c >= :startDt AND Date__c <= :endDt';
         strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino)':
+            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino OR Account__r.Business_Unit__c =:Seahold)':
         ' AND Account__r.Business_Unit__c =:filterByBusinessUnit';
         strQuery += ' Group by Account__c, Name__c, Account__r.Business_Unit__c, Account__r.AccountNumber,'+ 
             'Account__r.Name, Date__c';
@@ -138,7 +151,7 @@ public with sharing class CriticalDateReportCtlr {
     }
     
     @AuraEnabled
-    Public static List<String> getCriticalDateNames(String startDate, String endDate, String businessUnit){
+    Public static List<String> getCriticalDateNames(String startDate, String endDate, String businessUnit, String CriticalDateName){
         
         List<String> values = new List<String>();
         
@@ -148,6 +161,7 @@ public with sharing class CriticalDateReportCtlr {
         string filterByBusinessUnit = '';
         string Elfi = 'ELFI';
         string Rhino = 'Rhino';
+        string Seahold = 'Seahold';
         
         if(businessUnit == 'ELFI'){            
             filterByBusinessUnit = 'ELFI';
@@ -155,13 +169,16 @@ public with sharing class CriticalDateReportCtlr {
             filterByBusinessUnit = 'Rhino';
         }else if(businessUnit == 'Consolidated'){            
             filterByBusinessUnit = 'Consolidated';
+        }else if(businessUnit == 'Seahold'){
+            filterByBusinessUnit = 'Seahold';
         }
         
         String strQuery = 'SELECT Name__c FROM Critical_Date__c WHERE Date__c >= :startDt AND Date__c <= :endDt';
         strQuery += ' AND Account__c in (Select AccountId From Opportunity WHERE Loan_Status__c != \'Closed - Paid\' AND Loan_Status__c != \'Closed - Bad Debt\' AND Loan_Status__c != \'Closed - Bad Debt - Making Payments\')';
         strQuery += (filterByBusinessUnit == 'Consolidated') ? 
-            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino)':
+            ' AND (Account__r.Business_Unit__c =:Elfi OR Account__r.Business_Unit__c =:Rhino OR Account__r.Business_Unit__c =:Seahold)':
         ' AND Account__r.Business_Unit__c =:filterByBusinessUnit';
+        strQuery += (CriticalDateName == 'Consolidated') ? '' : ' AND Name__c =: CriticalDateName';
         strQuery += ' Group by Name__c Order by Name__c';
         List<AggregateResult> aggResultList = Database.query(strQuery);
         
@@ -193,13 +210,14 @@ public with sharing class CriticalDateReportCtlr {
     }
     
     @AuraEnabled
-    public static void saveBusinessUnitCustomSettings(String BusinessUnit){
+    public static void saveBusinessUnitCustomSettings(String BusinessUnit, String CriticalDateName){
         try{
             
            // Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getInstance(UserInfo.getUserId());
             Critical_Dates_Report__c fsr = Critical_Dates_Report__c.getOrgDefaults();
             
             fsr.Business_Unit__C = BusinessUnit;
+            fsr.Critical_Dates_Name__c = CriticalDateName;
             
             upsert fsr;
 

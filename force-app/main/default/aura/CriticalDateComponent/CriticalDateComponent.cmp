@@ -1,3 +1,13 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 07-10-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   07-09-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="CriticalDateReportCtlr" >
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -22,10 +32,13 @@
     <aura:attribute name="customSetting" type="Object"/>
     
     <aura:attribute name="businessUnitOptions" type="List" />
+    <aura:attribute name="criticaldates" type="List" />
+    <aura:attribute name="criticaldatesFilter" type="String" default="{!v.customSetting.Critical_Dates_Name__c}" />
     <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
     
+    <div style="background: White !important;">
    <!-- <aura:if isTrue="{!v.showWarning}">-->
-        <lightning:card>
+        <lightning:card class="slds-card_boundary_remove">
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="12">                                
                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
@@ -48,7 +61,7 @@
         </lightning:card>
    <!-- </aura:if> -->
     
-    <lightning:card title="Information" variant="base">
+    <lightning:card title="Information" variant="base" class="slds-card_boundary_remove">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="4">
@@ -90,7 +103,7 @@
             </lightning:layout>
         </div>
     </lightning:card>
-    <lightning:card title="Filter" variant="base">
+    <lightning:card title="Filter" variant="base" class="slds-card_boundary_remove">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="2">
@@ -104,8 +117,19 @@
                         </div>
                     </div>
                 </lightning:layoutItem>
+                <lightning:layoutItem size="3">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
+                                    <lightning:combobox aura:id="criticaldatesFilter" label="Critical Date Name" value="{!v.criticaldatesFilter}" placeholder="Critical Dates" options="{! v.criticaldates }"/>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
                 <lightning:layoutItem size="2">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large">
+                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large slds-m-top_large" style="margin-left: 0px !important;">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
@@ -119,7 +143,7 @@
             </lightning:layout>
         </div>
     </lightning:card>
-    <lightning:card>
+    <lightning:card class="slds-card_boundary_remove">
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
                 <lightning:button aura:id="printExcel" class="slds-theme_neutral" iconPosition="left" 
@@ -131,7 +155,7 @@
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card> 
-    <lightning:card>
+    <lightning:card class="slds-card_boundary_remove">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
                 <lightning:layoutItem size="9">
@@ -272,6 +296,7 @@
             </div>
         </div>
     </aura:if>
+</div>
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">
         <div class="demo-only demo--inverse" style="height: 6rem;">
