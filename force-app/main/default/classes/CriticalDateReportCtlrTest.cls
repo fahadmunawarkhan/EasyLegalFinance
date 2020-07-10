@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 07-10-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   07-10-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 @isTest
 public with sharing class CriticalDateReportCtlrTest {
     
@@ -73,14 +83,14 @@ public with sharing class CriticalDateReportCtlrTest {
         CriticalDateReportCtlr.getCriticalDateList(''+Date.today(), ''+Date.today(), 'ELFI');
         CriticalDateReportCtlr.getCriticalDateList(''+Date.today(), ''+Date.today(), 'Rhino');
         CriticalDateReportCtlr.getCriticalDateList(''+Date.today(), ''+Date.today(), 'Consolidated');
-        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'ELFI');
-        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'Rhino');
-        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'Consolidated');
+        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'ELFI', 'Consolidated');
+        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'Rhino', 'Consolidated');
+        CriticalDateReportCtlr.getCriticalDateNames(''+Date.today(), ''+Date.today().addDays(6), 'Consolidated', 'Consolidated');
         CriticalDateReportCtlr.getCustomSetting();
         
         CriticalDateReportCtlr.getPickListValues('Account', 'Business_Unit__c');
         
-        CriticalDateReportCtlr.saveBusinessUnitCustomSettings('ELFI');
+        CriticalDateReportCtlr.saveBusinessUnitCustomSettings('ELFI', 'A/B status');
         
         Date dt = Date.today();
         try{
