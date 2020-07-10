@@ -33,9 +33,6 @@
             if (state === 'SUCCESS') {
                 component.set("v.spinner", false);
                 component.set("v.accountObj", response.getReturnValue());
-                component.set("v.JudgementCheckBool", (component.get("v.JudgementCheck") == 'Yes' ? true : false));
-                component.set("v.CollectionsBool", (component.get("v.Collections") == 'Yes' ? true : false));
-                component.set("v.NoticeAssignmentCheckBool", (component.get("v.NoticeAssignmentCheck") == 'Yes' ? true : false));
                 component.set("v.selectedReasonForLTV", response.getReturnValue().Reason_for_LTV__c);
                 this.setReasonForLTVOptions(component);
 
@@ -1596,27 +1593,6 @@
                 action.setCallback(this, function(response) {
                     var state = response.getState();
                     if (state === 'SUCCESS') {
-                        resolve(response.getReturnValue());
-                    } else if (state === 'ERROR') {
-                        reject(response.getError());
-                    }
-                });
-                $A.enqueueAction(action);
-            }
-        ));
-    },
-    CreateTasksNAJudgementCollection: function(component) {
-        let action = component.get("c.CreateTasksForNoticeAssignJudgementCollection");
-        return new Promise($A.getCallback(
-            function(resolve, reject) {
-                action.setParams({
-                    accountId: component.get("v.recordId"),
-                    AccountObj: component.get("v.accountObj")
-                });
-                action.setCallback(this, function(response) {
-                    var state = response.getState();
-                    if (state === 'SUCCESS') {
-                        console.log(response.getReturnValue());
                         resolve(response.getReturnValue());
                     } else if (state === 'ERROR') {
                         reject(response.getError());

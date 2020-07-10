@@ -106,13 +106,6 @@
         component.set("v.paymentSearchTypeSelected", "Payout");
         component.set("v.paymentSearchDisabled", false);
     },
-    onCheckCondition: function(component, event, helper) {
-        let ConditionValue = event.getSource().get("v.value");
-        let ConditionId = event.getSource().getLocalId();
-        component.set('v.' + ConditionId + 'Bool', ((ConditionValue == 'Yes') ? true : false));
-        component.set('v.' + ConditionId, ((ConditionValue == 'Yes') ? 'Yes' : 'No'));
-        console.log(component.get("v." + ConditionId));
-    },
     onfocusAccountTab: function(component, event, helper) {
         helper.getAccountInfo(component);
         helper.getLatestContact(component);
@@ -251,18 +244,6 @@
     },
 
     saveAll: function(component, event, helper) {
-        var allValid = true;
-        if (component.get("v.NoticeAssignmentCheckBool") || component.get("v.JudgementCheckBool") || component.get("v.CollectionsBool")) {
-            allValid = [].concat(component.find('inputdate')).reduce(function(validSoFar, inputCmp) {
-                inputCmp.showHelpMessageIfInvalid();
-                return validSoFar && !inputCmp.get('v.validity').valueMissing;
-            }, true);
-        }
-
-        if (allValid) {
-            (component.get("v.NoticeAssignmentCheckBool") == false ? component.get("v.accountObj").Assignment_1st_Notice__c = component.get("v.accountObj").Assignment_Follow_Up__c = null : '');
-            (component.get("v.JudgementCheckBool") == false ? component.get("v.accountObj").Judgement_Date__c = null : '');
-            (component.get("v.CollectionsBool") == false ? component.get("v.accountObj").Collections_Date__c = null : '');
 
             let businessUnit = component.get("v.accountObj.Business_Unit__c");
 
@@ -298,9 +279,6 @@
                     }
                 );
             }
-        } else {
-            helper.showToast('ERROR', 'Please select the date.', 'Error');
-        }
 
 
         /*

@@ -1,10 +1,10 @@
 <!--
   @File Name          : CustomerViewComponent.cmp
   @Description        : 
-  @Author             : fahad.khan@toptal.com
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 30/06/2020, 4:42:26 pm
+  @Last Modified On   : 07-10-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -40,12 +40,6 @@
     <aura:attribute name="criticalDateName" type="List" default="[]" />
     <aura:attribute name="oppIdList" type="Id[]" />
     <aura:attribute name="createdPaymentList" type="List" default="[]" />      
-    <aura:attribute name="NoticeAssignmentCheck" type="String" default="{!v.accountObj.Notice_of_assignment__c}" />
-    <aura:attribute name="NoticeAssignmentCheckBool" type="boolean" default="false" />
-    <aura:attribute name="JudgementCheck" type="String" default="{!v.accountObj.Judgement__c}" />
-    <aura:attribute name="JudgementCheckBool" type="boolean" default="false" />
-    <aura:attribute name="Collections" type="String" default="{!v.accountObj.Collections__c}" />
-    <aura:attribute name="CollectionsBool" type="boolean" default="false" />
     <aura:attribute name="notes" type="Object[]" />
     <aura:attribute name="paymentActionsMap" type="Map" default="{}" />
     <aura:attribute name="paymentActionsValidationMap" type="Map" default="{}" />
@@ -492,103 +486,6 @@
                                         </table>
                                     </lightning:card>
                                 </div>
-                                <div class="slds-m-bottom_small slds-m-left_xx-large">
-                                    <!-- <<<<<<=========== Notice of assignment, Judgement, Collection ========>>>>> -->
-                                    <aura:if isTrue="{!v.currentUser.Assign_Details__c}">
-                                        <!-- <<<<<<======= Notice of Assignment ========>>>>>> -->
-                                        <div style="margin-top:40px;">
-                                            <lightning:card title="Notice of Assignment" iconName="standard:case" variant="base">
-                                                <aura:set attribute="actions">
-                                                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveAll}" />
-                                                </aura:set>
-                                                <lightning:layout>
-                                                    <lightning:layoutItem size="5">
-                                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-small">
-                                                            <span class="slds-form-element__label">Notice of assignment</span>
-                                                            <div class="slds-form-element__control">
-                                                                <span class="">
-                                                    <div class="slds-form-element__control">
-                                                        <lightning:buttonGroup>
-                                                        <lightning:button variant="{!if(v.NoticeAssignmentCheckBool, 'success', 'Neutral' )}" aura:id="NoticeAssignmentCheck" label="Yes" value="Yes" onclick="{!c.onCheckCondition}" class="bttn-yes" disabled="" />
-                                                        <lightning:button variant="{!if(v.NoticeAssignmentCheckBool, 'Neutral', 'destructive' )}" aura:id="NoticeAssignmentCheck" label="No" value="No" onclick="{!c.onCheckCondition}" class="bttn-no" disabled="" />
-                                                        <!--<lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />-->
-                                                        </lightning:buttonGroup>
-                                                    </div>
-                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </lightning:layoutItem>
-                                                    <lightning:layoutItem size="7">
-                                                        <aura:if isTrue="{!v.NoticeAssignmentCheckBool}">
-                                                            <lightning:input type="date" name="input2" aura:id="inputdate" label="1st Notice" value="{!v.accountObj.Assignment_1st_Notice__c}" required="true" />
-                                                            <lightning:input type="date" name="input2" aura:id="inputdate" label="Follow Up" value="{!v.accountObj.Assignment_Follow_Up__c}" required="true" />
-                                                        </aura:if>
-                                                    </lightning:layoutItem>
-                                                </lightning:layout>
-                                            </lightning:card>
-                                        </div>
-                                        <!-- <<<<<<======= end Notice of Assignment ========>>>>>> -->
-                                        <!-- <<<<<<======= Judgment ========>>>>>> -->
-                                        <div style="margin-top:-9px !important;">
-                                            <lightning:card title="Judgement" iconName="standard:case" variant="base">
-                                                <lightning:layout>
-                                                    <lightning:layoutItem size="5">
-                                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-small">
-                                                            <span class="slds-form-element__label">Judgement</span>
-                                                            <div class="slds-form-element__control">
-                                                                <span class="">
-                                                    <div class="slds-form-element__control">
-                                                        <lightning:buttonGroup>
-                                                        <lightning:button variant="{!if(v.JudgementCheckBool, 'success', 'Neutral' )}" aura:id="JudgementCheck" label="Yes" value="Yes" onclick="{!c.onCheckCondition}" class="bttn-yes" disabled="" />
-                                                        <lightning:button variant="{!if(v.JudgementCheckBool, 'Neutral', 'destructive' )}" aura:id="JudgementCheck" label="No" value="No" onclick="{!c.onCheckCondition}" class="bttn-no" disabled="" />
-                                                        <!--<lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />-->
-                                                        </lightning:buttonGroup>
-                                                    </div>
-                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </lightning:layoutItem>
-                                                    <lightning:layoutItem size="7">
-                                                        <aura:if isTrue="{!v.JudgementCheckBool}">
-                                                            <lightning:input type="date" name="input2" aura:id="inputdate" label="Judgement Date" value="{!v.accountObj.Judgement_Date__c}" required="true" />
-                                                        </aura:if>
-                                                    </lightning:layoutItem>
-                                                </lightning:layout>
-                                            </lightning:card>
-                                        </div>
-                                        <!-- <<<<<<======= end Judgment ========>>>>>> -->
-                                        <!-- <<<<<<======= Collections ========>>>>>> -->
-                                        <div style="margin-top:-9px !important;">
-                                            <lightning:card title="Collections" iconName="standard:case" variant="base">
-                                                <lightning:layout>
-                                                    <lightning:layoutItem size="5">
-                                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-small">
-                                                            <span class="slds-form-element__label">Collections</span>
-                                                            <div class="slds-form-element__control">
-                                                                <span class="">
-                                                                    <div class="slds-form-element__control">
-                                                                        <lightning:buttonGroup>
-                                                                        <lightning:button variant="{!if(v.CollectionsBool, 'success', 'Neutral' )}" aura:id="Collections" label="Yes" value="Yes" onclick="{!c.onCheckCondition}" class="bttn-yes" disabled="" />
-                                                                        <lightning:button variant="{!if(v.CollectionsBool, 'Neutral', 'destructive' )}" aura:id="Collections" label="No" value="No" onclick="{!c.onCheckCondition}" class="bttn-no" disabled="" />
-                                                                        <!--<lightning:input variant="label-hidden" type="checkbox" checked="{!v.oppObj.Restrict_Communication__c}" />-->
-                                                                        </lightning:buttonGroup>
-                                                                    </div>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </lightning:layoutItem>
-                                                    <lightning:layoutItem size="7">
-                                                        <aura:if isTrue="{!v.CollectionsBool}">
-                                                            <lightning:input type="date" name="input2" aura:id="inputdate" label="Collection Date" value="{!v.accountObj.Collections_Date__c}" required="true" />
-                                                        </aura:if>
-                                                    </lightning:layoutItem>
-                                                </lightning:layout>
-                                            </lightning:card>
-                                        </div>
-                                        <!-- <<<<<<======= end Collections ========>>>>>> -->
-                                    </aura:if>
-                                </div>
-                                <!-- <<<<<<=========== Notice of assignment, Judgement, Collection ========>>>>> -->
                             </lightning:layoutItem>
                         </lightning:layout>
                     </div>
