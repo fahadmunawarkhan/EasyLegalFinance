@@ -24,7 +24,9 @@ public with sharing class OpportunityTriggerHandler {
             for(Assessment_Provider_Schedule__c aps : [Select Id, Lawyer__c, Assessment_Provider__c, Discount__c, Rebate_Discount__c, Rebate_Period__c
                                                        FROM Assessment_Provider_Schedule__c 
                                                        WHERE Assessment_Provider__c in :assessmentProviderIds
-                                                       AND Lawyer__c in :lawyerIds order by CreatedDate asc]){
+                                                       AND Assessment_Provider__c != null
+                                                       AND Lawyer__c in :lawyerIds
+                                                       AND Lawyer__c != null order by CreatedDate asc]){
                                                            discountscheduleMap.put(aps.Assessment_Provider__c + '-' + aps.Lawyer__c, aps);
                                                        }
             
@@ -114,6 +116,7 @@ public with sharing class OpportunityTriggerHandler {
                                           AND StageName = 'Closed With Loan'
                                           AND Stage_Status__c = 'Active'
                                           AND Lawyer__c in :lawyerIds
+                                          AND Lawyer__c != null
                                           GROUP By Lawyer__c]){
                                               lawyersToUpdate.add(
                                                   new Contact(
@@ -137,6 +140,7 @@ public with sharing class OpportunityTriggerHandler {
                                           AND Stage_Status__c = 'Active'
                                           AND StageName = 'Closed With Loan'
                                           AND Lawyer__c in :lawyerIds
+                                          AND Lawyer__c != null
                                           GROUP By Lawyer__c]){
                                               lawyersToUpdate.add(
                                                   new Contact(
@@ -159,6 +163,7 @@ public with sharing class OpportunityTriggerHandler {
                                           WHERE Type_of_Loan__c = 'Assessment'
                                           AND Stage_Status__c = 'Invoice Pre-Approved'
                                           AND Lawyer__c in :lawyerIds
+                                          AND Lawyer__c != null
                                           GROUP By Lawyer__c]){
                                               lawyersToUpdate.add(
                                                   new Contact(
@@ -170,7 +175,7 @@ public with sharing class OpportunityTriggerHandler {
         if(!lawyersToUpdate.isEmpty())
             update lawyersToUpdate;
     }
-
+    
     public static void updateLoanStatus(List<Opportunity> oppList, Map<Id,Opportunity> oldMap){
         for (Opportunity opp : oppList){
             if ((opp.Stage_Status__c != oldMap.get(opp.Id).Stage_Status__c) && (opp.Stage_Status__c == 'Active' || opp.Stage_Status__c == 'Active - Collections')){
