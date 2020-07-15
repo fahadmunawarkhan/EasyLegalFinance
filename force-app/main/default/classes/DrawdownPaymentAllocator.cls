@@ -1,4 +1,5 @@
 public class DrawdownPaymentAllocator {
+    public static List<Id> idsToDelete = new List<Id>();
     public static Set<Id> processedAdvancesIds = new Set<Id>();    
     public static void allocate(Boolean isInsert, Map<Id, Drawdown__c> oldDrawdownsMap, List<Drawdown__c> newDrawdowns){
         updatePayoutDate(isInsert, oldDrawdownsMap, newDrawdowns);        
@@ -140,7 +141,7 @@ public class DrawdownPaymentAllocator {
         }
         if (!oppIds.isEmpty()){           
             List<Id> unallocatedPaymentIds = new List<Id>();
-            List<Opportunity> opps = [select Id, Payout_Date__c, Oldest_Unallocated_Payment__c, Oldest_Unallocated_Payment__r.Date__c from Opportunity where Id in :oppIds and Oldest_Unallocated_Payment__c != null];
+            List<Opportunity> opps = [select Id, Payout_Date__c, Oldest_Unallocated_Payment__c, Oldest_Unallocated_Payment__r.Date__c from Opportunity where Id in :oppIds and Oldest_Unallocated_Payment__c != null and Oldest_Unallocated_Payment__c not in :idsToDelete];
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
             Map<Id, Date> oppsDates = new Map<Id, Date>();
             Map<Id, Date> oppsOldDates = new Map<Id, Date>();

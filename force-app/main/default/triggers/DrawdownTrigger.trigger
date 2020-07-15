@@ -34,6 +34,7 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
         // As a work around, we will delete the Detail records directly
         List <ID> toDel = New List<ID>{};
         toDel.addAll(trigger.oldMap.keySet());
+        DrawdownPaymentAllocator.idsToDelete.addAll(toDel);
         DeletePaymentAllocations.DeletePaymentAllocationsFromPayment(toDel);
     }
     if(trigger.isAfter && (Trigger.isInsert || trigger.isUpdate || trigger.isDelete) /*&& !TriggerHelper.runOnce('DrawdownTrigger')*/ ){
