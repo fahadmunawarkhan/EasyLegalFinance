@@ -59,7 +59,7 @@ public with sharing class LawSocietyReviewController {
         String soqlQuery = 'SELECT Opportunity__r.Lawyer__c lawyerId, COUNT_DISTINCT(Opportunity__r.AccountId) file, SUM(Amount__c) amount FROM Drawdown__c WHERE Date__c >= :sDate AND Date__c <= :eDate';
        	soqlQuery += !String.isEmpty(searchByName) && searchByName != null? ' AND (Opportunity__r.Lawyer__r.Name LIKE \'%' + String.escapeSingleQuotes(searchByName) + '%\' OR Opportunity__r.Lawyer__r.Account.Name LIKE \'%' + String.escapeSingleQuotes(searchByName) + '%\')' : '';
         soqlQuery += businessUnit == 'Consolidated' ? ' AND (Opportunity__r.Account.Business_Unit__c = \'ELFI\' OR Opportunity__r.Account.Business_Unit__c = \'Rhino\')' : ' AND Opportunity__r.Account.Business_Unit__c = \''+businessUnit+'\'';
-        soqlQuery += ' AND Opportunity__r.StageName = \'Closed With Loan\' AND (Payment_Method__c = \'e-Transfer\' OR Payment_Method__c = \'Cheque\' OR Payment_Method__c = \'Admin Fee\') GROUP BY Opportunity__r.Lawyer__c';
+        soqlQuery += ' AND Opportunity__r.StageName = \'Closed With Loan\' AND Opportunity__r.Stage_Status__c LIKE \'%Active%\' AND (Payment_Method__c = \'e-Transfer\' OR Payment_Method__c = \'Cheque\' OR Payment_Method__c = \'Admin Fee\') GROUP BY Opportunity__r.Lawyer__c';
         soqlQuery += ' ORDER BY ' + field + ' ' + direction + ' NULLS LAST';
         
         List<AggregateResult> aggrQueryResult = Database.query(soqlQuery);
