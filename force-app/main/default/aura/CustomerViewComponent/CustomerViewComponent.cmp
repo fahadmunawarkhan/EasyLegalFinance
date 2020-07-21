@@ -1,10 +1,10 @@
 <!--
   @File Name          : CustomerViewComponent.cmp
   @Description        : 
-  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 07-10-2020
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 07-21-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -368,7 +368,9 @@
                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                     <div class="slds-form-element__control" style="margin-top:-45px;">
                                         <span class="">
-                                            <lightning:input class="field" value="{!v.conObj.MailingState}" tabindex="16" />
+                                            <lightning:combobox label="" name="MailingState" value="{!v.conObj.MailingState}" 
+                                                                placeholder="--None--" options="{! v.provinceResidencyOptions }" tabindex="16" />
+                                            <!--<lightning:input class="field" value="{!v.conObj.MailingState}" tabindex="16" />-->
                                         </span>
                                     </div>
                                 </div>
