@@ -119,6 +119,14 @@ public class ReserveHelper {
         	update allocationsToUpdate;
 	}
     
+    public static void notifyUponPayment(String accountId){          
+        Account account = [select Id, Name, Is_Reserve_Applied__c from Account where Id=:accountId];            
+        if (account.Is_Reserve_Applied__c){            
+            String accountLink = URL.getSalesforceBaseUrl().toExternalForm() + '/lightning/r/Account/' + accountId + '/view';            
+            MailHelper.sendSingleMessage('info@easylegal.ca', getEmailRecipients(), 'Payment received on account marked "Reserve"', 'Payment has been received on account marked "Reserve". Follow the link below to access the account: ' + accountLink, true);
+        }
+    }
+    
     public static void createTaskUponPayment(String accountId){          
         Account account = [select Id, Name, Is_Reserve_Applied__c from Account where Id=:accountId];            
         if (account.Is_Reserve_Applied__c){            
@@ -138,5 +146,12 @@ public class ReserveHelper {
             if (!tasks.isEmpty())
             	insert tasks;
         }
+    }
+    
+    public static List<String> getEMailRecipients(){
+        List<ELFI_Accounting_Email_Address__mdt> emailAddresses = [select Email__c from ELFI_Accounting_Email_Address__mdt where DeveloperName='ELFI_Accounting_Email_Address'];
+        if (!emailAddresses.isEmpty())
+            return new List<String>{emailAddresses[0].Email__c};
+        else return new List<String>();
     }
 }
