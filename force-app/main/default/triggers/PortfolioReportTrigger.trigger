@@ -14,6 +14,12 @@ trigger PortfolioReportTrigger on Portfolio_Report__c (before insert, after inse
         if (pr.size() >0 ){
             trigger.new[0].addError('A Portfolio report is already in progress.  Please submit one report at a time.');
         }else{
+            List<AsyncApexJob> currentJobs = PayoutJobsHelper.getCurrentPayoutJobs();
+            if(!currentJobs.isEmpty()){                
+                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
+                m += '\nPlease try again later.';
+                trigger.new[0].addError(m);
+            }
             trigger.new[0].status__c='In Progress';
         }
     }

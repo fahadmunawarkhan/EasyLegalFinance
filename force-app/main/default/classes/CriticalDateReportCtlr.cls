@@ -86,6 +86,7 @@ public with sharing class CriticalDateReportCtlr {
     public static Id executeBatchJob(String startDate, String endDate){
         try{
             abortBatchJobs();
+            PayoutJobsHelper.checkJobs();
             Critical_Dates_Report__c c = Critical_Dates_Report__c.getOrgDefaults();
             c.Start_Date__c = !String.isEmpty(startDate) && startDate != null? Date.valueOf(startDate) : c.Start_Date__c;
             c.End_Date__c = !String.isEmpty(endDate) && endDate != null? Date.valueOf(endDate) : c.End_Date__c;
