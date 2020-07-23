@@ -1482,7 +1482,7 @@ return allOpts;*/
             if (isLastPayment){
                 deletePaymentTasks(accountId);
                 if (action == 'Closed Paid' || action == 'Partial Payment')                
-                	ReserveHelper.createTaskUponPayment(accountId);
+                	ReserveHelper.notifyUponPayment(accountId);
             }
             deletePaymentApplyingErrorTasks(accountId, oppId);
             System.debug('AP1: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
