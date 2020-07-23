@@ -45,10 +45,10 @@
     <description>ELFI 1 With Reserve</description>
     <filter>
         <criteriaItems>
-            <column>Account$Active_Loan_Count__c</column>
+            <column>Account$Outstanding_Balance_With_Reserve_To_Date__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
-            <operator>greaterOrEqual</operator>
+            <operator>greaterThan</operator>
             <value>0</value>
         </criteriaItems>
     </filter>
@@ -65,7 +65,7 @@
     <showSubTotals>true</showSubTotals>
     <timeFrameFilter>
         <dateColumn>Account$Date_of_Advance__c</dateColumn>
-        <endDate>2019-12-31</endDate>
+        <endDate>2020-12-31</endDate>
         <interval>INTERVAL_CUSTOM</interval>
         <startDate>2000-01-01</startDate>
     </timeFrameFilter>

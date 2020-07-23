@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Interest_Repaid_with_Reserve_To_Date__c</fullName>
+    <externalId>false</externalId>
+    <label>Interest Repaid with Reserve To Date</label>
+    <summarizedField>Drawdown__c.Interest_Repaid_with_Reserve_To_Date__c</summarizedField>
+    <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

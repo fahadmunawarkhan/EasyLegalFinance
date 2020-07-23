@@ -14,11 +14,31 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>Opportunity$Non_Repaid_Drawdown_Principal_Total__c</field>
+        <field>Opportunity$Principal_Advanced_To_Reserve_Date__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Opportunity$Interest_Accrued_as_of_Reserve_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$FV_at_Freeze_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Advances_after_Reserve_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Payments_after_Reserve_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Non_Repaid_Drawdown_Principal_Total__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Opportunity$Reserve_Non_Repaid_Interest__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>

@@ -26,7 +26,8 @@ public class ReserveHelper {
             updatePaymentAllocations(oppIds, idToOppMap);
             //updateOppsWithReserveApplied(oppWithReserveIds);
             opps = [select Is_Reserve_Applied__c, Payout_Date__c, Reserve_Date__c,Interest_Accrued_as_of_Payout_Date__c, Drawdown_Principal_Total__c,Non_Repaid_Drawdown_Principal_Total__c,
-                     Interest_Accrued_as_of_Reserve_Date__c, Reserve_Exposure__c, Reserve_Amount__c, Stop_Interest__c from Opportunity where Id=:oppIds];
+                     Interest_Accrued_as_of_Reserve_Date__c, Reserve_Non_Repaid_Interest__c, Reserve_Exposure__c, Reserve_Amount__c, Stop_Interest__c, Payments_after_Reserve_Date__c,
+                    Advances_after_Reserve_Date__c, Principal_Advanced_To_Reserve_Date__c, FV_at_Freeze_Date__c, Value_At_Reserve_Date__c from Opportunity where Id=:oppIds];
             return opps;
         }
         return new List<Opportunity>();

@@ -263,11 +263,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>IGD__Collection_Id__c</field>
-            <table>Opportunity</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Conga_Doc_Error__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1411,7 +1406,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Payout To Reserve Date</displayNameOverride>
+            <displayNameOverride>FV Before Reserve</displayNameOverride>
             <field>Value_At_Reserve_Date__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1479,8 +1474,37 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Accrued Interest To Reserve Date</displayNameOverride>
+            <displayNameOverride>Accrued Interest to Freeze Date</displayNameOverride>
             <field>Interest_Accrued_as_of_Reserve_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Accrued Interest</displayNameOverride>
+            <field>Reserve_Non_Repaid_Interest__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Payments after Freeze Date</displayNameOverride>
+            <field>Payments_after_Reserve_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Advances after Freeze Date</displayNameOverride>
+            <field>Advances_after_Reserve_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>FV_at_Freeze_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Principal Advanced To Freeze Date</displayNameOverride>
+            <field>Principal_Advanced_To_Reserve_Date__c</field>
             <table>Opportunity</table>
         </columns>
         <masterLabel>Opportunities</masterLabel>

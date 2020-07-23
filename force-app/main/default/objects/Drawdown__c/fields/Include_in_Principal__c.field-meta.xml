@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Include_in_Principal__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND(OR(ISPICKVAL( Payment_Method__c , &apos;Admin Fee&apos;), ISPICKVAL( Payment_Method__c , &apos;Cheque&apos;), ISPICKVAL( Payment_Method__c , &apos;e-Transfer&apos;), ISPICKVAL( Payment_Method__c , &apos;Other&apos;)),  NOT(ISPICKVAL(Reference_Notes__c, &apos;Refund&apos;)) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Include in Principal</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
