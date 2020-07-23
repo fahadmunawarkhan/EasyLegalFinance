@@ -11,6 +11,9 @@
         <label>myDecision</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision4</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myRule_1</name>
@@ -28,6 +31,34 @@
             <label>Just had SP Set</label>
         </rules>
     </decisions>
+    <decisions>
+        <processMetadataValues>
+            <name>index</name>
+            <value>
+                <numberValue>1.0</numberValue>
+            </value>
+        </processMetadataValues>
+        <name>myDecision4</name>
+        <label>myDecision4</label>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>myRule_5</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_5</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_5_A1</targetReference>
+            </connector>
+            <label>New Drawdown</label>
+        </rules>
+    </decisions>
     <formulas>
         <processMetadataValues>
             <name>originalFormula</name>
@@ -35,7 +66,7 @@
                 <stringValue>IF(ISBLANK([Drawdown__c].Scheduled_Payment__c.First_Sent_to_Bank_Date__c), DATETIMEVALUE([Drawdown__c].Date__c) , [Drawdown__c].Scheduled_Payment__c.First_Sent_to_Bank_Date__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_4156185143</name>
+        <name>formula_2_myRule_1_A1_2128597507</name>
         <dataType>DateTime</dataType>
         <expression>IF(ISBLANK({!myVariable_current.Scheduled_Payment__r.First_Sent_to_Bank_Date__c}), DATETIMEVALUE({!myVariable_current.Date__c}) , {!myVariable_current.Scheduled_Payment__r.First_Sent_to_Bank_Date__c})</expression>
     </formulas>
@@ -46,7 +77,7 @@
                 <stringValue>IF(ISBLANK([Drawdown__c].Scheduled_Payment__c.Sent_to_Bank_Date__c), DATETIMEVALUE([Drawdown__c].Date__c), [Drawdown__c].Scheduled_Payment__c.Sent_to_Bank_Date__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_6411981272</name>
+        <name>formula_3_myRule_1_A1_4246247082</name>
         <dataType>DateTime</dataType>
         <expression>IF(ISBLANK({!myVariable_current.Scheduled_Payment__r.Sent_to_Bank_Date__c}), DATETIMEVALUE({!myVariable_current.Date__c}), {!myVariable_current.Scheduled_Payment__r.Sent_to_Bank_Date__c})</expression>
     </formulas>
@@ -71,7 +102,18 @@ NOT(ISBLANK({!myVariable_current.Scheduled_Payment__c})),
 NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_current.Id})
 )</expression>
     </formulas>
-    <interviewLabel>Drawdown_Create_and_Edit_Handler-5_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>ISNEW()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_5</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW()</expression>
+    </formulas>
+    <interviewLabel>Drawdown_Create_and_Edit_Handler-2_InterviewLabel</interviewLabel>
     <label>Drawdown Create and Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -127,6 +169,9 @@ NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_curren
         <label>Update SP</label>
         <locationX>100</locationX>
         <locationY>200</locationY>
+        <connector>
+            <targetReference>myDecision4</targetReference>
+        </connector>
         <filters>
             <processMetadataValues>
                 <name>implicit</name>
@@ -245,7 +290,7 @@ NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_curren
             </processMetadataValues>
             <field>First_Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_4156185143</elementReference>
+                <elementReference>formula_2_myRule_1_A1_2128597507</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -317,7 +362,7 @@ NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_curren
             </processMetadataValues>
             <field>Sent_to_Bank_Date__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_6411981272</elementReference>
+                <elementReference>formula_3_myRule_1_A1_4246247082</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -357,6 +402,158 @@ NOT({!myVariable_current.Scheduled_Payment__r.Drawdown__c} = {!myVariable_curren
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>extraTypeInfo</name>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[Drawdown__c]</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
+        </processMetadataValues>
+        <name>myRule_5_A1</name>
+        <label>Populate Reserve Fields</label>
+        <locationX>500</locationX>
+        <locationY>200</locationY>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Boolean</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Is Reserve Applied</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Is_Reserve_Applied__c</field>
+            <value>
+                <elementReference>myVariable_current.Opportunity__r.Is_Reserve_Applied__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Reserve Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Reserve_Date__c</field>
+            <value>
+                <elementReference>myVariable_current.Opportunity__r.Reserve_Date__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Boolean</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Stop Interest</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Stop_Interest__c</field>
+            <value>
+                <elementReference>myVariable_current.Opportunity__r.Stop_Interest__c</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Drawdown__c</object>
     </recordUpdates>
     <startElementReference>myDecision</startElementReference>
     <status>Active</status>

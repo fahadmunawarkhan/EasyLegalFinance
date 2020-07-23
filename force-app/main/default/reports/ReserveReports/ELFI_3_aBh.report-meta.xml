@@ -63,7 +63,7 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>Opportunity$Accrued_Interest_To_Date_With_Reserve__c</field>
+        <field>Opportunity$Reserve_Non_Repaid_Interest_To_Date__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Value_At_Reserve_Date__c</fullName>
+    <fullName>Reserve_Non_Repaid_Interest__c</fullName>
     <externalId>false</externalId>
-    <formula>Non_Repaid_Drawdown_Principal_Total__c + Reserve_Non_Repaid_Interest__c</formula>
+    <formula>Interest_Accrued_as_of_Reserve_Date__c-Interest_Repaid_After_Reserve_Date__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Value At Reserve Date</label>
+    <label>Reserve Non Repaid Interest</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>
