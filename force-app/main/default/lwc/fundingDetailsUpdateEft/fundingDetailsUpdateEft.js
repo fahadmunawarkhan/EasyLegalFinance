@@ -15,11 +15,17 @@ import {
     generateObjectFromDraftValue
 } from 'c/fundingDetailsUtils';
 //import generateDrawdowns from '@salesforce/apex/ScheduledPaymentHelper.generateDrawdowns';
+import getCWBSheetNumbers from '@salesforce/apex/FundingDetailsComponentCtlr.getCWBSheetNumbers';
+import getSchedulePayments from '@salesforce/apex/FundingDetailsComponentCtlr.getSchedulePayments';
 import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import moveToProcessStep from '@salesforce/apex/FundingDetailsComponentCtlr.moveToProcessStep';
 
 export default class FundingDetailsUpdateEft extends LightningElement {
+    cwbSelected = true;
+    fileNumbersOptions = [
+        {label: 'All', value: 'All'}
+    ];
     _filters = {
         preset: 'all'
     }
@@ -32,6 +38,23 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         if (this.filterInitilized && this.resourcesInitialized) {
             this.refresh();
         }
+    }
+
+    @api fileTypeValue = 'CWB - EFT';
+    get options() {
+        return [
+            { label: 'TD - EFT', value: 'TD - EFT' },
+            { label: 'CWB - EFT', value: 'CWB - EFT' }
+        ];
+    }
+
+    @api selectedFileNumber = 'All';
+    get fileNumbersOptions() {
+        return fileNumbersOptions;
+    }
+
+    set setFileNumbersOptions(opts) {
+        fileNumbersOptions = opts;
     }
 
     @track groupedPayments;
@@ -52,7 +75,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
             this.permissions = result.data;
         }
     }
-
+    
     @track flattenedList;
     @track loading = true;
     @track errors;
@@ -74,6 +97,24 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         }
     }
 
+    handleFileTypeChange(event){
+        this.fileTypeValue = event.detail.value;
+        this.selectedFileNumber = 'All';
+        if(this.fileTypeValue == 'CWB - EFT'){
+            this.cwbSelected = true;
+        }else{
+            this.cwbSelected = false;
+            this.selectedFileNumber = '';
+        }
+        this.refresh();
+    }
+
+    handleFileNumberChange(event){
+        this.selectedFileNumber = event.detail.value;
+        console.log('selectedFileNumber ' + this.selectedFileNumber)
+        this.refresh();
+    }
+
     @api refresh() {
         this.loading = true;
         let options = {
@@ -82,32 +123,65 @@ export default class FundingDetailsUpdateEft extends LightningElement {
             workflowStage: 'updateEFTInfo',
             dateField: 'Sent_to_Bank_Date__c'
         };
-        getScheduledPaymentsWithOpportunities(options)
+        getCWBSheetNumbers(options).then(result => {
+            let opts = [];
+            opts.push({label : 'All', value: 'All'});
+            console.log(JSON.stringify(result));
+            for(let i = 0; i<result.length; i++){
+                if(result[i] != null)
+                    opts.push({label : result[i], value: result[i]})
+            }
+
+            this.fileNumbersOptions = opts;
+
+            let options = {
+                startDate: this.filters.startDate,
+                endDate: this.filters.endDate,
+                workflowStage: 'updateEFTInfo',
+                dateField: 'Sent_to_Bank_Date__c',
+                fileType: this.fileTypeValue,
+                fileNumber: this.selectedFileNumber
+            };
+
+            getScheduledPaymentsWithOpportunities(options)
             .then(result => {
                 this.data = result;
-                combineData(this.data)
-                    .then(combinedData => {
-                        this.spList = combinedData.spList;
-                        this.oppMap = combinedData.oppMap;
-                        this.spMap = combinedData.spMap;
-                        this.loading = false;
-                        this.error = undefined;
-                        groupPayments(this.spList, 'Transaction_Reference_Number__c')
-                            .then(groupedPayments => {
-                                this.groupedPayments = groupedPayments;
-                                this.loading = false;
-                            })
-                    });
-            })
-            .catch(error => {
-                this.loading = false;
-                this.error = error;
-                this.data = undefined;
-                this.spList = undefined;
-                this.oppList = undefined;
-                this.selectedScheduledPayment = undefined;
-                this.selectedOpportunity = undefined;
-            });
+                    combineData(this.data)
+                        .then(combinedData => {
+                            this.spList = combinedData.spList;
+                            this.oppMap = combinedData.oppMap;
+                            this.spMap = combinedData.spMap;
+                            this.loading = false;
+                            this.error = undefined;
+                            
+
+                            groupPayments(this.spList, 'Transaction_Reference_Number__c')
+                                .then(groupedPayments => {
+                                    this.groupedPayments = groupedPayments;
+                                    this.loading = false;
+                                })
+                        });
+                })
+                .catch(error => {
+                    this.loading = false;
+                    this.error = error;
+                    this.data = undefined;
+                    this.spList = undefined;
+                    this.oppList = undefined;
+                    this.selectedScheduledPayment = undefined;
+                    this.selectedOpportunity = undefined;
+                });
+
+        }).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });
+                
     }
 
     handleFilterInitialized(event) {
@@ -169,7 +243,201 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         });
         //this.dt.draftValues = this.draftValues;
     }
+    handlePartialRejected(){
+        if(this.getSelectedIds() == 0){
+            alert('Please select a record first.');
+        }else{
+            if(this.fileTypeValue == 'CWB - EFT' && this.selectedFileNumber == 'All'){
+                alert('Please select a file number form dropdown first.')
+            }else{
 
+                let options = {
+                    fileNumber: this.selectedFileNumber
+                };
+                
+                this.loading = true;
+                this.errors = undefined;
+                getSchedulePayments(options).then(result => {
+                    
+                    const spList = [];
+                    this.getSelectedIds().forEach(id => spList.push({
+                        Id: id,
+                        Status__c: 'Pre Send Validation',
+                        Banking_Verified__c: false,
+                        Credit_Verified__c: false,
+                        Documents_Verified__c: false,
+                        BIA_PPSA_LL_Verified__c: false,
+                        AFT_File_Number__c : null
+                    }));
+        
+                    if(spList.length == result.length){
+                        this.loading = false;
+                        showToast(this, 
+                            'Selected transaction cannot be marked partial rejected.',
+                            'All transactions of a file cannot be partial rejected. There must be atleast one successful transaction.',
+                            'error'
+                        );
+
+                    }else{
+                        updateScheduledPaymentsFromDraftValues(spList)
+                            .then(result => {
+                                showToast(this, 
+                                    'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
+                                    'You may now generate an updated Banking Sheet',
+                                    'success'
+                                );
+                                this.refresh();
+                                //sendNeedsRefreshEvent(this);
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                                if (error && error.body && error.body.message) {
+                                    //this.dataTable.generateErrors(error.body.message);
+                                    this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                                    showToast(this, 
+                                        'Unable to update EFT Number',
+                                        this.errors.table.messages.join('\n'),
+                                        'error',
+                                        'sticky'
+                                    );
+                                } else {
+                                    showToast(this, 
+                                        'There was an error',
+                                        JSON.stringify(error),
+                                        'error',
+                                        'sticky'
+                                    );
+                                }
+                            });
+                        }
+
+                }).catch(error => {
+
+                    this.loading = false;
+                    if (error && error.body && error.body.message) {
+                        //this.dataTable.generateErrors(error.body.message);
+                        this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                        showToast(this, 
+                            'Unable to update EFT Number',
+                            this.errors.table.messages.join('\n'),
+                            'error',
+                            'sticky'
+                        );
+                    } else {
+                        showToast(this, 
+                            'There was an error',
+                            JSON.stringify(error),
+                            'error',
+                            'sticky'
+                        );
+                    }
+
+                });                                
+            
+            }
+        }
+    }
+    handleFullRejected(){
+        if(this.getSelectedIds() == 0){
+            alert('Please select a record first.');
+        }else{
+            if(this.fileTypeValue == 'CWB - EFT' && this.selectedFileNumber == 'All'){
+                alert('Please select a file number form dropdown first.')
+            }else{
+
+                let options = {
+                    fileNumber: this.selectedFileNumber
+                };
+                
+                this.loading = true;
+                this.errors = undefined;
+                getSchedulePayments(options).then(result => {
+
+                    console.log('1');
+                    const spIds = [];
+                    this.getSelectedIds().forEach(id => spIds.push(id));
+                    console.log('2');
+                    const spList = [];
+                    for(let i = 0; i < spIds.length; i++){
+                        for(let j = 0; j < this.spList.length; j++){
+                            if(spIds[i] == this.spList[j].Id && this.selectedFileNumber == this.spList[j].CWB_Sheet_Number__c){
+                                spList.push({
+                                    Id: this.spList[j].Id,
+                                    Status__c: 'Pre Send Validation',
+                                    Banking_Verified__c: false,
+                                    Credit_Verified__c: false,
+                                    Documents_Verified__c: false,
+                                    BIA_PPSA_LL_Verified__c: false
+                                });
+                            }
+                        }
+                    }
+                    console.log('3');
+
+                    if(spList.length != result.length){
+
+                        this.loading = false;
+                        showToast(this, 
+                            'Error',
+                            'Please select all transactions of sheet # ' + this.selectedFileNumber + ' to mark them fully rejected.',
+                            'error'
+                        );
+                    }else{
+                        updateScheduledPaymentsFromDraftValues(spList)
+                        .then(result => {
+                            showToast(this, 
+                                'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
+                                'You may now generate an updated Banking Sheet',
+                                'success'
+                            );
+                            this.refresh();
+                            //sendNeedsRefreshEvent(this);
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                            if (error && error.body && error.body.message) {
+                                //this.dataTable.generateErrors(error.body.message);
+                                this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                                showToast(this, 
+                                    'Unable to update EFT Number',
+                                    this.errors.table.messages.join('\n'),
+                                    'error',
+                                    'sticky'
+                                );
+                            } else {
+                                showToast(this, 
+                                    'There was an error',
+                                    JSON.stringify(error),
+                                    'error',
+                                    'sticky'
+                                );
+                            }
+                        });
+                    }
+                }).catch(error => {
+                    this.loading = false;
+                    console.log(JSON.stringify(error));
+                    if (error && error.body && error.body.message) {
+                        //this.dataTable.generateErrors(error.body.message);
+                        this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                        showToast(this, 
+                            'Unable to update EFT Number',
+                            this.errors.table.messages.join('\n'),
+                            'error',
+                            'sticky'
+                        );
+                    } else {
+                        showToast(this, 
+                            'There was an error',
+                            JSON.stringify(error),
+                            'error',
+                            'sticky'
+                        );
+                    }
+                });
+            }
+        }
+    }    
     handleSendBack() {
         const spList = [];
         this.getSelectedIds().forEach(id => spList.push({

@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Seth Boyd
   @Group              : 
-  @Last Modified By   : Seth Boyd
-  @Last Modified On   : 5/9/2019, 7:53:03 AM
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 6/29/2020, 10:49:12 AM
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -74,6 +74,20 @@
                     'Amount__c': 0,
 
     -->
+    <lightning-layout>
+        <lightning-layout-item size="2" flexibility="no-grow" padding="around-small">
+            <lightning-combobox
+                name="sheetNumbers"
+                label="Sheet Number"
+                value={selectedSheetNumber}
+                placeholder="Select Banking Sheet"
+                options={sheetNumbersOptions} 
+                onchange={handleSheetNumberChange}
+                variant="label-inline" >
+            </lightning-combobox>
+        </lightning-layout-item>
+    </lightning-layout>
+
     <lightning-input
         type="checkbox" 
         value={selectedAll}

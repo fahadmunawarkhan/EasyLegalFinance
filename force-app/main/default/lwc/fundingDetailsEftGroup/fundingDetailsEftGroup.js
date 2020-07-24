@@ -22,6 +22,7 @@ export default class FundingDetailsEFTGroup extends LightningElement {
         { label: 'Payment File #', fieldName: 'File_Number__c', type: 'text', sortable: true },
         { label: 'Transaction Number', fieldName: 'Transaction_Reference_Number__c', type: 'text', sortable: true, },
         { label: 'EFT#', fieldName: 'EFT_Number__c', type: 'text', sortable: true, editable: true },
+        { label: 'Sheet#', fieldName: 'CWB_Sheet_Number__c', type: 'text', sortable: true, editable: false, cellAttributes: { class: { fieldName: 'CWB_Sheet_Number_CSS__c' } } },
     ];
 
     @track _errors;

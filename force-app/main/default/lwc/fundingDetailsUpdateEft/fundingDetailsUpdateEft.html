@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Seth Boyd
   @Group              : 
-  @Last Modified By   : Seth Boyd
-  @Last Modified On   : 5/9/2019, 7:53:03 AM
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 6/25/2020, 5:04:31 PM
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -58,6 +58,33 @@
     -->
 
     <lightning-layout>
+        <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" hidden={hideBankingSheetFilters}>
+            <lightning-combobox
+                name="bfile"
+                label="File Type"
+                value={fileTypeValue}
+                placeholder="Select Banking File"
+                options={options} 
+                variant="label-inline"
+                onchange={handleFileTypeChange} >
+            </lightning-combobox>
+        </lightning-layout-item>
+        <template if:true={cwbSelected}>
+            <lightning-layout-item size="2" flexibility="no-grow" padding="around-small">
+                <lightning-combobox
+                    name="bfileNumbers"
+                    label="Sheet Number"
+                    value={selectedFileNumber}
+                    placeholder="Select Banking File"
+                    options={fileNumbersOptions} 
+                    onchange={handleFileNumberChange}
+                    variant="label-inline" >
+                </lightning-combobox>
+            </lightning-layout-item>
+        </template>
+    </lightning-layout>
+
+    <lightning-layout>
         <lightning-layout-item>
             <lightning-input
                 type="checkbox" 
@@ -86,9 +113,19 @@
 
     <div slot="footer" class="slds-p-top_medium">
         <lightning-layout horizontal-align="end">
-            <lightning-layout-item padding="around-small">
-                <lightning-button label="Send Back to Validation" onclick={handleSendBack} variant="destructive"></lightning-button>
-            </lightning-layout-item>
+            <template if:true={cwbSelected}>
+                <lightning-layout-item padding="around-small">
+                    <lightning-button label="Partial Rejected" onclick={handlePartialRejected} variant="destructive"></lightning-button>
+                </lightning-layout-item>
+                <lightning-layout-item padding="around-small">
+                    <lightning-button label="Full Rejected" onclick={handleFullRejected} variant="destructive"></lightning-button>
+                </lightning-layout-item>
+            </template>
+            <template if:false={cwbSelected}>
+                <lightning-layout-item padding="around-small">
+                    <lightning-button label="Send Back to Validation" onclick={handleSendBack} variant="destructive"></lightning-button>
+                </lightning-layout-item>
+            </template>
             <lightning-layout-item padding="around-small">
                 <lightning-button label="Save and Send to Next Step" onclick={handleSave} variant="brand"></lightning-button>
             </lightning-layout-item>

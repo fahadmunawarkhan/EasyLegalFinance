@@ -1,3 +1,14 @@
+<!--
+  @File Name          : fundingDetailsValidateEfts.html
+  @Description        : 
+  @Author             : fahad.khan@toptal.com
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 7/1/2020, 10:21:45 AM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    6/26/2020   fahad.khan@toptal.com     Initial Version
+-->
 <template>
     <div class="slds-spinner_container slds-is-relative" if:true={loading} >
         <lightning-spinner size="large" class="with-backdrop" style="z-index: 9001;" alternative-text="Loading..."></lightning-spinner>
@@ -35,7 +46,21 @@
         onchange={groupingFieldChange}
     ></lightning-combobox>
     -->
-
+    <template if:false={isCheque}>
+        <lightning-layout>
+            <lightning-layout-item size="2" flexibility="no-grow" padding="around-small">
+                <lightning-combobox
+                    name="sheetNumbers"
+                    label="Sheet Number"
+                    value={selectedSheetNumber}
+                    placeholder="Select Banking Sheet"
+                    options={sheetNumbersOptions} 
+                    onchange={handleSheetNumberChange}
+                    variant="label-inline" >
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
     <!-- Loop over groupings -->
     <template for:each={groupedPayments} for:item="grouping">
         <div key={grouping.Id} class="slds-box group-box">
@@ -100,6 +125,9 @@
                         </th>
                         <th class="" scope="col">
                             <div class="slds-truncate" title="Payment Amount">Payment Amount</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Sheet#">Sheet#</div>
                         </th>
                         <th class="" scope="col">
                             <div if:false={isCheque} class="slds-truncate" title="Bank Valid">Bank Valid</div>

@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Seth Boyd
   @Group              : 
-  @Last Modified By   : Seth Boyd
-  @Last Modified On   : 5/9/2019, 5:44:00 AM
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 7/8/2020, 12:12:21 PM
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -60,7 +60,7 @@
                     onkeyup={handleSearchKeyup}
                     onchange={handleSearchChange}
                 ></lightning-input>
-            </lightning-layout-item>
+            </lightning-layout-item>            
             <c-date-range-picker
                 hidden={hideFilters}
                 filters={activeFilter}
@@ -69,16 +69,41 @@
                 onfilterinit={handleStagingFilterInitialized}
                 time-period={filterTimePeriod}
             ></c-date-range-picker>
+            <lightning-layout-item size="3" flexibility="no-grow" padding="around-small" hidden={hideBusinessUnitFilter}>
+                <lightning-combobox
+                    name="bUnint"
+                    label="Business Unit"
+                    value={businessUnitFilterValue}
+                    placeholder="Select Business Unit"
+                    options={businessUnitoptions} 
+                    variant="label-inline" 
+                    onchange={handleBusinessUnitChange}>
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" flexibility="no-grow" padding="around-small" hidden={hideBankingSheetFilters}>
+                <lightning-combobox
+                    name="bfile"
+                    label="File Type"
+                    value={fileTypeValue}
+                    placeholder="Select Banking File"
+                    options={options} 
+                    variant="label-inline"
+                    onchange={handleFileTypeChange} >
+                </lightning-combobox>
+            </lightning-layout-item>
+            <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" >
+                <lightning-button variant="brand" label="CWB Sheets Status" title="CWB Sheets Status" onclick={CWBSheetsStatusButton} class="slds-m-left_x-small"></lightning-button>
+            </lightning-layout-item>            
         </lightning-layout>
         <template if:true={filterInitilized}>
             <template if:true={shouldShowStaging}>
                 <c-funding-details-staging-area onfilterchange={handleStagingFilterChange} filters={filters.staging} query-term={queryTerm}></c-funding-details-staging-area>
             </template>
             <template if:true={shouldShowValidateEfts}>
-                <c-funding-details-validate-efts class="eft" onfilterchange={handleStagingFilterChange} filters={filters.staging}></c-funding-details-validate-efts>
+                <c-funding-details-validate-efts class="eft" businessunitfilter={businessUnitFilterValue} onfilterchange={handleStagingFilterChange} filters={filters.staging}></c-funding-details-validate-efts>
             </template>
             <template if:true={shouldShowBankingSheet}>
-                <c-funding-details-update-and-generate-banking-sheet onfilterchange={handleStagingFilterChange} filters={filters.staging}></c-funding-details-update-and-generate-banking-sheet>
+                <c-funding-details-update-and-generate-banking-sheet businessunitfilter={businessUnitFilterValue} filetype={fileTypeValue} onfilterchange={handleStagingFilterChange} filters={filters.staging}></c-funding-details-update-and-generate-banking-sheet>
             </template>
             <template if:true={shouldShowInputEfts}>
                 <c-funding-details-update-eft filters={filters.all}></c-funding-details-update-eft>

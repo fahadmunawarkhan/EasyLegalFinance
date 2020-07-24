@@ -15,13 +15,19 @@ import {
     //updateSPList,
     groupPayments
 } from 'c/fundingDetailsUtils';
+import getCWBSheetNumbers from '@salesforce/apex/FundingDetailsComponentCtlr.getCWBSheetNumbers';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
 
 export default class FundingDetailsUpdateAndGenerateBankingSheet extends LightningElement {
+    sheetNumbersOptions = [
+        {label: 'All', value: 'All'}
+    ];
     _filters = {
         preset: 'this_week'
     }
+    _fileType = 'CWB - EFT';
+    _businessUnit = 'ELFI';
     @api 
     get filters() {
         return this._filters;
@@ -32,7 +38,26 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
             this.refresh();
         }
     }
-
+    @api 
+    get filetype(){
+        return this._fileType;
+    }
+    set filetype(value){
+        this._fileType = value || this._fileType;
+        this.refresh();
+    }
+    @api
+    get businessunitfilter(){
+        return this._businessUnit;
+    }
+    set businessunitfilter(value){
+        this._businessUnit = value || this._businessUnit;
+        this.refresh();
+    }
+    @api selectedSheetNumber = 'All';
+    get sheetNumbersOptions() {
+        return this.sheetNumbersOptions;
+    }
     @track groupedPayments;
     @track data;
     @track spList;
@@ -70,6 +95,7 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
         { label: 'Scheduled Date', fieldName: 'Scheduled_Date__c', type: 'date-local', typeAttributes: {'time-zone': 'UTC'}, sortable: true },
         { label: 'Available Credit', fieldName: 'opportunity.Loan_Available_to_Drawdown__c', type: 'currency', sortable: true },
         { label: 'Payment Amount', fieldName: 'Amount__c', type: 'currency', sortable: true },
+        { label: 'Sheet#', fieldName: 'CWB_Sheet_Number__c', type: 'text', sortable: true, editable: false, cellAttributes: { class: { fieldName: 'CWB_Sheet_Number_CSS__c' } } },
     ];
     @track errors;
     @track sortedBy = 'Scheduled_Date__c';
@@ -90,6 +116,10 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
         }
     }
 
+    handleSheetNumberChange(event){
+        this.selectedSheetNumber = event.detail.value;        
+        this.refresh();
+    }
     @api refresh() {
         this.loading = true;
         //this.selectedAll = false; // Seems to be bugging out, maybe a bug in LWC rendering?
@@ -98,8 +128,30 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
             startDate: this.filters.startDate,
             endDate: this.filters.endDate,
             workflowStage: 'generateBankingSheet',
+            businessUnitFilter : this._businessUnit,
             //dateField: 'Sent_to_Bank_Date__c'
         };
+
+        getCWBSheetNumbers(options).then(result => {
+            let opts = [];
+            opts.push({label : 'All', value: 'All'});
+            for(let i = 0; i<result.length; i++){
+                if(result[i] != null)
+                    opts.push({label : result[i], value: result[i]})
+            }
+
+            this.sheetNumbersOptions = opts;
+            
+            let options = {
+                startDate: this.filters.startDate,
+                endDate: this.filters.endDate,
+                workflowStage: 'generateBankingSheet',
+                businessUnitFilter : this._businessUnit,
+                //dateField: 'Sent_to_Bank_Date__c'
+                fileType: this._fileType,
+                fileNumber: this.selectedSheetNumber,
+            };
+
         getScheduledPaymentsWithOpportunities(options)
             .then(result => {
                 this.data = result;
@@ -126,6 +178,15 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                 this.selectedScheduledPayment = undefined;
                 this.selectedOpportunity = undefined;
             });
+        }).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });
     }
 
     handleFilterInitialized(event) {
@@ -255,9 +316,17 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                 'Please select the payments you want included before generating the banking sheet.',
                 'warning'
             )
+        }else if(this._businessUnit == 'All' && this._fileType == 'CWB - EFT'){
+            showToast(
+                this,
+                'Business unit Error.',
+                'Business unit can not be "All" while generating CWB - EFT file. Please select a specific business unit from dropdown.',
+                'warning'
+            )
+
         } else {
             this.loading = true;
-            generateBankingSheet({spIds: spIds})
+            generateBankingSheet({spIds: spIds, fileType : this._fileType, businessUnitFilter : this._businessUnit})
                 .then(result => {
                     showToast(this, 
                         'Successfully generated banking sheet',
@@ -283,6 +352,7 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                         this.datatables.forEach(dt => {
                             allData = allData.concat(dt.data);
                         });
+                        console.log(JSON.stringify(error));
                         this.errors = generateDataTableErrors(JSON.parse(error.body.message), allData);
                         this.datatables.forEach(dt => {
                             dt.errors = this.errors;
