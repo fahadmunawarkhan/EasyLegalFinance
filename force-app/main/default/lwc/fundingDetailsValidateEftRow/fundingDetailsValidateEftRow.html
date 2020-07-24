@@ -1,3 +1,14 @@
+<!--
+  @File Name          : fundingDetailsValidateEftRow.html
+  @Description        : 
+  @Author             : fahad.khan@toptal.com
+  @Group              : 
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 6/30/2020, 11:47:29 AM
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    6/26/2020   fahad.khan@toptal.com     Initial Version
+-->
 <template>
         <td data-label="Notes">
             <div class="slds-truncate" if:true={value.Notes__c}>
@@ -55,6 +66,11 @@
                     format-style="currency"
                     value={value.Amount__c}
                 ></lightning-formatted-number>
+            </div>
+        </td>
+        <td data-label="Sheet#" class={value.CWB_Sheet_Number_CSS__c}>
+            <div class="slds-truncate" title={value.CWB_Sheet_Number__c}>
+                {value.CWB_Sheet_Number__c}
             </div>
         </td>
         <td data-label="Bank Valid">

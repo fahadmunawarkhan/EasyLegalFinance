@@ -6,10 +6,15 @@ import {
     combineData,
     groupPayments
 } from 'c/fundingDetailsUtils';
+import getCWBSheetNumbers from '@salesforce/apex/FundingDetailsComponentCtlr.getCWBSheetNumbers';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
 
 export default class FundingDetailsValidateEfts extends LightningElement {
+    sheetNumbersOptions = [
+        {label: 'All', value: 'All'}
+    ];
+    _businessUnit = 'ELFI';
     _filters = {
         preset: 'this_week'
     }
@@ -24,10 +29,23 @@ export default class FundingDetailsValidateEfts extends LightningElement {
         }
     }
 
+    @api selectedSheetNumber = 'All';
+    get sheetNumbersOptions() {
+        return this.sheetNumbersOptions;
+    }
     @api paymentType = 'eft';
 
     get isCheque() {
         return this.paymentType === 'cheque'
+    }
+
+    @api
+    get businessunitfilter(){
+        return this._businessUnit;
+    }
+    set businessunitfilter(value){
+        this._businessUnit = value || this._businessUnit;
+        this.refresh();
     }
 
     /*
@@ -108,18 +126,44 @@ export default class FundingDetailsValidateEfts extends LightningElement {
         }
     }
 
+    handleSheetNumberChange(event){
+        this.selectedSheetNumber = event.detail.value;        
+        this.refresh();
+    }
+
     @api refresh() {
         this.loading = true;
         //this.selectedAll = false; // Seems to be bugging out, maybe a bug in LWC rendering?
         //this.selectAllText = 'Select All';
         //const dates = this.querySelector('c-date-range-picker').getDates();
+        
         let options = {
             startDate: this.filters.startDate,
             endDate: this.filters.endDate,
             workflowStage: this.isCheque ? 'validateCheque' : 'validateEft',
+            businessUnitFilter : this._businessUnit,
             //dateField: 'Sent_to_Bank_Date__c'
         };
-        getScheduledPaymentsWithOpportunities(options)
+        getCWBSheetNumbers(options).then(result => {
+            let opts = [];
+            opts.push({label : 'All', value: 'All'});
+            for(let i = 0; i<result.length; i++){
+                if(result[i] != null)
+                    opts.push({label : result[i], value: result[i]})
+            }
+
+            this.sheetNumbersOptions = opts;
+
+            let options = {
+                startDate: this.filters.startDate,
+                endDate: this.filters.endDate,
+                workflowStage: this.isCheque ? 'validateCheque' : 'validateEft',
+                businessUnitFilter : this._businessUnit,
+                fileNumber: this.selectedSheetNumber,
+                //dateField: 'Sent_to_Bank_Date__c'
+            };
+
+            getScheduledPaymentsWithOpportunities(options)
             .then(result => {
                 this.data = result;
                 combineData(this.data)
@@ -145,6 +189,17 @@ export default class FundingDetailsValidateEfts extends LightningElement {
                 this.selectedScheduledPayment = undefined;
                 this.selectedOpportunity = undefined;
             });
+
+
+        }).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });        
     }
 
     handleFilterInitialized(event) {

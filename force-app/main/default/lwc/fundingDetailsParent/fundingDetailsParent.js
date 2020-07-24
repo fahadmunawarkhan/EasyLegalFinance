@@ -25,6 +25,25 @@ export default class FundingDetails_Parent extends LightningElement {
     @track hideFilters = true;
     @track hideSearch = true;
     @track queryTerm;
+    @track hideBankingSheetFilters = true;
+    @track hideBusinessUnitFilter = true;
+
+    @api fileTypeValue = 'CWB - EFT';
+    get options() {
+        return [
+            { label: 'TD - EFT', value: 'TD - EFT' },
+            { label: 'CWB - EFT', value: 'CWB - EFT' }
+        ];
+    }
+
+    @api businessUnitFilterValue = 'ELFI';
+    get businessUnitoptions() {
+        return [
+            { label: 'ELFI', value: 'ELFI' },
+            { label: 'Rhino', value: 'Rhino' },
+            { label: 'Seahold', value: 'Seahold' }
+        ];
+    }
 
     tabQuerySelector = 'c-funding-details-staging-area';
     @track filterInitilized = false;
@@ -35,6 +54,13 @@ export default class FundingDetails_Parent extends LightningElement {
             this.permissions = result.data;
         }
     }
+    handleFileTypeChange(event){
+        this.fileTypeValue = event.detail.value;
+    }
+    handleBusinessUnitChange(event){
+        this.businessUnitFilterValue = event.detail.value;
+        //this.template.querySelector("c-funding-details-update-and-generate-banking-sheet").refresh();
+    }
 
     tabConfiguration = {
         Staging: {
@@ -43,7 +69,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: false,
-            tabQuerySelector: 'c-funding-details-staging-area'
+            tabQuerySelector: 'c-funding-details-staging-area',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
         ValidateEfts: {
@@ -52,7 +80,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-validate-efts.eft'
+            tabQuerySelector: 'c-funding-details-validate-efts.eft',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : false
         },
 
         BankingSheet: {
@@ -61,7 +91,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-update-and-generate-banking-sheet'
+            tabQuerySelector: 'c-funding-details-update-and-generate-banking-sheet',
+            hideBankingSheetFilters : false,
+            hideBusinessUnitFilter : false
         },
 
         InputEfts: {
@@ -70,7 +102,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-update-eft'
+            tabQuerySelector: 'c-funding-details-update-eft',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
         ValidateCheques: {
@@ -79,7 +113,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-validate-efts.cheque'
+            tabQuerySelector: 'c-funding-details-validate-efts.cheque',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
         SendCheques: {
@@ -88,7 +124,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'future',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-send-cheques'
+            tabQuerySelector: 'c-funding-details-send-cheques',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
         OpportunityTable: {
@@ -97,7 +135,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'past',
             hideFilters: false,
             hideSearch: true,
-            tabQuerySelector: 'c-funding-details-opportunity-table'
+            tabQuerySelector: 'c-funding-details-opportunity-table',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
         CompletedPayments: {
@@ -106,7 +146,9 @@ export default class FundingDetails_Parent extends LightningElement {
             filterTimePeriod: 'past',
             hideFilters: false,
             hideSearch: false,
-            tabQuerySelector: 'c-funding-details-completed-payments'
+            tabQuerySelector: 'c-funding-details-completed-payments',
+            hideBankingSheetFilters : true,
+            hideBusinessUnitFilter : true
         },
 
     }
@@ -120,7 +162,9 @@ export default class FundingDetails_Parent extends LightningElement {
         //console.dir(JSON.parse(JSON.stringify(event)));
         //debugger;
     }
-
+    CWBSheetsStatusButton(){
+        window.open("/00O4W000003rWkQUAU");
+    }
     selectTab(stageName) {
         this.currentStage = stageName;
         this.tabQuerySelector = this.tabConfiguration[this.currentStage].tabQuerySelector;
@@ -133,6 +177,8 @@ export default class FundingDetails_Parent extends LightningElement {
         this.filterTimePeriod = this.tabConfiguration[this.currentStage].filterTimePeriod;
         this.hideFilters = this.tabConfiguration[this.currentStage].hideFilters;
         this.hideSearch = this.tabConfiguration[this.currentStage].hideSearch;
+        this.hideBankingSheetFilters = this.tabConfiguration[this.currentStage].hideBankingSheetFilters;
+        this.hideBusinessUnitFilter = this.tabConfiguration[this.currentStage].hideBusinessUnitFilter
         this.queryTerm = '';
     }
 

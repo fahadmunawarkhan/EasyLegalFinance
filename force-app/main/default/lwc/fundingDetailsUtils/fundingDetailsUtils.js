@@ -29,6 +29,8 @@ const groupPayments = (spList, groupingField, noFlatten) => {
                 parentRow['Expected_Admin_Fee_Amount__c'] = 0;
                 parentRow['Amount__c'] = 0;
                 parentRow['_children'] = [];
+                console.log('_children');
+                console.log(JSON.stringify(sp));
                 summaryMap[sp[groupingField]] = parentRow;
                 data.push(parentRow);
             } else {

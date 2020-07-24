@@ -37,7 +37,7 @@ public with sharing class FundingDetailsComponentCtlr {
         }
     }
     */
-
+    
     @AuraEnabled(cacheable=False)
     public static Opportunity[] getOpportunitiesWithScheduledPayments(Date startDate, Date endDate){
         String[] allowedStatuses = new String[]{'Loan Setup Check', 'Process Drawdowns', 'Populate PPSA', 'Final Review'};
@@ -170,30 +170,143 @@ public with sharing class FundingDetailsComponentCtlr {
     }
     // FundingDetailsComponentCtlr.clearBadTestData
     */
-
+    
     @AuraEnabled(cacheable=False)
-    public static Map<String, Object> getScheduledPaymentsWithOpportunities(Date startDate, Date endDate, String workflowStage, String dateField) {
+    public static List<String> getCWBSheetNumbers(Date startDate, Date endDate, String workflowStage, String businessUnitFilter, String dateField){
+        List<Scheduled_Payment__c> spList;
+        String[] statuses;
+        String extraWhere = '';
+        
+        switch on workflowStage {
+            when 'validateEft'{
+                statuses = new String[]{'Pre Send Validation'};
+                extraWhere += ' AND Send_Cheque__c = false';  
+                extraWhere += businessUnitFilter != null && businessUnitFilter != 'All' ? ' AND Opportunity__r.Account.Business_Unit__c = \'' + businessUnitFilter + '\'' : '';
+            }
+            when 'generateBankingSheet'{
+                statuses = new String[]{'Approved to Send'};
+                extraWhere += ' AND Send_Cheque__c = false';
+                extraWhere += businessUnitFilter != null && businessUnitFilter != 'All' ? ' AND Opportunity__r.Account.Business_Unit__c = \'' + businessUnitFilter + '\'' : '';
+            }
+            when 'validateCheque'{
+                statuses = new String[]{'Pre Send Validation'};
+                extraWhere += ' AND Send_Cheque__c = true';
+            }
+            
+            when 'updateEFTInfo'{
+                statuses = new String[]{'Sent to Bank'};
+                extraWhere += ' AND Send_Cheque__c = false';
+            }
+        }
+        
+        extraWhere += ' AND AFT_File_Number__c != null';
+        
+        
+        
+        Boolean useDateTime = true;
+        if (dateField == null || dateField == 'Scheduled_Date__c') {
+            dateField = 'Scheduled_Date__c';
+            useDateTime = false;
+        }
+        Datetime compareStart = null;
+        if (startDate != null) {
+            if ( useDateTime ) {
+                compareStart = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day(), 0, 0, 0);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :compareEnd';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' <= :endDate';
+            }
+        }
+        Datetime compareEnd = null;
+        if (endDate != null) {
+            if ( useDateTime ) {
+                compareEnd = Datetime.newInstance(endDate.year(), endDate.month(), endDate.day(), 23, 59, 59);
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :compareStart';
+            } else {
+                extraWhere += ' AND ' + String.escapeSingleQuotes(dateField) + ' >= :startDate';
+            }
+        }
+        String query = 
+            'SELECT ' +
+            'Id, Current_Bank_Account_Name__c, Current_Bank_Account_Display__c, Current_Bank_Account_URL__c, Triggered_Admin_Fee_Amount__c, Expected_Admin_Fee_Amount__c' +
+            ', Notes__c, Hold__c' +
+            ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+            ', Can_Send_to_Bank__c' +
+            ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
+            ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
+            ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c, AFT_File_Number__c, CWB_Sheet_Number__c, CWB_Sheet_Number_CSS__c, CWB_Business_Unit__c' +
+            ', Drawdown_Date__c, Can_Be_Reversed__c, Drawdown__c' +
+            ' FROM Scheduled_Payment__c';
+        if(statuses != null) {
+            query = query + ' WHERE Status__c in :statuses ';
+        }
+        
+        system.debug('extraWhere ' + extraWhere);
+        query = query + ' {0} ORDER BY CWB_Sheet_Number__c ASC LIMIT 10000';
+        query = String.format(query, new List<String>{extraWhere});
+        spList = Database.query(query);
+        
+        Set<String> result = new Set<String>();
+        
+        for(Scheduled_Payment__c sp : spList){
+            if(sp.CWB_Sheet_Number__c != null && sp.CWB_Sheet_Number__c != '')
+                result.add(sp.CWB_Sheet_Number__c);
+        }
+        
+        return new List<String>(result);
+    }
+    
+    @AuraEnabled(cacheable=False)
+    public static List<Scheduled_Payment__c> getSchedulePayments(String fileNumber){
+        List<Scheduled_Payment__c> schedulePayments = new List<Scheduled_Payment__c>();
+        String query = 
+            'SELECT ' +
+            'Id, Current_Bank_Account_Name__c, Current_Bank_Account_Display__c, Current_Bank_Account_URL__c, Triggered_Admin_Fee_Amount__c, Expected_Admin_Fee_Amount__c' +
+            ', Notes__c, Hold__c' +
+            ', Banking_Verified__c, Credit_Verified__c, Documents_Verified__c, BIA_PPSA_LL_Verified__c, Verified_By__c, Verified_By__r.Name, Verified_Date__c' +
+            ', Can_Send_to_Bank__c' +
+            ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
+            ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
+            ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c, AFT_File_Number__c, CWB_Sheet_Number__c, CWB_Sheet_Number_CSS__c' +
+            ', Drawdown_Date__c, Can_Be_Reversed__c, Drawdown__c' +
+            ' FROM Scheduled_Payment__c';
+        query += fileNumber != null && fileNumber != ''? ' WHERE CWB_Sheet_Number__c = \'' + fileNumber + '\'' : '';
+        
+        schedulePayments = Database.query(query);
+        
+        return schedulePayments;
+    }
+    
+    @AuraEnabled(cacheable=False)
+    public static Map<String, Object> getScheduledPaymentsWithOpportunities(Date startDate, Date endDate, String workflowStage, String businessUnitFilter, String dateField, String fileType, String fileNumber) {
         //endDate = Date.valueOf(endDate);
         List<Scheduled_Payment__c> spList;
         String[] statuses;
         String extraWhere = '';
-
+        system.debug('workflowStage = ' + workflowStage);
         switch on workflowStage {
             when 'staging'{
                 statuses = new String[]{'Scheduled'};
                 extraWhere += ' AND Hold__c = false';
             }
             when 'validateEft'{
+                system.debug('businessUnitFilter = ' + businessUnitFilter);
                 statuses = new String[]{'Pre Send Validation'};
                 extraWhere += ' AND Send_Cheque__c = false';
+                extraWhere += businessUnitFilter != null && businessUnitFilter != 'All' ? ' AND Opportunity__r.Account.Business_Unit__c = \'' + businessUnitFilter + '\'' : '';
+                extraWhere += fileNumber != null && fileNumber != '' && fileNumber != 'All'? ' AND CWB_Sheet_Number__c = \'' + fileNumber + '\'' : '';
             }
             when 'generateBankingSheet' {
                 statuses = new String[]{'Approved to Send'};
                 extraWhere += ' AND Send_Cheque__c = false';
+                extraWhere += businessUnitFilter != null && businessUnitFilter != 'All' ? ' AND Opportunity__r.Account.Business_Unit__c = \'' + businessUnitFilter + '\'' : '';
+                extraWhere += fileType != null && fileType == 'CWB - EFT'? ' AND EFT_File__c = null' : fileType != null && fileType == 'TD - EFT'? ' AND AFT_File__c = null' : '';
+                extraWhere += fileNumber != null && fileNumber != '' && fileNumber != 'All'? ' AND CWB_Sheet_Number__c = \'' + fileNumber + '\'' : '';
             }
             when 'validateCheque'{
                 statuses = new String[]{'Pre Send Validation'};
                 extraWhere += ' AND Send_Cheque__c = true';
+                extraWhere += fileNumber != null && fileNumber != '' && fileNumber != 'All'? ' AND CWB_Sheet_Number__c = \'' + fileNumber + '\'' : '';
             }
             when 'sendCheques' {
                 statuses = new String[]{'Approved to Send'};
@@ -202,6 +315,8 @@ public with sharing class FundingDetailsComponentCtlr {
             when 'updateEFTInfo' {
                 statuses = new String[]{'Sent to Bank'};
                 extraWhere += ' AND Send_Cheque__c = false';
+                extraWhere += fileType != null && fileType == 'CWB - EFT'? ' AND AFT_File__c != null AND EFT_File__c = null' : fileType != null && fileType == 'TD - EFT'? ' AND EFT_File__c != null AND AFT_File__c = null' : '';
+                extraWhere += fileNumber != null && fileNumber != '' && fileNumber != 'All' && fileType != null && fileType == 'CWB - EFT'? ' AND CWB_Sheet_Number__c = \'' + fileNumber + '\'' : '';
             }
             when 'processAndValidateLoan' {
                 statuses = new String[]{'Processed by Bank', 'Drawdown Created'};
@@ -244,12 +359,14 @@ public with sharing class FundingDetailsComponentCtlr {
                 ', Can_Send_to_Bank__c' +
                 ', Name, File_Number__c, Opportunity__c, Status__c, Payment_Type__c, Amount__c, Scheduled_Date__c, Send_Cheque__c' +
                 ', Sent_to_Bank_Date__c, Sent_to_Bank_By__r.Name, Account__r.Id, Account__r.Name' +
-                ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c' +
+                ', Current_Account_Id__c, Current_Account_Name__c, Current_Account_URL__c, Transaction_Reference_Number__c, AFT_File_Number__c, CWB_Sheet_Number__c, CWB_Sheet_Number_CSS__c' +
                 ', Drawdown_Date__c, Can_Be_Reversed__c, Drawdown__c' +
             ' FROM Scheduled_Payment__c';
         if(statuses != null) {
             query = query + ' WHERE Status__c in :statuses ';
         }
+        
+        system.debug('extraWhere ' + extraWhere);
         query = query + ' {0} ORDER BY Verified_Date__c DESC, Scheduled_Date__c ASC LIMIT 10000';
         query = String.format(query, new List<String>{extraWhere});
         spList = Database.query(query);
@@ -539,17 +656,29 @@ public with sharing class FundingDetailsComponentCtlr {
     }
 
     @AuraEnabled
-    public static string generateBankingSheet(Id[] spIds){
+    public static string generateBankingSheet(Id[] spIds, String fileType, String businessUnitFilter){
         try {
-            EFTFile eft = new EFTFile(spIds);
-            String fileText;
-            fileText = eft.generateFileText();
+            String fileText = '';
+            if(fileType == 'TD - EFT'){
+                EFTFile eft = new EFTFile(spIds);                
+                fileText = eft.generateFileText();
+            }else if(fileType == 'CWB - EFT'){
+                AFTFile aft = new AFTFile(spIds, businessUnitFilter);
+                fileText = aft.generateFileText();
+            }
             return fileText;
         } catch (EFTFileErrorListException e) {
+            system.debug('Exception 1');
+            system.debug(e.getMessage() + '-' + e.getLineNumber());
             throw e.generateAuraHandledException();
         } catch (DMLException e){
+            system.debug('Exception 2');
+            system.debug(e.getMessage() + '-' + e.getLineNumber());
             throw new AuraHandledException('Error: '+e.getDmlMessage(0));
         } catch (Exception e){
+            system.debug('Exception 3');
+            system.debug(e.getMessage() + '- Line Number: ' + e.getLineNumber());
+            system.debug(e.getStackTraceString());
             system.debug(e);
             throw new AuraHandledException('Error: '+e.getMessage());
         }
