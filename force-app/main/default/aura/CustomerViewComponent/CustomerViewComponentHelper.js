@@ -1437,40 +1437,62 @@
 									{label:'Stop Interest',fieldName:'Stop_Interest__c',type:'boolean', editable: false, align: 'center'},                                           
                                     {label:'Loan',fieldName:'Name',type:'text', align: 'left'}, 
 									{label:'Reserve Date',fieldName:'Reserve_Date__c',type:'date-local', editable: true, align: 'right'},                                          
-                                    {label:'Principal Advanced',fieldName:'Non_Repaid_Drawdown_Principal_Total__c',type:'currency', align: 'right'},
-                                    {label:'Accrued Interest',fieldName:'Interest_Accrued_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
-									{label:'Value at Reserve Date',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
+                                    {label:'Principal Advanced to Freeze Date',fieldName:'Principal_Advanced_To_Reserve_Date__c',type:'currency', align: 'right'},
+                                    {label:'Accrued Interest to Freeze Date',fieldName:'Interest_Accrued_as_of_Reserve_Date__c',type:'currency', align: 'right'},                                    
+                                    {label:'FV at Freeze Date',fieldName:'FV_at_Freeze_Date__c',type:'currency', editable: true, align: 'right'},                                                                                     
+                                    {label:'Advances after Freeze Date',fieldName:'Advances_after_Reserve_Date__c',type:'currency', align: 'right'},
+                                    {label:'Payments after Freeze Date',fieldName:'Payments_after_Reserve_Date__c',type:'currency', align: 'right'},                                    
+                                    //{label:'Principal Advanced',fieldName:'Non_Repaid_Drawdown_Principal_Total__c',type:'currency', align: 'right'},
+                                    //{ label: 'Accrued Interest', fieldName: 'Reserve_Non_Repaid_Interest__c', type: 'currency', align: 'right' },
+									{label:'FV Before Reserve',fieldName:'Value_At_Reserve_Date__c',type:'currency', editable: true, align: 'right'},                                          
                                     {label:'Reserve Amount',fieldName:'Reserve_Amount__c',type:'currency', editable: true, align: 'right'},
                                     { label: 'Exposure', fieldName: 'Reserve_Exposure__c', type: 'currency', align: 'right' }]);
     },
     populateReserveTableData: function(component){
         var oppsList = component.get("v.oppList");
         var data = [];
+        var totalPrincipalAtFreezeDate = 0.0;
+        var totalAccruedInterestAtFreezeDate = 0.0;
         var totalPrincipal = 0.0;
         var totalAccruedInterest = 0.0;
+        var totalAdvancesAfterFreezeDate = 0.0;        
+        var totalPaymentsAfterFreezeDate = 0.0;        
+        var fvAtFreezeDate = 0.0;
         var valueAtReserveDate = 0.0;
         var totalReserveAmount = 0.0;
         var totalExposure = 0.0;
-        for (var i = 0; i < oppsList.length; i++){
+        for (var i = 0; i < oppsList.length; i++) {
             var opp = oppsList[i];
             var name = opp.Name;
+            var isInterestFrozen = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c;
             if (opp.Loan_Requests__c)
                 name += ' - ' + opp.Loan_Requests__c;
-                var items = [{value: opp.Is_Reserve_Applied__c, align: 'center', type: 'boolean', editable: true},
-                {value: opp.Stop_Interest__c, align: 'center', type: 'boolean', editable: true},                       
-                {value: name, align: 'left', type: 'text', editable: false},
-                {value: opp.Reserve_Date__c, align: 'right', type: 'date', editable: true},
-                {value: opp.Non_Repaid_Drawdown_Principal_Total__c, align: 'right', type: 'currency', editable: false},
-                {value: opp.Interest_Accrued_as_of_Reserve_Date__c, align: 'right', type: 'currency', editable: false},                  
-                {value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
-                {value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
-                { value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false }];
+            var items = [{itemName: 'Is_Reserve_Applied__c', value: opp.Is_Reserve_Applied__c, align: 'center', type: 'boolean', editable: true},
+                {itemName: 'Stop_Interest__c', value: opp.Stop_Interest__c, align: 'center', type: 'boolean', editable: true},                       
+                {itemName: name, value: name, align: 'left', type: 'text', editable: false},
+                {itemName: 'Reserve_Date__c', value: isInterestFrozen ? opp.Reserve_Date__c : '-', align: 'right', type: isInterestFrozen ? 'date' : 'text', editable: isInterestFrozen},
+                {itemName: 'Principal_Advanced_To_Reserve_Date__c', value: isInterestFrozen ? opp.Principal_Advanced_To_Reserve_Date__c : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false},
+                {itemName: 'Interest_Accrued_as_of_Reserve_Date__c', value: isInterestFrozen ? opp.Interest_Accrued_as_of_Reserve_Date__c : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false},                                               
+                {itemName: 'FV_at_Freeze_Date__c', value: isInterestFrozen ? opp.FV_at_Freeze_Date__c : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false},                                                                            
+                {itemName: 'Advances_after_Reserve_Date__c', value: isInterestFrozen ? opp.Advances_after_Reserve_Date__c : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false},
+                {itemName: 'Payments_after_Reserve_Date__c', value: isInterestFrozen ? opp.Payments_after_Reserve_Date__c : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false},                                               
+                {itemName: 'Value_At_Reserve_Date__c', value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
+                {itemName: 'Reserve_Amount__c', value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
+                {itemName: 'Reserve_Exposure__c', value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false }];
           var row = {id: opp.Id, items: items};
             data.push(row);
-            if (opp.Non_Repaid_Drawdown_Principal_Total__c)
-                totalPrincipal += opp.Non_Repaid_Drawdown_Principal_Total__c;
+            if (isInterestFrozen){
+            if (opp.Principal_Advanced_To_Reserve_Date__c)
+                totalPrincipalAtFreezeDate += opp.Principal_Advanced_To_Reserve_Date__c;
             if (opp.Interest_Accrued_as_of_Reserve_Date__c)
-                totalAccruedInterest += opp.Interest_Accrued_as_of_Reserve_Date__c;
+                totalAccruedInterestAtFreezeDate += opp.Interest_Accrued_as_of_Reserve_Date__c;
+            if (opp.FV_at_Freeze_Date__c)
+                fvAtFreezeDate += opp.FV_at_Freeze_Date__c;            
+            if (opp.Advances_after_Reserve_Date__c)
+                totalAdvancesAfterFreezeDate += opp.Advances_after_Reserve_Date__c;                        
+            if (opp.Payments_after_Reserve_Date__c)
+                totalPaymentsAfterFreezeDate += opp.Payments_after_Reserve_Date__c;                                    
+            }
             if (opp.Value_At_Reserve_Date__c)
                 valueAtReserveDate += opp.Value_At_Reserve_Date__c;
             if (opp.Reserve_Amount__c)
@@ -1478,16 +1500,19 @@
             if (opp.Reserve_Exposure__c)
                 totalExposure += opp.Reserve_Exposure__c;
         }
-        var totalItems = [{value: '', align: 'center', type: 'text', editable: false, bold: true},
-				  {value: '', align: 'right', type: 'text', editable: false, bold: true},                          
-                  {value: 'Total', align: 'right', type: 'text', editable: false, bold: true},
-                  {value: '', align: 'right', type: 'text', editable: false, bold: true},
-                  {value: totalPrincipal, align: 'right', type: 'currency', editable: false, bold: true},
-                  {value: totalAccruedInterest, align: 'right', type: 'currency', editable: false, bold: true},                  
-				  {value: valueAtReserveDate, align: 'right', type: 'currency', editable: false, bold: true},                          
-                  {value: totalReserveAmount, align: 'right', type: 'currency', editable: false, bold: true},
-                  { value: totalExposure, align: 'right', type: 'currency', editable: false, bold: true }];
-        var totalRow = {id: '', items: totalItems};
+        var totalItems = [{ value: '', align: 'center', type: 'text', editable: false, bold: true },
+            { value: '', align: 'right', type: 'text', editable: false, bold: true },
+            { value: 'Total', align: 'right', type: 'text', editable: false, bold: true },
+            { value: '', align: 'right', type: 'text', editable: false, bold: true },
+                          {value: isInterestFrozen ? totalPrincipalAtFreezeDate : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false, bold: true},
+            {value: isInterestFrozen ? totalAccruedInterestAtFreezeDate : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false, bold: true},            
+            {value: isInterestFrozen ?  fvAtFreezeDate : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false, bold: true},                          
+            {value: isInterestFrozen ?  totalAdvancesAfterFreezeDate : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false, bold: true},
+            {value: isInterestFrozen ?  totalPaymentsAfterFreezeDate : '-', align: 'right', type: isInterestFrozen ? 'currency' : 'text', editable: false, bold: true},
+            {value: valueAtReserveDate, align: 'right', type: 'currency', editable: false, bold: true},                          
+            { value: totalReserveAmount, align: 'right', type: 'currency', editable: false, bold: true },
+            { value: totalExposure, align: 'right', type: 'currency', editable: false, bold: true }];
+        var totalRow = { id: '', items: totalItems };
         data.push(totalRow);
         component.set("v._reserveData", data);
     },
@@ -1518,7 +1543,7 @@
             function(resolve, reject){
                 for (var i = 0; i < records.length; i++) {
                     console.log(records[i]);
-                    if (records[i]["Is_Reserve_Applied__c"] && !records[i]["Reserve_Date__c"]) {
+                    if (records[i]["Is_Reserve_Applied__c"] && records[i]["Stop_Interest__c"] && !records[i]["Reserve_Date__c"]) {
                         reject('Reserve Date cannot be empty');
                         return;
                     }
@@ -1601,5 +1626,14 @@
                 $A.enqueueAction(action);
             }
         ));
+    },
+	handleCustomCellChanged: function(component, recordId, cellItem) {                
+        if (cellItem && cellItem.itemName == 'Stop_Interest__c'){
+            var tableComp = component.find('reservetable');
+            var isInterestFrozen = (cellItem.value == true);
+            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
+            var updatedCellItem = {itemName: 'Reserve_Date__c', value: isInterestFrozen ? today : '-', align: 'right', type: isInterestFrozen ? 'date' : 'text', editable: isInterestFrozen};
+            tableComp.updateCell(recordId, updatedCellItem);
+        }        
     }
 })

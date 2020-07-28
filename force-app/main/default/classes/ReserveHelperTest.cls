@@ -197,4 +197,20 @@ public class ReserveHelperTest {
         Test.stopTest();
     }
     
+    public static testMethod void testNotifyUponPayment(){
+        User testUser = insertUser();        
+        Test.startTest();        	
+        Account account = [select Id, Is_Reserve_Applied__c from Account where Name='Test Client Account'];
+        Opportunity clientOpportunity = [SELECT Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        clientOpportunity.Is_Reserve_Applied__c = true;
+        clientOpportunity.Reserve_Date__c = Date.today();
+        update clientOpportunity;
+        ReserveHelper.notifyUponPayment(account.Id);
+        Test.stopTest();
+    }
+    
+    public static testMethod void testGetEMailRecipients(){
+        ReserveHelper.getEMailRecipients();
+    }
+    
 }

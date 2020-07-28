@@ -55,8 +55,12 @@ public class ReserveHelper {
             opp.Reserve_Amount__c = null;           
         }            
         else{
+            if (reserveInfoMap.get('Reserve_Date__c') != null){
             Date reserveDate = reserveInfoMap.get('Reserve_Date__c') instanceOf Date ? Date.valueOf(reserveInfoMap.get('Reserve_Date__c')) : Date.valueOf((String)reserveInfoMap.get('Reserve_Date__c'));
             opp.Reserve_Date__c = reserveDate;
+            }
+            else 
+                opp.Reserve_Date__c = null;
             //opp.Payout_Date__c = reserveDate;                
             opp.Reserve_Amount__c = Double.valueOf(reserveInfoMap.get('Reserve_Amount__c'));
         }                                        

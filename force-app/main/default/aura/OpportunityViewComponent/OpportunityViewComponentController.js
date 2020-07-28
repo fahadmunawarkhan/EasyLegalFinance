@@ -575,8 +575,6 @@
         let oppObj = component.get("v.oppObj");
         var reserveApplied = component.get("v.oppObj.Is_Reserve_Applied__c");
         if (reserveApplied) {
-            var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
-            oppObj.Reserve_Date__c = today;
             oppObj.Reserve_Amount__c = 0.0;
             var expandedSections = component.get('v.expandedSections') || {};
             expandedSections['reserve'] = true;
@@ -596,13 +594,20 @@
     },
     handleStopInterestChanged : function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
+        let oppObj = component.get("v.oppObj");
         var stopInterest = component.get("v.oppObj.Stop_Interest__c");
+        var reserveApplied = component.get("v.oppObj.Is_Reserve_Applied__c");
         if (stopInterest){
             var expandedSections = component.get('v.expandedSections') || {};
             expandedSections['reserve'] = true;
             component.set('v.expandedSections', expandedSections);
-    }
-    },    
+            if (reserveApplied){
+                var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
+            	oppObj.Reserve_Date__c = today;
+                component.set("v.oppObj", oppObj);
+            }
+	    }
+    },       
     handleReserveDateChanged : function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
     },
