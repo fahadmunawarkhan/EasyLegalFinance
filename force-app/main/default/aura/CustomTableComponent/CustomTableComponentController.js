@@ -24,5 +24,14 @@
         var changedRecordIdsMap = component.get("v.changedRecordIdsMap");
         changedRecordIdsMap[recordId] = recordId;
         component.set("v.changedRecordIdsMap", changedRecordIdsMap);
+    },    
+    updateCell: function(component, event, helper) {
+        var params = event.getParam('arguments');
+        if (params) {
+            var recordId = params.recordId;
+            var cellItem = params.cellItem;
+            console.log(recordId + ' ' + cellItem.itemName  + ' '+ cellItem.type + ' ' +  cellItem.editable + ' ' +  cellItem.value);
+            helper.updateCell(component, recordId, cellItem);
+        }
     },      
 })

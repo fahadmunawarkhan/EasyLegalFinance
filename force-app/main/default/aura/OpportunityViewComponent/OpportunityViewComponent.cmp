@@ -582,8 +582,14 @@
                             <lightning:layoutItem size="4" class="slds-m-left_xx-large">                            
                                                                                     
                                 <div class="slds-form-element slds-m-left_xx-large">
-                                    <div class="slds-form-element__control"><span class="">
-                                        <lightning:input tabindex="5" label="Reserve Date" type="date" value="{!v.oppObj.Reserve_Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" disabled="{!!v.oppObj.Is_Reserve_Applied__c}" onchange="{!c.handleReserveDateChanged}"/>
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">
+                                                <lightning:input tabindex="5" label="Reserve Date" type="date" value="{!v.oppObj.Reserve_Date__c}" min="{! v.calendarMin}" max="{! v.calendarMax}" disabled="{!!v.oppObj.Is_Reserve_Applied__c}" onchange="{!c.handleReserveDateChanged}"/>
+                                                <aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="Reserve Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>
                                         </span>
                                     </div>
                                 </div>                            
@@ -609,19 +615,76 @@
                                 <div class="slds-form-element slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Non_Repaid_Drawdown_Principal_Total__c}" step="0.01" 
-                                                             label="Principal Advanced" disabled="true"/>
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">
+                                                <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Principal_Advanced_To_Reserve_Date__c}" step="0.01" 
+                                                             label="Principal Advanced to Freeze Date" disabled="true"/>
+                                                <aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="Principal Advanced to Freeze Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="slds-form-element slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Interest_Accrued_as_of_Reserve_Date__c}" step="0.01" 
-                                                             label="Accrued Interest To Reserve Date" disabled="true"/>
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">                                            
+                                                <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Interest_Accrued_as_of_Reserve_Date__c}" step="0.01" 
+                                                             label="Accrued Interest To Freeze Date" disabled="true"/>
+                                            	<aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="Accrued Interest To Freeze Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>
+                                        </span>
+                                    </div>
+                                </div>                                                                                                                                
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">                                            
+                                            	<lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.FV_at_Freeze_Date__c}" step="0.01" 
+                                                             label="FV at Freeze Date" disabled="true"/>
+                                            	<aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="FV at Freeze Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>
+                                        </span>
+                                    </div>
+                                </div>                                
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">
+                                            	<lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Advances_after_Reserve_Date__c}" step="0.01" 
+                                                             label="Advances after Freeze Date" disabled="true"/>
+                                            	<aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="Advances after Freeze Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>
+                                        </span>
+                                    </div>
+                                </div>                                                                                                
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <aura:if isTrue="{!and(v.oppObj.Is_Reserve_Applied__c, v.oppObj.Stop_Interest__c)}">
+                                            	<lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Payments_after_Reserve_Date__c}" step="0.01" 
+                                                             label="Payments after Freeze Date" disabled="true"/>
+                                            	<aura:set attribute="else">
+                                                    <lightning:input type="text" value="-" label="Payments after Freeze Date" disabled="true"/>
+                                                </aura:set>    
+                                            </aura:if>    
                                         </span>
                                     </div>
                                 </div>
+                                <div class="slds-form-element slds-m-left_xx-large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="Number" formatter="currency" tabindex="18" value="{!v.oppObj.Value_At_Reserve_Date__c}" step="0.01" 
+                                                             label="FV Before Reserve" disabled="true"/>
+                                        </span>
+                                    </div>
+                                </div>                                                                
                                 <div class="slds-form-element slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">

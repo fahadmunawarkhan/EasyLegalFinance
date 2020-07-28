@@ -1,10 +1,10 @@
 <!--
   @File Name          : CustomerViewComponent.cmp
   @Description        : 
-  @Author             : fahad.khan@toptal.com
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 07-21-2020
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 07-10-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -52,6 +52,7 @@
 
     <aura:handler name="resetClickedEvent" event="c:CustomTableResetClickedEvent" action="{!c.handleCustomTableResetClicked}" />
     <aura:handler name="saveClickedEvent" event="c:customTableSaveClickedEvent" action="{!c.handleCustomTableSaveClicked}" />
+    <aura:handler name="cellChangedEvent" event="c:CustomCellChangedEvent" action="{!c.handleCustomCellChanged}"/>
 
     <aura:attribute name="paymentSearchTypeSelected" type="String" />
     <aura:attribute name="paymentPayoutSearch" type="boolean" />
@@ -2043,7 +2044,7 @@
                                 	<h2 class="slds-text-heading--small slds-m-top_medium slds-truncate hd-lbl">Reserve Applied</h2>
                                 </div>
                             </div>
-                            <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}"/>
+                            <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}" aura:id="reservetable"/>                            
                         </lightning:card>                        						
                     </div>                        
                 </div>       

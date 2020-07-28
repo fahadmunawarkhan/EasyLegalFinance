@@ -1646,7 +1646,7 @@
     applyReserve : function(component) {
         var oppObj = component.get("v.oppObj");
         var action = component.get('c.applyReserveOpp');        
-        if (oppObj.Is_Reserve_Applied__c && !oppObj.Reserve_Date__c){
+        if (oppObj.Is_Reserve_Applied__c && oppObj.Stop_Interest__c && !oppObj.Reserve_Date__c){
             this.showToast('ERROR', 'Reserve Date cannot be empty', 'ERROR');
             component.set("v.spinner", false);
             return;
@@ -1663,7 +1663,13 @@
                 var res = response.getReturnValue();
                 component.set("v.oppObj.Non_Repaid_Drawdown_Principal_Total__c", res.Non_Repaid_Drawdown_Principal_Total__c);
                 component.set("v.oppObj.Interest_Accrued_as_of_Reserve_Date__c", res.Interest_Accrued_as_of_Reserve_Date__c);
+                component.set("v.oppObj.FV_at_Freeze_Date__c", res.FV_at_Freeze_Date__c);                                
+                component.set("v.oppObj.Value_At_Reserve_Date__c", res.Value_At_Reserve_Date__c);                                
                 component.set("v.oppObj.Reserve_Exposure__c", res.Reserve_Exposure__c);                                
+                component.set("v.oppObj.Payments_after_Reserve_Date__c", res.Payments_after_Reserve_Date__c);                                
+                component.set("v.oppObj.Advances_after_Reserve_Date__c", res.Advances_after_Reserve_Date__c);                                
+                component.set("v.oppObj.Interest_Accrued_as_of_Reserve_Date__c", res.Interest_Accrued_as_of_Reserve_Date__c);                                
+                component.set("v.oppObj.Principal_Advanced_To_Reserve_Date__c", res.Principal_Advanced_To_Reserve_Date__c);                                
                 var loanReserved = component.getEvent("loanReserved");
                 loanReserved.fire(); 
                 component.set("v.reserveInfoChanged", false);

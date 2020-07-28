@@ -18,7 +18,8 @@
         component.set("v.isChanged", true);
         var cellChangedEvent = component.getEvent("cellChangedEvent");
         var recordId = component.get("v.recordId");
-        cellChangedEvent.setParams({"recordId" : recordId });
+        var cellItem = component.get("v.cellItem");
+        cellChangedEvent.setParams({"recordId" : recordId, "cellItem" : cellItem});
 		cellChangedEvent.fire();
     },
     onFocus: function(component, event, helper) {        

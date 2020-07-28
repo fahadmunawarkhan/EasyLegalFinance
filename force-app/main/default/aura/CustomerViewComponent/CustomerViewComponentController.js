@@ -847,4 +847,11 @@
                 }
             )
     },
+    handleCustomCellChanged: function(component, event, helper) {
+        var recordId = event.getParam("recordId");        
+        var cellItem = event.getParam("cellItem");
+        console.log('handleCustomCellChanged ' + recordId);
+        console.log(cellItem.itemName + ' ' + cellItem.value);
+        helper.handleCustomCellChanged(component, recordId, cellItem);
+    },                     
 })
