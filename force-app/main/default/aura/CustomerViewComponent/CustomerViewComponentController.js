@@ -188,8 +188,9 @@
                 baseURL = accObj.Conga_Send_Lawyer_Payout_Email_URL__c;
 
             baseURL += ofn;
-            baseURL += "&Id=" + oppObj.Primary_Contact__c + "&EmailToId=" + oppObj.Primary_Contact__c;
-            baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
+            baseURL += "&Id=" + oppObj.Lawyer__c + "&EmailToId=" + oppObj.Lawyer__c;
+            //baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
+            baseURL += "&DS7=2";
             baseURL += "&ReturnPath=/lightning/r/Account/" + accObj.Id + "/view%23/LOAN_OVERVIEW";
             console.log('baseURL');
             console.log(baseURL);
