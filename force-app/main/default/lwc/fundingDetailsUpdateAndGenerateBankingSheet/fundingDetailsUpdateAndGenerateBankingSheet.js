@@ -325,53 +325,65 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
             )
 
         } else {
-            this.loading = true;
-            generateBankingSheet({spIds: spIds, fileType : this._fileType, businessUnitFilter : this._businessUnit})
-                .then(result => {
-                    showToast(this, 
-                        'Successfully generated banking sheet',
-                        'The payments have been marked as \'Sent to Bank\', and can be further processed now.',
-                        'success',
-                    );
 
-                    // trigger download of banking sheet file
-                    download(`bankingSheet-${new Date().toISOString()}.txt`, result);
+            let generateSheet = true;
 
-                    // call for refresh of data
-                    //sendNeedsRefreshEvent(this);
-                    this.refresh();
-                    this.loading = false;
-                })
-                .catch(error => {
-                    this.loading = false;
-                    if (error && error.body && error.body.message) {
-                        //this.dataTable.generateErrors(error.body.message);
-                        //const errorsMessage = JSON.parse(error.body.message);
-                        //this.datatables
-                        let allData = [];
-                        this.datatables.forEach(dt => {
-                            allData = allData.concat(dt.data);
-                        });
-                        console.log(JSON.stringify(error));
-                        this.errors = generateDataTableErrors(JSON.parse(error.body.message), allData);
-                        this.datatables.forEach(dt => {
-                            dt.errors = this.errors;
-                        });
+            if (this._fileType == 'CWB - EFT' && confirm('Are you sure you want to generate a banking sheet for CWB, If this is for any other bank please select "TD - EFT / Other" from options.\n\nDo you want to continue?')) {
+                generateSheet = true;
+            } else if (this._fileType == 'CWB - EFT'){
+                generateSheet = false;
+            }
+
+            if(generateSheet){
+
+                this.loading = true;
+                generateBankingSheet({spIds: spIds, fileType : this._fileType, businessUnitFilter : this._businessUnit})
+                    .then(result => {
                         showToast(this, 
-                            'Unable to generate banking sheet',
-                            this.errors.table.messages.join('\n'),
-                            'error',
-                            'sticky'
+                            'Successfully generated banking sheet',
+                            'The payments have been marked as \'Sent to Bank\', and can be further processed now.',
+                            'success',
                         );
-                    } else {
-                        showToast(this, 
-                            'There was an error',
-                            JSON.stringify(error),
-                            'error',
-                            'sticky'
-                        );
-                    }
-                });
+
+                        // trigger download of banking sheet file
+                        download(`bankingSheet-${new Date().toISOString()}.txt`, result);
+
+                        // call for refresh of data
+                        //sendNeedsRefreshEvent(this);
+                        this.refresh();
+                        this.loading = false;
+                    })
+                    .catch(error => {
+                        this.loading = false;
+                        if (error && error.body && error.body.message) {
+                            //this.dataTable.generateErrors(error.body.message);
+                            //const errorsMessage = JSON.parse(error.body.message);
+                            //this.datatables
+                            let allData = [];
+                            this.datatables.forEach(dt => {
+                                allData = allData.concat(dt.data);
+                            });
+                            console.log(JSON.stringify(error));
+                            this.errors = generateDataTableErrors(JSON.parse(error.body.message), allData);
+                            this.datatables.forEach(dt => {
+                                dt.errors = this.errors;
+                            });
+                            showToast(this, 
+                                'Unable to generate banking sheet',
+                                this.errors.table.messages.join('\n'),
+                                'error',
+                                'sticky'
+                            );
+                        } else {
+                            showToast(this, 
+                                'There was an error',
+                                JSON.stringify(error),
+                                'error',
+                                'sticky'
+                            );
+                        }
+                    });
+            }
         }
     }
 

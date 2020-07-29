@@ -43,7 +43,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @api fileTypeValue = 'CWB - EFT';
     get options() {
         return [
-            { label: 'TD - EFT', value: 'TD - EFT' },
+            { label: 'TD - EFT / Other', value: 'TD - EFT' },
             { label: 'CWB - EFT', value: 'CWB - EFT' }
         ];
     }
