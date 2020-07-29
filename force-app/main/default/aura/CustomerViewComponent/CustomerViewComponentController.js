@@ -187,9 +187,7 @@
             if (oppObj.Type_of_Loan__c == 'Lawyer Loan')
                 baseURL = accObj.Conga_Send_Lawyer_Payout_Email_URL__c;
             
-            if (oppObj.Type_of_Loan__c != 'Assessment' && oppObj.Type_of_Loan__c != 'Lawyer Loan'){
-                baseURL += "&EmailSubject=Loan+Payout+Statement+-+" + accObj.Name.substring(0, accObj.Name.indexOf("- Account")).trim().split(" ").join("+");
-            }
+            baseURL += "&EmailSubject=Loan+Payout+Statement+-+" + oppObj.Primary_Contact_Name__c.trim().split(" ").join("+");
             
             console.log('ofn = ' + ofn);
             
