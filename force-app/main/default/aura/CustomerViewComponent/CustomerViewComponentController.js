@@ -179,14 +179,20 @@
         if (dateIsSet) {
             var accObj = component.get('v.accountObj');
             let loanOverView = component.get("v.LoanSummary");
-            let ofn = "&OFN=" + "Payout+Statement+" + accObj.Name.substring(0, accObj.Name.indexOf("- Account")) + "+-+" + loanOverView.payoutDate;
+            let ofn = "&OFN=" + "Payout+Statement+" + accObj.Name.substring(0, accObj.Name.indexOf("- Account")).trim().split(" ").join("+") + "+-+" + loanOverView.payoutDate;
 
             var baseURL = accObj.Conga_Send_Payout_Email_URL__c;
             if (oppObj.Type_of_Loan__c == 'Assessment')
                 baseURL = accObj.Conga_Send_Assessment_Payout_Email_URL__c;
             if (oppObj.Type_of_Loan__c == 'Lawyer Loan')
                 baseURL = accObj.Conga_Send_Lawyer_Payout_Email_URL__c;
-
+            
+            if (oppObj.Type_of_Loan__c != 'Assessment' && oppObj.Type_of_Loan__c != 'Lawyer Loan'){
+                baseURL += "&EmailSubject=Loan+Payout+Statement+-+" + accObj.Name.substring(0, accObj.Name.indexOf("- Account")).trim().split(" ").join("+");
+            }
+            
+            console.log('ofn = ' + ofn);
+            
             baseURL += ofn;
             baseURL += "&Id=" + oppObj.Lawyer__c + "&EmailToId=" + oppObj.Lawyer__c;
             //baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
