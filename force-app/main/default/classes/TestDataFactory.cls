@@ -99,6 +99,7 @@ public class TestDataFactory {
         baConfig.setDefinition('Name', 'static value(First Last)');
         baConfig.setDefinition('Account__c', 'static value(222-222-222)');
         baConfig.setDefinition('Bank__c', 'static value(0333)');
+        baConfig.setDefinition('Bank_Name__c', 'static value(TD Canada Trust)');
         baConfig.setDefinition('Transit__c', 'static value(44444)');
         baConfig.setDefinition('Mark_as_Primary__c', 'static value(true)');
         return baConfig;

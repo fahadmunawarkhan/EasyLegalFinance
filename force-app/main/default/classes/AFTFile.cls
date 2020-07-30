@@ -72,7 +72,7 @@ public with sharing class AFTFile {
 
         // Fetch Accounts with Bank Account and Contact information mapped by Id for ease of use
         this.bankAccountList = new Map<Id, Bank_Account__c>([
-            SELECT Id, Name, Bank__c, Transit__c, Account__c, Client__r.Name, Client__r.AccountNumber
+            SELECT Id, Name, Bank_Name__c, Bank__c, Transit__c, Account__c, Client__r.Name, Client__r.AccountNumber
             FROM Bank_Account__c
             WHERE Id in :bankAccountIds
             ORDER BY Id

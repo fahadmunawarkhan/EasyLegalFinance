@@ -63,10 +63,13 @@ public with sharing class AFTFileDetail {
     
     private String getTransitNumber(){
         
-        if (this.cwbFileSetting.InstitutionalIDforReturns == null || this.cwbFileSetting.InstitutionalIDforReturns.length() != 8) {
+        if (this.bankAccount.Bank__c == null || this.bankAccount.Bank__c.length() != 4) {
+            throw new EFTFileException(null, '', 'Invalid Bank #. Please update the payment bank account. Bank # must be 4 digits long.');
+        }
+        if (this.bankAccount.Transit__c == null || this.bankAccount.Transit__c.length() != 5) {
             throw new EFTFileException(null, '', 'Invalid Bank Account Transit #. Please update the payment bank account. Transit #\'s must be 5 digits long.');
         }
-        return EFTHelper.formatString(this.cwbFileSetting.InstitutionalIDforReturns, '0', 9, 'left');
+        return this.bankAccount.Bank__c + this.bankAccount.Transit__c;
     }
     private String getAccountNumber(){
         
@@ -89,7 +92,10 @@ public with sharing class AFTFileDetail {
     }
     
     private String getPayeeName(){
-        return EFTHelper.formatString(this.bankAccount.Name, ' ', 30, 'right');
+        if (this.bankAccount.Bank_Name__c == null || this.bankAccount.Bank_Name__c == '') {
+            throw new EFTFileException(null, '', 'Bank Name can not be null. Please update the Bank Name.');
+        }
+        return EFTHelper.formatString(this.bankAccount.Bank_Name__c, ' ', 30, 'right');
     }
     
     private String getOriginatorLongName(){
