@@ -42,7 +42,7 @@
                     </lightning-layout>
                     <lightning-layout>
                         <lightning-layout-item flexibility="grow" size="12" padding="around-small">
-                            <lightning-input type="number" name="SeaholdFileNumber" label="Seahold Sheet Number" value={cwbFileSetting.Seahold_File_Number__c}></lightning-input>
+                            <lightning-input type="number" name="SeaholdFileNumber" label="Seahold Sheet Number" value={cwbFileSetting.Seahold_File_Number__c} onchange={handleFieldChange}></lightning-input>
                         </lightning-layout-item>
                     </lightning-layout>
                 </div>
