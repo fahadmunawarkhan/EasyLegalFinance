@@ -36,6 +36,7 @@
 	* @description Method to handle when the record submitted sucessfully
 	*/
 	handleCreateSubmit : function(component,event,helper){
+        event.preventDefault();
 		event.getParam("fields")['Client__c'] = component.get("v.recordId");
 		component.find('createForm').submit(event.getParam("fields"));
 		$A.util.addClass(component.find("spinner"),"slds-show"); 
@@ -45,6 +46,7 @@
 	* @description Method to handle when the record submitted sucessfully
 	*/
 	handleEditSubmit : function(component,event,helper){
+        event.preventDefault();
 		component.find('editForm').submit(event.getParam("fields"));
 		$A.util.addClass(component.find("spinner"),"slds-show"); 
 	},
