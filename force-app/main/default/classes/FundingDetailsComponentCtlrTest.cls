@@ -134,6 +134,10 @@ public class FundingDetailsComponentCtlrTest {
         results = FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities(Date.today(), null, 'reviewClosedPayments', 'ELFI', null, 'CWB - EFT', 'All');
         results = FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities(null, Date.today(), null, 'ELFI', null, 'CWB - EFT', 'All');
         results = FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities(null, null, 'staging', 'ELFI', null, 'CWB - EFT', 'All');
+        
+        FundingDetailsComponentCtlr.hasSystemAdminProfile();
+        FundingDetailsComponentCtlr.getCWBFileSettings();
+        FundingDetailsComponentCtlr.getCurrentUserInfo();
         Test.stopTest();
 
         //system.assert(results.containsKey('scheduled_payments'), 'Results should contain scheduled payments');

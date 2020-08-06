@@ -3,6 +3,7 @@ import { LightningElement, wire, api, track } from 'lwc';
 //import { reduceErrors } from 'c/ldsUtils';
 
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
+import hasSystemAdminProfile from '@salesforce/apex/FundingDetailsComponentCtlr.hasSystemAdminProfile';
 //import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
 //import resetTestInfo from '@salesforce/apex/ScheduledPaymentHelper.resetTestInfo';
 //import getOpportunitiesWithScheduledPayments from '@salesforce/apex/FundingDetailsComponentCtlr.getOpportunitiesWithScheduledPayments';
@@ -28,9 +29,10 @@ export default class FundingDetails_Parent extends LightningElement {
     @track hideBankingSheetFilters = true;
     @track hideBusinessUnitFilter = true;
 
-    @api fileTypeValue = 'CWB - EFT';
+    @api fileTypeValue = 'None';
     get options() {
         return [
+            { label: 'None', value: 'None' },
             { label: 'TD - EFT / Other', value: 'TD - EFT' },
             { label: 'CWB - EFT', value: 'CWB - EFT' }
         ];
@@ -60,6 +62,32 @@ export default class FundingDetails_Parent extends LightningElement {
     handleBusinessUnitChange(event){
         this.businessUnitFilterValue = event.detail.value;
         //this.template.querySelector("c-funding-details-update-and-generate-banking-sheet").refresh();
+    }
+    @track isSystemAdmin = false;
+    @wire(hasSystemAdminProfile)
+    wireHasSystemAdminProfile({ error, data }) {
+        if (data) {
+            this.isSystemAdmin = data;
+        } else if (error) {
+            this.isSystemAdmin = false;
+            console.log("ERROR");
+            console.log(error);
+        }
+    }
+
+    get notifyClass() { 
+        return this.fileTypeValue == 'CWB - EFT' ? 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning' : 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info';
+    }
+
+    get showWarningNotification(){
+        return this.shouldShowBankingSheet && this.fileTypeValue != 'None';
+    }
+
+    get sheetBankingInfo(){
+        return this.fileTypeValue == 'CWB - EFT' ? 'CWB Banking system' : 'TD or Other Banking systems';
+    }
+    get selectedFileType(){
+        return this.fileTypeValue == 'CWB - EFT' ? 'CWB - EFT' : 'TD - EFT / Other';
     }
 
     tabConfiguration = {

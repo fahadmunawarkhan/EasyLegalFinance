@@ -1,10 +1,10 @@
 <!--
   @Component Name     : fundingDetailsUpdateEft.html
   @Description        : 
-  @Author             : Seth Boyd
+  @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 6/25/2020, 5:04:31 PM
+  @Last Modified On   : 08-06-2020
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -114,6 +114,11 @@
     <div slot="footer" class="slds-p-top_medium">
         <lightning-layout horizontal-align="end">
             <template if:true={cwbSelected}>
+                <template if:true={hasCWBConfigPrmission}>
+                    <lightning-layout-item padding="around-small">
+                        <lightning-button label="Clear and Send Back to Validation" onclick={handleSendBack} variant="destructive"></lightning-button>
+                    </lightning-layout-item>
+                </template>
                 <lightning-layout-item padding="around-small">
                     <lightning-button label="Partial Rejected" onclick={handlePartialRejected} variant="destructive"></lightning-button>
                 </lightning-layout-item>
