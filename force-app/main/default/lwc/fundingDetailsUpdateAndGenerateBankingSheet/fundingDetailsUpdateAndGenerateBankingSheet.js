@@ -292,9 +292,9 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                if(each.name == 'ELFIFileNumber'){
                    this.cwbFileSetting.ELFI_File_Number__c = each.value;
                }else if(each.name == 'RhinoFileNumber'){
-                this.cwbFileSetting.Rhino_File_Number__c = each.value;
+                    this.cwbFileSetting.Rhino_File_Number__c = each.value;
                }else if(each.name == 'SeaholdFileNumber'){
-                this.cwbFileSetting.Seahold_File_Number__c = each.value;
+                    this.cwbFileSetting.Seahold_File_Number__c = each.value;
                }
            }
         });
