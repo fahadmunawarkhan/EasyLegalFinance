@@ -18,6 +18,9 @@ import {
 import getCWBSheetNumbers from '@salesforce/apex/FundingDetailsComponentCtlr.getCWBSheetNumbers';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
+import getCWBFileSettings from '@salesforce/apex/FundingDetailsComponentCtlr.getCWBFileSettings';
+import getCurrentUserInfo from '@salesforce/apex/FundingDetailsComponentCtlr.getCurrentUserInfo';
+import updateCWBFileSettings from '@salesforce/apex/FundingDetailsComponentCtlr.updateCWBFileSettings';
 
 export default class FundingDetailsUpdateAndGenerateBankingSheet extends LightningElement {
     sheetNumbersOptions = [
@@ -68,6 +71,8 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
     @track selectedOpportunity;
     @track permissions;
     @track pageSize = 50;
+    @track isModalOpen = false;
+    @api cwbFileSetting;
 
     @wire(fetchCustomPermissions, {permissions: PERMISSION_CLASSES})
     setPermissions(result) {
@@ -116,12 +121,29 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
         }
     }
 
+    @track currentUser;
+
     handleSheetNumberChange(event){
         this.selectedSheetNumber = event.detail.value;        
         this.refresh();
     }
     @api refresh() {
         this.loading = true;
+
+        getCurrentUserInfo().then(
+            result =>{
+                this.currentUser = result;
+            }
+        ).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });
+
         //this.selectedAll = false; // Seems to be bugging out, maybe a bug in LWC rendering?
         //this.selectAllText = 'Select All';
         let options = {
@@ -209,6 +231,73 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
     get dataTable() {
         this.dt = this.dt || this.template.querySelector('c-funding-details-datatable-wrapper');
         return this.dt;
+    }
+
+    get canConfigCWBSheetNumbers(){
+        return this.currentUser != undefined && this.currentUser != null? this.currentUser.Can_Configure_CWB_Settings__c : false;
+    }
+
+    openModal() {
+        getCWBFileSettings().then(result => {
+            console.log('CWB File Settings');
+            console.log(result);
+            this.cwbFileSetting = result;
+            this.isModalOpen = true;
+        }).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });        
+    }
+    closeModal() {
+        // to close modal set isModalOpen tarck value as false
+        this.isModalOpen = false;
+    }
+    updateCWBSheetNumbers() {
+        this.loading = true;
+        
+        let options = {
+            cwbFileSetting: this.cwbFileSetting
+        };
+
+        updateCWBFileSettings(options).then(
+            result =>{
+                showToast(this, 
+                    'Success',
+                    'Sheet Numbers are updated successfully.',
+                    'success',
+                );
+                this.loading = false;
+            }
+        ).catch(error => {
+            this.loading = false;
+            this.error = error;
+            this.data = undefined;
+            this.spList = undefined;
+            this.oppList = undefined;
+            this.selectedScheduledPayment = undefined;
+            this.selectedOpportunity = undefined;
+        });
+
+        this.isModalOpen = false;
+    }
+
+    handleFieldChange(event){
+        this.template.querySelectorAll('lightning-input').forEach(each => {
+           if(each.name != undefined && each.name != null){
+               if(each.name == 'ELFIFileNumber'){
+                   this.cwbFileSetting.ELFI_File_Number__c = each.value;
+               }else if(each.name == 'RhinoFileNumber'){
+                this.cwbFileSetting.Rhino_File_Number__c = each.value;
+               }else if(each.name == 'SeaholdFileNumber'){
+                this.cwbFileSetting.Seahold_File_Number__c = each.value;
+               }
+           }
+        });
     }
 
     /*
@@ -316,6 +405,9 @@ export default class FundingDetailsUpdateAndGenerateBankingSheet extends Lightni
                 'Please select the payments you want included before generating the banking sheet.',
                 'warning'
             )
+        }else if(this._fileType == 'None'){
+            alert("Please select a file type for which you want to generate a banking sheet from dropdown.");
+            
         }else if(this._businessUnit == 'All' && this._fileType == 'CWB - EFT'){
             showToast(
                 this,

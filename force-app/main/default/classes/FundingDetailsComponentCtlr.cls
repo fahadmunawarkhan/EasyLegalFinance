@@ -683,5 +683,26 @@ public with sharing class FundingDetailsComponentCtlr {
             throw new AuraHandledException('Error: '+e.getMessage());
         }
     }
+    
+    @AuraEnabled (cacheable=true)
+    public static Boolean hasSystemAdminProfile(){
+        String userProfileName = [select Name from profile where id =: userinfo.getProfileId()].Name;
+        return userProfileName == 'System Administrator';
+    }
+    
+    @AuraEnabled
+    public static CWB_File_Setting__c getCWBFileSettings(){
+        return CWB_File_Setting__c.getOrgDefaults();
+    }
+    
+    @AuraEnabled
+    public static User getCurrentUserInfo(){
+        return [select Id, Name, Can_Configure_CWB_Settings__c from User where id =: userinfo.getUserId()];
+    }
+    
+    @AuraEnabled
+    public static void updateCWBFileSettings(CWB_File_Setting__c cwbFileSetting){
+        update cwbFileSetting;
+    }
 
 }

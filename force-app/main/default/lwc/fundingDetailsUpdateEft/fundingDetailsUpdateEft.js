@@ -20,6 +20,7 @@ import getSchedulePayments from '@salesforce/apex/FundingDetailsComponentCtlr.ge
 import getScheduledPaymentsWithOpportunities from '@salesforce/apex/FundingDetailsComponentCtlr.getScheduledPaymentsWithOpportunities';
 import fetchCustomPermissions from '@salesforce/apex/FetchCustomPermissions.fetchCustomPermissions';
 import moveToProcessStep from '@salesforce/apex/FundingDetailsComponentCtlr.moveToProcessStep';
+import getCurrentUserInfo from '@salesforce/apex/FundingDetailsComponentCtlr.getCurrentUserInfo';
 
 export default class FundingDetailsUpdateEft extends LightningElement {
     cwbSelected = true;
@@ -68,6 +69,7 @@ export default class FundingDetailsUpdateEft extends LightningElement {
     @track permissions;
     @track pageSize = 50;
     @track eftNum;
+    @track currentUser;
 
     @wire(fetchCustomPermissions, {permissions: PERMISSION_CLASSES})
     setPermissions(result) {
@@ -117,6 +119,16 @@ export default class FundingDetailsUpdateEft extends LightningElement {
 
     @api refresh() {
         this.loading = true;
+
+        getCurrentUserInfo().then(
+            result =>{
+                this.currentUser = result;
+            }
+        ).catch(error => {
+            this.loading = false;
+            this.error = error;
+        });
+
         let options = {
             startDate: this.filters.startDate,
             endDate: this.filters.endDate,
@@ -190,6 +202,10 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         if (this.resourcesInitialized) {
             this.refresh();
         }
+    }
+
+    get hasCWBConfigPrmission(){
+        return this.currentUser != undefined && this.currentUser != null? (this.currentUser.Can_Configure_CWB_Settings__c && this.cwbSelected) : false;
     }
 
     handleChangeFilterDate(event) {
@@ -439,48 +455,53 @@ export default class FundingDetailsUpdateEft extends LightningElement {
         }
     }    
     handleSendBack() {
-        const spList = [];
-        this.getSelectedIds().forEach(id => spList.push({
-            Id: id,
-            Status__c: 'Pre Send Validation',
-            Banking_Verified__c: false,
-            Credit_Verified__c: false,
-            Documents_Verified__c: false,
-            BIA_PPSA_LL_Verified__c: false
-        }));
+        if(this.getSelectedIds() == 0){
+            alert('Please select a record first.');
+        }else{
+            const spList = [];
+            this.getSelectedIds().forEach(id => spList.push({
+                Id: id,
+                Status__c: 'Pre Send Validation',
+                Banking_Verified__c: false,
+                Credit_Verified__c: false,
+                Documents_Verified__c: false,
+                BIA_PPSA_LL_Verified__c: false,
+                AFT_File_Number__c : null
+            }));
 
-        this.loading = true;
-        this.errors = undefined;
-        updateScheduledPaymentsFromDraftValues(spList)
-            .then(result => {
-                showToast(this, 
-                    'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
-                    'You may now generate an updated Banking Sheet',
-                    'success'
-                );
-                this.refresh();
-                //sendNeedsRefreshEvent(this);
-            })
-            .catch(error => {
-                this.loading = false;
-                if (error && error.body && error.body.message) {
-                    //this.dataTable.generateErrors(error.body.message);
-                    this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+            this.loading = true;
+            this.errors = undefined;
+            updateScheduledPaymentsFromDraftValues(spList)
+                .then(result => {
                     showToast(this, 
-                        'Unable to update EFT Number',
-                        this.errors.table.messages.join('\n'),
-                        'error',
-                        'sticky'
+                        'Successfully Reverted Scheduled Payments to \'Pre Send Validation\'',
+                        'You may now generate an updated Banking Sheet',
+                        'success'
                     );
-                } else {
-                    showToast(this, 
-                        'There was an error',
-                        JSON.stringify(error),
-                        'error',
-                        'sticky'
-                    );
-                }
-            });
+                    this.refresh();
+                    //sendNeedsRefreshEvent(this);
+                })
+                .catch(error => {
+                    this.loading = false;
+                    if (error && error.body && error.body.message) {
+                        //this.dataTable.generateErrors(error.body.message);
+                        this.errors = generateDataTableErrors(JSON.parse(error.body.message), this.spList);
+                        showToast(this, 
+                            'Unable to update EFT Number',
+                            this.errors.table.messages.join('\n'),
+                            'error',
+                            'sticky'
+                        );
+                    } else {
+                        showToast(this, 
+                            'There was an error',
+                            JSON.stringify(error),
+                            'error',
+                            'sticky'
+                        );
+                    }
+                });
+        }
     }
 
     handleSave() {

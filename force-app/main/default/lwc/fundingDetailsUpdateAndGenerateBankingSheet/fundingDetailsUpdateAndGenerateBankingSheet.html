@@ -1,10 +1,10 @@
 <!--
   @Component Name     : fundingDetailsUpdateAndGenerateBankingSheet.html
   @Description        : 
-  @Author             : Seth Boyd
+  @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 6/29/2020, 10:49:12 AM
+  @Last Modified On   : 08-06-2020
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -12,6 +12,50 @@
   1.0    4/18/2019, 3:15:26 PM   Seth Boyd     Initial Version
 -->
 <template>
+
+    <template if:true={isModalOpen}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Update CWB Sheet Numbers</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning-layout>
+                        <lightning-layout-item flexibility="grow" size="12" padding="around-small">
+                            <lightning-input type="number" name="ELFIFileNumber" label="ELFI Sheet Number" value={cwbFileSetting.ELFI_File_Number__c} onchange={handleFieldChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <lightning-layout>
+                        <lightning-layout-item flexibility="grow" size="12" padding="around-small">
+                            <lightning-input type="number" name="RhinoFileNumber" label="Rhino Sheet Number" value={cwbFileSetting.Rhino_File_Number__c} onchange={handleFieldChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <lightning-layout>
+                        <lightning-layout-item flexibility="grow" size="12" padding="around-small">
+                            <lightning-input type="number" name="SeaholdFileNumber" label="Seahold Sheet Number" value={cwbFileSetting.Seahold_File_Number__c}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={updateCWBSheetNumbers} title="Update">Update</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
     <div class="slds-spinner_container slds-is-relative" if:true={loading} >
         <lightning-spinner size="large" class="with-backdrop" style="z-index: 9001;" alternative-text="Loading..."></lightning-spinner>
         <div class="slds-backdrop slds-backdrop_open"></div>
@@ -75,7 +119,7 @@
 
     -->
     <lightning-layout>
-        <lightning-layout-item size="2" flexibility="no-grow" padding="around-small">
+        <lightning-layout-item size="3" flexibility="no-grow" padding="around-small">
             <lightning-combobox
                 name="sheetNumbers"
                 label="Sheet Number"
@@ -86,6 +130,16 @@
                 variant="label-inline" >
             </lightning-combobox>
         </lightning-layout-item>
+        <template if:true={canConfigCWBSheetNumbers}>
+            <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" >
+                <lightning-button variant="brand"
+                    label="Config CWB Sheet #"
+                    title="Config CWB Sheet #"
+                    onclick={openModal}
+                    class="slds-m-left_x-small">
+                </lightning-button>
+            </lightning-layout-item>
+        </template>
     </lightning-layout>
 
     <lightning-input

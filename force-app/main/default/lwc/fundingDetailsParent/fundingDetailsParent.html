@@ -1,10 +1,10 @@
 <!--
   @Component Name     : fundingDetailsParent.html
   @Description        : 
-  @Author             : Seth Boyd
+  @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 7/8/2020, 12:12:21 PM
+  @Last Modified On   : 08-05-2020
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -31,6 +31,31 @@
         <lightning-tab if:true={canReviewClosedPayments} label="Review Closed Payments" value="CompletedPayments" onactive={tabSelected}>
         </lightning-tab>
     </lightning-tabset>
+
+    <template if:true={showWarningNotification}>
+        <lightning-card>
+            <lightning-layout>
+                <lightning-layout-item size="12">
+                    <div class={notifyClass} role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                            <lightning-icon icon-name="utility:info_alt" alternative-text="info!" size="x-small"></lightning-icon>
+                        </span>
+                        <h1>You have select <span style="font-weight:bold;">"{selectedFileType}"</span> file type from dropdown. This will generate a banking sheet for <span style="font-weight:bold;">{sheetBankingInfo}</span>.
+                        </h1>
+                        <div class="slds-notify__close">                            
+                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" >
+                                <lightning-icon icon-name="utility:close" alternative-text="close" size="xx-small" ></lightning-icon>
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-card>
+    </template>
+
+
     <lightning-card>
 
         <!-- Trying to move shared filter to parent -->
@@ -91,9 +116,11 @@
                     onchange={handleFileTypeChange} >
                 </lightning-combobox>
             </lightning-layout-item>
-            <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" >
-                <lightning-button variant="brand" label="CWB Sheets Status" title="CWB Sheets Status" onclick={CWBSheetsStatusButton} class="slds-m-left_x-small"></lightning-button>
-            </lightning-layout-item>            
+            <template if:true={isSystemAdmin}>
+                <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" >
+                    <lightning-button variant="" label="Ref. Report [Dev Only]" title="Reference Report [Developers Only]" onclick={CWBSheetsStatusButton} class="slds-m-left_x-small"></lightning-button>
+                </lightning-layout-item>      
+            </template>      
         </lightning-layout>
         <template if:true={filterInitilized}>
             <template if:true={shouldShowStaging}>
