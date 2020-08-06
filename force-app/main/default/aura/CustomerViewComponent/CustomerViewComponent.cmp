@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 07-10-2020
+  @Last Modified On   : 08-05-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -1286,20 +1286,24 @@
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="6">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                                            <aura:if isTrue="{!v.currentUser.Loan_Overview_Edit__c}">
                                                 <lightning:layout horizontalAlign="center">
-                                                    <lightning:layoutItem>
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Email Payout Statement" onclick="{!c.sendPayoutStatement}"></lightning:button>
-                                                    </lightning:layoutItem>
-
-                                                    <lightning:layoutItem>
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>
-                                                    </lightning:layoutItem>
-                                                    <lightning:layoutItem>
-                                                        <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" />
-                                                    </lightning:layoutItem>
+                                                    <aura:if isTrue="{!v.currentUser.Can_Send_Email_Payout_Statement__c}">
+                                                        <lightning:layoutItem>
+                                                            <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Email Payout Statement" onclick="{!c.sendPayoutStatement}"></lightning:button>
+                                                        </lightning:layoutItem>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.currentUser.Can_Generate_Payout_Statement__c}">
+                                                        <lightning:layoutItem>
+                                                            <lightning:button class="slds-p-around_xx-small slds-theme_neutral slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Generate Payout Statement" onclick="{!c.generatePayoutStatement}"></lightning:button>
+                                                        </lightning:layoutItem>
+                                                    </aura:if>
+                                                    <aura:if isTrue="{!v.currentUser.Loan_Overview_Edit__c}">
+                                                        <lightning:layoutItem>
+                                                            <lightning:button class="slds-p-around_xx-small slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance" onclick="{!c.generatePayout}" />
+                                                        </lightning:layoutItem>
+                                                    </aura:if>
                                                 </lightning:layout>
-                                            </aura:if>
+                                            
                                         </div>
                                     </lightning:layoutItem>
                                     <!--<lightning:layoutItem size="6">
