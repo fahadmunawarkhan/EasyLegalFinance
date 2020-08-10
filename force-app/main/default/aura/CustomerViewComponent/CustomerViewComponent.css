@@ -38,3 +38,17 @@
     background: #ad321c !important;
     color: #fff !important;
 }
+.THIS.payment-instruction-modal .slds-modal__container{
+	width: 1000px !important;
+	max-width: 1000px !important;
+}
+
+.THIS .payment-summary-accordion{
+	width: 900px !important;
+	max-width: 900px !important;    
+}
+
+.THIS .payment-instructions{
+	width: 1000px !important;
+	max-width: 1000px !important;    
+}

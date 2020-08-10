@@ -65,6 +65,7 @@
     <aura:attribute name="estimatedTotalBalance" type="decimal" />
     <aura:attribute name="EFT" type="decimal" />
     <aura:attribute name="CHQ" type="decimal" />
+    <aura:attribute name="WireFee" type="decimal" />
     <aura:attribute name="paymentsError" type="String" />
     <aura:attribute name="paymentSearchDisabled" type="Boolean" />
 
@@ -151,6 +152,8 @@
     
     <aura:attribute name="currentUser" type="User" /> 
 
+    <!-- Payment Instruction Variables -->    
+    <aura:attribute name="paymentInstructionModalPromise" type="Aura.Action"/>
     <lightning:overlayLibrary aura:id="overlayLib"/>
     <body> 
         <!-- <<<<<<<<<< PAGE HEADER, TITLE AND BUTTONS >>>>>>>>>> -->
@@ -1049,6 +1052,11 @@
                                 Loan Summary
                             </a>
                         </li>
+                        <li class="slds-tabs--scoped__item customClassForTab" title="Payment Summary" role="presentation" aura:id="paymentSummaryId">
+                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentSummaryTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2">
+                                Payment Summary
+                            </a>
+                        </li>   
                         <li class="slds-tabs--scoped__item customClassForTab" title="Transactions" role="presentation" aura:id="transactionsId">
                             <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.transactionsTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3">
                                 Transactions
@@ -1357,6 +1365,15 @@
                         </lightning:card>
                     </div>
                     
+                    <!-- <<<<<<<<<< Payment Summary >>>>>>>>>> -->
+                    <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-2" aura:id="paymentSummaryTabDataId">
+                        <lightning:card class="slds-card slds-card_boundary" title="Payment Summary" variant="base"> 
+                            <div class="payment-instructions">
+                            	<c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.PaymentSummaryItems}"/>
+                            </div>
+                        </lightning:card>                        						
+                    </div>                        
+
                     
                     <!-- <<<<<<<<<< TRANSACTIONS TABLE >>>>>>>>>> -->
                     <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-3" aura:id="transactionsTabDataId">                        
@@ -1525,7 +1542,7 @@
                     </div>
 
                     <!-- <<<<<<<<<< PAYMENTS >>>>>>>>>> -->
-                    <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-3" aura:id="paymentsTabDataId">                    
+                    <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="paymentsTabDataId">                    
                         <lightning:card title="" variant="base">
                             <div class="slds-card__body_inner">
                                 <lightning:layout>
@@ -1600,6 +1617,7 @@
                                                                 <div class="slds-form_horizontal">
                                                                 	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
                                                                 </div>
+                                                                <ui:inputCurrency label="Wire Fee" value="{!v.WireFee}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>                                                                                                                                                                                                
                                                             </div>
                                                             <div class="slds-col">
                                                                 <div class="slds-form_horizontal">
@@ -1906,6 +1924,7 @@
                                                                 <div class="slds-form_horizontal">
                                                                 	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
                                                                 </div>
+                                                                <ui:inputCurrency label="Wire Fee" value="{!v.WireFee}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>                                                                                                                        
                                                             </div>
                                                             <div class="slds-col">
                                                                 <div class="slds-form_horizontal">
@@ -2035,7 +2054,7 @@
                         </aura:if>
                     </div>
                     <!-- <<<<<<<<<< RESERVE TAB >>>>>>>>>> -->
-                    <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="reserveTabDataId">
+                    <div id="tab-scoped-5" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-5" aura:id="reserveTabDataId">
                         <lightning:card class="slds-card slds-card_boundary" title="Reserve Applied" variant="base">                                                        
                             <div class="slds-card__body_inner">
                                 <div class="slds-media__body slds-m-bottom_xx-small">

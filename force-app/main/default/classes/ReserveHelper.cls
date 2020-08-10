@@ -10,7 +10,7 @@ public class ReserveHelper {
                 oppWithReserveIds.add((Id)reserveInfoMap.get('Id'));
         }
         if (!oppIds.isEmpty()){
-            List<Opportunity> opps = [select Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c, Interest_Accrued_as_of_Reserve_Date__c,
+            List<Opportunity> opps = [select Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Reserve_Amount_Without_Clearing__c, Is_Reserve_Applied__c, Interest_Accrued_as_of_Reserve_Date__c,
                                       Stop_Interest__c from Opportunity where Id in :oppIds];
             Map<Id, Opportunity> idToOppMap = new Map<Id, Opportunity>();
             for (Opportunity opp : opps){
@@ -26,7 +26,7 @@ public class ReserveHelper {
             updatePaymentAllocations(oppIds, idToOppMap);
             //updateOppsWithReserveApplied(oppWithReserveIds);
             opps = [select Is_Reserve_Applied__c, Payout_Date__c, Reserve_Date__c,Interest_Accrued_as_of_Payout_Date__c, Drawdown_Principal_Total__c,Non_Repaid_Drawdown_Principal_Total__c,
-                     Interest_Accrued_as_of_Reserve_Date__c, Reserve_Non_Repaid_Interest__c, Reserve_Exposure__c, Reserve_Amount__c, Stop_Interest__c, Payments_after_Reserve_Date__c,
+                     Interest_Accrued_as_of_Reserve_Date__c, Reserve_Non_Repaid_Interest__c, Reserve_Exposure__c, Reserve_Amount__c, Reserve_Amount_Without_Clearing__c, Stop_Interest__c, Payments_after_Reserve_Date__c,
                     Advances_after_Reserve_Date__c, Principal_Advanced_To_Reserve_Date__c, FV_at_Freeze_Date__c, Value_At_Reserve_Date__c from Opportunity where Id=:oppIds];
             return opps;
         }
@@ -53,6 +53,7 @@ public class ReserveHelper {
         if (!isReserveApplied){
             opp.Reserve_Date__c = null;            
             opp.Reserve_Amount__c = null;           
+            opp.Reserve_Amount_Without_Clearing__c = null;
         }            
         else{
             if (reserveInfoMap.get('Reserve_Date__c') != null){
@@ -63,6 +64,7 @@ public class ReserveHelper {
                 opp.Reserve_Date__c = null;
             //opp.Payout_Date__c = reserveDate;                
             opp.Reserve_Amount__c = Double.valueOf(reserveInfoMap.get('Reserve_Amount__c'));
+            opp.Reserve_Amount_Without_Clearing__c = Double.valueOf(reserveInfoMap.get('Reserve_Amount__c'));
         }                                        
     }
     

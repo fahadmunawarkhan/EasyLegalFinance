@@ -143,6 +143,14 @@
         component.find("loanSummaryId").getElement().className = 'slds-tabs--scoped__item slds-active customClassForTab';
         component.find("loanSummaryTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
     },
+    paymentSummaryTab: function(component, event, helper) {
+        component.set("v.spinner", true);
+
+        helper.clearAllTabs(component, event);
+        helper.loadPaymentSummaryTab(component);
+        component.find("paymentSummaryId").getElement().className = 'slds-tabs--scoped__item slds-active customClassForTab';
+        component.find("paymentSummaryTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
+    },      
     transactionsTab: function(component, event, helper) {
         component.set("v.spinner", true);
 
@@ -787,7 +795,8 @@
         var paymentAmount = component.get("v.paymentAmount");
         var eft = component.get("v.EFT");
         var chq = component.get("v.CHQ");
-        if (paymentAmount != null || eft != null || chq != null) {
+        var wireFee = component.get("v.WireFee");
+        if (paymentAmount != null || eft != null || chq != null || wireFee != null) {
             component.set("v.paymentSearchDisabled", true);
         }
         /*else{
