@@ -1,0 +1,139 @@
+<aura:component controller="PaymentInstructionCtlr">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="paymentInfo" type="Object" />
+    <div class="slds-grid">    
+        <div class="slds-col slds-size_5-of-5 slds-text-align_center text-title">
+        	Payment Instructions for {!v.paymentInfo.description} - {!v.paymentInfo.opportunityName} 
+    	</div>
+    </div>
+    <br/>
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-5 text-description">
+            File Number:
+        </div>
+        <div class="slds-col slds-size_4-of-5">
+            {!v.paymentInfo.fileNumber}
+        </div>        
+    </div>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-5 text-description">
+            Name:
+        </div>
+        <div class="slds-col slds-size_4-of-5">
+            {!v.paymentInfo.opportunityName}
+        </div>        
+    </div>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-5 text-description">
+            Date of payment:
+        </div>
+        <div class="slds-col slds-size_4-of-5">
+            {!v.paymentInfo.paymentDateString}
+        </div>        
+    </div>
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please apply the payment received as follows:
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.principal}" label="Principal" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:input type="number" value="{!v.paymentInfo.interest}" label="Interest" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>                      
+            </div>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.surplus}" label="Surplus" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+            </div>      
+			<div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.shortfallPrincipal}" label="Shortfall Principal" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:input type="number" value="{!v.paymentInfo.shortfallInterest}" label="Shortfall Interest" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>                      
+            </div>            
+        </div>        
+    </div>   
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please write off the following as bad debts:
+        </div>
+        <div class="slds-col slds-size_3-of-5">            
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.badDebtPrincipal}" label="Principal" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:input type="number" value="{!v.paymentInfo.badDebtInterest}" label="Interest" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>                      
+            </div>
+        </div>        
+    </div> 
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please reverse the following reserve:
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.reserve}" label="Reserve" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+            </div>
+        </div>        
+    </div> 
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please apply as bad debt recovery:
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.badDebtRecovery}" label="Bad debt recovery" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+            </div>
+        </div>        
+    </div>  
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please apply refund:
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.refund}" label="Refund" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+            </div>
+        </div>        
+    </div>     
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_2-of-5 text-description">
+            Please expense wire fees:
+        </div>
+        <div class="slds-col slds-size_3-of-5">
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                    <lightning:input type="number" value="{!v.paymentInfo.wireFee}" label="Wire Fee" formatter="currency" step="0.01" variant="label-inline"/>
+                </div>        
+            </div>
+        </div>        
+    </div> 
+    <br/>
+    <br/>
+    <!--<lightning:textarea name="input1" label="Enter some text" aura:id="textarea_id"/>-->
+    <div class="slds-text-align_center">
+        <lightning:button label="Copy as rich text" iconName="utility:copy" onclick="{!c.copyAsRichText}"/>
+        <lightning:button label="Email Bookkeeper" iconName="utility:email" onclick="{!c.sendEmail}"/>
+    </div>
+</aura:component>

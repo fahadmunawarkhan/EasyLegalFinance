@@ -1173,6 +1173,7 @@
         var sType = component.get("v.paymentSearchTypeSelected");
         var eft = component.get("v.EFT");
         var chq = component.get("v.CHQ");
+        var wireFee = component.get("v.WireFee");
         var oppsIds = component.get("v.oppIdList");
         if (oppsIds.length > 0) {
             var oppId = oppsIds[oppsIds.length - 1];
@@ -1184,6 +1185,7 @@
                 searchType: sType,
                 eft: eft,
                 chq: chq,
+                wireFee: wireFee,
                 oppId: oppId,
                 action: action,
                 isLastPayment: (oppsIds.length == 1)
@@ -1195,11 +1197,21 @@
                     var oppsIds = component.get("v.oppIdList");
                     oppsIds.pop();
                     component.set("v.oppIdList", oppsIds);                    
+                    var newPayments = response.getReturnValue();
+                    var createdPaymentList = component.get("v.createdPaymentList");
+                    if (newPayments){                        
+                    	createdPaymentList.push.apply(createdPaymentList, newPayments);
+                        component.set("v.createdPaymentList", createdPaymentList);
+                    }
                     if (oppsIds.length == 0){                        
-                        component.set("v.spinner", false);
                         component.set("v.displayPaymentValidationErrors", false);
-                        component.set("v.oppList", response.getReturnValue());                                        
-                        this.postSubmitPayments(component);              
+                        this.postSubmitPayments(component, true);              
+                        var paymentIds = [];
+                        for (var i = 0; i < createdPaymentList.length; i++){
+                            paymentIds.push(createdPaymentList[i].Id);
+                        }
+                        if (paymentIds.length > 0)
+                            this.showPaymentInstructionDialog(component, paymentIds);
                         this.showToast('SUCCESS','Success!','SUCCESS');                        
                     }
                     else this.submitNextPayment(component);
@@ -1207,17 +1219,7 @@
                 } else if (state === 'ERROR') {
                     var errors = response.getError();
                     console.log(errors);
-                    var hlp = this;
-                    this.getOpportunitiesList(component)
-                        .then(
-                            function(result){                                
-                                component.set("v.spinner", false);
-                                component.set("v.paymentSearchDisabled", false); 
-                                hlp.estimateTotalBalance(component);                                
-                            },
-                            function(error){                                
-                                component.set("v.spinner", false);
-                            });
+                    this.postSubmitPayments(component, false);
                     this.createTaskOnPaymentApplyingError(component, oppId);
                     if (errors) {
                         if (errors[0] && errors[0].message) {
@@ -1251,6 +1253,7 @@
         }
         if (oppsIds.length > 0){
             component.set("v.oppIdList", oppsIds);
+            component.set("v.createdPaymentList", []);
             this.submitNextPayment(component);
         }
 
@@ -1278,14 +1281,27 @@
             totalBalance = 0.0;
         component.set("v.estimatedTotalBalance", totalBalance);*/
     },
-    postSubmitPayments : function(component){
-        this.estimateTotalBalance(component);
-        var paymentAmount = component.get('v.paymentAmount');
-        component.set('v.calculatedPaymentAmount', null);    	
-        component.set('v.paymentAmount', null);
-        component.set('v.EFT', null);
-        component.set('v.CHQ', null);
-        component.set("v.paymentSearchDisabled", false); 
+    postSubmitPayments : function(component, isSuccess){
+        var self = this;
+        this.getOpportunitiesList(component)
+        .then(
+            function(result){    
+                console.log('postSubmitPayments');
+                console.log(result);
+                component.set("v.spinner", false);                         
+                component.set("v.paymentSearchDisabled", false); 
+                self.estimateTotalBalance(component);                                
+                if (isSuccess){
+                    component.set('v.calculatedPaymentAmount', null);    	
+                    component.set('v.paymentAmount', null);
+                    component.set('v.EFT', null);
+                    component.set('v.CHQ', null);
+                }
+            },
+            function(error){                                
+                component.set("v.spinner", false);
+            }
+        );        
     },
     formatCurrency : function(amount) {
         //https://developer.salesforce.com/index.php?title=Format_Number_as_Currency.js&oldid=9020
@@ -1577,8 +1593,115 @@
                 }
             );
     },
+    getPaymentInfo : function(component){
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.getPaymentSummaryItem'); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                //action.setParams({ accountId : recordId})                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },
+    showPaymentInstructionDialog: function(component, paymentIds){
+		console.log('showPaymentInstructionDialog' + paymentIds);
+        this.getLastPaymentsSummary(component, paymentIds)
+        .then(
+            $A.getCallback(function(result) {  
+                console.log(result);
+                var paymentSummaryItems = result;
+                $A.createComponent(
+                    "c:PaymentInstructionSummaryComponent",
+                    {
+                        paymentSummaryItems: paymentSummaryItems
+                    }
+                    ,
+                    function(formComponent, status, errorMessage){
+                        if (status === "SUCCESS") {
+                            let modalPromise = component.find("overlayLib").showCustomModal({
+                                body: formComponent,
+                                cssClass: "cCustomerViewComponent payment-instruction-modal",
+                                //cssClass: "slds-modal_small",
+                                showCloseButton: true,
+                                closeCallback: function() {}
+                            });
+                            component.set("v.paymentInstructionModalPromise", modalPromise);                    
+                        } else {
+                            console.error(errorMessage);
+                        }
+                    }
+                );   
+            }),
+            $A.getCallback(function(errors) {
+                if (errors[0] && errors[0].message) {
+                    helper.errorsHandler(errors)
+                }else {
+                    helper.unknownErrorsHandler();
+                }                
+            })
+        );
+    },
+    getPaymentSummary: function(component){        
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.getPaymentSummaryItems'); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams({ accountId : recordId})                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },
+    getLastPaymentsSummary: function(component, paymentIds){        
+        var recordId = component.get("v.recordId");
+        var action = component.get('c.getLastPaymentSummaryItems'); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams({ accountId : recordId, paymentIds : paymentIds})                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },                
+	loadPaymentSummaryTab: function(component){                
+        this.getPaymentSummary(component)
+        .then(
+            (result) => {                
+                component.set("v.spinner", false);
+                console.log(result);
+                component.set("v.PaymentSummaryItems", result);
+            },
+            (error) => {
+                component.set("v.spinner", false);
+            }
+        )
+    },
     excludeFromLawyerStatements : function(component){
-
         let accountObj = component.get("v.accountObj");
 
         var recordId = component.get("v.recordId");

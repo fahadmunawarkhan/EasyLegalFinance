@@ -321,7 +321,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
     
     /******************* Method to change an opportunity to bad debt *********************/
     @AuraEnabled
-    public static void changeToBadDebtStage(String oppId, String accountId, String payoutDate){                
+    public static List<Drawdown__c> changeToBadDebtStage(String oppId, String accountId, String payoutDate, Decimal wireFee){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -330,6 +330,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Reference_Notes__c = 'Bad Debt';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;   
+        dd.Wire_Fee__c = wireFee;
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
@@ -337,12 +338,12 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Loan_Status__c = 'Closed - Bad Debt';
         update opp;
         
-
+        return new List<Drawdown__c>{dd};        
     }
     
     /******************* Method to change an opportunity to surplus stage *********************/
     @AuraEnabled
-    public static void changeToSurplusStage(String oppId, String accountId, String payoutDate){                
+    public static List<Drawdown__c> changeToSurplusStage(String oppId, String accountId, String payoutDate, Decimal wireFee){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -352,6 +353,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Reference_Notes__c = 'Payment Surplus';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
+        dd.Wire_Fee__c = wireFee;
         insert dd;
         List<Drawdown__c> drawdownList = [Select id, Surplus__c from Drawdown__c where Opportunity__c = :oppId and Payment_Method__c = 'Payment'];
         for (Drawdown__c d : drawdownList ){
@@ -363,11 +365,13 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Stage_Status__c = 'Closed - Surplus';
         opp.Loan_Status__c = 'Closed - Surplus';
         update opp;        
+        
+        return new List<Drawdown__c>{dd};
     }
     
     /******************* Method to change an opportunity to shortfall stage *********************/
     @AuraEnabled
-    public static void changeToShortfallStage(String oppId, String accountId, String payoutDate){                
+    public static List<Drawdown__c> changeToShortfallStage(String oppId, String accountId, String payoutDate, Decimal wireFee){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -376,6 +380,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Reference_Notes__c = 'Payment Shortfall';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
+        dd.Wire_Fee__c = wireFee;
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
@@ -383,11 +388,12 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Loan_Status__c = 'Closed - Shortfall';
         update opp;
         
+        return new List<Drawdown__c>{dd};
     }    
     
     /******************* Method to save a partial payment *********************/
     @AuraEnabled
-    public static void applyPartialPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq){            
+    public static List<Drawdown__c> applyPartialPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq, Decimal wireFee){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -403,6 +409,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;
+        dd.Wire_Fee__c = wireFee;
         if (opp.Client_Rebate_Amount__c > 0){
             Drawdown__c clientRebateDrawdown = createClientRebateDrawdown(opp, payoutDate);
             insert clientRebateDrawdown;
@@ -417,6 +424,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Loan_Status__c = 'Active - Partial Payment';
         update opp;
         
+        return new List<Drawdown__c>{dd};
     }
     
     public static Drawdown__c createClientRebateDrawdown(Opportunity opp, String payoutDate){
@@ -433,7 +441,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
     
     /******************* Method to save a full payment *********************/
     @AuraEnabled
-    public static void applyFullPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq){            
+    public static List<Drawdown__c> applyFullPayments(String oppId, String accountId, String searchType, String payoutDate, String eft, String chq, Decimal wireFee){            
         Opportunity opp = getSingleOpportunity(oppId);
         List<Drawdown__c> drawdowns = new List<Drawdown__c>();
         Drawdown__c dd = new Drawdown__c();
@@ -445,6 +453,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;        
+		dd.Wire_Fee__c = wireFee;        
         if (searchType == 'Payout - Interest First')
             dd.Payout_Interest_First__c = true;
         drawdowns.add(dd);
@@ -458,11 +467,11 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Total_Service_Providers_Allowance__c = 0;
         opp.Loan_Status__c = 'Closed - Paid';
         update opp;
-
+        return new List<Drawdown__c>{dd};
     }    
     
     @AuraEnabled
-    public static void applyBadDebtRecovery(String oppId, String accountId, String payoutDate, String eft, String chq){            
+    public static List<Drawdown__c> applyBadDebtRecovery(String oppId, String accountId, String payoutDate, String eft, String chq, Decimal wireFee){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -473,15 +482,16 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;        
+        dd.Wire_Fee__c = wireFee;
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
         update opp;
-
+        return new List<Drawdown__c>{dd};
     }    
     
     @AuraEnabled
-    public static void applyRefund(String oppId, String accountId, String payoutDate, String eft, String chq){            
+    public static List<Drawdown__c> applyRefund(String oppId, String accountId, String payoutDate, String eft, String chq, Decimal wireFee){            
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -492,11 +502,12 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
         dd.CHQ__c = chq;        
+        dd.Wire_Fee__c = wireFee;
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
         update opp;
-
+        return new List<Drawdown__c>{dd};
     }    
     
     
@@ -1454,31 +1465,32 @@ return allOpts;*/
     }    
     
     @AuraEnabled
-    public static List<Opportunity> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment){   
+    public static List<Drawdown__c> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment, Decimal wireFee){
         Savepoint sp = null;
+        List<Drawdown__c> createdPayments = new List<Drawdown__c>();
         try{
             sp = Database.setSavepoint();
             System.debug('AP: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
             if (action == 'Partial Payment'){
-                applyPartialPayments(oppId, accountId, searchType, payoutDate, eft, chq);
+                createdPayments.addAll(applyPartialPayments(oppId, accountId, searchType, payoutDate, eft, chq, wireFee));
             }
             else if (action == 'Bad Debt Recovery'){
-                applyBadDebtRecovery(oppId, accountId, payoutDate, eft, chq);
+                createdPayments.addAll(applyBadDebtRecovery(oppId, accountId, payoutDate, eft, chq, wireFee));
             }
             else if (action == 'Refund'){
-                applyRefund(oppId, accountId, payoutDate, eft, chq);
+                createdPayments.addAll(applyRefund(oppId, accountId, payoutDate, eft, chq, wireFee));
             }   
             else if (action == 'Bad Debt'){
-                changeToBadDebtStage(oppId, accountId, payoutDate);
+                createdPayments.addAll(changeToBadDebtStage(oppId, accountId, payoutDate, wireFee));
             }
             else if (action == 'Closed Paid'){
-                applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq);
+                createdPayments.addAll(applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq, wireFee));
             }
             else if (action == 'Surplus'){
-                changeToSurplusStage(oppId, accountId, payoutDate);
+                createdPayments.addAll(changeToSurplusStage(oppId, accountId, payoutDate, wireFee));
             }
             else if (action == 'Shortfall'){
-                changeToShortfallStage(oppId, accountId, payoutDate);
+                createdPayments.addAll(changeToShortfallStage(oppId, accountId, payoutDate, wireFee));
             }
             if (isLastPayment){
                 deletePaymentTasks(accountId);
@@ -1499,10 +1511,8 @@ return allOpts;*/
             System.debug('Exception ' + e.getMessage());            
             throw new AuraHandledException('Error:'+e.getMessage());
         }
-        if (isLastPayment)
-            return getOpportunities(accountId);
-        else
-            return new List<Opportunity>();
+
+        return createdPayments;
     }   
     
     @AuraEnabled
@@ -1664,6 +1674,16 @@ return allOpts;*/
         }            
     }    
 	
+    @AuraEnabled 
+    public static List<PaymentSummaryItem> getPaymentSummaryItems(String accountId){
+        List<PaymentSummaryItem> result = PaymentSummaryItemHelper.getPaymentSummaryItems(accountId);                       
+        return result;
+	}
+    @AuraEnabled 
+    public static List<PaymentSummaryItem> getLastPaymentSummaryItems(String accountId, List<Id> paymentIds){
+        return PaymentSummaryItemHelper.getLastPaymentSummaryItems(accountId, paymentIds);
+	}	
+
     public Class ApprovalHistoryWrapper{
         
         @AuraEnabled

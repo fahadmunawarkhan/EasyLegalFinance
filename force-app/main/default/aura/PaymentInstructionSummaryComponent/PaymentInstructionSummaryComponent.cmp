@@ -1,0 +1,30 @@
+<aura:component >    
+    <aura:attribute name="paymentSummaryItems" type="Object" />
+    <aura:iteration items="{!v.paymentSummaryItems}" var="paymentSummaryItem" indexVar="index">
+        <div class="slds-section slds-is-close" aura:id="sections">
+            <h3 class="slds-section__title">
+                <button aria-controls="items" class="slds-button slds-section__title-action" onclick="{!c.toggleSection}" data-index="{!index}">
+                    <span >
+                        <lightning:icon iconName="utility:switch"
+                                        size="x-small"
+                                        class="slds-section__title-action-icon slds-button__icon_left"
+                                        alternativeText="button icon" 
+                                        />
+                        <lightning:icon
+                                        iconName="standard:partner_fund_allocation"
+                                        variant="base"
+                                        size="small"
+                                        class="slds-button__icon_left slds-m-horizontal__small"
+                                        alternativeText="" />
+                    </span>
+                    <span class="slds-truncate" title="PaymentSummaryItem">{!paymentSummaryItem.opportunityName +' - ' + paymentSummaryItem.description}</span>
+                </button>
+            </h3>            
+            <div class="slds-section__content" id="items">
+                <div class="cPaymentInstructionSummaryComponent payment-instruction-section">
+				<c:PaymentInstructionComponent paymentInfo="{!paymentSummaryItem}"/>            
+                    </div>
+            </div>
+        </div>
+    </aura:iteration>                               
+</aura:component>
