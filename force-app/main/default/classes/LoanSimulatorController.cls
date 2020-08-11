@@ -54,12 +54,13 @@ public with sharing class LoanSimulatorController {
 											'drawdowns' => drawdownsList
 										};
 		}catch(Exception ex){
+            throw new AuraHandledException(ex.getMessage());
 
 		}finally{
 			Database.rollback(savePointInstance);
 		}
 
-		return null;
+		//return null;
 	}
 
 	/**
@@ -68,7 +69,8 @@ public with sharing class LoanSimulatorController {
 	**/
 	private static Account createAccount(Id recordTypeId,String accountName){
 		Account account  =  new Account(Name = accountName, Authorization_Clause__c = 'No', RecordTypeId = recordTypeId,Phone='123456789');
-		insert account;
+        insert account;        
+        
 		return account;
 	}
 }
