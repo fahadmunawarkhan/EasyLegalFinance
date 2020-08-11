@@ -1210,8 +1210,8 @@
                         for (var i = 0; i < createdPaymentList.length; i++){
                             paymentIds.push(createdPaymentList[i].Id);
                         }
-                        if (paymentIds.length > 0)
-                            this.showPaymentInstructionDialog(component, paymentIds);
+                        /*if (paymentIds.length > 0)
+                            this.showPaymentInstructionDialog(component, paymentIds);*/
                         this.showToast('SUCCESS','Success!','SUCCESS');                        
                     }
                     else this.submitNextPayment(component);
