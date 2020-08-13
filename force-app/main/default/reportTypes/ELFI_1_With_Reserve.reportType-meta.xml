@@ -60,11 +60,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>All_Payout_Balance__c</field>
-            <table>Account</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>All_Payout_Interest__c</field>
             <table>Account</table>
         </columns>
@@ -280,7 +275,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Outstanding Balance To Date</displayNameOverride>
+            <displayNameOverride>FV Per Trans Table</displayNameOverride>
             <field>Outstanding_Balance_as_of_To_Date__c</field>
             <table>Account</table>
         </columns>
@@ -490,12 +485,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Value at Reserve Date</displayNameOverride>
-            <field>Value_at_To_Date__c</field>
-            <table>Account</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Principal Repaid</displayNameOverride>
             <field>Principal_Repaid_as_of_To_Date__c</field>
             <table>Account</table>
@@ -514,7 +503,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Outstanding Balance</displayNameOverride>
+            <displayNameOverride>Exposure</displayNameOverride>
             <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
             <table>Account</table>
         </columns>
@@ -522,6 +511,22 @@
             <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Principal</displayNameOverride>
             <field>Principal_With_Reserve_To_Date__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Unbilled_Revenue__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Value_At_Reserve_Date__c</field>
+            <table>Account</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>FV Before Reserve</displayNameOverride>
+            <field>Value_at_To_Date__c</field>
             <table>Account</table>
         </columns>
         <masterLabel>Accounts</masterLabel>

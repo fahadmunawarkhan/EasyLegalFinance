@@ -22,7 +22,15 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Outstanding_Balance_as_of_To_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
         <field>Account$Value_at_To_Date__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account$Unbilled_Revenue__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
@@ -35,9 +43,6 @@
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Account$Admin_Fee_as_of_To_Date__c</field>
-    </columns>
-    <columns>
-        <field>Account$BillingAddress</field>
     </columns>
     <columns>
         <field>Account$Reporting_To_Date__c</field>
