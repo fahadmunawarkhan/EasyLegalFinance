@@ -1,10 +1,10 @@
 <!--
   @File Name          : ReportingViewComponent.cmp
   @Description        : 
-  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 21/04/2020, 1:35:06 pm
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 08-13-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -35,6 +35,10 @@
         </div>
 
         <lightning:tabset variant="default" selectedTabId="{!v._selectedTabId}" onselect="{!c.onPrimaryTabSelect}">
+            
+            <!--<lightning:tab id="CLIENT_SUMMARY" label="Client Summary ">
+                <c:ClientSummaryReport />
+            </lightning:tab>-->
             <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
                 <lightning:tab id="LAWYER_SUMMARY" label="Lawyer Summary ">
                     <c:LawyerSummary />
@@ -67,11 +71,7 @@
                     <c:FinancialSummaryComponent />
                 </lightning:tab>
             </aura:if>
-            <aura:if isTrue="{!v.currentUser.Funding_Summary_Report__c}">
-                <lightning:tab id="FUNDING_SUMMARY" label="Funding Summary">
-                    <c:FundingSummaryReport />
-                </lightning:tab>
-            </aura:if>
+            
             <!-- Actual Financials Per Month -->
             <aura:if isTrue="{!v.currentUser.Actual_Sales_By_Month_Report__c}">
                 <lightning:tab id="ACTUAL_SALES_BY_MONTH" label="Actual Sales By Month Summary">
@@ -85,6 +85,11 @@
                 </lightning:tab>
             </aura:if>
             <!--PPSA Expiry Report-->
+            <aura:if isTrue="{!v.currentUser.Funding_Summary_Report__c}">
+                <lightning:tab id="FUNDING_SUMMARY" label="Funding Summary">
+                    <c:FundingSummaryReport />
+                </lightning:tab>
+            </aura:if>
             <aura:if isTrue="{!v.currentUser.Payment_Summary_Report__c}">
                 <lightning:tab id="PAYMENT_SUMMARY" label="Payment Summary">
                     <c:PaymentSummaryComponent />
@@ -93,6 +98,11 @@
             <aura:if isTrue="{!v.currentUser.Bad_Debt_Summary_Report__c}">
                 <lightning:tab id="BAD_DEBT_SUMMARY" label="Bad Debt Summary">
                     <c:BadDebtSummaryReport />
+                </lightning:tab>
+            </aura:if>
+            <aura:if isTrue="{!v.currentUser.Bad_Debt_Summary_Report__c}">
+                <lightning:tab id="BAD_DEBT_RECOVERY" label="Bad Debt Recovery">
+                    <c:BadDebtRecoveryReport />
                 </lightning:tab>
             </aura:if>
             <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
