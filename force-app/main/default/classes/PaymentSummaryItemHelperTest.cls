@@ -1,5 +1,5 @@
 @isTest
-public class PaymentSummaryItemHelperTest {
+public class PaymentSummaryItemHelperTest {    
     @TestSetup
     static void initailizeTestData(){        
         List<Account> accountList = new List<Account>();
@@ -59,13 +59,6 @@ public class PaymentSummaryItemHelperTest {
         System.assertEquals(50.0, paymentSummaryItem.principal);
         System.assertEquals(40.0, paymentSummaryItem.interest);
     }    
-    public static testMethod void testFillRealPaymentSummaryItem2(){
-        PaymentSummaryItem paymentSummaryItem = new PaymentSummaryItem();
-        PaymentSummaryItemHelper.fillRealPaymentSummaryItem(paymentSummaryItem, 0.0, 50.0, 40.0, false);
-        System.assertEquals('Partial Payment', paymentSummaryItem.referenceNotes);
-        System.assertEquals(50.0, paymentSummaryItem.principal);
-        System.assertEquals(40.0, paymentSummaryItem.interest);
-    } 
     public static testMethod void testFillSurplusPaymentSummaryItem(){
         PaymentSummaryItem paymentSummaryItem = new PaymentSummaryItem();
         PaymentSummaryItemHelper.fillSurplusPaymentSummaryItem(paymentSummaryItem, -100.0);
@@ -113,37 +106,37 @@ public class PaymentSummaryItemHelperTest {
     public static testMethod void testGetPaymentSummaryItemWithReserve(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Partial Payment', paymentSummaryItem.referenceNotes);
     }
     public static testMethod void testGetPaymentSummaryItemWithReserve1(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Bad Debt');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Bad Debt', paymentSummaryItem.referenceNotes);
     }    
     public static testMethod void testGetPaymentSummaryItemWithReserve2(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Payment Shortfall');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Payment Shortfall', paymentSummaryItem.referenceNotes);
     }  
     public static testMethod void testGetPaymentSummaryItemWithReserve3(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Payment Surplus');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Payment Surplus', paymentSummaryItem.referenceNotes);
     }
     public static testMethod void testGetPaymentSummaryItemWithReserve4(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Bad Debt Recovery');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Bad Debt Recovery', paymentSummaryItem.referenceNotes);
     } 
     public static testMethod void testGetPaymentSummaryItemWithReserve5(){
         Opportunity opp = new Opportunity(Name = 'OppName');
         Drawdown__c drawdown = new Drawdown__c(Date__c = Date.today(), Payment_Method__c = 'Payment', Reference_Notes__c = 'Payment Rejected');
-        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, false);
+        PaymentSummaryItem paymentSummaryItem = PaymentSummaryItemHelper.getPaymentSummaryItemWithReserve(drawdown, opp, 50.0, 50.0, 100.0, 0.0, 50.0, 50.0, true);
         System.assertEquals('Payment Rejected', paymentSummaryItem.referenceNotes);
     } 
     public static testMethod void testGetPaymentSummaryItemsWithReserve(){
@@ -196,7 +189,7 @@ public class PaymentSummaryItemHelperTest {
         System.assertEquals(2000.0, items[0].principal);
         System.assertEquals(9.04, items[0].interest);
         Test.stopTest();
-    }
+    }    
     public static testMethod void testGetPaymentSummaryItems2() {       
         List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
         insertDrawdowns(clientOpportunities[0].Id);

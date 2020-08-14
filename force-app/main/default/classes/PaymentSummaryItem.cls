@@ -36,7 +36,9 @@ public class PaymentSummaryItem{
     @AuraEnabled
     public string referenceNotes{get;set;}
     @AuraEnabled
-    public string description{get;set;}    
+    public string description{get{
+    	return referenceNotes + ' of $' +  Utils.formatCurrency(amount) + ' on ' + Utils.formatDate(paymentDate, 'MMM dd, yyyy');    
+    }}    
     @AuraEnabled
     public decimal wireFee {get;set;}              
     @AuraEnabled

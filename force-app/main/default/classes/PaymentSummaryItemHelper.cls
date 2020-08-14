@@ -1,10 +1,10 @@
 public class PaymentSummaryItemHelper {
     @TestVisible
-    private static void fillRealPaymentSummaryItem(PaymentSummaryItem paymentSummaryItem, Decimal reserveBalance, Decimal principal, Decimal interest, Boolean isLastPayment){        
-        if ((reserveBalance == 0.0) && isLastPayment)
+    private static void fillRealPaymentSummaryItem(PaymentSummaryItem paymentSummaryItem, Decimal reserveBalance, Decimal principal, Decimal interest, Boolean isLastOpp){        
+        if (reserveBalance == 0.0 || (reserveBalance < 0.0 && !isLastOpp))
             paymentSummaryItem.referenceNotes = 'Loan Payout';
         else
-            paymentSummaryItem.referenceNotes = 'Partial Payment';
+            paymentSummaryItem.referenceNotes = 'Partial Payment';        
         paymentSummaryItem.principal = principal;
         paymentSummaryItem.interest = interest;        
     }
@@ -64,7 +64,7 @@ public class PaymentSummaryItemHelper {
 
     
     public static PaymentSummaryItem getPaymentSummaryItemWithReserve(Drawdown__c drawdown, Opportunity opp, Decimal principal, Decimal interest, 
-        	Decimal reserveBalance, Decimal reserveToReverse, Decimal reservePrincipal, Decimal reserveInterest, Boolean isLastPayment){
+        	Decimal reserveBalance, Decimal reserveToReverse, Decimal reservePrincipal, Decimal reserveInterest, Boolean isLastOpp){
         PaymentSummaryItem paymentSummaryItem = new PaymentSummaryItem();                        
         paymentSummaryItem.id = drawdown.Id;
         paymentSummaryItem.fileNumber = opp.Account.AccountNumber;
@@ -76,15 +76,19 @@ public class PaymentSummaryItemHelper {
         
         String referenceNotes = '';
         if (drawdown.Reference_Notes__c == 'Loan Payout' || drawdown.Reference_Notes__c == 'Partial Payment'){
-            fillRealPaymentSummaryItem(paymentSummaryItem, reserveBalance, principal, interest, isLastPayment);
+            fillRealPaymentSummaryItem(paymentSummaryItem, reserveBalance, principal, interest, isLastOpp);
         }
         else if (drawdown.Reference_Notes__c == 'Payment Surplus'){
             fillSurplusPaymentSummaryItem(paymentSummaryItem, reserveBalance);
         }
         else if(drawdown.Reference_Notes__c == 'Payment Shortfall'){  
+            if (reserveBalance == 0.0)
+                return null;
             fillShortfallPaymentSummaryItem(paymentSummaryItem, reserveBalance, principal, interest);
         }
         else if(drawdown.Reference_Notes__c == 'Bad Debt'){
+            if (reserveBalance == 0.0)
+                return null;
             fillBadDebtPaymentSummaryItem(paymentSummaryItem, reserveBalance, principal, interest);                                                
         }
         else if(drawdown.Reference_Notes__c == 'Bad Debt Recovery'){
@@ -98,24 +102,37 @@ public class PaymentSummaryItemHelper {
         }
 
         DateTime dt = DateTime.newInstance(drawdown.Date__c.year(), drawdown.Date__c.month(), drawdown.Date__c.day());
-        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');                    
-        paymentSummaryItem.description = paymentSummaryItem.referenceNotes + ' of $' +  formatCurrency(paymentSummaryItem.amount) + ' on ' + dt.format('MMM dd, yyyy');
+        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');                            
         
         return paymentSummaryItem;
     }
     
     public static List<PaymentSummaryItem> getPaymentSummaryItemsWithReserve(List<Opportunity> opps, List<Drawdown__c> drawdowns){
         List<PaymentSummaryItem> items = new List<PaymentSummaryItem>();
-        for (Opportunity opp : opps){
+        Decimal reserveOverpayment = 0.0;
+        Decimal reserveBalance = 0.0;
+        for (Integer oppIndex = 0; oppIndex < opps.size(); oppIndex++){
+            Opportunity opp = opps[oppIndex];
+            Boolean isLastOpp = oppIndex == opps.size() - 1;
             List<Drawdown__c> drawdownsForOpp = new List<Drawdown__c>();            
             for (Drawdown__c drawdown : drawdowns){
                 if (drawdown.Opportunity__c == opp.Id)
                 	drawdownsForOpp.add(drawdown);
 			}            
-            Decimal reserveBalance = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c ? opp.Outstanding_Balance_as_of_Reserve_Date__c : 0.0;
+            if (opp.Is_Reserve_Applied__c && opp.Stop_Interest__c){                
+                reserveOverpayment +=  opp.Outstanding_Balance_as_of_Reserve_Date__c;
+                reserveBalance = reserveOverpayment;                                
+                if (!isLastOpp && reserveBalance < 0.0)
+                    reserveBalance = 0.0;
+                if (reserveOverpayment > 0.0)
+                    reserveOverpayment = 0.0;                
+            }
+            else reserveBalance = 0.0;
+            //reserveBalance = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c ? opp.Outstanding_Balance_as_of_Reserve_Date__c - reserveOverpayment : 0.0;
             Decimal reserveAmount = opp.Is_Reserve_Applied__c ? opp.Reserve_Amount_Without_Clearing__c : 0.0;
             Decimal reserveInterest = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c ? opp.Interest_Accrued_as_of_Reserve_Date__c : 0.0;
             Decimal reservePrincipal = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c ? opp.Principal_Advanced_To_Reserve_Date__c : 0.0;                        
+            List<PaymentSummaryItem> itemsForOpp = new List<PaymentSummaryItem>();
             for (Integer i = 0; i < drawdownsForOpp.size(); i++){
                 Drawdown__c drawdown = drawdownsForOpp[i];
                 Decimal principal = 0.0;
@@ -150,13 +167,37 @@ public class PaymentSummaryItemHelper {
                     }
                 }                
                 if (drawdown.Payment_Method__c=='Payment' || drawdown.Reference_Notes__c=='Refund'){
-                    if (opp.Is_Reserve_Applied__c && opp.Stop_Interest__c && drawdown.Date__c > opp.Reserve_Date__c){                        
-                    	items.add(getPaymentSummaryItemWithReserve(drawdown, opp, principal, interest, reserveBalance, reserveToReverse, reservePrincipal, reserveInterest, (i == drawdownsForOpp.size() - 1)));                    
+                    if (opp.Is_Reserve_Applied__c && opp.Stop_Interest__c && drawdown.Date__c > opp.Reserve_Date__c){   
+						PaymentSummaryItem item = getPaymentSummaryItemWithReserve(drawdown, opp, principal, interest, reserveBalance, reserveToReverse, reservePrincipal, reserveInterest, isLastOpp);                         
+                        if (item != null)
+                    		itemsForOpp.add( item );                    
                     }
                     else
-                    	items.add(getPaymentSummaryItem(drawdown, opp.Account.AccountNumber, opp.Opportunity_Long_Name__c, opp.Is_Reserve_Applied__c ? reserveToReverse : 0.0));
+                    	itemsForOpp.add(getPaymentSummaryItem(drawdown, opp.Account.AccountNumber, opp.Opportunity_Long_Name__c, opp.Is_Reserve_Applied__c ? reserveToReverse : 0.0));
                 }
             }
+            if (reserveBalance < 0.0)
+                reserveOverpayment += reserveBalance;
+            items.addAll(processItemsForOpp(itemsForOpp));
+        }
+        return items;
+    }
+    public static List<PaymentSummaryItem> processItemsForOpp(List<PaymentSummaryItem> itemsForOpp){
+        List<PaymentSummaryItem> items = new List<PaymentSummaryItem>();
+        for (Integer i = 0; i < itemsForOpp.size(); i++){
+            PaymentSummaryItem item = itemsForOpp[i];
+            if (item.referenceNotes == 'Loan Payout'){
+                Boolean nextPaymentFound = false;
+                for (Integer j = i+1; j < itemsForOpp.size(); j++){
+                    PaymentSummaryItem nextItem = itemsForOpp[j];
+                    if (nextItem.referenceNotes == 'Partial Payment' || nextItem.referenceNotes == 'Payment Surplus'){
+                        nextPaymentFound = true;
+                    }
+				}                
+                if (nextPaymentFound)                 
+                    item.referenceNotes = 'Partial Payment';
+            }
+            items.add(item);
         }
         return items;
     }
@@ -171,8 +212,7 @@ public class PaymentSummaryItemHelper {
         if (reserveAmount != null)
             paymentSummaryItem.reserve = reserveAmount;
         DateTime dt = DateTime.newInstance(payment.Date__c.year(), payment.Date__c.month(), payment.Date__c.day());
-        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');
-        paymentSummaryItem.description = payment.Reference_Notes__c + ' of $' +  formatCurrency(payment.Amount__c) + ' on ' + dt.format('MMM dd, yyyy');
+        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');        
         if (payment.Reference_Notes__c == 'Loan Payout' || payment.Reference_Notes__c == 'Partial Payment'
            || payment.Reference_Notes__c == 'Client Rebate' || payment.Reference_Notes__c == 'Payment Rejected' || payment.Reference_Notes__c == 'Payment Halted'){
             if (payment.Principal_Repaid__c != null && payment.Principal_Repaid__c != 0.0)
@@ -205,8 +245,8 @@ public class PaymentSummaryItemHelper {
     }    
 
 	public static List<PaymentSummaryItem> getPaymentSummaryItems(String accountId){
-        List<Opportunity> opps = [select Is_Reserve_Applied__c, Stop_Interest__c, Reserve_Amount_Without_Clearing__c, Opportunity_Long_Name__c, Account.AccountNumber, Reserve_Date__c,
-                                  Outstanding_Balance_as_of_Reserve_Date__c, Interest_Accrued_as_of_Reserve_Date__c, Principal_Advanced_To_Reserve_Date__c from Opportunity where AccountId=:accountId];
+        List<Opportunity> opps = [select Name, Loan_Requests__c, Is_Reserve_Applied__c, Stop_Interest__c, Reserve_Amount_Without_Clearing__c, Opportunity_Long_Name__c, Account.AccountNumber, Reserve_Date__c,
+                                  Outstanding_Balance_as_of_Reserve_Date__c, Interest_Accrued_as_of_Reserve_Date__c, Principal_Advanced_To_Reserve_Date__c from Opportunity where AccountId=:accountId order by Loan_Requests__c asc];
         Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>(opps);
         List<PaymentSummaryItem> paymentSummaryItems = new List<PaymentSummaryItem>();        
         List<Drawdown__c> drawdownList = [SELECT Amount__c, Total_Amount__c, Reference_Notes__c, Date__c, Opportunity__c, Payment_Method__c, Principal_Repaid__c, Include_in_Principal__c,
@@ -222,11 +262,4 @@ public class PaymentSummaryItemHelper {
         }
         return items;
     }	         
-    //https://salesforce.stackexchange.com/questions/318/what-is-a-concise-function-that-formats-a-string-decimal-into-a-currency-forma
-    public static String formatCurrency(Decimal i) {
-        if (i == null) return '0.00';
-        i = Decimal.valueOf(Math.roundToLong(i * 100)) / 100;
-        String s = (i.setScale(2) + (i >= 0 ? 0.001 : -0.001)).format();
-        return s.substring(0, s.length() - 1);
-    }
 }
