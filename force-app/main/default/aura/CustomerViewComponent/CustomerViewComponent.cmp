@@ -1052,30 +1052,30 @@
                                 Loan Summary
                             </a>
                         </li>
-                        <li class="slds-tabs--scoped__item customClassForTab" title="Payment Summary" role="presentation" aura:id="paymentSummaryId">
-                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentSummaryTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2">
-                                Payment Summary
-                            </a>
-                        </li>   
                         <li class="slds-tabs--scoped__item customClassForTab" title="Transactions" role="presentation" aura:id="transactionsId">
-                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.transactionsTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3">
+                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.transactionsTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2">
                                 Transactions
                             </a>
                         </li>
                         <aura:if isTrue="{!v.currentUser.Payments_tab__c}">
                             <li class="slds-tabs--scoped__item customClassForTab" title="Payments" role="presentation" aura:id="paymentsId">
-                                <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentsTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-4">
+                                <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentsTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3">
                                     Payments
                                 </a>
                             </li>
                         </aura:if>
                         <aura:if isTrue="{!v.currentUser.Reserve__c}">
                             <li class="slds-tabs--scoped__item customClassForTab" title="Reserve" role="presentation" aura:id="reserveId">
-                                <a class="slds-tabs_scoped__link reserve-tab-link" href="javascript:void(0);" onclick="{!c.reserveTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-5" aura:id="reserveTabLinkId">
+                                <a class="slds-tabs_scoped__link reserve-tab-link" href="javascript:void(0);" onclick="{!c.reserveTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-4" aura:id="reserveTabLinkId">
                                     Reserve
                                 </a>
                             </li> 
                         </aura:if>
+                        <li class="slds-tabs--scoped__item customClassForTab" title="Payment Summary" role="presentation" aura:id="paymentSummaryId">
+                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentSummaryTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-5">
+                                Payment Summary
+                            </a>
+                        </li>                           
                     </ul>
                     <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show customClassForTabData" role="tabpanel" aria-labelledby="tab-default-1" aura:id="loanSummaryTabDataId">
                         <!-- <<<<<<<<<< LOAN SUMMARY >>>>>>>>>> -->
@@ -1364,19 +1364,9 @@
                             </div>
                         </lightning:card>
                     </div>
-                    
-                    <!-- <<<<<<<<<< Payment Summary >>>>>>>>>> -->
-                    <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-2" aura:id="paymentSummaryTabDataId">
-                        <lightning:card class="slds-card slds-card_boundary" title="Payment Summary" variant="base"> 
-                            <div class="payment-instructions">
-                            	<c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.PaymentSummaryItems}"/>
-                            </div>
-                        </lightning:card>                        						
-                    </div>                        
-
-                    
+                                        
                     <!-- <<<<<<<<<< TRANSACTIONS TABLE >>>>>>>>>> -->
-                    <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-3" aura:id="transactionsTabDataId">                        
+                    <div id="tab-scoped-2" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-2" aura:id="transactionsTabDataId">                        
                         <lightning:card class="slds-card slds-card_boundary" title="Transactions" variant="base">
                             <aura:set attribute="actions">
                                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Export to Excel" onclick="{!c.exportToExcel}" />
@@ -1542,7 +1532,7 @@
                     </div>
 
                     <!-- <<<<<<<<<< PAYMENTS >>>>>>>>>> -->
-                    <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="paymentsTabDataId">                    
+                    <div id="tab-scoped-3" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-3" aura:id="paymentsTabDataId">                    
                         <lightning:card title="" variant="base">
                             <div class="slds-card__body_inner">
                                 <lightning:layout>
@@ -2054,7 +2044,7 @@
                         </aura:if>
                     </div>
                     <!-- <<<<<<<<<< RESERVE TAB >>>>>>>>>> -->
-                    <div id="tab-scoped-5" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-5" aura:id="reserveTabDataId">
+                    <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="reserveTabDataId">
                         <lightning:card class="slds-card slds-card_boundary" title="Reserve Applied" variant="base">                                                        
                             <div class="slds-card__body_inner">
                                 <div class="slds-media__body slds-m-bottom_xx-small">
@@ -2069,7 +2059,16 @@
                             </div>
                             <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}" aura:id="reservetable"/>                            
                         </lightning:card>                        						
+                    </div>    
+                    <!-- <<<<<<<<<< Payment Summary >>>>>>>>>> -->
+                    <div id="tab-scoped-5" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-5" aura:id="paymentSummaryTabDataId">
+                        <lightning:card class="slds-card slds-card_boundary" title="Payment Summary" variant="base"> 
+                            <div class="payment-instructions">
+                            	<c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.PaymentSummaryItems}"/>
+                            </div>
+                        </lightning:card>                        						
                     </div>                        
+                    
                 </div>       
                 
             </lightning:tab>  
