@@ -28,8 +28,16 @@
             $A.enqueueAction(action);
         }));
     },
-
-
+    setDefaultTypeOfLoan : function(component){
+        let selectedTypeOfLoanFilter = [];
+        selectedTypeOfLoanFilter.push({Id:"Facility Loan",Name:"Facility Loan"});
+        component.set("v.selectedTypeOfLoanFilter", selectedTypeOfLoanFilter);  
+    },
+    setDefaultBussinessUnit: function(component){
+        let selectedBusinessUnitFilter = [];
+        selectedBusinessUnitFilter.push({Id:"ELFI",Name:"ELFI"});
+        component.set("v.selectedBusinessUnitFilter", selectedBusinessUnitFilter); 
+    },
     getPickListValues: function(component, object, field, attributeId) {
         var picklistgetter = component.get('c.getPickListValues');
         picklistgetter.setParams({
@@ -75,7 +83,48 @@
         });
         $A.enqueueAction(picklistgetter);
     },
-
+    getTypeofLoanPickList : function(component, object, field, attributeId, selectedFilterValue){
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            let selectedFilter = component.get("v."+selectedFilterValue);
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
+                        });
+                    }
+                }
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedFilter.length; j++){
+                        if(opts[i].Name == selectedFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
     setDefaultDates: function(component) {
         return new Promise(function(resolve, reject) {
             let dt = new Date();
@@ -94,6 +143,8 @@
     },
 
     getAmountGroupByLawyer: function(component) {
+        let typeofloanArr = this.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "");
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.getAmountGroupByLawyer');
             action.setParams({
@@ -101,9 +152,9 @@
                 endDate: component.get('v.endDate'),
                 field: component.get('v.sortField'),
                 direction: component.get('v.sortOrder'),
-                BusinessUnit: component.get("v.selectedBusinessUnitFilter"),
+                BusinessUnit: businessunitArr,
                 searchByName: component.get('v.searchByName'),
-                typeOfLoan: component.get('v.selectedTypeOfLoanFilter')
+                typeOfLoan: typeofloanArr
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -112,6 +163,7 @@
                     console.log(response.getReturnValue());
                     resolve(response.getReturnValue());
                 } else if (state === 'ERROR') {
+                    console.log('Amount for Law firm in helper ERROR.');
                     reject(response.getError());
                 }
             });
@@ -135,13 +187,13 @@
         }));
     },
     setCustomSettings: function(component) {
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "'");
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.saveCustomSettings');
             action.setParams({
                 startDate: component.get('v.startDate'),
                 endDate: component.get('v.endDate'),
-                businessUnit: component.get('v.selectedBusinessUnitFilter'),
-                typeOfLoan: component.get('v.selectedTypeOfLoanFilter'),
+                businessUnit: businessunitArr,
                 searchByName: component.get('v.searchByName')
 
             });
@@ -195,13 +247,20 @@
             OverageTotal = 0,
             OverageAmtTotal = 0.0;
         
+        var ActiveFileTotal = 0,
+            AdminFeeReceivedTotal = 0.0,
+            InterestAmtTotal = 0.0;
+        
         if(paymentData != null && paymentData != undefined){
             
             for (var i = 0; i < paymentData.length; i++) {
                 
                 fileTotal += (paymentData[i].FileCount == null) ? 0 : paymentData[i].FileCount;
+                ActiveFileTotal += (paymentData[i].ActiveFileCount == null) ? 0 : paymentData[i].ActiveFileCount;
                 OpptyTotal += (paymentData[i].OpptyCount == null) ? 0 : paymentData[i].OpptyCount;
                 amountTotal += (paymentData[i].Amount == null) ? 0 : paymentData[i].Amount;
+                InterestAmtTotal += (paymentData[i].InterestRepaid == null) ? 0 : paymentData[i].InterestRepaid;
+                AdminFeeReceivedTotal += (paymentData[i].AdminFeeReceived == null) ? 0 : paymentData[i].AdminFeeReceived;
                 //ElfifileTotal += (paymentData[i].elfiFileCount == null) ? 0 : paymentData[i].elfiFileCount;
                 //ElfiOpptyTotal += (paymentData[i].elfiOpptyCount == null) ? 0 : paymentData[i].elfiOpptyCount;
                 //ElfiamountTotal += (paymentData[i].elfiAmount == null) ? 0 : paymentData[i].elfiAmount;
@@ -235,6 +294,9 @@
             }
         }
         component.set("v.fileTotal", fileTotal);
+        component.set("v.ActiveFileTotal", ActiveFileTotal);
+        component.set("v.AdminFeeReceivedTotal", AdminFeeReceivedTotal);
+        component.set("v.InterestAmtTotal", InterestAmtTotal);
         component.set("v.OpptyTotal", OpptyTotal);
         component.set("v.ClosedFileTotal", ClosedFileTotal);
         //component.set("v.ElfiClosedFileTotal", ElfiClosedFileTotal); 
@@ -276,5 +338,35 @@
             "type": type
         });
         toastEvent.fire();
+    },
+    getSelectedTypeOfLoanArr : function(component, quote){
+        let selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        let typeOfLoanArr = [];
+        for(let i=0; i<selectedTypeOfLoanOptions.length; i++){
+            typeOfLoanArr.push(quote + selectedTypeOfLoanOptions[i].Name + quote);
+        }
+        return typeOfLoanArr;
+    },
+    getSelectedBusinessUnitArr : function(component, quote){
+        let selectedBusinessUnitOptions = component.find("businessunitMS").get("v.selectedOptions");
+        let businessUnitArr = [];
+        for(let i=0; i<selectedBusinessUnitOptions.length; i++){
+            businessUnitArr.push(quote + selectedBusinessUnitOptions[i].Name + quote);
+        }
+        return businessUnitArr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

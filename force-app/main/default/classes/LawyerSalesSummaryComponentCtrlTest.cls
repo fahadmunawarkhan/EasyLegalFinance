@@ -75,13 +75,13 @@ public class LawyerSalesSummaryComponentCtrlTest {
     public static testmethod void mainTest(){
         Test.startTest();
         
-        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListRhino = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Lawyer', 'ASC', 'ELFI', '', 'Facility Loan');
-        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListElfi = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', 'Rhino', '', 'Facility Loan');
-        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListConsolidated = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Lawyer', 'ASC', 'Consolidated', '', 'Facility Loan');
+        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListRhino = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Lawyer', 'ASC', new List<String>{'ELFI'}, '', new List<String>{'Facility Loan'});
+        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListElfi = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', new List<String>{'Rhino'}, '', new List<String>{'Facility Loan'});
+        List<LawyerSalesSummaryComponentCtrl.Wrapper> aggListConsolidated = LawyerSalesSummaryComponentCtrl.getAmountGroupByLawyer(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Lawyer', 'ASC', new List<String>{''}, '', new List<String>{'Facility Loan'});
         //system.assertEquals(1, aggList.size());
         
         //BadDebtSummaryReportCtlr.PartialPaymentsWrapper financials = BadDebtSummaryReportCtlr.getPartialPayments(String.valueOf(Date.today()), String.valueOf(Date.today()));
-        LawyerSalesSummaryComponentCtrl.saveCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI' ,'Facility Loan', '');
+        LawyerSalesSummaryComponentCtrl.saveCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'} , '');
         LawyerSalesSummaryComponentCtrl.getCustomSetting();
         LawyerSalesSummaryComponentCtrl.saveBusinessUnitCustomSettings('ELFI');
 		LawyerSalesSummaryComponentCtrl.getPickListValues('Account', 'Business_Unit__c');

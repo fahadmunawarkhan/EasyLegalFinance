@@ -3,13 +3,15 @@
     doInit : function(component, event, helper) {
         
         component.set("v.spinner", true);        
-        
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
-        
+        helper.getTypeofLoanPickList(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.getTypeofLoanPickList(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        console.log('test===??>');
+console.log(component.get("v.businessUnitOptions"));
         helper.getReportCongaURL(component).then($A.getCallback(
             function(result){ 
                 component.set('v.ViewAllUrl', result[0].Conga_Lawyer_Sales_Summary_View_All__c);
@@ -46,13 +48,20 @@
     
     searchButton : function(component, event, helper){
         
-        component.set("v.spinner", true);        
-        helper.getAmountGroupByLawyer(component).then($A.getCallback(
+        component.set("v.spinner", true);
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getAmountGroupByLawyer(component);
+            }
+        )).then($A.getCallback(
             function(result){
                 component.set('v.AmountByLawyer', result);
                 helper.GetFileTotalAndAmountTotalForLawyer(component);
                 component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));
-                
                 return helper.setCustomSettings(component);
             }
         )).then($A.getCallback(
@@ -131,9 +140,11 @@
         }
     },
     viewAllReportButton : function(component, event, helper){
-        let url = '/apex/LawyerSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
-        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&SearchByName='+ component.get('v.searchByName')
-        url += '&TypeOfLoan='+ component.get('v.selectedTypeOfLoanFilter')
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        let url = '/apex/LawyerSalesSummaryViewAllVF?BusinessUnit=' + businessunitArr
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&SearchByName='+ component.get('v.searchByName');
+        url += '&TypeOfLoan='+ typeofloanArr;
         
         let newWin;
         try{                       
@@ -145,9 +156,11 @@
         }
     },
     viewAllPDFReportButton : function(component, event, helper){
-        let url = '/apex/LawyerSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        let url = '/apex/LawyerSalesSummaryViewAllVF?BusinessUnit=' + businessunitArr;
         url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&SearchByName='+ component.get('v.searchByName')
-        url += '&TypeOfLoan='+ component.get('v.selectedTypeOfLoanFilter') + '&ContentType=PDF';
+        url += '&TypeOfLoan='+ typeofloanArr + '&ContentType=PDF';
         
         let newWin;
         try{                       
@@ -159,9 +172,11 @@
         }
     },
     printPDFReportButton : function(component, event, helper){
-        let url = '/apex/LawyerSalesSummaryPrintPDF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        let url = '/apex/LawyerSalesSummaryPrintPDF?BusinessUnit=' + businessunitArr;
         url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&SearchByName='+ component.get('v.searchByName')
-        url += '&TypeOfLoan='+ component.get('v.selectedTypeOfLoanFilter') + '&ContentType=PDF';
+        url += '&TypeOfLoan='+ typeofloanArr + '&ContentType=PDF';
         
         let newWin;
         try{                       
