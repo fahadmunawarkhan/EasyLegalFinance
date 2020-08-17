@@ -1,10 +1,10 @@
 /**
  * @File Name          : LawFirmSalesSummaryComponentCtrl.cls
  * @Description        : 
- * @Author             : fahad.khan@toptal.com
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 09/04/2020, 11:05:14 am
+ * @Last Modified On   : 08-11-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    3/6/2020   fahad.khan@toptal.com     Initial Version
@@ -17,6 +17,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         public string firmId {get; set;}
         @AuraEnabled
         public integer totalFileCount {get; set;}
+        @AuraEnabled
+        public integer totalActiveFileCount {get; set;}
         @AuraEnabled
         public integer totalClosedFileCount {get; set;}
         @AuraEnabled
@@ -37,6 +39,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         public integer totalOverAgeFile {get; set;}
         @AuraEnabled
         public double totalOverAgeAmt {get; set;}
+        @AuraEnabled
+        public double totalInterestRepaid {get; set;}
+        @AuraEnabled
+        public double totalAdminFeeReceived {get; set;}
         
         public wrapper(string f, string frmId){
             
@@ -53,6 +59,9 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             totalShortFallAmt = 0.00;
             totalOverAgeFile = 0;
             totalOverAgeAmt = 0.00;
+            totalInterestRepaid = 0.00;
+            totalAdminFeeReceived = 0.00;
+            totalActiveFileCount = 0;
         }
         
         // public void wrapper1(integer tc, integer tcc, integer toc, decimal ta,decimal tca, integer tbdf, double tbda, integer tsff, double tsfa, integer toaf, double toaa){
@@ -70,7 +79,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         // }
     }
     @AuraEnabled
-    public static Wrapper[] getAmountGroupByLawFirm(String startDate, String endDate, String field, String direction, string BusinessUnit, String searchByName, String typeOfLoan){
+    public static Wrapper[] getAmountGroupByLawFirm(String startDate, String endDate, String field, String direction, List<string> BusinessUnit, String searchByName, List<String> typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -116,8 +125,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             strQuery += ' OR (Payment_Method__c =:AdminFee))';
             strQuery += ' AND Is_Rejected__c = false';            
             strQuery += ' AND Opportunity__r.Law_firm__c != \'\''; 
-            strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-            strQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+            strQuery += typeOfLoan.isEmpty() ? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
             strQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name';
             strQuery += ' order by ' + field + ' ' + direction + ' NULLS LAST';
@@ -142,7 +151,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 
                 String closedWLoanQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,'; 
                 closedWLoanQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
-                closedWLoanQuery += ' SUM(Amount__c) amt';
+                closedWLoanQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 closedWLoanQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 closedWLoanQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
                 closedWLoanQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
@@ -152,8 +161,8 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 closedWLoanQuery += ' AND Opportunity__r.Stage_Status__c =:closedPaid';
                 closedWLoanQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 closedWLoanQuery += ' AND Is_Rejected__c = false'; 
-                closedWLoanQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                closedWLoanQuery += typeOfLoan == 'Consolidated' ? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                closedWLoanQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                closedWLoanQuery += typeOfLoan.isEmpty() ? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 closedWLoanQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name';
                 //lawfirm in set of lawfirm
                 List<AggregateResult> closedOppAggResult = Database.query(closedWLoanQuery);
@@ -179,16 +188,16 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 */
                 String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 badDebtOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                badDebtOppQuery += ' SUM(Amount__c) amt';
+                badDebtOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 badDebtOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
                 badDebtOppQuery += ' AND Date__c <= :endDt';
-                badDebtOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                badDebtOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 //badDebtOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 //badDebtOppQuery += ' AND Payment_Method__c =:payment';
                 badDebtOppQuery += ' AND Reference_Notes__c =:badDebt';
                 badDebtOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 badDebtOppQuery += ' AND Is_Rejected__c = false';
-                badDebtOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                badDebtOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
                 badDebtOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
 
                 List<AggregateResult> BadDebtAggResult = Database.query(badDebtOppQuery);
@@ -211,17 +220,17 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 */
                 String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 shortFallOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                shortFallOppQuery += ' SUM(Amount__c) amt';
+                shortFallOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 shortFallOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 shortFallOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
-                shortFallOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                shortFallOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 shortFallOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 shortFallOppQuery += ' AND Payment_Method__c =:payment';
                 shortFallOppQuery += ' AND Reference_Notes__c =:paymentShortfall';
                 shortFallOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedShortfall';
                 shortFallOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 shortFallOppQuery += ' AND Is_Rejected__c = false';
-                shortFallOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                shortFallOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
                 shortFallOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c ';
 
                 List<AggregateResult> ShortFallAggResult = Database.query(shortFallOppQuery);
@@ -244,17 +253,17 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 */
                 String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 overageOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                overageOppQuery += ' SUM(Amount__c) amt';
+                overageOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 overageOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 overageOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
-                overageOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                overageOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 overageOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 overageOppQuery += ' AND Payment_Method__c =:payment';  
                 overageOppQuery += ' AND Reference_Notes__c =:paymentSurplus'; 
                 overageOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedSurplus';
                 overageOppQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
                 overageOppQuery += ' AND Is_Rejected__c = false';
-                overageOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                overageOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
                 overageOppQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
 
                 List<AggregateResult> OverAgeAggResult = Database.query(overageOppQuery);
@@ -266,8 +275,32 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                         OverAgeResultMap.put(key, overageagr);
                     }
                 }
-                system.debug('Over Age Results');
-                system.debug(OverAgeResultMap);
+                
+                
+                /*
+                ========================
+                ADMIN FEE RECEIVED QUERY
+                ========================
+                */
+                String adminFeeQuery = 'Select Account.Business_Unit__c unit, Law_firm__r.name firm, Law_firm__c firmId,';
+                adminFeeQuery += ' SUM(Admin_Fee_Received__c) adminfeeRec';
+                adminFeeQuery += ' FROM Opportunity WHERE Opportunity_Closed_Date__c >= :startDt';
+                adminFeeQuery += ' AND Opportunity_Closed_Date__c <= :endDt';
+                adminFeeQuery += ' AND Law_firm__c in :lawfirmIdsSet';
+                adminFeeQuery += (typeOfLoan.isEmpty())? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
+                adminFeeQuery += ' AND StageName =:ClosedWithLoan';
+                adminFeeQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Account.Business_Unit__c IN :BusinessUnit';
+                adminFeeQuery += ' Group by Law_firm__c, Law_firm__r.name, Account.Business_Unit__c';
+                
+                List<AggregateResult> adminOppAggResult = Database.query(adminFeeQuery);
+                Map<String, AggregateResult> AdminFeeRecResultMap = new Map<String, AggregateResult>();
+                if(!adminOppAggResult.isEmpty()){
+                    for(AggregateResult adminFeeAgr : adminOppAggResult)
+                    {
+                        String key = String.valueOf(adminFeeAgr.get('firmId'));
+                        AdminFeeRecResultMap.put(key, adminFeeAgr);
+                    }
+                }
 
 
 
@@ -278,7 +311,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                     String key = f;
                     Wrapper w = new Wrapper(fName, result.containsKey(key) ? (String)result.get(key).get('firmId') : '');
                         // ========== RHINO, ELFI, Consolidated ========//
-                        w.totalFileCount += (result.containsKey(key) ? (Integer)result.get(key).get('file') : 0);
+                        w.totalActiveFileCount += (result.containsKey(key) ? (Integer)result.get(key).get('file') : 0);
                         w.totalClosedFileCount += (closedOppResultMap.containsKey(key) ? (Integer)closedOppResultMap.get(key).get('file') : 0);
                         W.totalOpptyCount += (result.containsKey(key) ? (Integer)result.get(key).get('opptyCount') : 0);
                         w.totalClosedAmount += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('amt') : 0);
@@ -289,6 +322,15 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                         w.totalShortFallAmt += (ShortFallResultMap.containsKey(key) ? (double)ShortFallResultMap.get(key).get('amt') : 0);
                         w.totalOverAgeFile += (OverAgeResultMap.containsKey(key) ? (Integer)OverAgeResultMap.get(key).get('file') : 0);
                         w.totalOverAgeAmt += (OverAgeResultMap.containsKey(key) ? (double)OverAgeResultMap.get(key).get('amt') : 0);
+                    
+                        w.totalInterestRepaid += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('interest') != null? (decimal)closedOppResultMap.get(key).get('interest') :0 : 0);
+                    	w.totalInterestRepaid += (BadDebtResultMap.containsKey(key) ? (decimal)BadDebtResultMap.get(key).get('interest') != null? (decimal)BadDebtResultMap.get(key).get('interest') :0 : 0);
+                    	w.totalInterestRepaid += (ShortFallResultMap.containsKey(key) ? (decimal)ShortFallResultMap.get(key).get('interest') != null? (decimal)ShortFallResultMap.get(key).get('interest') :0 : 0);
+                    	w.totalInterestRepaid += (OverAgeResultMap.containsKey(key) ? (decimal)OverAgeResultMap.get(key).get('interest') != null? (decimal)OverAgeResultMap.get(key).get('interest') :0 : 0);
+                    
+                    	w.totalAdminFeeReceived += (AdminFeeRecResultMap.containsKey(key) ? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') != null? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') : 0 : 0);
+                    	
+                    	w.totalFileCount = w.totalActiveFileCount + w.totalClosedFileCount;
                         // ========== RHINO, ELFI, Consolidated ========//
                     wrapers.add(w);
                 }
@@ -315,7 +357,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
     }
     
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -324,7 +366,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             
             psr.End_date__c = endDt;
             psr.Start_Date__c = startDt;
-            psr.Business_Unit__c = businessUnit;
+            psr.Business_Unit__c = String.join(businessUnit, '|');
             
             update psr; 
         }catch(Exception ex){
