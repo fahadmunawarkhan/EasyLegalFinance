@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 4/7/2020, 5:54:28 PM
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 08-11-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -30,7 +30,7 @@
                             <td colspan="11">
                                 <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
                                     <span>
-                                        <apex:image value="{!if(or(businessUnit == 'Rhino'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
+                                        <apex:image value="{!if(or(businessUnitString == 'Rhino'), URLFOR($Resource.Rhino_Logo), URLFOR($Resource.ELFI_Logo))}" />
                                     </span>
                                 </apex:outputPanel>
                             </td>
@@ -38,7 +38,7 @@
                         <tr>
                             <td align="center" colspan="11">
                                 <span style="font-size:20pt;font-weight:bold;text-align:center;">
-                                    Lawyer Sales Summary {!if((businessUnit == 'Consolidated'), '('&businessUnit&')', '')}
+                                    Lawyer Sales Summary {!if((businessUnitString == 'Consolidated'), '('&businessUnitString&')', '')}
                                 </span>
                             </td>
                         </tr>
@@ -67,7 +67,7 @@
                     <div>
                         <table border='1'>
                             <thead>
-                                <tr align="center" style="background-color:{!if((businessUnit == 'Rhino'),'#0a3b63',if((businessUnit == 'ELFI'), '#fb733a', '#fb733a'))}; color:{!if((businessUnit == 'ELFI'), '#000000', if((businessUnit == 'Rhino'), '#ffffff','#000000') )};">
+                                <tr align="center" style="background-color:{!if((businessUnitString == 'Rhino'),'#0a3b63',if((businessUnitString == 'ELFI'), '#fb733a', '#fb733a'))}; color:{!if((businessUnitString == 'ELFI'), '#000000', if((businessUnitString == 'Rhino'), '#ffffff','#000000') )};">
                                     <th>
                                         <span>LAWYER</span>
                                     </th>
@@ -76,10 +76,13 @@
                                     </th>
                                     
                                     <th>
-                                        <span># OF FILES</span>
+                                        <span>TOTAL # OF ACCOUNTS</span>
                                     </th>
                                     <th>
-                                        <span># OF CLOSED FILES</span>
+                                        <span># OF ACTIVE ACCOUNTS</span>
+                                    </th>
+                                    <th>
+                                        <span># OF CLOSED ACCOUNTS</span>
                                     </th>   
                                     <th>
                                         <span># OF OPPS</span>
@@ -91,27 +94,33 @@
                                         <span>AMOUNT</span>
                                     </th>
                                     <th>
-                                        <span># OF BAD DEBT FILES</span>
+                                        <span># OF BAD DEBT ACCOUNTS</span>
                                     </th>
                                     <th>
                                         <span>BAD DEBT AMOUNT</span>
                                     </th>
                                     <th>
-                                        <span># OF SHORTFALL FILES</span>
+                                        <span># OF SHORTFALL ACCOUNTS</span>
                                     </th>
                                     <th>
                                         <span>SHORTFALL AMOUNT</span>
                                     </th>
                                     <th>
-                                        <span># OF OVERAGE FILES</span>
+                                        <span># OF OVERAGE ACCOUNTS</span>
                                     </th>
                                     <th>
                                         <span>OVERAGE AMOUNT</span>
-                                    </th>                                
+                                    </th>
+                                    <th>
+                                        <span>TOTAL INTEREST</span>
+                                    </th>
+                                    <th>
+                                        <span>ADMIN FEE RECEIVED</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <apex:variable value="{!0}" var="totalrhinoFileCount"/>
+                                <apex:variable value="{!0}" var="totalFileCount"/>
                                 <apex:variable value="{!0}" var="totalrhinoClosedFileCount"/>
                                 <apex:variable value="{!0}" var="totalrhinoOpptyCount"/>
                                 <apex:variable value="{!0}" var="totalrhinoClosedAmount"/>
@@ -122,6 +131,9 @@
                                 <apex:variable value="{!0}" var="totalrhinoShortfallAmount"/>
                                 <apex:variable value="{!0}" var="totalrhinoOverageFileCount"/>
                                 <apex:variable value="{!0}" var="totalrhinoOverageAmount"/>
+                                <apex:variable value="{!0}" var="totalActiveFileCount"/>
+                                <apex:variable value="{!0}" var="totalInterestAmount"/>
+                                <apex:variable value="{!0}" var="totalAdminFeeReceived"/>
                                 <apex:repeat value="{!GroupbyLawyer}" var="data">
                                     <tr>                                    
                                         <td>
@@ -132,7 +144,11 @@
                                         </td>
                                         <td>
                                             <span>{!data.FileCount}</span>
-                                            <apex:variable value="{!data.FileCount + totalrhinoFileCount}" var="totalrhinoFileCount"/>
+                                            <apex:variable value="{!data.FileCount + totalFileCount}" var="totalFileCount"/>
+                                        </td>
+                                        <td>
+                                            <span>{!data.ActiveFileCount}</span>
+                                            <apex:variable value="{!data.ActiveFileCount + totalActiveFileCount}" var="totalActiveFileCount"/>
                                         </td>
                                         <td>
                                             <span>{!data.ClosedFileCount}</span>
@@ -194,6 +210,23 @@
                                             </span>
                                             <apex:variable value="{!data.OverageAmount + totalrhinoOverageAmount}" var="totalrhinoOverageAmount"/>
                                         </td>
+                                        
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.InterestRepaid}" />                                    
+                                                </apex:outputText>                                                
+                                            </span>
+                                            <apex:variable value="{!data.InterestRepaid + totalInterestAmount}" var="totalInterestAmount"/>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.AdminFeeReceived}" />                                    
+                                                </apex:outputText>                                                
+                                            </span>
+                                            <apex:variable value="{!data.AdminFeeReceived + totalAdminFeeReceived}" var="totalAdminFeeReceived"/>
+                                        </td>
                                     </tr>
                                 </apex:repeat>
                                 <tr style="background-color:#c7c8ca;">
@@ -202,7 +235,12 @@
                                     </td>
                                     <td>
                                         <span>
-                                            <strong>{!totalrhinoFileCount}</strong>
+                                            <strong>{!totalFileCount}</strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>{!totalActiveFileCount}</strong>
                                         </span>
                                     </td>
                                     <td>
@@ -271,6 +309,24 @@
                                             <strong>
                                                 <apex:outputText value="{0, Number, Currency}">
                                                     <apex:param value="{!totalrhinoOverageAmount}" />                                    
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalInterestAmount}" />                                    
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalAdminFeeReceived}" />                                    
                                                 </apex:outputText>
                                             </strong>
                                         </span>

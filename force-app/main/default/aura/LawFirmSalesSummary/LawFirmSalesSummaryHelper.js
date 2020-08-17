@@ -5,7 +5,16 @@
         var min = '2010-01-01';
         component.set("v.calendarMin", min);
     },
-
+    setDefaultTypeOfLoan : function(component){
+        let selectedTypeOfLoanFilter = [];
+        selectedTypeOfLoanFilter.push({Id:"Facility Loan",Name:"Facility Loan"});
+        component.set("v.selectedTypeOfLoanFilter", selectedTypeOfLoanFilter);  
+    },
+    setDefaultBussinessUnit: function(component){
+        let selectedBusinessUnitFilter = [];
+        selectedBusinessUnitFilter.push({Id:"ELFI",Name:"ELFI"});
+        component.set("v.selectedBusinessUnitFilter", selectedBusinessUnitFilter); 
+    },
     getCalendarMax: function(component) {
         var year = new Date().getFullYear() + 5;
         var max = year + '-12-31';
@@ -28,47 +37,12 @@
             }
         });
     },
-    getPickListValues: function(component, object, field, attributeId) {
-        var picklistgetter = component.get('c.getPickListValues');
-        picklistgetter.setParams({
-            objectType: object,
-            field: field
-        });
-
-
-        picklistgetter.setCallback(this, function(response) {
-            var opts = [];
-            if (response.getState() == 'SUCCESS') {
-                var allValues = response.getReturnValue();
-
-                for (var i = 0; i < allValues.length; i++) {
-                    if (allValues[i].includes('===SEPERATOR===')) {
-                        opts.push({
-                            class: "optionClass",
-                            label: allValues[i].split('===SEPERATOR===')[0],
-                            value: allValues[i].split('===SEPERATOR===')[1]
-                        });
-                    } else {
-                        opts.push({
-                            class: "optionClass",
-                            label: allValues[i],
-                            value: allValues[i]
-                        });
-                    }
-                }
-                opts.push({
-                    class: "optionClass",
-                    label: 'Consolidated',
-                    value: 'Consolidated'
-                });
-                component.set('v.' + attributeId, opts);
-            }
-        });
-        $A.enqueueAction(picklistgetter);
-    },
     getAmountGroupByLawFirm: function(component) {
         console.log("sortFiels Is ====>");
         console.log(component.get('v.sortField'));
+
+        let typeofloanArr = this.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "");
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.getAmountGroupByLawFirm');
             action.setParams({
@@ -76,9 +50,9 @@
                 endDate: component.get('v.endDate'),
                 field: component.get('v.sortField'),
                 direction: component.get('v.sortOrder'),
-                BusinessUnit: component.get('v.selectedBusinessUnitFilter'),
+                BusinessUnit: businessunitArr,
                 searchByName: component.get('v.searchByName'),
-                typeOfLoan: component.get("v.selectedTypeOfLoanFilter")
+                typeOfLoan: typeofloanArr
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -110,12 +84,13 @@
         }));
     },
     setCustomSettings: function(component) {
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "'");
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.saveCustomSettings');
             action.setParams({
                 startDate: component.get('v.startDate'),
                 endDate: component.get('v.endDate'),
-                businessUnit: component.get('v.selectedBusinessUnitFilter')
+                businessUnit: businessunitArr
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -164,11 +139,16 @@
         var ShortFallAmtTotal = 0;
         var OverAgeFileTotal = 0;
         var OverAgeAmtTotal = 0;
+        
+        var InterestRepaidTotal = 0.0,
+            AdminFeeReceivedTotal = 0.0,
+            ActiveFileTotal = 0;
 
         console.log('----');
 
         for (var i = 0; i < paymentData.length; i++) {
             fileTotal += (paymentData[i].totalFileCount == null) ? 0 : paymentData[i].totalFileCount;
+            ActiveFileTotal += (paymentData[i].totalActiveFileCount == null) ? 0 : paymentData[i].totalActiveFileCount;
             closedFileTotal += (paymentData[i].totalClosedFileCount == null) ? 0 : paymentData[i].totalClosedFileCount;
             opptyTotal += (paymentData[i].totalOpptyCount == null) ? 0 : paymentData[i].totalOpptyCount;
             closedAmountTotal += (paymentData[i].totalClosedAmount == null) ? 0 : paymentData[i].totalClosedAmount;
@@ -179,6 +159,8 @@
             ShortFallAmtTotal += (paymentData[i].totalShortFallAmt == null) ? 0 : paymentData[i].totalShortFallAmt;
             OverAgeFileTotal += (paymentData[i].totalOverAgeFile == null) ? 0 : paymentData[i].totalOverAgeFile;
             OverAgeAmtTotal += (paymentData[i].totalOverAgeAmt == null) ? 0 : paymentData[i].totalOverAgeAmt;
+            InterestRepaidTotal += (paymentData[i].totalInterestRepaid == null) ? 0 : paymentData[i].totalInterestRepaid;
+            AdminFeeReceivedTotal += (paymentData[i].totalAdminFeeReceived == null) ? 0 : paymentData[i].totalAdminFeeReceived;
         }
 
 
@@ -193,6 +175,9 @@
         component.set("v.ShortFallAmtTotal", ShortFallAmtTotal);
         component.set("v.OverAgeFileTotal", OverAgeFileTotal);
         component.set("v.OverAgeAmtTotal", OverAgeAmtTotal);
+        component.set("v.InterestRepaidTotal", InterestRepaidTotal);
+        component.set("v.AdminFeeReceivedTotal", AdminFeeReceivedTotal);
+        component.set("v.ActiveFileTotal", ActiveFileTotal);
     },
 
     errorsHandler: function(errors) {
@@ -210,5 +195,77 @@
             "type": type
         });
         toastEvent.fire();
+    },
+    getPickListValues : function(component, object, field, attributeId, selectedFilterValue){
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            let selectedFilter = component.get("v."+selectedFilterValue);
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
+                        });
+                    }
+                }
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedFilter.length; j++){
+                        if(opts[i].Name == selectedFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
+    getSelectedTypeOfLoanArr : function(component, quote){
+        let selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        let typeOfLoanArr = [];
+        for(let i=0; i<selectedTypeOfLoanOptions.length; i++){
+            typeOfLoanArr.push(quote + selectedTypeOfLoanOptions[i].Name + quote);
+        }
+        return typeOfLoanArr;
+    },
+    getSelectedBusinessUnitArr : function(component, quote){
+        let selectedBusinessUnitOptions = component.find("businessunitMS").get("v.selectedOptions");
+        let businessUnitArr = [];
+        for(let i=0; i<selectedBusinessUnitOptions.length; i++){
+            businessUnitArr.push(quote + selectedBusinessUnitOptions[i].Name + quote);
+        }
+        return businessUnitArr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

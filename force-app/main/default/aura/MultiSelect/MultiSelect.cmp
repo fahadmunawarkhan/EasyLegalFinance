@@ -1,3 +1,13 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 08-11-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   08-11-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
 <aura:component >
     <!-- Name of dropdown to display -->
     <aura:attribute name="mslabel" type="String" default="" />
@@ -20,6 +30,8 @@
     <aura:attribute name="selectedLabel" type="String" default="Select a value.." />
     <!-- Selected options label -->
     <aura:attribute name="initializationCompleted" type="Boolean" default="false" />
+    <!-- Selected combobox container -->
+    <aura:attribute name="comboboxcontainer" type="Boolean" default="true" />
     
     <!-- Render handler to execute on component initialization -->
     <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
@@ -30,7 +42,7 @@
         	<label class="slds-form-element__label">{!v.mslabel}</label>
         </aura:if>
         <div class="slds-form-element__control">
-            <div class="slds-combobox_container slds-size_small">
+            <div class="{! (v.comboboxcontainer)? 'slds-combobox_container slds-size_small': ''}">
                 <div id="ms-picklist-dropdown" class="slds-dropdown-trigger slds-dropdown-trigger_click slds-picklist ms-picklist-dropdown" 
                      aria-expanded="false" aria-haspopup="listbox" role="listbox" >
                     <!-- MAIN BUTTON CODE -->

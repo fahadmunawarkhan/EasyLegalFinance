@@ -85,18 +85,18 @@ public class LawFirmSalesSummaryComponentCtrlTest {
     
     public static testmethod void mainTest(){
         Test.startTest();
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', 'Consolidated', '','Facility Loan');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Firm', 'ASC', new List<String>{''}, '',new List<String>{'Facility Loan'});
         system.assertEquals(1, aggList.size());
         
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList2 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Files', 'ASC', 'Consolidated', '','Facility Loan');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList2 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Files', 'ASC', new List<String>{''}, '',new List<String>{'Facility Loan'});
         system.assertEquals(1, aggList2.size());
         
-        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList3 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Amount', 'ASC', 'Consolidated', '','Facility Loan');
+        List<LawFirmSalesSummaryComponentCtrl.Wrapper> aggList3 = LawFirmSalesSummaryComponentCtrl.getAmountGroupByLawFirm(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Amount', 'ASC', new List<String>{''}, '',new List<String>{'Facility Loan'});
         system.assertEquals(1, aggList3.size());
         
         LawFirmSalesSummaryComponentCtrl.getDrawdownLawFirmSalesCongaURLs();
         LawFirmSalesSummaryComponentCtrl.getCustomSetting();
-        LawFirmSalesSummaryComponentCtrl.saveCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Consolidated');
+        LawFirmSalesSummaryComponentCtrl.saveCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{''});
 
         Test.stopTest();
     }

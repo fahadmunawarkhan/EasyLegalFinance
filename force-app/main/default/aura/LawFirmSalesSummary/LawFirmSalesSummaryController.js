@@ -3,10 +3,12 @@
 
         component.set("v.spinner", true);
 
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
-        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
+        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
         helper.getReportCongaURL(component).then($A.getCallback(
             function(result) {
                 component.set('v.ViewAllUrl', result[0].Conga_Law_Firm_Sales_Summary_View_All__c);
@@ -47,7 +49,15 @@
 
         component.set("v.spinner", true);
 
-        helper.getAmountGroupByLawFirm(component).then($A.getCallback(
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getAmountGroupByLawFirm(component);
+            }
+        )).then($A.getCallback(
             function(result) {
                 helper.setCustomSettings(component);
                 component.set('v.AmountByLawFirm', result);
@@ -114,8 +124,10 @@
 
         let newWin;
         let url = '';
-        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
-        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=Excel';
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + businessunitArr;
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + typeofloanArr + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=Excel';
         /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl');
         } else if (selectedMenuItemValue == "PayoutViewAll") {
@@ -134,8 +146,10 @@
 
         let newWin;
         let url = '';
-        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
-        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=PDF';
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        url += '/apex/LawFirmSalesSummaryViewAllVF?BusinessUnit=' + businessunitArr;
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + typeofloanArr + '&SearchByName=' + component.get("v.searchByName") + '&ContentType=PDF';
         /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl') + '%26' + 'DefaultPDF=1';
         } else if (selectedMenuItemValue == "PayoutViewAll") {
@@ -154,8 +168,10 @@
 
         let newWin;
         let url = '';
-        url += '/apex/LawFirmSalesSummaryPrintPDF?BusinessUnit=' + component.get('v.selectedBusinessUnitFilter');
-        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter") + '&SearchByName=' + component.get("v.searchByName") + '&sortField=' + component.get('v.sortField') + '&direction=' + component.get('v.sortOrder') + '&ContentType=PDF';
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+        url += '/apex/LawFirmSalesSummaryPrintPDF?BusinessUnit=' + businessunitArr;
+        url += '&StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&typeOfLoan=' + typeofloanArr + '&SearchByName=' + component.get("v.searchByName") + '&sortField=' + component.get('v.sortField') + '&direction=' + component.get('v.sortOrder') + '&ContentType=PDF';
         /*if (selectedMenuItemValue == "ViewAll") {
             url = component.get('v.ViewAllUrl') + '%26' + 'DefaultPDF=1';
         } else if (selectedMenuItemValue == "PayoutViewAll") {

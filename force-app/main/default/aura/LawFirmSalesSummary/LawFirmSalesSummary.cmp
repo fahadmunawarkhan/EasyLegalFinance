@@ -1,10 +1,10 @@
 <!--
   @File Name          : LawFirmSalesSummary.cmp
   @Description        : 
-  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08/04/2020, 12:30:55 pm
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 08-17-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -19,6 +19,7 @@
     <aura:attribute name="amtTotal" type="decimal" />
     <aura:attribute name="closedAmtTotal" type="decimal" />
     <aura:attribute name="fileTotal" type="integer" />
+    <aura:attribute name="ActiveFileTotal" type="integer" />
     <aura:attribute name="closedFileTotal" type="integer" />
     <aura:attribute name="opptyTotal" type="integer" />
     <aura:attribute name="NoBadDebtTotal" type="integer" />
@@ -27,6 +28,8 @@
     <aura:attribute name="ShortFallAmtTotal" type="decimal" />
     <aura:attribute name="OverAgeFileTotal" type="integer" />`
     <aura:attribute name="OverAgeAmtTotal" type="decimal" />
+    <aura:attribute name="InterestRepaidTotal" type="decimal" />
+    <aura:attribute name="AdminFeeReceivedTotal" type="decimal" />
 
     <aura:attribute name="RhinoamtTotal" type="decimal" />
     <aura:attribute name="RhinoClosedAmtTotal" type="decimal" />
@@ -64,13 +67,13 @@
 
     <!--Funding Dashboard (Type of Loan)-->
     <aura:attribute name="typeOfLoanOptions" type="List" />
-    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="Facility Loan" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="list" />
     <!--|==============================|-->
 
     <aura:attribute name="design" type="Boolean" default="false" />
     <aura:attribute name="ChosenFilter" type="string" />
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="List" />
 
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
@@ -134,7 +137,11 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <c:MultiSelect aura:id="businessunitMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
+                                                selectedOptions="{!v.selectedBusinessUnitFilter}"
+                                                comboboxcontainer="false" />
                                 </div>
                             </span>
                         </div>
@@ -146,7 +153,10 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                    <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                selectedOptions="{!v.selectedTypeOfLoanFilter}" />
                                 </div>
                             </span>
                         </div>
@@ -232,8 +242,8 @@
                                     <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                                 </aura:if>-->
                             </th>
-                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files" style="cursor: pointer;">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF FILES"># OF FILES</span>
+                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files" >
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL # OF ACCOUNTS">TOTAL # OF ACCOUNTS</span>
                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Files')}">
                                     <lightning:icon iconName="utility:arrowdown" size="xx-small" />
                                 </aura:if>
@@ -246,10 +256,13 @@
                                 </aura:if>-->
                             </th>
                             <th>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF ACTIVE FILES"># OF ACTIVE FILES</span>
+                            </th>
+                            <th>
                                 <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED FILES"># OF CLOSED FILES</span>
                             </th>
-                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount" style="cursor: pointer;">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF Opps"># OF TOTAL Opps</span>
+                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount" >
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS"># OF TOTAL OPPS</span>
                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='opptyCount')}">
                                     <lightning:icon iconName="utility:arrowdown" size="xx-small" />
                                 </aura:if>
@@ -274,7 +287,7 @@
                                 </aura:if>-->
                             </th>
                             <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT FILES"># OF BAD DEBT FILES</span>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT ACCOUNTS"># OF BAD DEBT ACCOUNTS</span>
                             </th>
                             <th>
                                 <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">
@@ -282,8 +295,8 @@
                                         </span>
                             </th>
                             <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL FILES">
-                                            # OF SHORTFALL FILES
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL ACCOUNTS">
+                                            # OF SHORTFALL ACCOUNTS
                                         </span>
                             </th>
                             <th>
@@ -292,14 +305,24 @@
                                         </span>
                             </th>
                             <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE FILES">
-                                            # OF OVERAGE FILES
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE ACCOUNTS">
+                                            # OF OVERAGE ACCOUNTS
                                         </span>
                             </th>
                             <th>
                                 <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">
                                             OVERAGE AMOUNT
                                         </span>
+                            </th>
+                            <th>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL INTEREST">
+                                    TOTAL INTEREST
+                                </span>
+                            </th>
+                            <th>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="ADMIN FEE RECEIVED">
+                                    ADMIN FEE RECEIVED
+                                </span>
                             </th>
                         </tr>
 
@@ -324,6 +347,16 @@
                                             0
                                             <aura:set attribute="else">
                                                 <lightning:formattedNumber value="{!item.totalFileCount}" style="decimal" maximumFractionDigits="0" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td class="">
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.totalActiveFileCount == null}">
+                                            0
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.totalActiveFileCount}" style="decimal" maximumFractionDigits="0" />
                                             </aura:set>
                                         </aura:if>
                                     </div>
@@ -428,6 +461,26 @@
                                         </aura:if>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.totalInterestRepaid == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.totalInterestRepaid}" style="currency" maximumFractionDigits="2" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.totalAdminFeeReceived == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.totalAdminFeeReceived}" style="currency" maximumFractionDigits="2" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
                             </tr>
 
                         </aura:iteration>
@@ -444,6 +497,17 @@
                                         0
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </aura:set>
+                                    </aura:if>
+
+                                </div>
+                            </td>
+                            <td data-label="File Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    <aura:if isTrue="{!v.ActiveFileTotal == null}">
+                                        0
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
                                         </aura:set>
                                     </aura:if>
 
@@ -549,6 +613,26 @@
                                         $0.00
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.OverAgeAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                    <aura:if isTrue="{!v.InterestRepaidTotal == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.InterestRepaidTotal}" style="currency" maximumFractionDigits="2" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                    <aura:if isTrue="{!v.AdminFeeReceivedTotal == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.AdminFeeReceivedTotal}" style="currency" maximumFractionDigits="2" />
                                         </aura:set>
                                     </aura:if>
                                 </div>

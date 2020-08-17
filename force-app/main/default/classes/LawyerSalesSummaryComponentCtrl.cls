@@ -4,14 +4,14 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 07/04/2020, 4:15:59 pm
+ * @Last Modified On   : 08-11-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
 **/
 public with sharing class LawyerSalesSummaryComponentCtrl {
     @AuraEnabled
-    public static list<Wrapper> getAmountGroupByLawyer(String startDate, String endDate, String field, String direction, string BusinessUnit, String searchByName, String typeOfLoan){
+    public static list<Wrapper> getAmountGroupByLawyer(String startDate, String endDate, String field, String direction, List<string> BusinessUnit, String searchByName, List<String> typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -46,8 +46,6 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 field = 'SUM(Amount__c)'; 
             }
             
-            BusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit))? BusinessUnit : 'ELFI';
-            
             strQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer,  Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, '; 
             strQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount, ';
             strQuery += ' SUM(Amount__c) amt';
@@ -56,9 +54,9 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
             strQuery += ' OR (Payment_Method__c =:Cheque)';
             strQuery += ' OR (Payment_Method__c =:AdminFee))';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+            strQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
             strQuery += ' AND Opportunity__r.Lawyer__c != \'\'';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name LIKE \'%' + searchByName + '%\')'  : '';
@@ -78,15 +76,15 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 
                 for(AggregateResult agr : aggResult){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                        // if province exists 
-                       wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                       wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                         
                         w.OpptyCount += Integer.valueof(agr.get('opptyCount'));
                         w.Amount += Double.valueof(agr.get('amt'));
                         w.ClosedAmount = 0; 
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
                     }else{
                         // new province
@@ -99,7 +97,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                                         Double.valueof(agr.get('amt')));
                         w.ClosedAmount = 0;
                         w.ClosedAmount = 0;
-                        agrMap.put(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                     }
                 }
                 
@@ -110,10 +108,10 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 strQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file';
                 strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
                 strQuery += ' AND Date__c <= :endDt';
-                strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 strQuery += ' AND Opportunity__r.Stage_Status__c LIKE \'%Active%\'';
-                strQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
+                strQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
                 strQuery += ' AND Opportunity__r.Lawyer__c != \'\'';
                 strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
                 strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name LIKE \'%' + searchByName + '%\')'  : '';
@@ -122,47 +120,48 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 List<AggregateResult> aggResultOpenOpps = Database.query(strQuery);
                 for(AggregateResult agr : aggResultOpenOpps){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                         
-                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                         
-                         w.FileCount += integer.valueof(agr.get('file'));
+                         w.ActiveFileCount += integer.valueof(agr.get('file'));
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);                        
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);                        
                     }
                 }
                 system.debug('===>');
                 system.debug(aggResultOpenOpps);
                 system.debug('===>');
 
-                String closedOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String closedOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 closedOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                closedOppQuery += ' SUM(Amount__c) amt';
+                closedOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 closedOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 closedOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
-                closedOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                closedOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 closedOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 closedOppQuery += ' AND Payment_Method__c =:payment';  
                 closedOppQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment OR Reference_Notes__c =:clientRebate)'; 
                 closedOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedPaid';
                 closedOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
                 closedOppQuery += ' AND Is_Rejected__c = false';
-                closedOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                closedOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                closedOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                closedOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c';
                 
                 
             	List<AggregateResult> closedOppAggResult = Database.query(closedOppQuery);
                 
                 for(AggregateResult agr : closedOppAggResult){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                         // if province exists 
-                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                         
                             w.ClosedAmount += Double.valueof(agr.get('amt'));
                             w.ClosedFileCount += integer.valueof(agr.get('file'));
+                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
                     }
                 }
@@ -170,33 +169,34 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 /**
                  * Bad Debt
                  * */
-                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String badDebtOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 badDebtOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                badDebtOppQuery += ' SUM(Amount__c) amt';
+                badDebtOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 badDebtOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
                 badDebtOppQuery += ' AND Date__c <= :endDt';
-                badDebtOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                badDebtOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 //badDebtOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 //badDebtOppQuery += ' AND Payment_Method__c =:payment';  
                 badDebtOppQuery += ' AND Reference_Notes__c =:badDebt';                 
                 badDebtOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
                 badDebtOppQuery += ' AND Is_Rejected__c = false';
-                badDebtOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                badDebtOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                badDebtOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                badDebtOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c';
                 
                 
             	List<AggregateResult> badDebtOppAggResult = Database.query(badDebtOppQuery);
                 
                 for(AggregateResult agr : badDebtOppAggResult){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                         // if province exists 
-                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                             
                             w.BadDebtAmount += Double.valueof(agr.get('amt'));
                             w.BadDebtFileCount += integer.valueof(agr.get('file'));
+                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
                     }
                 }
@@ -205,34 +205,35 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                  * ShortFall
                  * */
                 
-                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String shortFallOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 shortFallOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                shortFallOppQuery += ' SUM(Amount__c) amt';
+                shortFallOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 shortFallOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 shortFallOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
-                shortFallOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                shortFallOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 shortFallOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 shortFallOppQuery += ' AND Payment_Method__c =:payment';
                 shortFallOppQuery += ' AND Reference_Notes__c =:paymentShortfall';                 
                 shortFallOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedShortfall';
                 shortFallOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
                 shortFallOppQuery += ' AND Is_Rejected__c = false';
-                shortFallOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                shortFallOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                shortFallOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c';
                 
                 
             	List<AggregateResult> shortFallOppQueryOppAggResult = Database.query(shortFallOppQuery);
                 
                 for(AggregateResult agr : shortFallOppQueryOppAggResult){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                         // if province exists 
-                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                             
                             w.ShortfallAmount += Double.valueof(agr.get('amt'));
                             w.ShortfallFileCount += integer.valueof(agr.get('file'));
+                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
                     }
                 }
@@ -240,39 +241,73 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 /**
                  * Overage
                  * */
-                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm,';
+                String overageOppQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Lawyer__c lawyerId, Opportunity__r.Lawyer__r.Name lawyer, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,';
                 overageOppQuery += ' COUNT_DISTINCT(Opportunity__r.AccountId) file, COUNT_DISTINCT(Opportunity__c) opptyCount,';
-                overageOppQuery += ' SUM(Amount__c) amt';
+                overageOppQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
                 overageOppQuery += ' FROM Drawdown__c WHERE Opportunity__r.Opportunity_Closed_Date__c >= :startDt';
                 overageOppQuery += ' AND Opportunity__r.Opportunity_Closed_Date__c <= :endDt';
-                overageOppQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+                overageOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 overageOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 overageOppQuery += ' AND Payment_Method__c =:payment';  
                 overageOppQuery += ' AND Reference_Notes__c =:paymentSurplus'; 
                 overageOppQuery += ' AND Opportunity__r.Stage_Status__c =:closedSurplus';
                 overageOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
                 overageOppQuery += ' AND Is_Rejected__c = false';
-                overageOppQuery += BusinessUnit == 'Consolidated' ? '' : ' AND Opportunity__r.Account.Business_Unit__c = :BusinessUnit';
-                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name';
+                overageOppQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                overageOppQuery += ' Group by Opportunity__r.Account.Business_Unit__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name, Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c';
                 
                 
             	List<AggregateResult> overageOppAggResult = Database.query(overageOppQuery);
                 
                 for(AggregateResult agr : overageOppAggResult){
                     
-                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')))){
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
                         // if province exists 
-                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')));
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
                             
                             w.OverageAmount += Double.valueof(agr.get('amt'));
                             w.OverageFileCount += integer.valueof(agr.get('file'));
+                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
-                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firm')), w);
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
+                        
+                    }
+                }
+                
+                /**
+                 * 	Admin Fee Received
+                 * */
+                
+                String adminFeeQuery = 'Select Account.Business_Unit__c businessunit, Lawyer__c lawyerId, Lawyer__r.Name lawyer, Law_firm__r.name firm, Law_firm__c firmId,';
+                adminFeeQuery += ' SUM(Admin_Fee_Received__c) adminfeeRec';
+                adminFeeQuery += ' FROM Opportunity WHERE Opportunity_Closed_Date__c >= :startDt';
+                adminFeeQuery += ' AND Opportunity_Closed_Date__c <= :endDt';
+                adminFeeQuery += ' AND Lawyer__c in :lawyerIdsSet';
+                adminFeeQuery += (typeOfLoan.isEmpty())? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
+                adminFeeQuery += ' AND StageName =:ClosedWithLoan';
+                adminFeeQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Account.Business_Unit__c IN :BusinessUnit';
+                adminFeeQuery += ' Group by Account.Business_Unit__c, Lawyer__c, Lawyer__r.Name, Law_firm__r.name, Law_firm__c';
+                
+                List<AggregateResult> adminOppAggResult = Database.query(adminFeeQuery);
+                
+                for(AggregateResult agr : adminOppAggResult){
+                    
+                    if(agrMap.containsKey(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')))){
+                        // if province exists 
+                        wrapper w = agrMap.get(String.ValueOf(agr.get('lawyerId')) + '-' + String.ValueOf(agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')));
+                            
+                            w.AdminFeeReceived += Double.valueof(agr.get('adminfeeRec')) != null? Double.valueof(agr.get('adminfeeRec')) : 0;
+                        
+                        agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
                     }
                 }
                 
 				list<Wrapper> finalWrapper = new list<Wrapper>(agrMap.values());
+                
+                for(Wrapper w : finalWrapper){
+                    w.FileCount = w.ActiveFileCount + w.ClosedFileCount;
+                }
 				/* 
 				list<Wrapper> finalWrapper = new list<Wrapper>(); 
                 
@@ -313,7 +348,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
     }
 
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit, String searchByName){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -322,8 +357,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             
             lsr.End_date__c = endDt;
             lsr.Start_Date__c = startDt;
-            lsr.BusinessUnit__c = businessUnit;
-            lsr.Type_of_Loan__c = typeOfLoan;
+            lsr.BusinessUnit__c = string.join(businessUnit, '|');
             lsr.Search_By_Name__c = searchByName;
             
             update lsr; 
@@ -374,6 +408,8 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
         @AuraEnabled
         public integer FileCount {get; set;}
         @AuraEnabled
+        public integer ActiveFileCount {get; set;}
+        @AuraEnabled
         public integer ClosedFileCount {get; set;}
         @AuraEnabled
         public integer ShortfallFileCount {get; set;}
@@ -393,6 +429,10 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
         public decimal OverageAmount {get; set;}
         @AuraEnabled
         public decimal Amount {get; set;}
+        @AuraEnabled
+        public decimal InterestRepaid {get; set;}
+        @AuraEnabled
+        public decimal AdminFeeReceived {get; set;}
         
 
         wrapper(string l, string lawrId, string f, string frmId, integer rc, integer rcc, integer roc, decimal ra){
@@ -402,7 +442,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             firm = f;
             firmId = frmId;
             
-            FileCount = rc;
+            ActiveFileCount = rc;
             ClosedFileCount = rcc;
             OpptyCount = roc;
             Amount = ra;
@@ -414,6 +454,9 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
             ShortfallAmount = 0.0;
             BadDebtAmount = 0.0;
             OverageAmount = 0.0;
+            FileCount = 0;
+            InterestRepaid = 0.0;
+            AdminFeeReceived = 0.0;
         }
         
     }

@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 07/05/2020, 5:05:36 pm
+  @Last Modified On   : 08-11-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -103,10 +103,14 @@
                             <th>
                                 <span><font size="1" face="Arial Unicode MS">Type of Loan</font></span>
                             </th>
+                            <th>
+                                <span><font size="1" face="Arial Unicode MS">Interest Repaid</font></span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <apex:variable value="{!0}" var="totalAmount"/>
+                        <apex:variable value="{!0.00}" var="totalInterestRepaid"/>
                         <apex:repeat value="{!AllDrawdowns}" var="drawdown">
                             <tr>
                                 <td>
@@ -148,6 +152,14 @@
                                 <td>
                                     <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Type_of_Loan__c}</font>
                                 </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">
+                                        <apex:outputText value="{0, Number, Currency}">
+                                            <apex:param value="{!drawdown.Interest_Repaid__c}" />                                    
+                                        </apex:outputText>
+                                    </font>
+                                    <apex:variable value="{!totalInterestRepaid + drawdown.Interest_Repaid__c}" var="totalInterestRepaid"/>
+                                </td>
                             </tr>
                         </apex:repeat>
                         <tr>
@@ -169,6 +181,13 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td>
+                                <font size="1" face="Arial Unicode MS">
+                                    <apex:outputText value="{0, Number, Currency}">
+                                        <apex:param value="{!totalInterestRepaid}" />                                    
+                                    </apex:outputText>
+                                </font>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
