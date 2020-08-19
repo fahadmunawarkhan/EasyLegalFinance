@@ -14,6 +14,7 @@ public with sharing class PayoutStatementController {
 	public Drawdown__c outstandingBalanceDrawdown {get; private set;}
 	public Drawdown__c totalDiemDrawdown {get; private set;}
 	public String businessUnit {get; private set;}
+    public Banking_Details__c bankingDetails {get; private set;}
 
 	/**
 	* @description Constructor
@@ -30,6 +31,8 @@ public with sharing class PayoutStatementController {
 		this.accruedInterestDrawdown = new Drawdown__c(Amount__c=Decimal.valueOf(ApexPages.currentPage().getParameters().get('interest')));
 		this.outstandingBalanceDrawdown = new Drawdown__c(Amount__c=Decimal.valueOf(ApexPages.currentPage().getParameters().get('balance')));
 		this.totalDiemDrawdown = new Drawdown__c(Amount__c=0.00);
+        
+        this.bankingDetails = Banking_Details__c.getOrgDefaults();
 
 		// loop through all the drawdowns and add Per_Diem_as_of_Payout_Date__c 
 		for(Drawdown__c drawdown : this.drawdownsList){
