@@ -17,7 +17,7 @@
     <aura:attribute name="_selectedButton" type="String" description="Hold the selected button" access="private" />  
     <aura:attribute name="_selectedBusinessUnit" type="String" description="Selected Business unit" access="private" default="elfi" />
     <aura:attribute name="_errorsList" type="List" description="List to hold the errors message during validation" default="[]" access="private" />  
-     <aura:attribute name="_businessUnitOptions" type="List" default="[{'label':'ELFI','value':'elfi'},{'label':'Rhino','value':'rhino'}]" access="private"  />
+     <aura:attribute name="_businessUnitOptions" type="List" default="[{'label':'ELFI','value':'elfi'},{'label':'Rhino','value':'rhino'}, {'label':'Seahold','value':'seahold'}]" access="private"  />
     <!-- PRIVATE ATTRIBUTES -->
     
     <!-- COMPONENT BODY -->

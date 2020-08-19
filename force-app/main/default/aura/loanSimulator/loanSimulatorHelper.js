@@ -107,12 +107,16 @@
     **/
     createPayoutStatement : function(component, event, resultMap) {  
         var action = component.get("c.calculateLoanInterestAndBalance");
+        console.log("Drawdowns");
+        console.log(component.get("v._drawdownsList"));
         action.setParams({
             opportunity : event.getParam('fields'),
             drawdownsList : component.get("v._drawdownsList")
         });
         this.promiseServerSideCall(action).then(
                 $A.getCallback(function(result){
+                    console.log('result');
+                    console.log(result);
                     $A.get("e.force:navigateToURL").setParams({ 
                         "url": "/apex/PayoutStatement?contact="+JSON.stringify(component.get("v._contact"))+'&lawFirm='+component.get("v._lawFirm")+'&lawyer='+component.get("v._lawyer")+
                                     '&opportunity='+JSON.stringify(event.getParam('fields'))+'&drawdowns='+JSON.stringify(result['drawdowns'])+'&principal='+JSON.stringify(result['principal'])+
@@ -122,6 +126,9 @@
                 })
             ).catch(
                 $A.getCallback(function(error){
+                    console.log("ERROR");
+                    console.log(error);
+                    console.log(JSON.stringify(error));
                     if(!$A.util.isEmpty(error)){
                         var errorMessage = $A.get("e.force:showToast");
                         errorMessage.setParams({
