@@ -1,10 +1,10 @@
 /**
  * @File Name          : LawyerSummaryCtlr.cls
  * @Description        : 
- * @Author             : fahad.khan@toptal.com
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 01/07/2020, 4:25:35 pm
+ * @Last Modified On   : 08-24-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    6/11/2020   fahad.khan@toptal.com     Initial Version
@@ -23,7 +23,7 @@ public class LawyerSummaryCtlr {
             strQuery += ' (Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 ),';
             strQuery += ' (Select id,createddate from tasks where subject LIKE \'%Email: Clients Summary%\' and type=\'Email\' and createddate = today order by createddate desc limit 1 )';
             strQuery += ' FROM Contact WHERE RecordType.Name = \'Lawyers\'';
-            strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name LIKE \'%' + searchByName + '%\' OR Account.Name LIKE \'%' + searchByName + '%\' )' : '';
+            strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name_Formula__c LIKE \'%' + searchByName + '%\' OR Account.Name_Formula__c LIKE \'%' + searchByName + '%\' )' : '';
             strQuery += ' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
             strQuery += ' AND Account.Business_Unit__c =:businessUnitFilter';
             strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
@@ -208,7 +208,7 @@ public class LawyerSummaryCtlr {
                 strQuery += ' (Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 ),';
                 strQuery += ' (Select id,createddate from tasks where type=\'Email\' and createddate = today order by createddate desc limit 1 )';
                 strQuery += ' FROM Contact WHERE RecordType.Name = \'Lawyers\'';
-                strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name LIKE \'%' + searchByName + '%\' OR Account.Name LIKE \'%' + searchByName + '%\' )' : '';
+                strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name_Formula__c LIKE \'%' + searchByName + '%\' OR Account.Name_Formula__c LIKE \'%' + searchByName + '%\' )' : '';
                 strQuery += ' AND Id in (SELECT Lawyer__c FROM Opportunity WHERE accountId !=null AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
                 strQuery += ' AND Account.Business_Unit__c =:businessUnitFilter';
                 strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
