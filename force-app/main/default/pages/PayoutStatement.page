@@ -87,12 +87,12 @@
                         {!IF(businessUnit == 'rhino', 'www.rhinofinance.com', IF(businessUnit == 'seahold', 'www.seahold.ca', 'www.easylegal.ca'))}
                     </td>
                     <td style="width:50%;font-size: 10pt;font-family: verdana,arial,sans-serif; text-align:center;" valign="middle">
-                        <div>{!IF(businessUnit == 'seahold', '500 st. George Street', 'TD Canada Trust Tower, 161 Bay Street, 27th Floor')}</div>
+                        <div>{!IF(businessUnit == 'seahold', '500 St. George Street', 'TD Canada Trust Tower, 161 Bay Street, 27th Floor')}</div>
                         <div style="{!IF(businessUnit == 'seahold', '', 'padding-left:40px;')}" >{!IF(businessUnit == 'seahold', 'Moncton, New Brunswick E1C 1Y3', 'PO Box 508, Toronto, Ontario M5J 2S1')}</div>
                     </td>
                     <td style="width:25%;font-size: 10pt;text-align:right;font-family: verdana,arial,sans-serif;" valign="middle">
                         <div>T. {!IF(businessUnit == 'rhino', '1-888-291-4488', IF(businessUnit == 'seahold', '1-888-285-7333', '1-866-800-2100'))}</div>
-                        <div>{!IF(businessUnit == 'rhino', 'F. 1-780-428-4488', IF(businessUnit == 'seahold', '', 'F. 1-888-209-9330'))}</div>
+                        <div>{!IF(businessUnit == 'rhino', 'F. 1-780-428-4488', IF(businessUnit == 'seahold', 'F. 1-866-872-8593', 'F. 1-888-209-9330'))}</div>
                     </td>
                 </tr>
             </table>
@@ -130,6 +130,7 @@
                                         <apex:param value="{!payoutDate}" /> 
                                     </apex:outputText>.
                                 </b>
+                                 The amount owing at this date is <b><apex:outputField value="{!outstandingBalanceDrawdown.Amount__c}" /></b>.
                                 
                             </div>
                             <div style="padding-top:20px;font-size: 10pt;font-family: verdana,arial,sans-serif;line-height: 1.3;" >
