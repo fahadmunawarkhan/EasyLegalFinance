@@ -277,10 +277,7 @@
                                 function(result) {
                                     component.set("v.approvalHistory", result);
                                 }
-                            ).then($A.getCallback(
-                                function(result) {
-                                    helper.CreateTasksNAJudgementCollection(component);
-                                })).catch(
+                            ).catch(
                                 function(errors) {
                                     console.log(errors);
                                     helper.errorsHandler(errors);

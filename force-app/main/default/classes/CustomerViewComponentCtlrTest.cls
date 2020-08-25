@@ -5,11 +5,11 @@ public class CustomerViewComponentCtlrTest {
     static void initailizeTestData(){
         // Account
         Id RecordTypeIdAccount = 
-            Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();
-        
+            Schema.SObjectType.Account.getRecordTypeInfosByName().get('General Business').getRecordTypeId();       
         
         Account generalBusinessAcc = new Account();
         generalBusinessAcc.Name='account';
+        generalBusinessAcc.AccountNumber = 'Test';
         generalBusinessAcc.BillingStreet = 'Testtest';
         generalBusinessAcc.BillingState = 'CA';
         generalBusinessAcc.BillingCity = 'City';
@@ -365,7 +365,7 @@ public class CustomerViewComponentCtlrTest {
         String accId = [select id from account where name = 'account' limit 1].id;  
         String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
         test.startTest();
-        CustomerViewComponentCtlr.changeToBadDebtStage(OppId, accId, '2018-01-01', 0.0);
+        CustomerViewComponentCtlr.changeToBadDebtStage(OppId, accId, '2018-01-01', '', 0.0);
         test.stopTest();
     }
     public static testmethod void test_Process6(){
@@ -512,7 +512,7 @@ public class CustomerViewComponentCtlrTest {
         CustomerViewComponentCtlr.getCurrentUserInfo();
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, 0.0);
+        CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, '', 0.0);
         test.stopTest();
     }
     
@@ -576,7 +576,7 @@ public class CustomerViewComponentCtlrTest {
         List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Surplus', true, 0.0);
+        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Payout', 'eft', 'chq', opps[0].Id, 'Surplus', true, '', 0.0);
         //System.assertEquals('Closed - Surplus', oppsAfterApplying[0].Stage_Status__c);        
         Test.stopTest();
     }
@@ -588,8 +588,7 @@ public class CustomerViewComponentCtlrTest {
         List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Bad Debt Recovery', 'eft', 'chq', opps[0].Id, 'Bad Debt Recovery', true, 0.0);
-        List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Payment'];
+        List<Drawdown__c> drawdowns = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Bad Debt Recovery', 'eft', 'chq', opps[0].Id, 'Bad Debt Recovery', true, '', 0.0);
         System.assertEquals('Bad Debt Recovery', drawdowns[0].Reference_Notes__c);
         Test.stopTest();
     }
@@ -601,8 +600,7 @@ public class CustomerViewComponentCtlrTest {
         List<Opportunity> opps = [select Id from Opportunity where AccountId=:account.Id];                
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Refund', 'eft', 'chq', opps[0].Id, 'Refund', true, 0.0);
-        List<Drawdown__c> drawdowns = [select Id, Reference_Notes__c from Drawdown__c where Payment_Method__c='Other'];
+        List<Drawdown__c> drawdowns = CustomerViewComponentCtlr.applyPayment(account.Id, payoutDateStr, 'Refund', 'eft', 'chq', opps[0].Id, 'Refund', true, '', 0.0);        
         System.assertEquals('Refund', drawdowns[0].Reference_Notes__c);
         Test.stopTest();
     }    	
@@ -743,13 +741,13 @@ public class CustomerViewComponentCtlrTest {
         Test.stopTest();        
     }
     
-        public static testmethod void testGetPaymentSummaryItemsBadDebt(){
+    public static testmethod void testGetPaymentSummaryItemsBadDebt(){
         String accId = [select id from account where name = 'account' limit 1].id;
         String OppId = [select id from opportunity where name = 'Test Opportunity'].id;
         test.startTest();
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, 0.0);
+        CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, '', 0.0);
         List<PaymentSummaryItem> paymentSummaryItems = CustomerViewComponentCtlr.getPaymentSummaryItems(accId);        
         System.assertEquals(1, paymentSummaryItems.size());
         System.assertEquals(true, paymentSummaryItems.get(0).badDebtPrincipal > 0.0);
@@ -764,7 +762,7 @@ public class CustomerViewComponentCtlrTest {
         test.startTest();
         Date payoutDate = Date.today();
         String payoutDateStr = DateTime.newInstance(payoutDate.year(), payoutDate.month(), payoutDate.day()).format('yyyy-MM-dd');
-        List<Drawdown__c> payments = CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, 0.0);
+        List<Drawdown__c> payments = CustomerViewComponentCtlr.applyPayment(accId, payoutDateStr, 'Payout', 'eft', 'chq', OppId, 'Bad Debt', false, '', 0.0);
         List<Id> paymentIds = new List<Id>();
         for (Drawdown__c payment : payments){
             paymentIds.add(payment.Id);
@@ -776,7 +774,7 @@ public class CustomerViewComponentCtlrTest {
         
         test.stopTest();
     }
-
+            
     public static testmethod void test_excludeFromLawyerStmts(){
         Account acc = [select Id from Account where Name='account' LIMIT 1];
         Test.startTest();        

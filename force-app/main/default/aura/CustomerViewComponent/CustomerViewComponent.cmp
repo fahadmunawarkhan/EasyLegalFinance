@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08-05-2020
+  @Last Modified On   : 08-25-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -1679,7 +1679,7 @@
                                         <div style="width:500px;margin-left:5%;">
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + ((opp.Stage_Status__c != '' &amp;&amp; opp.Stage_Status__c != '--- None ---') ? ' (' + opp.Stage_Status__c + ')' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}"/>
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" BadDebtreasonValue = "{!opp.Bad_Debt_Reason__c}"/>
 
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
