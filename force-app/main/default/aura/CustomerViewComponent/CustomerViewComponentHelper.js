@@ -1178,6 +1178,7 @@
         if (oppsIds.length > 0) {
             var oppId = oppsIds[oppsIds.length - 1];
             var action = paymentActionsMap[oppId];
+            var OppBadDebtsValues = this.getBadReasons(component, oppId);
             console.log('Submit next payment ' + oppId + ' ' + action + ' ' + oppsIds.length);
             actionMethod.setParams({
                 accountId: accountId,
@@ -1188,7 +1189,8 @@
                 wireFee: wireFee,
                 oppId: oppId,
                 action: action,
-                isLastPayment: (oppsIds.length == 1)
+                isLastPayment: (oppsIds.length == 1),
+                OppBadDebts: (OppBadDebtsValues == "" || OppBadDebtsValues == null) ? '' : OppBadDebtsValues
             });
 
             actionMethod.setCallback(this, function(response) {
@@ -1257,6 +1259,14 @@
             this.submitNextPayment(component);
         }
 
+    },
+    getBadReasons : function(component, OppId){
+        var oppsList = component.get("v.oppList");
+        var BadDebtArr = [];
+        for (var oppIndex in oppsList){
+                BadDebtArr[oppsList[oppIndex].Id] = (!oppsList[oppIndex].Bad_Debt_Reason__c) ? '' : oppsList[oppIndex].Bad_Debt_Reason__c;
+        }
+        return BadDebtArr[OppId];
     },
     estimateTotalBalance : function(component)    {
         var opps = component.get("v.oppList");

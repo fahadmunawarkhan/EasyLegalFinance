@@ -1,6 +1,6 @@
 ({
 	handleChange : function(component, value) {
-		//alert(value);
+        component.set('v.BadDebtCheck', (value == 'Bad Debt') ? true : false);
 		var oppId = component.get('v.oppId');
         var paymentActionSelected = component.getEvent("paymentActionSelected");
         paymentActionSelected.setParams({
@@ -91,5 +91,49 @@
             result: valid, 
             oppId: oppId
         }).fire();        
+    },
+    getPickListValues: function(component, object, field, attributeId)
+    {
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                
+                if (allValues != undefined && allValues.length > 0) {
+                    opts.push({
+                        class: "optionClass",
+                        label: "--- None ---",
+                        value: ""
+                    });
+                }
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i].split('===SEPERATOR===')[0],
+                            value: allValues[i].split('===SEPERATOR===')[1]
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            class: "optionClass",
+                            label: allValues[i],
+                            value: allValues[i]
+                        });
+                    }
+                }
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
     }
 })

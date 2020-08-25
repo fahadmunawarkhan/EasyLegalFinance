@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 08-05-2020
+ * @Last Modified On   : 08-25-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -321,7 +321,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
     
     /******************* Method to change an opportunity to bad debt *********************/
     @AuraEnabled
-    public static List<Drawdown__c> changeToBadDebtStage(String oppId, String accountId, String payoutDate, Decimal wireFee){                
+    public static List<Drawdown__c> changeToBadDebtStage(String oppId, String accountId, String payoutDate, String OppBadDebts, Decimal wireFee){                
         Opportunity opp = getSingleOpportunity(oppId);
         Drawdown__c dd = new Drawdown__c();
         
@@ -329,13 +329,14 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Bad Debt';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
-        dd.Opportunity__c = oppId;   
+        dd.Opportunity__c = oppId; 
         dd.Wire_Fee__c = wireFee;
         insert dd;
         
         opp.Temp_Payment_Received__c = 0;
         opp.Stage_Status__c = 'Closed - Bad Debt';
         opp.Loan_Status__c = 'Closed - Bad Debt';
+        opp.Bad_Debt_Reason__c = (OppBadDebts == '' || OppBadDebts == null) ? '' : OppBadDebts;
         update opp;
         
         return new List<Drawdown__c>{dd};        
@@ -379,7 +380,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         dd.Payment_Method__c = 'Payment';
         dd.Reference_Notes__c = 'Payment Shortfall';
         dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
-        dd.Opportunity__c = oppId;        
+        dd.Opportunity__c = oppId; 
         dd.Wire_Fee__c = wireFee;
         insert dd;
         
@@ -452,7 +453,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
             dd.Date__c = !String.isBlank(payoutDate) ? Date.valueOf(payoutDate) : System.today();
         dd.Opportunity__c = oppId;        
         dd.EFT__c = eft;
-        dd.CHQ__c = chq;        
+        dd.CHQ__c = chq;
 		dd.Wire_Fee__c = wireFee;        
         if (searchType == 'Payout - Interest First')
             dd.Payout_Interest_First__c = true;
@@ -1112,6 +1113,7 @@ system.debug('### groupedResults: ' + groupedResults[0]);
                 }
             } 
             if(totalReversed[0] != null){
+                System.debug(totalReversed[0].get('interestReversed'));
                 if(totalReversed[0].get('interestReversed') != null){
                     Decimal interestReversed = Decimal.valueOf(String.valueOf(totalReversed[0].get('interestReversed')));
                     if (loanSummary.balancePrincipal != null)
@@ -1363,7 +1365,7 @@ return allOpts;*/
         @AuraEnabled
         public string paymentMethod {get;set;}   
         @AuraEnabled
-        public string referenceNotes {get;set;}                  
+        public string referenceNotes {get;set;}          
     }  
     /*******************get Latest oppty orderd by Loan request*******************/
     @AuraEnabled
@@ -1465,7 +1467,9 @@ return allOpts;*/
     }    
     
     @AuraEnabled
-    public static List<Drawdown__c> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment, Decimal wireFee){
+    public static List<Drawdown__c> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment, String OppBadDebts, Decimal wireFee){
+        Long t1=System.currentTimeMillis();
+        System.debug(t1);
         Savepoint sp = null;
         List<Drawdown__c> createdPayments = new List<Drawdown__c>();
         try{
@@ -1481,7 +1485,7 @@ return allOpts;*/
                 createdPayments.addAll(applyRefund(oppId, accountId, payoutDate, eft, chq, wireFee));
             }   
             else if (action == 'Bad Debt'){
-                createdPayments.addAll(changeToBadDebtStage(oppId, accountId, payoutDate, wireFee));
+                createdPayments.addAll(changeToBadDebtStage(oppId, accountId, payoutDate,OppBadDebts, wireFee));
             }
             else if (action == 'Closed Paid'){
                 createdPayments.addAll(applyFullPayments(oppId, accountId, searchType, payoutDate, eft, chq, wireFee));
@@ -1498,7 +1502,6 @@ return allOpts;*/
                 	ReserveHelper.notifyUponPayment(accountId);
             }
             deletePaymentApplyingErrorTasks(accountId, oppId);
-            System.debug('AP1: '+ oppId + ' ' + action + ' ' + Limits.getQueries() ); 
         }
         catch (DMLException e){
             if (sp != null)
@@ -1641,8 +1644,7 @@ return allOpts;*/
     	
     @AuraEnabled
     public static Account getAccountReserveInfo(String accountId) {
-        Account acc = [select Reserved_Loans_Count__c, Is_Reserve_Applied__c, Exclude_From_Payout__c from Account where Id=:accountId];
-        System.debug(acc);
+        Account acc = [select Reserved_Loans_Count__c, Is_Reserve_Applied__c, Exclude_From_Payout__c from Account where Id=:accountId];        
         return acc;
     }
     
@@ -1658,7 +1660,6 @@ return allOpts;*/
             throw new AuraHandledException('Error:'+e.getMessage());
         }            
     }
-
     @AuraEnabled
     public static void excludeFromLawyerStmts(String accountId, Boolean needExclude){ 
         try{
@@ -1673,7 +1674,7 @@ return allOpts;*/
             throw new AuraHandledException('Error:'+e.getMessage());
         }            
     }    
-	
+
     @AuraEnabled 
     public static List<PaymentSummaryItem> getPaymentSummaryItems(String accountId){
         List<PaymentSummaryItem> result = PaymentSummaryItemHelper.getPaymentSummaryItems(accountId);                       
@@ -1682,7 +1683,7 @@ return allOpts;*/
     @AuraEnabled 
     public static List<PaymentSummaryItem> getLastPaymentSummaryItems(String accountId, List<Id> paymentIds){
         return PaymentSummaryItemHelper.getLastPaymentSummaryItems(accountId, paymentIds);
-	}	
+	}    
 
     public Class ApprovalHistoryWrapper{
         
@@ -1713,6 +1714,5 @@ return allOpts;*/
             RequestedBy = reqBy;
             
         }
-
-    } 
+    }
 }
