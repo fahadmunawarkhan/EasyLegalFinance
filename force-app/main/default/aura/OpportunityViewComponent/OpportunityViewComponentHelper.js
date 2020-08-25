@@ -17,7 +17,7 @@
                 
                 if (state === 'SUCCESS') {
                     component.set("v.oppObj", response.getReturnValue()); 
-                    
+                    (component.get("v.oppObj").Stage_Status__c == 'Closed - Bad Debt' ? component.set("v.BadDebtReasonsStatus", true) : '');
                     //setting lookups
                     component.set("v.selectedLookUpAssignedTo.Id", component.get("v.oppObj").Assigned_To__c);
                     component.set("v.selectedLookUpAssignedTo.Name",(component.get("v.oppObj").Assigned_To__c ? 
@@ -1565,7 +1565,7 @@
     showReverseModal: function(component, drawdownId) {       
         console.log('Drawdwon Id: ' + drawdownId);
         $A.createComponent(
-                "c:rejectedPaymentForm",
+            "c:rejectedPaymentForm",
                 {
                     drawdownToReverseId: drawdownId,
                     onsuccess: component.getReference("c.handleRejectSuccess"),

@@ -1,10 +1,10 @@
 <!--
   @Component Name     : OpportunityViewComponent.cmp
   @Description        : 
-  @Author             : Victoria Ventura
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : Seth Boyd
-  @Last Modified On   : 5/13/2019, 10:34:52 AM
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 08-25-2020
   @Modification Log   : 
   ===============================================================================
   Ver         Date                     Author      		      Modification
@@ -55,6 +55,8 @@
     <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
     <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
     <aura:attribute name="bDisabledDependentFld" type="boolean" default="{!v.oppObj.Stage_Status__c == null}"/> 
+    <aura:attribute name="BadDebtReasons" type="list" default="[]" />
+    <aura:attribute name="BadDebtReasonsStatus" type="boolean" default="false" />
     
     <aura:attribute name="listBankruptcyValues" type="String[]" default="Yes,No" description="" />
     
@@ -336,6 +338,29 @@
                         </div>
                     </lightning:layoutItem>                    
                 </lightning:layout> 
+                <!-- Bad Debt Reason -->
+                <aura:if isTrue="{!v.BadDebtReasonsStatus}">
+                    <lightning:layout class="slds-m-left_xx-large">
+                        <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                            <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                <div class="slds-form-element__control">
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                            <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                                <div class="slds-form-element__control">
+                                    <lightning:select name="BadDebtReason" value="{!v.oppObj.Bad_Debt_Reason__c}" label="Reason for Bad Debt" tabindex="13" aura:id="BadDebtReasonPicklist" disabled="false">
+                                        <aura:iteration items="{!v.BadDebtReasons}" var="val">
+                                            <option value="{!val.value}" selected="{!val.value == v.oppObj.Bad_Debt_Reason__c}">{!val.label}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+                <!-- End of Bad Debt Reason -->
                 <lightning:layout class="slds-m-left_xx-large">
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -388,7 +413,7 @@
                             </div>
                         </div>
                     </lightning:layoutItem>                     
-                </lightning:layout>   
+                </lightning:layout>
                 <lightning:layout class="slds-m-left_xx-large">
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">                        
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Name of Court</span>

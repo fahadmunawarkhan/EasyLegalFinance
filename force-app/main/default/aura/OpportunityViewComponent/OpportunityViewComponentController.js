@@ -48,6 +48,7 @@
         helper.getPickListValues(component, 'Opportunity', 'Day_of_Month__c', 'Day_of_Month__c_options');
         helper.getPickListValues(component, 'Opportunity', 'Invoice_Type__c', 'invoiceTypeOptions');
         helper.getPickListValues(component, 'Opportunity', 'Insurer_Name__c', 'insurerNameOptions');        
+        helper.getPickListValues(component, 'Opportunity', 'Bad_Debt_Reason__c', 'BadDebtReasons');
         
         helper.getBankAccountOptions(component);
         
@@ -67,6 +68,10 @@
     },
     reInitSomeData:function(component, event, helper) {
         helper.reInitSomeData(component, helper);
+    },
+    StageStatusCheck: function(component, event, helper) {
+        var selectedStageStatus = event.getSource().get("v.value");
+        component.set("v.BadDebtReasonsStatus", (selectedStageStatus == 'Closed - Bad Debt') ? true : false);
     },
     
     onControllerFieldChange: function(component, event, helper) { 
@@ -97,7 +102,7 @@
     saveOpp : function(component, event, helper){
         var success;
         
-        
+        (component.get("v.BadDebtReasonsStatus") == false ? component.get("v.oppObj").Bad_Debt_Reason__c = '' : '');
         success = helper.validateRequired(component, "Name");
         if(!success)	return;
         
@@ -607,7 +612,7 @@
                 component.set("v.oppObj", oppObj);
             }
 	    }
-    },       
+    },    
     handleReserveDateChanged : function(component, event, helper) {
         component.set("v.reserveInfoChanged", true);
     },
