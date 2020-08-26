@@ -304,6 +304,24 @@ public class OpportunityViewComponentCtlr {
 
         return getServiceProviders(oppId);
     }    
+    @AuraEnabled
+    public static Boolean needAsyncDelete(String oppId){
+        List<Payment_Async_Processing_Threshold__mdt> thresholds  = [select Threshold__c from Payment_Async_Processing_Threshold__mdt where DeveloperName='Delete_Threshold'];
+        if (thresholds.isEmpty())
+            return false;
+        Integer drawdownsCount = [select Count() from Drawdown__c where Opportunity__c=:oppId];        
+        return drawdownsCount > thresholds[0].Threshold__c;
+    }
+    @AuraEnabled
+    public static void deleteDrawdownAsync(String drawdownId, String accountId){         
+        Account acc = [select Is_Async_Processing__c from Account where Id=:accountId];
+        if (acc.Is_Async_Processing__c)
+			throw new AuraHandledException('Error: Asynchronous processing is already running');            
+        acc.Is_Async_Processing__c = true;
+        update acc;        
+        System.enqueueJob(new DeleteDrawdownQueueable(drawdownId, accountId));
+	}
+
     
     /******************* Method to delete a drawdown item *********************/
     @AuraEnabled

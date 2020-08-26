@@ -1697,4 +1697,43 @@
             this.unknownErrorsHandler();
         }
 	},
+	runAction: function(component, actionName, params){ 
+        console.log('runAction ' + params);
+        var action = component.get(actionName); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams(params)                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },  
+    deleteDrawdownAsync: function(component, drawdownId){         
+        var accountId = component.get("v.accountId");
+        this.runAction(component, 'c.deleteDrawdownAsync', {drawdownId: drawdownId, accountId : accountId})
+        .then(
+            (result) => {
+                component.set("v.spinner", false);
+                this.showToast('SUCCESS','This loan contains a large number of drawdowns and will be updated in the background. Request has been recorded. You may now leave this page. It will reflect this update when the operation completes.','SUCCESS');                        
+            },
+            (errors) => {
+                component.set("v.spinner", false);
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        );
+    }        
 })

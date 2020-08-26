@@ -783,4 +783,26 @@ public class CustomerViewComponentCtlrTest {
         System.assertEquals(true, acc.Exclude_from_Payout__c);
         Test.stopTest();        
     }
+    
+    public static testmethod void testApplyPaymentAsync(){        
+        Account acc = [select id, Is_Async_Processing__c from account where name = 'account' limit 1];  
+        String oppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();
+        PaymentInfo info = new PaymentInfo();
+        info.accountId = acc.Id;
+        info.payoutDate = '2018-01-01';
+        info.searchType = 'Payout';
+        info.oppId = oppId;
+        info.action = 'Partial Payment';
+        info.OppBadDebts = '';
+        CustomerViewComponentCtlr.applyPaymentAsync(acc.Id, new List<PaymentInfo>{info});        
+        test.stopTest();
+    }
+    
+    public static testmethod void testNeedAsyncProcessing(){        
+        String oppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        test.startTest();        
+        CustomerViewComponentCtlr.needAsyncProcessing(new List<Id>{oppId});        
+        test.stopTest();
+    }
 }
