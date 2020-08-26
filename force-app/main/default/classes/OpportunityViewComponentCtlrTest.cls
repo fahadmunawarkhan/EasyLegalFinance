@@ -381,4 +381,18 @@ public class OpportunityViewComponentCtlrTest {
 
         Test.stopTest();
     }    
+    public static testMethod void needAsyncDeleteTest() {        
+        Opportunity clientOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];        
+        Test.startTest();
+        OpportunityViewComponentCtlr.needAsyncDelete(clientOpportunity.Id);
+        Test.stopTest();
+    } 
+    public static testMethod void deleteDrawdownAsyncTest() {        
+        Opportunity clientOpportunity = [SELECT AccountId FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        insertDrawdown(clientOpportunity.Id);
+        Drawdown__c d = [select Id from Drawdown__c LIMIT 1];
+        Test.startTest();        
+		OpportunityViewComponentCtlr.deleteDrawdownAsync(d.Id, clientOpportunity.AccountId);
+        Test.stopTest();
+    }        
 }

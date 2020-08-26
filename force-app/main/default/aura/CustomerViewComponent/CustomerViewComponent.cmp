@@ -1565,7 +1565,7 @@
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
                                                     <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                                        <lightning:button class="slds-theme_neutral" disabled="{!v.paymentSearchDisabled}" iconPosition="left" 
+                                                        <lightning:button class="slds-theme_neutral" disabled="{!or(v.paymentSearchDisabled,v.accountObj.Is_Async_Processing__c==true)}" iconPosition="left" 
                                                                           variant="neutral" type="button" label="Search" onclick="{!c.runAllOptsPayout}" />                    
                                                     </div>                                                    
                                                 </span>
@@ -1627,7 +1627,7 @@
                                             <span class="slds-form-element__static">
                                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
                                                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
-                                                                      variant="neutral" type="button" label="Calculate" onclick="{!c.calculatePayment}"  /> 
+                                                                      variant="neutral" type="button" label="Calculate" onclick="{!c.calculatePayment}"  disabled="{!v.accountObj.Is_Async_Processing__c==true}" /> 
                                                     <!--
                                                     <aura:if isTrue="{!v._enableCloseAllPaid}" >    
                                                         <lightning:button class="slds-theme_neutral" iconPosition="left" 
@@ -1652,8 +1652,8 @@
                             </lightning:layout>
                             <hr/>
                             <div class="slds-m-top_xxx-small slds-align_absolute-center">
-                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}" />
-                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}" />
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Submit" onclick="{!c.submitPayments}"  disabled="{!v.accountObj.Is_Async_Processing__c==true}"/>
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.cancel}"  disabled="{!v.accountObj.Is_Async_Processing__c==true}"/>
                             </div>
 
                             <aura:if isTrue="{!v.displayPaymentValidationErrors}">

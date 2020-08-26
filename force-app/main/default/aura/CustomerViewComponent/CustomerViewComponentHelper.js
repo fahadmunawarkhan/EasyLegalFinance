@@ -1166,6 +1166,83 @@
         });
         $A.enqueueAction(actionMethod);
     },
+    runAction: function(component, actionName, params){                
+        var action = component.get(actionName); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams(params)                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },                
+    submitPaymentsAsync: function(component) {
+        var accountId = component.get("v.recordId");
+        var actionMethod = component.get('c.applyPaymentAsync');
+        var paymentActionsMap = component.get("v.paymentActionsMap");
+        var sType = component.get("v.paymentSearchTypeSelected");
+        var eft = component.get("v.EFT");
+        var chq = component.get("v.CHQ");
+        var wireFee = component.get("v.WireFee");
+        var oppsIds = component.get("v.oppIdList");
+        if (oppsIds.length > 0) {
+            var oppId = oppsIds[oppsIds.length - 1];
+            var action = paymentActionsMap[oppId];
+            var OppBadDebtsValues = this.getBadReasons(component, oppId);
+            
+            var paymentInfos = [];            
+            for (var i = oppsIds.length - 1; i >= 0; i--){
+                var oppId = oppsIds[i];
+                var action = paymentActionsMap[oppId];
+                paymentInfos.push(
+                    {accountId: accountId,
+                         payoutDate: component.get("v.paymentDate"),
+                         searchType: sType,
+                         eft: eft,
+                         chq: chq,
+                         oppId: oppId,
+                         action: action,
+                     	 wireFee: wireFee,
+                     	 OppBadDebts: (OppBadDebtsValues == "" || OppBadDebtsValues == null) ? '' : OppBadDebtsValues
+                    }
+                );
+                wireFee = null;
+            }            
+            component.set("v.WireFee", null); 
+            actionMethod.setParams({accountId: accountId, paymentInfos: paymentInfos});
+
+            actionMethod.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === 'SUCCESS') {
+                    component.set("v.spinner", false);
+                    component.set("v.accountObj.Is_Async_Processing__c", true);
+                    this.showToast('SUCCESS','This loan contains a large number of drawdowns and will be updated in the background. Request has been recorded. You may now leave this page. It will reflect this update when the operation completes.','SUCCESS');                        
+                } else if (state === 'ERROR') {
+                    component.set("v.spinner", false);
+                    var errors = response.getError();
+                    console.log(errors);
+                    this.postSubmitPayments(component, false);
+                    this.createTaskOnPaymentApplyingError(component, oppId);
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            this.errorsHandler(errors)
+                        }
+                    } else {
+                        this.unknownErrorsHandler();
+                    }
+                }
+            });
+            $A.enqueueAction(actionMethod);
+        }
+    },        
     submitNextPayment: function(component) {
         var accountId = component.get("v.recordId");
         var actionMethod = component.get('c.applyPayment');
@@ -1198,7 +1275,8 @@
                 if (state === 'SUCCESS') {
                     var oppsIds = component.get("v.oppIdList");
                     oppsIds.pop();
-                    component.set("v.oppIdList", oppsIds);                    
+                    component.set("v.oppIdList", oppsIds);
+                    component.set("v.WireFee", null);                     
                     var newPayments = response.getReturnValue();
                     var createdPaymentList = component.get("v.createdPaymentList");
                     if (newPayments){                        
@@ -1256,9 +1334,26 @@
         if (oppsIds.length > 0){
             component.set("v.oppIdList", oppsIds);
             component.set("v.createdPaymentList", []);
-            this.submitNextPayment(component);
+            this.runAction(component, 'c.needAsyncProcessing', {oppIds: oppsIds})
+            .then(
+                (result) => {                                
+                    if (result)
+                    	this.submitPaymentsAsync(component);
+                    else
+                    	this.submitNextPayment(component);
+                },
+                (errors) => {
+                    component.set("v.spinner", false);
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            this.errorsHandler(errors)
+                        }
+                    } else {
+                        this.unknownErrorsHandler();
+                    }
+                }
+          	)                        
         }
-
     },
     getBadReasons : function(component, OppId){
         var oppsList = component.get("v.oppList");

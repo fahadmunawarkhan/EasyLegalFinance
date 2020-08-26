@@ -250,13 +250,33 @@
     
     deleteDrawdownItem : function(component, event, helper){
         component.set("v.spinner", true);
+        console.log('deleteDrawdownItem');
         var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;           
-        
+        var recordId = component.get('v.recordId');
         if(confirm('Are you sure?')) {
             try{
-                helper.deleteDrawdownItem(component, itemDescription); 
+                helper.runAction(component, 'c.needAsyncDelete', {oppId: recordId})
+                .then(
+                    (result) => {                                                        
+                        console.log('needAsyncDelete ' + result);
+                        if (result)
+                        	helper.deleteDrawdownAsync(component, itemDescription);
+                        else
+                        	helper.deleteDrawdownItem(component, itemDescription);
+                    	},
+                        (errors) => {
+                            component.set("v.spinner", false);
+                        	if (errors){
+                            	if (errors[0] && errors[0].message) {
+                        			helper.errorsHandler(errors)
+                    			}else {
+                        			helper.unknownErrorsHandler();
+                    			}    
+                            }
+                    	}
+                )                
             }catch(e){
-                
+                console.log(e);
             }
             //helper.getRefNotesDependantPicklistMapAsync(component, 'drawDownObj', 'referenceNotesDepPicklistMap');            
             

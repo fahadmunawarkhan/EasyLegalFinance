@@ -1467,6 +1467,25 @@ return allOpts;*/
     }    
     
     @AuraEnabled
+    public static Boolean needAsyncProcessing(List<Id> oppIds){
+        List<Payment_Async_Processing_Threshold__mdt> thresholds  = [select Threshold__c from Payment_Async_Processing_Threshold__mdt where DeveloperName='Apply_Payment_Threshold'];
+        if (thresholds.isEmpty())
+            return false;
+        Integer drawdownsCount = [select Count() from Drawdown__c where Opportunity__c in : oppIds];        
+        return drawdownsCount > thresholds[0].Threshold__c;
+    }
+    
+    @AuraEnabled
+    public static void applyPaymentAsync(String accountId, List<PaymentInfo> paymentInfos){
+        Account acc = [select Is_Async_Processing__c from Account where Id=:accountId];
+        if (acc.Is_Async_Processing__c)
+			throw new AuraHandledException('Error: Asynchronous processing is already running');            
+        acc.Is_Async_Processing__c = true;
+        update acc;
+        System.enqueueJob(new ApplyPaymentQueueable(accountId, paymentInfos));
+	}
+    
+    @AuraEnabled
     public static List<Drawdown__c> applyPayment(String accountId, String payoutDate, String searchType, String eft, String chq, String oppId, String action, Boolean isLastPayment, String OppBadDebts, Decimal wireFee){
         Long t1=System.currentTimeMillis();
         System.debug(t1);
@@ -1507,12 +1526,14 @@ return allOpts;*/
             if (sp != null)
                 Database.rollback(sp);
             System.debug('DML Exception ' +e.getMessage());            
-            throw new AuraHandledException('Error:'+e.getDmlMessage(0));
+            if (!System.isQueueable())
+            	throw new AuraHandledException('Error:'+e.getDmlMessage(0));
         } catch (Exception e){
             if (sp != null)
                 Database.rollback(sp);            
             System.debug('Exception ' + e.getMessage());            
-            throw new AuraHandledException('Error:'+e.getMessage());
+            if (!System.isQueueable())
+            	throw new AuraHandledException('Error:'+e.getMessage());
         }
 
         return createdPayments;
