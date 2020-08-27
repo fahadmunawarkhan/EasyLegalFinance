@@ -69,15 +69,15 @@ public class FundingSummaryReportCtlrTest {
         
         initailizeTestData();
         Test.startTest();
-        list<FundingSummaryReportCtlr.Wrapper> result = FundingSummaryReportCtlr.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
+        list<FundingSummaryReportCtlr.Wrapper> result = FundingSummaryReportCtlr.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         system.assertEquals(1, result.size());
         
         Date dt = Date.today();
         
-        FundingSummaryReportCtlr.SummaryDataWrapper summarizeData = FundingSummaryReportCtlr.getSummarizeData(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
+        FundingSummaryReportCtlr.SummaryDataWrapper summarizeData = FundingSummaryReportCtlr.getSummarizeData(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         FundingSummaryReportCtlr.getCustomSetting();
         FundingSummaryReportCtlr.getPickListValues('Account', 'Business_Unit__c');
-        FundingSummaryReportCtlr.saveCustomSettings('' + dt, '' + dt.addDays(5),'ELFI', 'Facility Loan');
+        FundingSummaryReportCtlr.saveCustomSettings('' + dt, '' + dt.addDays(5), new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         
         Test.stopTest();
     }
