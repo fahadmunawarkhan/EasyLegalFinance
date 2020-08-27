@@ -74,12 +74,12 @@ public class PaymentSummaryComponentCtrlTest {
     
     public static testmethod void mainTest(){
         Test.startTest();
-        List<PaymentSummaryComponentCtlr.wrapperClass> aggList = PaymentSummaryComponentCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
+        List<PaymentSummaryComponentCtlr.wrapperClass> aggList = PaymentSummaryComponentCtlr.getPaymentsGroupByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         system.assertEquals(1, aggList.size());
         
-        PaymentSummaryComponentCtlr.PartialPaymentsWrapper financials = PaymentSummaryComponentCtlr.getPartialPayments(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI','Facility Loan');
+        PaymentSummaryComponentCtlr.PartialPaymentsWrapper financials = PaymentSummaryComponentCtlr.getPartialPayments(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'},new List<String>{'Facility Loan'});
         PaymentSummaryComponentCtlr.getCustomSetting();
-        PaymentSummaryComponentCtlr.saveDateCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI','Facility Loan');
+        PaymentSummaryComponentCtlr.saveDateCustomSettings(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'},new List<String>{'Facility Loan'});
 
         
         
