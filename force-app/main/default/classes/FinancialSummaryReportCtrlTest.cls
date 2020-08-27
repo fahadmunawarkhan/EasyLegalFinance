@@ -70,13 +70,13 @@ public class FinancialSummaryReportCtrlTest {
         Test.setMock(HttpCalloutMock.class, new SendCustomerDataToBirdEyeMock());
         initailizeTestData();
         Test.startTest();
-        list<FinancialSummaryReportCtrl.Wrapper> result = FinancialSummaryReportCtrl.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
+        list<FinancialSummaryReportCtrl.Wrapper> result = FinancialSummaryReportCtrl.getReportDataByProvince(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String> {'ELFI'}, new List<String>{'Facility Loan'});
         
         
-        FinancialSummaryReportCtrl.FinancialReportDataWrapper financials = FinancialSummaryReportCtrl.getFinancialReportData(String.valueOf(Date.today()), String.valueOf(Date.today()), 'ELFI', 'Facility Loan');
+        FinancialSummaryReportCtrl.FinancialReportDataWrapper financials = FinancialSummaryReportCtrl.getFinancialReportData(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         FinancialSummaryReportCtrl.getCustomSetting();
         FinancialSummaryReportCtrl.getPickListValues('Account', 'Business_Unit__c');
-        FinancialSummaryReportCtrl.saveBusinessUnitCustomSettings('ELFI', 'Facility Loan');
+        FinancialSummaryReportCtrl.saveBusinessUnitCustomSettings(new List<String>{'ELFI'}, new List<String>{'Facility Loan'});
         
         Date dt = Date.today();
         try{
@@ -87,9 +87,9 @@ public class FinancialSummaryReportCtrlTest {
         
         
         
-        FinancialSummaryReportCtrl.executeBatchJob(true,String.valueOf(Date.today()), String.valueOf(Date.today()), 'Facility Loan', '');
+        FinancialSummaryReportCtrl.executeBatchJob(true,String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'Facility Loan'}, '');
         FinancialSummaryReportCtrl.getBatchJobStatus();
-        FinancialSummaryReportCtrl.validateReport(String.valueOf(Date.today()), String.valueOf(Date.today()), 'Facility Loan', '');
+        FinancialSummaryReportCtrl.validateReport(String.valueOf(Date.today()), String.valueOf(Date.today()), new List<String>{'Facility Loan'}, '');
         
         
         Test.stopTest();
