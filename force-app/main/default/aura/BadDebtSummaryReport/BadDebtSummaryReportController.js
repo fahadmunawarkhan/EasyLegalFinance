@@ -1,7 +1,16 @@
 ({
     searchButton: function(component, event, helper) {
         component.set("v.spinner", true);
-        helper.setCustomSettings(component).then($A.getCallback(
+
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.setCustomSettings(component);
+            }
+        )).then($A.getCallback(
             function(result){
                 return helper.getDrawdown(component);
             }
@@ -35,8 +44,10 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         //helper.setDefaultDates(component);
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
         
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){
