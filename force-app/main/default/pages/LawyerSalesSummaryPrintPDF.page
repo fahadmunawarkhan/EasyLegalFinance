@@ -88,10 +88,7 @@
                                         <span># OF OPPS</span>
                                     </th>
                                     <th>
-                                        <span>PAYOUT</span>
-                                    </th>
-                                    <th>
-                                        <span>AMOUNT</span>
+                                        <span>PRINCIPAL OUTSTANDING</span>
                                     </th>
                                     <th>
                                         <span># OF BAD DEBT ACCOUNTS</span>
@@ -110,6 +107,9 @@
                                     </th>
                                     <th>
                                         <span>OVERAGE AMOUNT</span>
+                                    </th>
+                                    <th>
+                                        <span>PAYOUT</span>
                                     </th>
                                     <th>
                                         <span>TOTAL INTEREST</span>
@@ -161,14 +161,6 @@
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!data.ClosedAmount}" />
-                                                </apex:outputText>
-                                            </span>
-                                            <apex:variable value="{!data.ClosedAmount + totalrhinoClosedAmount}" var="totalrhinoClosedAmount"/>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <apex:outputText value="{0, Number, Currency}">
                                                     <apex:param value="{!data.Amount}" />
                                                 </apex:outputText>
                                             </span>
@@ -210,7 +202,14 @@
                                             </span>
                                             <apex:variable value="{!data.OverageAmount + totalrhinoOverageAmount}" var="totalrhinoOverageAmount"/>
                                         </td>
-                                        
+                                        <td>
+                                            <span>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!data.ClosedAmount}" />
+                                                </apex:outputText>
+                                            </span>
+                                            <apex:variable value="{!data.ClosedAmount + totalrhinoClosedAmount}" var="totalrhinoClosedAmount"/>
+                                        </td>
                                         <td>
                                             <span>
                                                 <apex:outputText value="{0, Number, Currency}">
@@ -253,15 +252,7 @@
                                             <strong>{!totalrhinoOpptyCount}</strong>
                                         </span>
                                     </td>
-                                    <td>
-                                        <span>
-                                            <strong>
-                                                <apex:outputText value="{0, Number, Currency}">
-                                                    <apex:param value="{!totalrhinoClosedAmount}" />                                    
-                                                </apex:outputText>
-                                            </strong>
-                                        </span>
-                                    </td>
+                                    
                                     <td>
                                         <span>
                                             <strong>
@@ -309,6 +300,15 @@
                                             <strong>
                                                 <apex:outputText value="{0, Number, Currency}">
                                                     <apex:param value="{!totalrhinoOverageAmount}" />                                    
+                                                </apex:outputText>
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <strong>
+                                                <apex:outputText value="{0, Number, Currency}">
+                                                    <apex:param value="{!totalrhinoClosedAmount}" />                                    
                                                 </apex:outputText>
                                             </strong>
                                         </span>
