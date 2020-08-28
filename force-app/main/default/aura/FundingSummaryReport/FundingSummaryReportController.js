@@ -4,8 +4,11 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        component.set("v.selectedBusinessUnitFilterVal", helper.getSelectedBusinessUnitArr(component, "").join());
         
         helper.getCustomSettings(component).then(
             function(result){                
@@ -31,9 +34,19 @@
         
     searchButton : function(component, event, helper){
         
-        component.set("v.spinner", true);        
-        helper.setCustomSettings(component).then($A.getCallback(
+        component.set("v.spinner", true);
+        
+        helper.validation(component, 'businessunitMS');
+        helper.validation(component, 'typeOfLoanMS');
+
+        component.set("v.selectedBusinessUnitFilterVal", helper.getSelectedBusinessUnitArr(component, "").join());        
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
             function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                helper.setCustomSettings(component);
                 return helper.getReportByProvinceHelper(component);
             }
         )).then($A.getCallback(

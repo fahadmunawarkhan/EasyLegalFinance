@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-12-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-04-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public with sharing class FundingSummaryReportCtlr {
 
     @AuraEnabled
@@ -14,11 +24,10 @@ public with sharing class FundingSummaryReportCtlr {
     }
     
     @AuraEnabled
-    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, string businessUnit, String typeOfLoan){
+    public static list<Wrapper> getReportDataByProvince(String startDate, String endDate, List<string> businessUnit, List<String> typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);            
-            string filterByBusinessUnit = (businessUnit != null && !String.isEmpty(businessUnit))? businessUnit : 'ELFI';
             
             String strQuery = '';
             
@@ -38,11 +47,11 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c, Opportunity__r.Account.Business_Unit__c';
             
             List<AggregateResult> aggResult = Database.query(strQuery);
@@ -82,7 +91,7 @@ public with sharing class FundingSummaryReportCtlr {
     }
     
     @AuraEnabled
-    public static SummaryDataWrapper getSummarizeData(String startDate, String endDate, String businessUnit, String typeOfLoan){
+    public static SummaryDataWrapper getSummarizeData(String startDate, String endDate, List<String> businessUnit, List<String> typeOfLoan){
         
         SummaryDataWrapper reportDataW = new SummaryDataWrapper();
         String strQuery = '';
@@ -95,8 +104,6 @@ public with sharing class FundingSummaryReportCtlr {
         String active = 'Active';
         String activeCollections = 'Active - Collections';
         
-        String filterByBusinessUnit = (!String.isEmpty(businessUnit) && businessUnit != null)? businessUnit : 'ELFI';
-        
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -106,23 +113,23 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' SUM(Admin_Fee__c) adminFee';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';			
+            strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';			
             AggregateResult aggResult = Database.query(strQuery);
             
             strQuery = 'Select SUM(Amount__c) adminFee';
             strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt'; 
             strQuery += ' AND Date__c <= :endDt';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
+            strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:adminFee or Reference_Notes__c =:adminFee)'; 
             strQuery += ' AND Is_Rejected__c = false';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';			
+            strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';			
             AggregateResult adminFeeAggResult = Database.query(strQuery);
             
             if(aggResult != null){
@@ -148,7 +155,7 @@ public with sharing class FundingSummaryReportCtlr {
     }
     
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit, List<String> typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -157,8 +164,8 @@ public with sharing class FundingSummaryReportCtlr {
             
             arsp.End_date__c = endDt;
             arsp.Start_Date__c = startDt;
-            arsp.Type_of_Loan__c = typeOfLoan;
-            arsp.Business_Unit__c = businessUnit;            
+            arsp.Type_of_Loan__c = String.join(typeOfLoan, '|');
+            arsp.Business_Unit__c = String.join(businessUnit, '|');            
             upsert arsp;
             
         }catch(Exception ex){            

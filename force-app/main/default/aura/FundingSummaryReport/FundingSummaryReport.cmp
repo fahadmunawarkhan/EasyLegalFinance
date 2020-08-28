@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 4/17/2020, 4:08:34 PM
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 08-12-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    13/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -26,11 +26,12 @@
     <aura:attribute name="v.selectedBusinessUnit" type="string" />
 
     <aura:attribute name="typeOfLoanOptions" type="List" />
-    <aura:attribute name="selectedTypeOfLoanFilter" type="String" default="{!v.customSetting.Type_of_Loan__c}" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="List" />
 
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="{!v.customSetting.Business_Unit__c}" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="List" />
+    <aura:attribute name="selectedBusinessUnitFilterVal" type="String" />
 
 
     <aura:attribute name="dataByProvince" type="AggregateResult[]" />
@@ -74,7 +75,11 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <c:MultiSelect aura:id="businessunitMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
+                                                selectedOptions="{!v.selectedBusinessUnitFilter}"
+                                                comboboxcontainer="false" />
                                 </div>
                             </span>
                         </div>
@@ -85,7 +90,10 @@
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
-                                    <lightning:combobox aura:id="typeofLoan" label="Type of Loan" value="{!v.selectedTypeOfLoanFilter}" placeholder="Type of Loan" options="{! v.typeOfLoanOptions }"/>
+                                    <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                selectedOptions="{!v.selectedTypeOfLoanFilter}" />
                                 </div>
                             </span>
                         </div>
@@ -253,7 +261,7 @@
                                         </td>
                                         <td data-label="">
                                             <div class="slds-truncate makeBoldBlue" title="">
-                                                Business Unit ({!v.selectedBusinessUnitFilter})
+                                                Business Unit ({!v.selectedBusinessUnitFilterVal})
                                             </div>
                                         </td>
                                     </tr>

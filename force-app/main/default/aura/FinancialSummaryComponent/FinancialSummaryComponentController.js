@@ -4,9 +4,12 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component); 
         
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
-        
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
+        component.set("v.selectedBusinessUnitFilterVal", helper.getSelectedBusinessUnitArr(component,"").join());
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+
         helper.getCustomSettings(component).then(
             function(result){                
                 component.set('v.customSetting', result);
@@ -106,7 +109,17 @@
         component.set("v.spinner", true);        
         helper.setBUCustomSettings(component);
         
-        helper.getReportByProvinceHelper(component).then($A.getCallback(
+        component.set("v.selectedBusinessUnitFilterVal", helper.getSelectedBusinessUnitArr(component,"").join());
+
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getReportByProvinceHelper(component);
+            }
+        )).then($A.getCallback(
             function(result){
                 var res = JSON.stringify(result);
                 console.log('****'+res);

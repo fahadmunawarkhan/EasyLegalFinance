@@ -5,11 +5,12 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         //helper.setDefaultDates(component);
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions').then($A.getCallback(
-            function(result){
-                return helper.getCustomSettings(component);
-        })).then($A.getCallback(
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        component.set("v.selectedBusinessUnit", helper.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions")).join());
+        helper.getCustomSettings(component).then($A.getCallback(
             function(result){ 
                 component.set('v.customSetting', result);
                 return helper.setDefaultDates(component);
@@ -41,8 +42,17 @@
     filterButton : function(component, event, helper){
         
         component.set("v.spinner", true);
-        component.set('v.selectedBusinessUnit', component.get('v.selectedBusinessUnitFilter'));
-        helper.getPaymentsGroupByProvince(component).then($A.getCallback(
+        component.set('v.selectedBusinessUnit', helper.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions")).join());
+
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getPaymentsGroupByProvince(component);
+            }
+        )).then($A.getCallback(
             function(result){
                 helper.setDateCustomSettings(component);
                 component.set('v.paymentsByProvince',result);

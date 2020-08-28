@@ -1,6 +1,16 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-13-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-04-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public with sharing class BadDebtSummaryReportCtlr {
     @AuraEnabled
-    public static list<Wrapper> getPaymentsGroupByProvince(String startDate, String endDate, string BusinessUnit, String typeOfLoan){
+    public static list<Wrapper> getPaymentsGroupByProvince(String startDate, String endDate, List<string> BusinessUnit, List<String> typeOfLoan){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -12,8 +22,6 @@ public with sharing class BadDebtSummaryReportCtlr {
             String badDebt = 'Bad Debt';
             String paymentShortfall = 'Payment Shortfall';
             
-            string filterByBusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit))? BusinessUnit : 'ELFI';
-            
             
             strQuery = 'Select Opportunity__r.Account.ProvinceResidency__c province,Opportunity__r.Account.Business_Unit__c businessunit, COUNT_DISTINCT(Opportunity__r.AccountId) file,'; 
             strQuery += ' COUNT_DISTINCT(Opportunity__c) opptyCount, SUM(Amount__c) amt';
@@ -21,8 +29,8 @@ public with sharing class BadDebtSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt'; 
             //strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
             //strQuery += ' AND Payment_Method__c =:payment';
-            strQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == null || typeOfLoan == 'Consolidated')? '' : ' AND Opportunity__r.Type_of_Loan__c =:typeOfLoan';
-            strQuery += (filterByBusinessUnit == 'Consolidated') ? '': ' AND Opportunity__r.Account.Business_Unit__c =:filterByBusinessUnit';
+            strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
+            strQuery += (BusinessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
             strQuery += ' AND Reference_Notes__c =:badDebt';
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += ' Group by Opportunity__r.Account.ProvinceResidency__c,Opportunity__r.Account.Business_Unit__c';
@@ -82,7 +90,7 @@ public with sharing class BadDebtSummaryReportCtlr {
         return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
     }
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate,String businessUnit, String typeOfLoan){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit, List<String> typeOfLoan){
         try{
             
             Date startDt = Date.valueOf(startDate);
@@ -90,10 +98,10 @@ public with sharing class BadDebtSummaryReportCtlr {
             
             Bad_Debt_Summary_Report__c bdr = Bad_Debt_Summary_Report__c.getOrgDefaults();
             
-            bdr.BusinessUnit__C = businessUnit;
+            bdr.BusinessUnit__C = String.join(businessUnit, '|');
             bdr.End_Date__c = endDt;
             bdr.Start_Date__c = startDt;
-            bdr.Type_of_Loan__c = typeOfLoan;
+            bdr.Type_of_Loan__c = String.join(typeOfLoan, '|');
             
             upsert bdr;
             
