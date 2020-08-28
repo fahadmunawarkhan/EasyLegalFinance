@@ -1,10 +1,10 @@
 <!--
   @File Name          : LawyerSalesSummary.cmp
   @Description        : 
-  @Author             : fahad.khan@toptal.com
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 08-17-2020
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 08-11-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -255,11 +255,8 @@
                                 <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS">{!'# OF OPPS'}</span>
                                 </th>
-                                <th>
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT'}</span>
-                                </th>
                                 <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Amount">{!'AMOUNT'}</span>
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PRINCIPAL OUTSTANDING">{!'PRINCIPAL OUTSTANDING'}</span>
                                 </th>
                                 <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT ACCOUNTS">{!'# OF BAD DEBT ACCOUNTS'}</span>
@@ -278,6 +275,9 @@
                                 </th>
                                 <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">{!'OVERAGE AMOUNT'}</span>
+                                </th>
+                                <th>
+                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT'}</span>
                                 </th>
                                 <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
                                     <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL INTEREST">{!'TOTAL INTEREST'}</span>
@@ -336,11 +336,6 @@
                                     </td>
                                     <td class="">
                                         <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
-                                    </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
                                             <lightning:formattedNumber value="{!item.Amount}" style="currency" maximumFractionDigits="2" />
                                         </div>
                                     </td>
@@ -372,6 +367,12 @@
                                     <td class="">
                                         <div class="slds-truncate">
                                             <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="">
+                                        <div class="slds-truncate">
+                                            <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
                                         </div>
                                     </td>
                                     <td class="">
@@ -420,17 +421,12 @@
                                         <lightning:formattedNumber value="{!v.OpptyTotal}" style="decimal" maximumFractionDigits="0" />
                                     </div>
                                 </td>
-                                
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
-                                        <lightning:formattedNumber value="{!v.ClosedAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
-                                </td>
                                 <td data-label="Amount Grand Total">
                                     <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.amtTotal}" style="currency" maximumFractionDigits="2" />
                                     </div>
                                 </td>
+                                
                                 <td data-label="File Grand Total">
                                     <div class="slds-truncate makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
@@ -459,6 +455,11 @@
                                 <td data-label="Amount Grand Total">
                                     <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.OverageAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </div>
+                                </td>
+                                <td data-label="Amount Grand Total">
+                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.ClosedAmtTotal}" style="currency" maximumFractionDigits="2" />
                                     </div>
                                 </td>
                                 <td data-label="Amount Grand Total">

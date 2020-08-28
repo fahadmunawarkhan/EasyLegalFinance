@@ -1,10 +1,10 @@
 <!--
   @File Name          : LawFirmSalesSummary.cmp
   @Description        : 
-  @Author             : fahad.khan@toptal.com
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 08-17-2020
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 08-11-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -270,11 +270,9 @@
                                     <lightning:icon iconName="utility:arrowup" size="xx-small" />
                                 </aura:if>
                             </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="CLOSED AMOUNT">PAYOUT</span>
-                            </th>
+                            
                             <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount" style="cursor: pointer;">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Amount">AMOUNT</span>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PRINCIPAL OUTSTANDING">PRINCIPAL OUTSTANDING</span>
                                 <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Amount')}">
                                     <lightning:icon iconName="utility:arrowdown" size="xx-small" />
                                 </aura:if>
@@ -313,6 +311,9 @@
                                 <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">
                                             OVERAGE AMOUNT
                                         </span>
+                            </th>
+                            <th>
+                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="CLOSED AMOUNT">PAYOUT</span>
                             </th>
                             <th>
                                 <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL INTEREST">
@@ -381,16 +382,7 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
-                                        <aura:if isTrue="{!item.totalClosedAmount == null}">
-                                            $0.00
-                                            <aura:set attribute="else">
-                                                <lightning:formattedNumber value="{!item.totalClosedAmount}" style="currency" maximumFractionDigits="2" />
-                                            </aura:set>
-                                        </aura:if>
-                                    </div>
-                                </td>
+                                
                                 <td class="">
                                     <div class="slds-truncate">
                                         <aura:if isTrue="{!item.totalAmount == null}">
@@ -457,6 +449,16 @@
                                             $0.00
                                             <aura:set attribute="else">
                                                 <lightning:formattedNumber value="{!item.totalOverAgeAmt}" style="currency" maximumFractionDigits="2" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td class="">
+                                    <div class="slds-truncate">
+                                        <aura:if isTrue="{!item.totalClosedAmount == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.totalClosedAmount}" style="currency" maximumFractionDigits="2" />
                                             </aura:set>
                                         </aura:if>
                                     </div>
@@ -536,17 +538,7 @@
 
                                 </div>
                             </td>
-                            <td data-label="Closed Amount Grand Total">
-
-                                <div class="slds-truncate makeBoldBlue" title="Closed Amount Grand Total">
-                                    <aura:if isTrue="{!v.closedAmtTotal == null}">
-                                        $0.00
-                                        <aura:set attribute="else">
-                                            <lightning:formattedNumber value="{!v.closedAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </td>
+                            
                             <td data-label="Amount Grand Total">
                                 <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
                                     <aura:if isTrue="{!v.amtTotal == null}">
@@ -613,6 +605,17 @@
                                         $0.00
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.OverAgeAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td data-label="Closed Amount Grand Total">
+
+                                <div class="slds-truncate makeBoldBlue" title="Closed Amount Grand Total">
+                                    <aura:if isTrue="{!v.closedAmtTotal == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.closedAmtTotal}" style="currency" maximumFractionDigits="2" />
                                         </aura:set>
                                     </aura:if>
                                 </div>
