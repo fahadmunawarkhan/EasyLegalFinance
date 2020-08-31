@@ -94,7 +94,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         strQuery += (businessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';
         strQuery += ' AND Opportunity__r.Lawyer__c != \'\'';
         strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Opportunity__r.Law_firm__r.name LIKE \'%' + searchByName + '%\''  : '';
-        strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name LIKE \'%' + searchByName + '%\')'  : '';
+        strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' OR Opportunity__r.Lawyer__r.Name_Formula__c LIKE \'%' + searchByName + '%\')'  : '';
         
         
         List<Drawdown__c> activeDrawdowns = Database.query(strQuery);
