@@ -67,7 +67,7 @@
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>Opportunity$Outstanding_Balance_With_Reserve_To_Date__c</field>
+        <field>Opportunity$Reserve_Outstanding_Balance_With_Offset__c</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
@@ -102,9 +102,16 @@
             <operator>notEqual</operator>
             <value/>
         </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity$Outstanding_Balance_With_Reserve_To_Date__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
     </filter>
     <format>Tabular</format>
-    <name>ELFI3 - Active Loans with Reserve</name>
+    <name>ELFI2 with Reserve</name>
     <params>
         <name>co</name>
         <value>1</value>

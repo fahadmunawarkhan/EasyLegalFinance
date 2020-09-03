@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Payments_after_Reserve_Date__c</fullName>
+    <fullName>Reserve_Non_Allocated_Amount_Offset__c</fullName>
     <externalId>false</externalId>
-    <label>Payments after Reserve Date</label>
+    <label>Reserve Non Allocated Amount Offset</label>
     <summarizedField>Drawdown__c.Amount__c</summarizedField>
     <summaryFilterItems>
-        <field>Drawdown__c.Payment_Method__c</field>
-        <operation>equals</operation>
-        <value>Payment</value>
-    </summaryFilterItems>
-    <summaryFilterItems>
-        <field>Drawdown__c.After_Reserve_Date__c</field>
-        <operation>equals</operation>
-        <value>True</value>
-    </summaryFilterItems>
-    <summaryFilterItems>
         <field>Drawdown__c.Reference_Notes__c</field>
-        <operation>notEqual</operation>
-        <value>Payment Shortfall</value>
+        <operation>equals</operation>
+        <value>Payment Surplus</value>
     </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Reserve_Non_Repaid_Interest__c</fullName>
     <externalId>false</externalId>
-    <formula>Interest_Accrued_as_of_Reserve_Date__c-Interest_Repaid_After_Reserve_Date__c</formula>
+    <formula>Interest_Accrued_as_of_Reserve_Date__c - Interest_Repaid_After_Reserve_Date__c + Reserve_Interest_Offset__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Reserve Non Repaid Interest</label>
     <precision>18</precision>
