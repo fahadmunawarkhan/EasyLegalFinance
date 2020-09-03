@@ -1562,16 +1562,15 @@
     getReverseModalElement: function(component) {
         return component.find("reverseModal")
     },
-    showReverseModal: function(component, drawdownId) {       
+    showReverseModal: function(component, drawdownId, isPaymentFromClient) {       
         console.log('Drawdwon Id: ' + drawdownId);
+        var componentName = isPaymentFromClient ? 'c:rejectedPaymentFromClientForm' : 'c:rejectedPaymentForm';
         $A.createComponent(
-            "c:rejectedPaymentForm",
-                {
-                    drawdownToReverseId: drawdownId,
-                    onsuccess: component.getReference("c.handleRejectSuccess"),
-                    oncancel: component.getReference("c.handleRejectCancel")
-                }
-            ,
+            componentName, {
+                drawdownToReverseId: drawdownId,
+                onsuccess: component.getReference("c.handleRejectSuccess"),
+                oncancel: component.getReference("c.handleRejectCancel")
+            },
             function(formComponent, status, errorMessage){
                 if (status === "SUCCESS") {
                     let modalPromise = component.find("overlayLib").showCustomModal({

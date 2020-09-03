@@ -143,4 +143,103 @@ public with sharing class DrawdownTriggerHandlerTest {
         
         Test.stopTest();
     }    
+	public static testMethod void rejectPaymentFromClientNSFChequeTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));        
+        insert dlistOriginal;        
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today().addDays(300), Opportunity__c = clientOpportunity.id,
+                                             Amount__c = 3000, Payment_Method__c ='Payment', 
+                                             Reference_Notes__c = 'Partial Payment'));
+        insert payments;
+        Test.startTest();        
+        Drawdown__c rejection = new Drawdown__c();
+        rejection.Opportunity__c = clientOpportunity.Id;
+        rejection.Payment_To_Reverse__c = payments[0].Id;
+        rejection.Date__c = payments[0].Date__c;
+        rejection.Amount__c = payments[0].Amount__c;
+        rejection.EFT__c = 'NSF Cheque';
+        rejection.CHQ__c = '123';
+        rejection.NSF_Fee__c = 5.0;
+        rejection.Reason_to_Reverse_Payment_NSF__c = 'NSF Cheque';
+        rejection.Payment_Method__c = 'Cheque';
+        rejection.Reference_Notes__c = 'Payment to Client';
+        rejection.Opportunity_Service_Provider__c = null;
+        insert rejection;
+        List<Drawdown_Payment_Allocation__c> allocations = [select Id, Amount__c, Transaction_Date__c, Payout_Date__c, Payment__c from Drawdown_Payment_Allocation__c where Drawdown__c=:rejection.Id];
+        System.assertEquals(1, allocations.size());
+        System.assertEquals(3000, allocations[0].Amount__c);
+        System.assertEquals(payments[0].Id, allocations[0].Payment__c);
+        System.assertEquals(payments[0].Date__c, allocations[0].Transaction_Date__c);
+        System.assertEquals(payments[0].Date__c, allocations[0].Payout_Date__c);
+        Test.stopTest();
+    }  
+    
+    public static testMethod void rejectPaymentFromClientOtherTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));        
+        insert dlistOriginal;        
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today().addDays(300), Opportunity__c = clientOpportunity.id,
+                                             Amount__c = 3000, Payment_Method__c ='Payment', 
+                                             Reference_Notes__c = 'Partial Payment'));
+        insert payments;
+        Test.startTest();        
+        Drawdown__c rejection = new Drawdown__c();
+        rejection.Opportunity__c = clientOpportunity.Id;
+        rejection.Payment_To_Reverse__c = payments[0].Id;
+        rejection.Date__c = payments[0].Date__c;
+        rejection.Amount__c = payments[0].Amount__c;        
+        rejection.CHQ__c = '123';
+        rejection.Reason_to_Reverse_Payment_NSF__c = 'ELFI Error';
+        rejection.Payment_Method__c = 'Other';
+        rejection.Reference_Notes__c = 'Payment to Client';
+        rejection.Opportunity_Service_Provider__c = null;
+        insert rejection;
+        List<Drawdown_Payment_Allocation__c> allocations = [select Id, Amount__c, Transaction_Date__c, Payout_Date__c, Payment__c from Drawdown_Payment_Allocation__c where Drawdown__c=:rejection.Id];
+        System.assertEquals(1, allocations.size());
+        System.assertEquals(3000, allocations[0].Amount__c);
+        System.assertEquals(payments[0].Id, allocations[0].Payment__c);
+        System.assertEquals(payments[0].Date__c, allocations[0].Transaction_Date__c);
+        System.assertEquals(payments[0].Date__c, allocations[0].Payout_Date__c);
+        Test.stopTest();
+    }  
+    
+    public static testMethod void createNSFFeeDrawdownTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Test.startTest();        
+        Drawdown__c rejection = new Drawdown__c();
+        rejection.Opportunity__c = clientOpportunity.Id;
+        rejection.Date__c = Date.today();
+        rejection.Amount__c = 1000.0;
+        rejection.NSF_Fee__c = 5.0;
+        rejection.EFT__c = 'NSF Cheque';
+        rejection.CHQ__c = '123';
+        rejection.Reason_to_Reverse_Payment_NSF__c = 'NSF Cheque';
+        rejection.Payment_Method__c = 'Cheque';
+        rejection.Reference_Notes__c = 'Payment to Client';
+        rejection.Opportunity_Service_Provider__c = null;
+        List<Drawdown__c> rejections = new List<Drawdown__c>();
+        rejections.add(rejection);
+        DrawdownTriggerHandler.createNSFFeeDrawdown(rejections);
+        List<Drawdown__c> nsfFeeDrawdowns = [select Id, Amount__c, Date__c, Payment_Method__c, EFT__c, CHQ__C from Drawdown__c where Reference_Notes__c='Other fee - no interest'];
+        System.assertEquals(1, nsfFeeDrawdowns.size());
+        System.assertEquals(5.0, nsfFeeDrawdowns[0].Amount__c);
+        System.assertEquals('NSF Cheque', nsfFeeDrawdowns[0].EFT__c);
+        System.assertEquals('123', nsfFeeDrawdowns[0].CHQ__c);
+        System.assertEquals(rejection.Date__c, nsfFeeDrawdowns[0].Date__c);        
+        Test.stopTest();
+    }    
 }

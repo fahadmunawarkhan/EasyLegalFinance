@@ -59,6 +59,7 @@ trigger DrawdownTrigger on Drawdown__c (before insert , before update, after ins
     */
     if (trigger.isAfter && Trigger.isInsert){
         DrawdownTriggerHandler.createAdminFeeRejections(Trigger.new);
+        DrawdownTriggerHandler.rejectPaymentFromClient(Trigger.new);
     } 
     if (trigger.isAfter && (Trigger.isInsert || trigger.isUpdate)){
         DrawdownPaymentAllocator.allocate(Trigger.isInsert, Trigger.oldMap, Trigger.new);

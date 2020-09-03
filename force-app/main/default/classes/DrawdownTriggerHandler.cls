@@ -1,3 +1,14 @@
+/**
+ * @File Name          : DrawdownTriggerHandler.cls
+ * @Description        : 
+ * @Author             : fahad.khan@toptal.com
+ * @Group              : 
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 5/29/2020, 11:55:50 AM
+ * @Modification Log   : 
+ * Ver       Date            Author      		    Modification
+ * 1.0    5/29/2020   fahad.khan@toptal.com     Initial Version
+**/
 public class DrawdownTriggerHandler {
     
     public static void validatePaymentChange(Map<Id,Drawdown__c> oldMap, List<Drawdown__c> newDrawdowns){
@@ -184,10 +195,10 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
             if(d.Reference_Notes__c == 'Admin Fee' || d.Reference_Notes__c == 'Assessment Fee')
             {
                 //system.debug('Reference Notes == Admin Fee ' + d.Id);
-                adminFee += d.Amount__c;
-                adminAccuredInterest += d.Accrued_Interest_as_of_Payout_Date__c;
-                adminOutstandingBalance +=d.Outstanding_Balance_as_of_Payout_Date__c;
-                adminPerDiem += d.Per_Diem_as_of_Payout_Date__c;
+                adminFee += d.Amount__c != null? d.Amount__c : 0;
+                adminAccuredInterest += d.Accrued_Interest_as_of_Payout_Date__c != null? d.Accrued_Interest_as_of_Payout_Date__c : 0;
+                adminOutstandingBalance += d.Outstanding_Balance_as_of_Payout_Date__c != null? d.Outstanding_Balance_as_of_Payout_Date__c : 0;
+                adminPerDiem += d.Per_Diem_as_of_Payout_Date__c != null? d.Per_Diem_as_of_Payout_Date__c : 0;
                 //system.debug('sel drawdown Admin Fee ' + d.Amount__c);
                 //ystem.debug('Total Admin Fee ' + adminFee);
                 //system.debug('Total Admin Accrued Interest ' + adminAccuredInterest);
@@ -224,7 +235,7 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
     public static void createAdminFeeRejections(List<Drawdown__c> newDrawdowns){
         List<Drawdown__c> rejections = new List<Drawdown__c>();
         for (Drawdown__c d : newDrawdowns){
-            if (d.Payment_To_Reverse__c != null){
+            if (d.Payment_To_Reverse__c != null && d.Payment_Method__c == 'Payment'){
                 rejections.add(d);
             }
         }
@@ -283,6 +294,54 @@ oldMap.get(d.Id).Reference_Notes__c == 'Admin Fee') && */
         }
 	}
     
+    public static void rejectPaymentFromClient(List<Drawdown__c> newDrawdowns){
+        List<Drawdown__c> rejections = new List<Drawdown__c>();
+        for (Drawdown__c d : newDrawdowns){
+            if (d.Payment_To_Reverse__c != null && d.Payment_Method__c != 'Payment' && d.Reason_to_Reverse_Payment_NSF__c != null){
+                rejections.add(d);
+            }
+        }
+        if (!rejections.isEmpty()){            
+            List<Id> drawdownsToReverseIds = new List<Id>();
+            List<Id> oppIds = new List<Id>();
+            Map<Id, Drawdown__c> paymentToRejectionMap = new Map<Id, Drawdown__c>();
+            for (Drawdown__c rejectionDrawdown : rejections){
+                drawdownsToReverseIds.add(rejectionDrawdown.Payment_To_Reverse__c);
+                oppIds.add(rejectionDrawdown.Opportunity__c);
+                paymentToRejectionMap.put(rejectionDrawdown.Payment_To_Reverse__c, rejectionDrawdown);
+            }
+            List<Drawdown__c> paymentsToReverse = [select Id, Date__c, Amount__c, Payment_To_Reverse__c from Drawdown__c where Id in :drawdownsToReverseIds];            
+            for (Drawdown__c payment : paymentsToReverse) {
+                payment.Payment_To_Reverse__c = paymentToRejectionMap.get(payment.Id).Id;                
+			}
+            update paymentsToReverse;
+            PaymentAllocator.deletePaymentAllocations(drawdownsToReverseIds);
+            PaymentAllocator.allocateRejectionDrawdowns(drawdownsToReverseIds);      
+            createNSFFeeDrawdown(rejections);
+        }        
+    }
+    
+    @TestVisible
+    private static void createNSFFeeDrawdown(List<Drawdown__c> rejections){
+        List<Drawdown__c> nsfFeeDrawdowns = new List<Drawdown__c>();
+        for (Drawdown__c rejection : rejections){
+            if (rejection.Reason_to_Reverse_Payment_NSF__c == 'NSF Cheque'){
+                Drawdown__c nsfFeeDrawdown = new Drawdown__c();
+                nsfFeeDrawdown.Opportunity__c = rejection.Opportunity__c;
+                nsfFeeDrawdown.Date__c = rejection.Date__c;
+                nsfFeeDrawdown.Amount__c = rejection.NSF_Fee__c;
+                nsfFeeDrawdown.EFT__c = rejection.EFT__c;
+                nsfFeeDrawdown.CHQ__c = rejection.CHQ__c;
+                nsfFeeDrawdown.Payment_Method__c = 'Admin Fee';
+                nsfFeeDrawdown.Reference_Notes__c = 'Other fee - no interest';
+                nsfFeeDrawdown.Opportunity_Service_Provider__c = rejection.Opportunity_Service_Provider__c;
+                nsfFeeDrawdowns.add(nsfFeeDrawdown);
+            }
+        }
+        if (!nsfFeeDrawdowns.isEmpty())
+            insert nsfFeeDrawdowns;            
+    }
+        
     public static void processClientRebate(List<Drawdown__c> newDrawdowns){        
         if (Trigger.isAfter && (Trigger.isInsert || Trigger.isDelete)){
             Set<Id> oppIds = new Set<Id>();
