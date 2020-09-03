@@ -194,5 +194,30 @@ public class PaymentAllocatorTest {
 		}
         System.assertEquals(0.0,advancePrincipalRepaidSum);
         Test.stopTest();
-    }    
+    }  
+	public static testMethod void deletePaymentAllocationsTest(){
+        Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity 0' LIMIT 1];
+        List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));
+        dlistOriginal.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = clientOpportunity.id,
+                                            Amount__c = 2000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.today().addDays(60),
+                                            Reference_Notes__c = 'Payment to Client'));        
+        insert dlistOriginal;        
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today().addDays(300), Opportunity__c = clientOpportunity.id,
+                                             Amount__c = 3000, Payment_Method__c ='Payment', 
+                                             Reference_Notes__c = 'Partial Payment'));
+        insert payments;
+        Test.startTest();        
+        List<Drawdown_Payment_Allocation__c> allocations = [select Id from Drawdown_Payment_Allocation__c];
+        System.assertEquals(false, allocations.isEmpty());
+        List<Id> paymentIds = new List<Id>();
+        paymentIds.add(payments[0].Id);
+        PaymentAllocator.deletePaymentAllocations(paymentIds);
+        allocations = [select Id from Drawdown_Payment_Allocation__c];
+        System.assertEquals(true, allocations.isEmpty());
+        Test.stopTest();
+    }     
 }

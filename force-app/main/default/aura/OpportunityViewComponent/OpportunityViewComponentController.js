@@ -541,7 +541,7 @@
         helper.getUpdatedAmounts(component);
     },
     handleReverseClick: function(component, event, helper) {
-        helper.showReverseModal(component, event.getParam("Id"));
+        helper.showReverseModal(component, event.getParam("Id"), event.getParam("isPaymentFromClient"));
     },    
     handleReverseSuccess : function(component, event, helper) {
         helper.reInitSomeData(component, event, helper);

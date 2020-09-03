@@ -98,49 +98,67 @@ History
         }
         insert allocations;
     }
-    public static void allocateRejectionDrawdowns(List<Id> rejectionDrawdownIds){
-        List<Drawdown__c> rejectionDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, 
-                                                Opportunity__c,Opportunity__r.Payout_Date__c, Opportunity__r.Reserve_Date__c from Drawdown__c where id in :rejectionDrawdownIds];
-        List<Id> drawdownToReverseIds = new List<Id>();
-        for (Drawdown__c rejectionDrawdown : rejectionDrawdowns){
-			drawdownToReverseIds.add(rejectionDrawdown.Payment_To_Reverse__c);            
+    public static void allocateRejectionDrawdowns(List<Id> paymentDrawdownIds){
+        List<Drawdown__c> paymentDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, 
+                                                Opportunity__c,Opportunity__r.Payout_Date__c, Opportunity__r.Reserve_Date__c, Reference_Notes__c from Drawdown__c where id in :paymentDrawdownIds];
+        List<Id> advanceDrawdownIds = new List<Id>();
+        for (Drawdown__c paymentDrawdown : paymentDrawdowns){
+			advanceDrawdownIds.add(paymentDrawdown.Payment_To_Reverse__c);            
         }
         List<Drawdown__c> drawdownsToReverse = [select Id, Name, Payout_Date__c, temp_payout_date__c, Opportunity__c, Outstanding_Balance_as_of_Payout_Date__c,
                                                 Accrued_Interest_as_of_Payout_Date__c, Interest_End_Date__c
-                                                from Drawdown__c where Id in :drawdownToReverseIds];
+                                                from Drawdown__c where Id in :advanceDrawdownIds];
         List<Drawdown_Payment_Allocation__c> allocations = new List<Drawdown_Payment_Allocation__c>();
-        for (Drawdown__c rejectionDrawdown : rejectionDrawdowns){
-            Decimal paymentBalance = 0.00 - rejectionDrawdown.Outstanding_Balance_as_of_Payout_Date__c;  
+        for (Drawdown__c paymentDrawdown : paymentDrawdowns){
+            Decimal paymentBalance = 0.00 - paymentDrawdown.Outstanding_Balance_as_of_Payout_Date__c;  
             if (paymentBalance > 0){
-                Drawdown__c drawdownToReverse = null;            
+                Drawdown__c advanceDrawdown = null;            
                 for (Drawdown__c d : drawdownsToReverse){
-                    if (rejectionDrawdown.Payment_To_Reverse__c == d.Id)
-                        drawdownToReverse = d;
+                    if (paymentDrawdown.Payment_To_Reverse__c == d.Id)
+                        advanceDrawdown = d;
                 }
-                if (drawdownToReverse == null){
+                if (advanceDrawdown == null){
                     throw new PaymentToReverseIsNotSetException('Payment to reverse is not set');
                 }
-                if (drawdownToReverse.Payout_Date__c <> rejectionDrawdown.date__c && drawdownToReverse.opportunity__c == rejectionDrawdown.opportunity__c){
-                    throw new PayoutDateInconsistentException('Drawdown ' + drawdownToReverse.name + ', with a Payout Date of:' + drawdownToReverse.Payout_Date__c + ' is not consistent with Payment date on ' + rejectionDrawdown.name+ ' of '+ rejectionDrawdown.date__c +'. Payments cannot be allocated.');
+                if (advanceDrawdown.Payout_Date__c <> paymentDrawdown.date__c && advanceDrawdown.opportunity__c == paymentDrawdown.opportunity__c){
+                    throw new PayoutDateInconsistentException('Drawdown ' + advanceDrawdown.name + ', with a Payout Date of:' + advanceDrawdown.Payout_Date__c + ' is not consistent with Payment date on ' + paymentDrawdown.name+ ' of '+ paymentDrawdown.date__c +'. Payments cannot be allocated.');
                 }
-                Drawdown_Payment_Allocation__c newAllocation = 
-                            new Drawdown_Payment_Allocation__c (Amount__c=rejectionDrawdown.Amount__c, drawdown__c=drawdownToReverse.id,payment__c=rejectionDrawdown.id, 
-                                                                payout_date__c=drawdownToReverse.payout_date__c, temp_payout_date__c=drawdownToReverse.temp_payout_date__c, 
-                                                                Transaction_Date__c=rejectionDrawdown.date__c, opportunity__c=rejectionDrawdown.opportunity__c,
-                                                                Interest_Accrued_to_Transaction_Date__c = drawdownToReverse.Accrued_Interest_as_of_Payout_Date__c,
-                                                                Interest_End_Date__c = drawdownToReverse.Interest_End_Date__c, Reserve_Date__c=rejectionDrawdown.Opportunity__r.Reserve_Date__c);
-                //System.debug('allocateRejectionDrawdowns ' + newAllocation.Amount__c  + ' ' + drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c + ' ' + rejectionDrawdown.Principal_Reversed__c);
-                if (newAllocation.Amount__c < drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c ){
-                    newAllocation.Principal_Repaid__c = newAllocation.Amount__c;
-                    newAllocation.Interest_Repaid__c = 0.0;                    
-                }
-                else{
-                    newAllocation.Principal_Repaid__c = rejectionDrawdown.Principal_Reversed__c;
-					newAllocation.Interest_Repaid__c = drawdownToReverse.Outstanding_Balance_as_of_Payout_Date__c - rejectionDrawdown.Principal_Reversed__c;                    
-                }
+                Drawdown_Payment_Allocation__c newAllocation = createAllocationForRejection(paymentDrawdown, advanceDrawdown);
                 allocations.add(newAllocation);
             }
         }
         insert allocations;
+    }
+    
+    public static Drawdown_Payment_Allocation__c createAllocationForRejection(Drawdown__c paymentDrawdown, Drawdown__c advanceDrawdown){        
+        Drawdown_Payment_Allocation__c newAllocation = 
+            new Drawdown_Payment_Allocation__c (Amount__c=paymentDrawdown.Amount__c, drawdown__c=advanceDrawdown.id,payment__c=paymentDrawdown.id, 
+                                                payout_date__c=advanceDrawdown.payout_date__c, temp_payout_date__c=advanceDrawdown.temp_payout_date__c, 
+                                                Transaction_Date__c=paymentDrawdown.date__c, opportunity__c=paymentDrawdown.opportunity__c,
+                                                Interest_Accrued_to_Transaction_Date__c = advanceDrawdown.Accrued_Interest_as_of_Payout_Date__c,
+                                                Interest_End_Date__c = advanceDrawdown.Interest_End_Date__c, Reserve_Date__c=paymentDrawdown.Opportunity__r.Reserve_Date__c);
+            //System.debug('allocatepaymentDrawdowns ' + newAllocation.Amount__c  + ' ' + advanceDrawdown.Outstanding_Balance_as_of_Payout_Date__c + ' ' + paymentDrawdown.Principal_Reversed__c);
+        if (paymentDrawdown.Reference_Notes__c == 'Payment Rejected' || paymentDrawdown.Reference_Notes__c == 'Payment Halted'){
+            if (newAllocation.Amount__c < advanceDrawdown.Outstanding_Balance_as_of_Payout_Date__c ){
+                newAllocation.Principal_Repaid__c = newAllocation.Amount__c;
+                newAllocation.Interest_Repaid__c = 0.0;                    
+            }
+            else{
+                newAllocation.Principal_Repaid__c = paymentDrawdown.Principal_Reversed__c;
+                newAllocation.Interest_Repaid__c = advanceDrawdown.Outstanding_Balance_as_of_Payout_Date__c - paymentDrawdown.Principal_Reversed__c;                    
+            }
+        }
+        else{
+            newAllocation.Principal_Repaid__c = newAllocation.Amount__c;
+            newAllocation.Interest_Repaid__c = 0.0;
+        }
+        
+        return newAllocation;
+    }
+    
+    public static void deletePaymentAllocations(List<Id> paymentIds){
+        List<Drawdown_Payment_Allocation__c> paymentAllocations = [select Id from Drawdown_Payment_Allocation__c where Payment__c in :paymentIds];
+        if (!paymentAllocations.isEmpty())
+            delete paymentAllocations;
     }
 }
