@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Reserve_Exposure__c</fullName>
     <externalId>false</externalId>
-    <formula>MAX( Value_At_Reserve_Date__c - Reserve_Amount__c, 0.0)</formula>
+    <formula>Value_At_Reserve_Date__c - Reserve_Amount__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Reserve Exposure</label>
     <precision>18</precision>

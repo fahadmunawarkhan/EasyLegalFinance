@@ -1528,7 +1528,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <displayNameOverride>Total Outstanding Balance</displayNameOverride>
             <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
             <table>Opportunity</table>
         </columns>
@@ -1536,6 +1535,12 @@
             <checkedByDefault>false</checkedByDefault>
             <displayNameOverride>Accrued Interest To Date</displayNameOverride>
             <field>Reserve_Non_Repaid_Interest_To_Date__c</field>
+            <table>Opportunity</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Total Outstanding Balance</displayNameOverride>
+            <field>Reserve_Outstanding_Balance_With_Offset__c</field>
             <table>Opportunity</table>
         </columns>
         <masterLabel>Opportunities</masterLabel>

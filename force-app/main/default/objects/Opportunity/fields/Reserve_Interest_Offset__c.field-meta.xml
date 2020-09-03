@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Interest_Repaid_After_Reserve_Date__c</fullName>
+    <fullName>Reserve_Interest_Offset__c</fullName>
     <externalId>false</externalId>
-    <label>Interest Repaid After Reserve Date</label>
+    <label>Reserve Interest Offset</label>
     <summarizedField>Drawdown__c.Interest_Repaid__c</summarizedField>
     <summaryFilterItems>
-        <field>Drawdown__c.After_Reserve_Date__c</field>
+        <field>Drawdown__c.Reference_Notes__c</field>
         <operation>equals</operation>
-        <value>True</value>
-    </summaryFilterItems>
-    <summaryFilterItems>
-        <field>Drawdown__c.Payment_Method__c</field>
-        <operation>equals</operation>
-        <value>Payment</value>
+        <value>Payment Shortfall</value>
     </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
