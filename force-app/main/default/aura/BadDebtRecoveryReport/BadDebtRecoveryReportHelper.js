@@ -2,7 +2,7 @@
     getCalendarMin : function(component){
         var year = new Date().getFullYear() - 10;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);                  
     },
     
@@ -244,5 +244,19 @@
             arr.push(quote + selectedOptions[i].Name + quote);
         }
         return arr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

@@ -1,6 +1,6 @@
 ({
 	getCalendarMin : function(component){
-        let min = '2010-01-01';
+        let min = '1980-01-01';
         component.set("v.calendarMin", min);                  
     },
     

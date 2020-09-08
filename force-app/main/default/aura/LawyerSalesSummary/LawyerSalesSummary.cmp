@@ -219,265 +219,207 @@
         </div>
         <div class="">
             <lightning:card title="Lawyer Sales Summary" iconName="standard:case" variant="base">
-                <div style="overflow-x:auto;height:450px;">
-                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
+                <div class="slds-table--header-fixed_container" style="height:500px;padding-top:4rem !important;">
+                <div class="slds-scrollable_y" style="height:100%;">
+                    <div class="date-in-table">
+                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table--header-fixed">
                         <thead>
-                            <tr class="slds-line-height_reset">
-                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Lawyer" style="cursor: pointer;">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Lawyer">LAWYER</span>
-                                    <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Lawyer')}">
-                                        <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                    </aura:if>
-                                    <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Lawyer')}">
-                                        <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                    </aura:if>
+                            <tr class="slds-text-heading_label"  style="font-size:10px; font-weight:bold;">
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center" style="height: 15px;">LAWYER</div>
                                 </th>
-                                <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Firm" style="cursor: pointer;">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Law Firm">LAW FIRM</span>
-                                    <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Firm')}">
-                                        <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                    </aura:if>
-                                    <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Firm')}">
-                                        <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                    </aura:if>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">LAW FIRM</div>
                                 </th>
-                                <!--CONSOLIDATED, RHINO, ELFI-->
-
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL # OF ACCOUNTS">{!'TOTAL # OF ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL # <br/>OF<br/>ACCOUNTS</div>
                                 </th>
-                                <th>
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF ACTIVE ACCOUNTS">{!'# OF ACTIVE ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>ACTIVE<br/>ACCOUNTS</div>
                                 </th>
-                                <th>
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED ACCOUNTS">{!'# OF CLOSED ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>CLOSED<br/>ACCOUNTS</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS">{!'# OF OPPS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:5%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>OPPS</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PRINCIPAL OUTSTANDING">{!'PRINCIPAL OUTSTANDING'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">PRINCIPAL<br/>OUTSTANDING</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT ACCOUNTS">{!'# OF BAD DEBT ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>BAD DEBT<br/>ACCOUNTS</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">{!'BAD DEBT AMOUNT'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:0%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">BAD DEBT<br/>AMOUNT</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL ACCOUNTS">{!'# OF SHORTFALL ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>SHORTFALL<br/>ACCOUNTS</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="SHORTFALL AMOUNT">{!'SHORTFALL AMOUNT'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:6%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">SHORTFALL<br/>AMOUNT</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE ACCOUNTS">{!'# OF OVERAGE ACCOUNTS'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>OVERAGE<br/>ACCOUNTS</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">{!'OVERAGE AMOUNT'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">OVERAGE<br/>AMOUNT</div>
                                 </th>
-                                <th>
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PAYOUT">{!'PAYOUT'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:5%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">PAYOUT</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL INTEREST">{!'TOTAL INTEREST'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL<br/>INTEREST</div>
                                 </th>
-                                <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount">
-                                    <span class="slds-truncate makeBold slds-m-right_xxx-small" title="ADMIN FEE RECEIVED">{!'ADMIN FEE RECEIVED'}</span>
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">ADMIN FEE<br/>RECEIVED</div>
                                 </th>
-
-                                <!--CONSOLIDATED, RHINO, ELFI-->
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="font-size:11px;">
                             <aura:iteration items="{!v.AmountByLawyer}" var="item">
-                                <tr class="slds-hint-parent">
-                                    <td class="">
-                                        <div class="slds-truncate makeBold">
-                                            <aura:if isTrue="{!item.lawyer == null}">
-                                                <aura:set attribute="else">
-                                                    <a href="{! '/' + item.lawyerId}">{!item.lawyer}</a>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
+                                <tr>
+                                    <td class="slds-cell-wrap">
+                                        <aura:if isTrue="{!item.lawyer == null}">
+                                            <aura:set attribute="else">
+                                                <a href="{! '/' + item.lawyerId}">{!item.lawyer}</a>
+                                            </aura:set>
+                                        </aura:if>
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate makeBold">
-                                            <aura:if isTrue="{!item.firm == null}">
-                                                <aura:set attribute="else">
-                                                    <a href="{! '/' + item.firmId}">{!item.firm}</a>
-                                                </aura:set>
-                                            </aura:if>
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <aura:if isTrue="{!item.firm == null}">
+                                            <aura:set attribute="else">
+                                                <a href="{! '/' + item.firmId}">{!item.firm}</a>
+                                            </aura:set>
+                                        </aura:if>
                                     </td>
-                                    <!--RHINO-->
-                                    <!--<aura:if isTrue="{!or(v.ChosenFilter == 'Rhino', v.ChosenFilter == 'ELFI', v.ChosenFilter == 'Consolidated')}">-->
-                                    <td class="">
-                                        <div class="slds-truncate">
-
-                                            <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-
-                                            <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.Amount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.Amount}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.BadDebtAmount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.BadDebtAmount}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.ShortfallAmount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ShortfallAmount}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
                                     </td>
                                     
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.InterestRepaid}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.InterestRepaid}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="">
-                                        <div class="slds-truncate">
-                                            <lightning:formattedNumber value="{!item.AdminFeeReceived}" style="currency" maximumFractionDigits="2" />
-                                        </div>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.AdminFeeReceived}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <!--</aura:if>-->
-                                    <!--RHINO-->
                                 </tr>
-
                             </aura:iteration>
-                            <!-- This section will be outside of the iteration above -->
-                            <tr class="slds-hint-parent">
-                                <td data-label="TOTAL">
-                                    <div class="slds-truncate makeBold" title="TOTAL:">TOTAL:</div>
+                            <tr>
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBold" title="TOTAL:">TOTAL:</span>
                                 </td>
-                                <td data-label="">
-                                    <div class="slds-truncate makeBold" title=""></div>
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBold" title=""></span>
                                 </td>
-                                <!--CONSOLIDATED-->
-                                <!--<aura:if isTrue="{!or(v.ChosenFilter == 'Consolidated', v.ChosenFilter == 'Rhino', v.ChosenFilter == 'ELFI')}">-->
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>                                
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ClosedFileTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.OpptyTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.amtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
-                                </td>
-                                
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    </span>
+                                </td>                                
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.BadDebtAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ShortfallTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.ShortfallAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="File Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.OverageTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.OverageAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.ClosedAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.InterestAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <td data-label="Amount Grand Total">
-                                    <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.AdminFeeReceivedTotal}" style="currency" maximumFractionDigits="2" />
-                                    </div>
+                                    </span>
                                 </td>
-                                <!--</aura:if>-->
-                                <!--CONSOLIDATED-->
                             </tr>
                             <!-- / This section will be outside of the iteration above -->
                         </tbody>
                     </table>
+                </div>
+                </div>
                 </div>
             </lightning:card>
         </div>
