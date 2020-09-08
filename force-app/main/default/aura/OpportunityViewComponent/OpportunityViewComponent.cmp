@@ -1,10 +1,10 @@
 <!--
   @Component Name     : OpportunityViewComponent.cmp
   @Description        : 
-  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08-25-2020
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 09-01-2020
   @Modification Log   : 
   ===============================================================================
   Ver         Date                     Author      		      Modification
@@ -58,7 +58,9 @@
     <aura:attribute name="BadDebtReasons" type="list" default="[]" />
     <aura:attribute name="BadDebtReasonsStatus" type="boolean" default="false" />
     
-    <aura:attribute name="listBankruptcyValues" type="String[]" default="Yes,No" description="" />
+    <aura:attribute name="listBankruptcyValues" type="String[]" default="No,Yes" description="" />
+    <aura:attribute name="listPoliceReportValues" type="String[]" default="No,Yes" description="" />
+    <aura:attribute name="listStatementOfDefenseValues" type="String[]" default="No,Yes" description="" />
     
     
     <aura:attribute name="referenceNotesDepPicklistMap" type="map" description="map to store dependent values with controlling value"/>
@@ -433,8 +435,47 @@
                             <div class="slds-form-element__control"><span class=""> <lightning:input type="Text" variant="label-hidden" tabindex="9" class="field" value="{!v.oppObj.Court_File_No__c}"/></span></div>
                         </div>
                     </lightning:layoutItem>  
+                   
+                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                                <lightning:select class = "bankruptcy-style"
+                                                  name="policeReportld"
+                                                  value="{!v.oppObj.Police_Report__c}"
+                                                  label = "Police Report?"
+                                                  tabindex="16" >
+                                    <aura:iteration items="{!v.listPoliceReportValues}" var="val">
+                                        <option value="{!val}" selected="{!val == v.oppObj.Police_Report__c}">{!val}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+                    </lightning:layoutItem>
                 </lightning:layout>
-
+                
+                <lightning:layout class="slds-m-left_xx-large">
+                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                            </div>
+                        </div>
+                    </lightning:layoutItem>  
+                    <lightning:layoutItem size="4" class="slds-m-left_xx-large">
+                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                            <div class="slds-form-element__control">
+                                <lightning:select class = "bankruptcy-style"
+                                                  name="statementOfDefenseId"
+                                                  value="{!v.oppObj.Statement_of_Defense__c}"
+                                                  label = "Statement of Defense?"
+                                                  tabindex="17" >
+                                    <aura:iteration items="{!v.listStatementOfDefenseValues}" var="val">
+                                        <option value="{!val}" selected="{!val == v.oppObj.Statement_of_Defense__c}">{!val}</option>
+                                    </aura:iteration>
+                                </lightning:select>	
+                            </div>
+                        </div>
+                    </lightning:layoutItem>                     
+                </lightning:layout>
 
 
                 <!-- Replaced with Previous Loan Table
