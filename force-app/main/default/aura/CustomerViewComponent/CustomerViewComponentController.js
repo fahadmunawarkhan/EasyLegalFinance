@@ -60,8 +60,11 @@
 
         helper.getPickListValues(component, 'Opportunity', 'Did_ELF_buyout_the_Loan__c', 'elfiBuyoutLoanOptions');
         helper.getPickListValues(component, 'Opportunity', 'Existing_Litigation_Loans__c', 'existingLitigationLoanOptions');
+        
+        helper.getPickListValues(component, 'Account', 'Primary_Insurance_Provider__c', 'insuranceProviderOptions');
 
         helper.getCurrentUser(component);
+        helper.getLoanSummaryInfo(component);
 
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
         component.set('v.paymentDate', today);
@@ -863,5 +866,35 @@
         console.log('handleCustomCellChanged ' + recordId);
         console.log(cellItem.itemName + ' ' + cellItem.value);
         helper.handleCustomCellChanged(component, recordId, cellItem);
-    },                     
+    },
+    openUnderwriterEvaluationModal : function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", true);
+    },
+    closeUnderwriterEvaluationModal: function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", false);
+        component.set("v.spinner", true);
+        helper.getAccountInfo(component);
+    },
+    saveUnderwriterEvaluationModal : function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", false);
+        component.set("v.spinner", true);
+        helper.saveAccountPromise(component).then($A.getCallback(
+            function(result){
+                helper.showToast('SUCCESS', 'Your changes were successfully saved!', 'SUCCESS');
+                return helper.getApprovalProcessHistoryInfo(component);
+            }
+        )).then(
+            function(result) {
+                component.set("v.spinner", false);
+                component.set("v.approvalHistory", result);
+                helper.getAccountInfo(component);
+            }
+        ).catch(
+            function(errors){
+                console.log(errors);
+                component.set("v.spinner", false);
+                helper.handleErrors(errors);
+            }
+        );
+    }                  
 })
