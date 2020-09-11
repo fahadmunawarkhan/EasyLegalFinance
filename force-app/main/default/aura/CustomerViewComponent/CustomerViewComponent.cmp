@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08-25-2020
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 09-11-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -152,6 +152,11 @@
     
     <aura:attribute name="currentUser" type="User" /> 
 
+    <aura:attribute name="showUnderwriterEvaluationModal" type="Boolean" default="false" />
+    <aura:attribute name="offersToSettleOptions" type="List" default="[]" />
+    
+    <aura:attribute name="insuranceProviderOptions" type="List" default="[]" />
+    
     <!-- Payment Instruction Variables -->    
     <aura:attribute name="paymentInstructionModalPromise" type="Aura.Action"/>
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -630,13 +635,13 @@
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Total Amount Loaned</span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
-                                                    <ui:inputCurrency class="field" value="{!v.accountObj.Total_Amount_Loaned__c}" disabled="true" />
+                                                    <ui:inputCurrency class="field" value="{!v.LoanSummary.balancePrincipal}" disabled="true" />
                                                 </span>
                                             </div>
                                         </div>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="5" class="slds-m-left_xx-large">
-                                        <lightning:input type="number" name="input7" label="Projected Loan Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01" onchange="{!c.projectedLoanValueChanged}" />
+                                        <lightning:input type="number" name="input7" label="Estimated Case Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01" onchange="{!c.projectedLoanValueChanged}" disabled="true" />
                                     </lightning:layoutItem>
                                 </lightning:layout>
                                 <!--<lightning:layout class="slds-m-left_xx-large">
@@ -707,7 +712,7 @@
                                         </div>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem size="6" class="slds-m-left_xx-large">
-                                        <div class="slds-form-element slds-m-bottom_small"><span class="slds-form-element__label">Loan To Value</span>
+                                        <div class="slds-form-element slds-m-bottom_small"><span class="slds-form-element__label">Loan To Value (LTV is system generated)</span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
                                                     <lightning:formattedNumber value="{!v.accountObj.Loan_To_Value__c}" style="percent-fixed" maximumFractionDigits="2" />
@@ -722,21 +727,27 @@
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
                                                 <div class="slds-form-element__control">
                                                     <span class="">
-                                                        <lightning:combobox label="Accident Location" name="AccidentLocation" value="{!v.oppObj.Accident_Location_from_W2L__c}" 
-                                                                            placeholder="--None--" options="{! v.provinceResidencyOptions }" tabindex="22" disabled="{!if(v.oppObj.Id == null,true,false)}" />                                                                                                                                              
+                                                        <lightning:combobox label="Primary Insurance Provider" name="InsuranceProvider" value="{!v.accountObj.Primary_Insurance_Provider__c}" placeholder="--None--" options="{! v.insuranceProviderOptions }"/>                                                                                                                                           
                                                     </span>
                                                 </div>
                                             </div>
                                         </lightning:layoutItem>
-                                        <lightning:layoutItem size="5" class="slds-m-left_xx-large">
-                                            <lightning:card title="Reason:" variant="base">
-                                                <lightning:layout class="">
-                                                    <lightning:layoutItem size="12" class="slds-m-left_xx-large">
-                                                        <lightning:radioGroup aura:id="reasonForLTVRadioGroup" name="radioGroup" variant="label-hidden" label="" class="customRadioCls" options="{! v.ReasonForLTV }" value="{! v.selectedReasonForLTV}" type="radio" />
-                                                    </lightning:layoutItem>
-                                                </lightning:layout>
-                                            </lightning:card>
-                                            <lightning:card title="Approvals:" iconName="standard:approval" variant="base">
+                                        <lightning:layoutItem size="5" class="slds-m-left_xx-large slds-m-bottom_x-small">
+                                            <lightning:button class="slds-align_absolute-center" iconPosition="left" variant="neutral" type="button" label="Update" onclick="{!c.openUnderwriterEvaluationModal}"></lightning:button>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </div>
+                                <lightning:layout class="slds-m-left_xx-large">
+                                    <lightning:layoutItem size="6" class="slds-m-left_xx-large">
+                                        <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
+                                            <div class="slds-form-element__control">
+                                                <span class="">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="5" class="slds-m-left_xx-large slds-m-bottom_x-small">
+                                        <lightning:card title="Approvals:" iconName="standard:approval" variant="base">
                                                 <div style="max-height:200px;overflow:auto;">
                                                     <table class="slds-table slds-table_bordered slds-table_col-bordered" style="width:90%">
                                                         <thead>
@@ -790,9 +801,8 @@
                                                     </table>
                                                 </div>
                                             </lightning:card>
-                                        </lightning:layoutItem>
-                                    </lightning:layout>
-                                </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
                                 <!--
                         <lightning:layout class="slds-m-left_xx-large">
                             <lightning:layoutItem size="8" class="slds-m-left_xx-large">
@@ -3565,6 +3575,97 @@
 
         </lightning:tabset>
 
+        <!-- <<<<<<<<<< POPUP MODAL >>>>>>>>>> -->
+    <aura:if isTrue="{!v.showUnderwriterEvaluationModal==true}" >
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon size="medium" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" iconName="utility:close" variant="bare" onclick="{! c.closeUnderwriterEvaluationModal }" alternativeText="Close" />
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Underwriter Evaluation</h2>
+                </header>
+                
+                <div style="min-height:300px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div>
+                        <lightning:layout>
+                            <lightning:layoutItem size="5" class="slds-m-left_large">
+                                <div class="slds-form-element slds-m-bottom_small slds-m-left_large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="number" name="input7" label="Estimated Case Value" value="{!v.accountObj.Projected_Loan_Value__c}" formatter="currency" step="0.01" onchange="{!c.projectedLoanValueChanged}" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="5" class="slds-m-left_large">
+                                <div class="slds-form-element slds-m-bottom_small slds-m-left_large">
+                                    <div class="slds-form-element__control">
+                                        <span class=""> 
+                                            <lightning:combobox label="Have they received any offers to settle" value="{!v.accountObj.Offers_to_Settle__c}" placeholder="--None--" options="{! v.offersToSettleOptions }" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        <lightning:layout>
+                            <lightning:layoutItem size="5" class="slds-m-left_large">
+                                <div class="slds-form-element slds-m-bottom_small slds-m-left_large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="number" label="Offer to Settle Amount" value="{!v.accountObj.Offer_to_Settle_Amount__c}" formatter="currency"  disabled="{!v.accountObj.Offers_to_Settle__c != 'Yes'}"  />
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="5" class="slds-m-left_large">
+                                <div class="slds-form-element slds-m-bottom_small slds-m-left_large">
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:input type="number" label="Liability" value="{!v.accountObj.Liability__c}" formatter="percent-fixed"   />
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        <lightning:layout class="">
+                            <lightning:layoutItem size="10" class="slds-m-left_xx-large">
+                                <div class="slds-form-element slds-m-bottom_small">
+                                    <span class="slds-form-element__label">
+                                        Reason:
+                                    </span>
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:radioGroup aura:id="reasonForLTVRadioGroup" name="radioGroup" variant="label-hidden" label="" class="customRadioCls" options="{! v.ReasonForLTV }" value="{! v.selectedReasonForLTV}" type="radio" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                        <lightning:layout class="">
+                            <lightning:layoutItem size="10" class="slds-m-left_xx-large slds-m-top_small">
+                                <div class="slds-form-element slds-m-bottom_small">
+                                    <span class="slds-form-element__label">
+                                        Underwriter Notes:
+                                    </span>
+                                    <div class="slds-form-element__control">
+                                        <span class="">
+                                            <lightning:inputRichText value="{!v.accountObj.Underwriter_Notes__c}" placeholder="Underwriter Notes...."/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Cancel" title="Cancel" onclick="{! c.closeUnderwriterEvaluationModal}"/>
+                    <lightning:button variant="brand" label="Save" title="Save" onclick="{! c.saveUnderwriterEvaluationModal}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        
+        
+    </aura:if>
         <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
         <aura:if isTrue="{!v.spinner}">
             <div class="demo-only demo--inverse" style="height: 6rem;">
