@@ -153,6 +153,7 @@
     <aura:attribute name="currentUser" type="User" /> 
 
     <aura:attribute name="showUnderwriterEvaluationModal" type="Boolean" default="false" />
+    <aura:attribute name="offersToSettleOptions" type="List" default="[]" />
     
     <aura:attribute name="insuranceProviderOptions" type="List" default="[]" />
     
