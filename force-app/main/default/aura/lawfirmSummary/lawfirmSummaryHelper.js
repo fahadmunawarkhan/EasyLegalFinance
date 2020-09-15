@@ -196,7 +196,8 @@
                 reportDate : reportDate,
                 LoanFilter: loanFilterValue,
                 businessUnitFilter: businessUnitFilterValue,
-                typeOfLoan : typeOfLoanArr
+                typeOfLoan : typeOfLoanArr,
+                DefaultPDF : component.get("v.DefaultPDF")
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();

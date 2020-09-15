@@ -111,12 +111,12 @@ public class LawfirmSummaryCtlrTest {
             
             LawfirmSummaryCtlr.generatePayoutBalance(cc.AccountId, ''+ Date.today(),'All', 'ELFI', new List<String>{'Facility Loan'});
             
-        LawfirmSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
+        LawfirmSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'}, false);
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Law_Firm_Summary_Report__c, null);
         
-        LawfirmSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
+        LawfirmSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'}, false);
         
         Test.stopTest();
     }

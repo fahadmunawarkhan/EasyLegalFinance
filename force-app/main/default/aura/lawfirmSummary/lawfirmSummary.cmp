@@ -1,3 +1,13 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 07-10-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   07-08-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="LawfirmSummaryCtlr">
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="payoutDate" type="date" />
@@ -20,6 +30,7 @@
     <aura:attribute name="spinner" type="Boolean" default="false" />
     <aura:attribute name="recordSelected" type="Boolean" default="false" />
     <aura:attribute name="emailRecipient" type="Contact" default="{}" />
+    <aura:attribute name="DefaultPDF" type="Boolean" default = "false" />
     
     <aura:attribute name="oppStageStatus" type="List" />
     
@@ -193,8 +204,18 @@
                 <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Balance for selected" onclick="{!c.generateBalanceForSelected}" />                
             </lightning:layoutItem>
             <lightning:layoutItem>
+                <lightning:buttonMenu disabled="{!v.disableButtons}" aura:Id="generateDocument" onselect="{!c.generateForSelected}"
+                                      label="Generate Payout Document" alternativeText="Generate Payout Document">
+                    <lightning:menuItem value="generatePayoutDocForSelectedExcel" label="Generate Payout Document For Selected (Excel)" />
+                    <lightning:menuItem value="generatePayoutDocForSelected" label="Generate Payout Document For Selected (PDF)" />
+                </lightning:buttonMenu>
+            </lightning:layoutItem>
+            <!-- <lightning:layoutItem>
                 <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Document for selected" onclick="{!c.generateForSelected}" />                
             </lightning:layoutItem>
+            <lightning:layoutItem>
+                <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Payout Document for selected(Excel)" onclick="{!c.generateForSelectedExcel}" />                
+            </lightning:layoutItem> -->
             <lightning:layoutItem>
                 <lightning:button disabled="{!v.disableButtons}" class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Payout Document" onclick="{!c.sendToSelected}" />
             </lightning:layoutItem>
@@ -284,18 +305,38 @@
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!acc.noOfFiles}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">
                                 <lightning:layout pullToBoundary="small" >
-                                    <lightning:layoutItem size="3" padding="horizontal-small">
+                                    <lightning:layoutItem size="2" padding="horizontal-small">
                                         <span Title= "Link to Client Data" class="file-icon" ><a  onclick="{!c.openLinkReport}" data-lawfirmId="{!acc.account.Id}"><lightning:icon class="icn" iconName="utility:file" size="xx-small" alternativeText="file"/></a></span>
                                     </lightning:layoutItem>
-            						<lightning:layoutItem size="3" padding="horizontal-small">
+            						<lightning:layoutItem size="2" padding="horizontal-small">
                                         <a Title="{! 'Email document to ' + v.emailRecipient.Name}" onclick="{!c.sendToIndividual}" data-selected="{!acc.account.Id}"><lightning:icon iconName="utility:email" size="xx-small" alternativeText="email"/></a>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="3" padding="horizontal-small">
+                                    <!--<lightning:layoutItem size="3" padding="horizontal-small">
                                         <aura:if isTrue="{!acc.account.Attachments[0].Id}">
                                             <span Title= "Preview" ><a  onclick="{!c.downloadAttachment}" data-attachment="{!acc.account.Attachments[0].Id}"><lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/></a></span>
                                         </aura:if>
+                                    </lightning:layoutItem>-->
+                                    <lightning:layoutItem size="2" padding="horizontal-small">
+                                        <aura:if isTrue="{!acc.PdfId}">
+                                            <span Title= "Preview" >
+                                                <a  onclick="{!c.downloadAttachment}" data-attachment="{!acc.PdfId}">
+                                                    <!-- <lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/> -->
+                                                    <lightning:icon class="icn" iconName="doctype:pdf" size="xx-small" alternativeText="file"/>
+                                                </a>
+                                            </span>
+                                        </aura:if>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="3" padding="horizontal-small">
+                                    <lightning:layoutItem size="2" padding="horizontal-small">
+                                        <aura:if isTrue="{!acc.ExcelId}">
+                                            <span Title= "Preview" >
+                                                <a  onclick="{!c.downloadAttachment}" data-attachment="{!acc.ExcelId}">
+                                                    <!-- <lightning:icon class="icn" iconName="utility:download" size="xx-small" alternativeText="file"/> -->
+                                                    <lightning:icon class="icn" iconName="doctype:excel" size="xx-small" alternativeText="file"/>
+                                                </a>
+                                            </span>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem size="2" padding="horizontal-small">
                                         <aura:if isTrue="{!acc.account.Tasks[0].Id}">
                                             <span  Title= "{! 'Email sent at ' + acc.account.Tasks[0].CreatedDate}" ><lightning:icon class="check-icn" iconName="utility:check" size="xx-small" alternativeText="email sent"/></span>
                                         </aura:if>
