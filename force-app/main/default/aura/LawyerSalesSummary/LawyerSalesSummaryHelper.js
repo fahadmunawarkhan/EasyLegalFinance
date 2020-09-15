@@ -368,5 +368,24 @@
                 }
             })
         );
+    },
+    getLawyerName : function(component){
+        return new Promise($A.getCallback(
+            function(resolve, reject) {
+                let action = component.get('c.getLawyerName');
+                action.setParams({
+                    recordId : component.get('v.recordId')
+                });
+                action.setCallback(this, function(response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        )); 
     }
 })

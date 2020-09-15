@@ -12,12 +12,13 @@
         helper.getTypeofLoanPickList(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
         console.log('test===??>');
 console.log(component.get("v.businessUnitOptions"));
+        
+        
         helper.getReportCongaURL(component).then($A.getCallback(
             function(result){ 
                 component.set('v.ViewAllUrl', result[0].Conga_Lawyer_Sales_Summary_View_All__c);
                 component.set('v.PrintAllUrl', result[0].Conga_Lawyer_Sales_Summary_Print_All__c);
             }));
-        
         helper.getCustomSettings(component).then($A.getCallback(
             function(result){ 
                 component.set('v.customSetting', result);
@@ -25,6 +26,11 @@ console.log(component.get("v.businessUnitOptions"));
             }
         )).then($A.getCallback(
             function(result){
+                return helper.getLawyerName(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                component.set("v.searchByName", result);
                 return helper.getAmountGroupByLawyer(component);
             }
         )).then($A.getCallback(            
