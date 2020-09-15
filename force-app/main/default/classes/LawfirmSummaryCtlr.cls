@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 07-08-2020
+ * @Last Modified On   : 09-15-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
@@ -205,27 +205,7 @@ public with sharing class LawfirmSummaryCtlr {
     @AuraEnabled
     public static void generatePayoutBalance(Id lawfirmId, String payoutDate, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan){
         try{
-            List <Payout_Bath_Job__mdt> payoutJobs = [SELECT MasterLabel, DeveloperName FROM Payout_Bath_Job__mdt];
-            Map<String, Payout_Bath_Job__mdt> devNameToPayoutJobsMap = new Map<String, Payout_Bath_Job__mdt>();
-            for(Payout_Bath_Job__mdt pJob : payoutJobs){
-                devNameToPayoutJobsMap.put(pJob.DeveloperName, pJob);
-            }
-            
-            
-            List<AsyncApexJob> currentJobs = [SELECT Id ,Status, ApexClass.Name, CreatedBy.Name, CreatedDate
-                                              FROM AsyncApexJob
-                                              WHERE Status!='Aborted'
-                                              AND ApexClass.Name IN :devNameToPayoutJobsMap.keySet()
-                                              AND Status!='Completed'
-                                              ORDER BY CreatedDate DESC];
-            if(!currentJobs.isEmpty()){
-                String m = 'Cannot execute this job because ' + currentJobs[0].CreatedBy.Name + ' ran a similar job at ' + currentJobs[0].CreatedDate + '.';
-                m += '\nPlease try again later.';
-                
-                AuraHandledException e = new AuraHandledException(m);
-                e.setMessage(m);
-                throw e;
-            }
+            PayoutJobsHelper.checkJobs();
             LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
             businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             Date pDate = Date.valueOf(payoutDate);
