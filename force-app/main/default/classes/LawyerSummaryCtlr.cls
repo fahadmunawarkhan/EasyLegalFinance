@@ -20,7 +20,6 @@ public class LawyerSummaryCtlr {
             searchByName = (searchByName == null || String.isEmpty(searchByName))? '' : searchByName;
             
             String strQuery = 'SELECT Id, Name, Account.Name,';
-            strQuery += ' (Select id from Attachments where name like \'%List of Clients%\' and createddate = today order by createddate desc limit 1 ),';
             strQuery += ' (Select id,createddate from tasks where subject LIKE \'%Email: Clients Summary%\' and type=\'Email\' and createddate = today order by createddate desc limit 1 )';
             strQuery += ' FROM Contact WHERE RecordType.Name = \'Lawyers\'';
             strQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Name_Formula__c LIKE \'%' + searchByName + '%\' OR Account.Name_Formula__c LIKE \'%' + searchByName + '%\' )' : '';
@@ -46,7 +45,29 @@ public class LawyerSummaryCtlr {
             {
                 System.debug('## getLawyersContacts - RESULT: ' + con.Id);
             }
-            
+
+            Map<Id, String> ContactParentToAttach = new Map<Id, String>();
+            for(Attachment attach : [Select id ,parentId
+                                        from Attachment 
+                                        where parentId IN : contactIds
+                                        and name like '%List of Clients%xlsx' and 
+                                        createddate = today order by createddate desc]){
+                            if(!ContactParentToAttach.containsKey(attach.parentId))
+                            ContactParentToAttach.put(attach.parentId, attach.Id);
+            }
+            system.debug(ContactParentToAttach);
+            Map<Id, String> ContactParentToAttachPDF = new Map<Id, String>();
+            for(Attachment attach : [Select id ,parentId
+                                        from Attachment 
+                                        where parentId IN : contactIds
+                                        and name like '%List of Clients%pdf' and 
+                                        createddate = today order by createddate desc]){
+                            if(!ContactParentToAttachPDF.containsKey(attach.parentId))
+                            ContactParentToAttachPDF.put(attach.parentId, attach.Id);
+            }
+            system.debug(ContactParentToAttachPDF);
+
+
             strQuery = 'Select Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Lawyer__c in :contactIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
             strQuery += ' AND Account.Exclude_from_Payout__c =: ExcludeFromPayout';
             strQuery += loanFilter == 'Active'? ' AND Stage_Status__c LIKE \'%Active%\'' : '';
@@ -72,6 +93,8 @@ public class LawyerSummaryCtlr {
                 ContactInfo info = new ContactInfo();
                 info.contact = c;
                 info.noOfFiles = lawyerToClients.containsKey(c.Id) ? lawyerToClients.get(c.Id).size() : 0;
+                info.ExcelId = ContactParentToAttach.containsKey(c.Id) ? ContactParentToAttach.get(c.Id) : '';
+                info.PdfId = ContactParentToAttachPDF.containsKey(c.Id) ? ContactParentToAttachPDF.get(c.Id) : '';
                 if(info.noOfFiles > 0)
                 {
                     contactInfo.add(info);
@@ -137,17 +160,23 @@ public class LawyerSummaryCtlr {
     }
     
     @AuraEnabled
-    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, List<string> typeOfLoan){
+    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, List<string> typeOfLoan, Boolean defaultexcel){
         try{
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
             String ids = '';
+            String CongaBatchField = '';
             
             if(String.isEmpty(query) || query == null) {
                 ids = String.Join(selectedIds,',');
                 query = 'select id from contact WHERE Id in ('+ ids +')';
             }
             
+            if(defaultexcel == true){
+                CongaBatchField = 'Conga_Batch_Lawyer_Summary_Excel__c';
+            } else {
+                CongaBatchField = 'Conga_Batch_Lawyer_Summary__c';
+            }
    
                         
             Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());        
@@ -163,13 +192,13 @@ public class LawyerSummaryCtlr {
                                                                   APXTConga4__Query__c = query);
                 insert congaQuery;
                 conductor = new APXT_BPM__Conductor__c(APXT_BPM__Title__c = 'Mass Lawyer Summary - ' + UserInfo.getName(), APXT_BPM__Query_Id__c = congaQuery.Id,
-                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary__c');
+                                                       APXT_BPM__URL_Field_Name__c = CongaBatchField);
                 insert conductor;            
                 customSettings.Conductor_Id_Lawyer_Summary_Report__c = conductor.Id;
             }else{
                 conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:customSettings.Conductor_Id_Lawyer_Summary_Report__c];
                 congaQuery = [SELECT Id, APXTConga4__Query__c FROM APXTConga4__Conga_Merge_Query__c WHERE Id =:conductor.APXT_BPM__Query_Id__c];
-                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary__c';
+                conductor.APXT_BPM__URL_Field_Name__c = CongaBatchField;
                 update conductor;
                 congaQuery.APXTConga4__Query__c = query;
                 update congaQuery;
@@ -249,5 +278,11 @@ public class LawyerSummaryCtlr {
         
         @AuraEnabled
         public Boolean checked{get;set;} 
+
+        @AuraEnabled
+        public String ExcelId{get;set;}
+
+        @AuraEnabled
+        public String PdfId{get;set;}
     }
 }

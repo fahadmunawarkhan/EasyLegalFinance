@@ -208,7 +208,8 @@
                 reportDate : reportDate,
                 LoanFilter: loanFilterValue,
                 businessUnitFilter: businessUnitFilterValue,
-                typeOfLoan : typeOfLoanArr
+                typeOfLoan : typeOfLoanArr,
+                defaultexcel : component.get("v.defaultExcel")
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
@@ -395,7 +396,8 @@
             reportDate : reportDate,
             LoanFilter: loanFilterValue,
             businessUnitFilter: businessUnitFilterValue,
-            typeOfLoan : typeOfLoanArr
+            typeOfLoan : typeOfLoanArr,
+            defaultexcel : component.get("v.defaultExcel")
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
