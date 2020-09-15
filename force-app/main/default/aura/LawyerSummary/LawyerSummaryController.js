@@ -141,9 +141,17 @@
     generatePayoutDocumentButton : function(component, event, helper){
         var selectedMenuItemValue = event.getParam("value");
         if(selectedMenuItemValue == 'generatePayoutDocForSelected'){
+            component.set("v.defaultExcel", false);
             $A.enqueueAction(component.get("c.generateForSelected"));
         }else if(selectedMenuItemValue == 'generatePayoutDocForAll'){
+            component.set("v.defaultExcel", false);
             $A.enqueueAction(component.get("c.GenerateForAll"));
+        }else if(selectedMenuItemValue == 'generatePayoutDocForAllExcel'){
+            component.set("v.defaultExcel", true);
+            $A.enqueueAction(component.get("c.GenerateForAll"));
+        }else if(selectedMenuItemValue == 'generatePayoutDocForSelectedExcel'){
+            component.set("v.defaultExcel", true);
+            $A.enqueueAction(component.get("c.generateForSelected"))
         }
     },
     sendPayoutDocumentButton : function(component, event, helper){
@@ -167,7 +175,7 @@
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         
-        let fv7 = 'Active,Active - Partial Payment,Active - Collections';
+        let fv7 = 'Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan';
         if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
             fv7 = '';
             for(let i=0; i< oppStageStatus.length; i++){
