@@ -396,6 +396,20 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
         return Lsr;
     }
     
+    @AuraEnabled
+    public static String getLawyerName(String recordId){
+        String name = '';
+        if(recordId != null){
+            Contact con = [SELECT Id, Name_Formula__c, Name 
+                           FROM Contact
+                           WHERE Id = :recordId];
+            if(con != null) name = con.Name_Formula__c;
+        }
+        
+        return name;
+            
+    }
+    
     public class Wrapper {
         @AuraEnabled
         public string lawyer {get; set;}

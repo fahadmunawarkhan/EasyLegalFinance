@@ -2,7 +2,7 @@
     getCalendarMin: function(component) {
         var year = new Date().getFullYear() - 5;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);
     },
 
@@ -368,5 +368,24 @@
                 }
             })
         );
+    },
+    getLawyerName : function(component){
+        return new Promise($A.getCallback(
+            function(resolve, reject) {
+                let action = component.get('c.getLawyerName');
+                action.setParams({
+                    recordId : component.get('v.recordId')
+                });
+                action.setCallback(this, function(response) {
+                    let state = response.getState();
+                    if (state === 'SUCCESS') {
+                        resolve(response.getReturnValue());
+                    } else if (state === 'ERROR') {
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action);
+            }
+        )); 
     }
 })
