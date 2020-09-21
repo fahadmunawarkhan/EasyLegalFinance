@@ -49,7 +49,8 @@
         helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
         helper.getPickListValues(component, 'Account', 'Account_Type__c', 'accountTypeOptions');
         helper.getPickListValues(component, 'Account', 'ProvinceResidency__c', 'provinceResidencyOptions');
-
+        helper.getPickListValues(component, 'Account', 'Offers_to_Settle__c', 'offersToSettleOptions');
+        
         helper.getPickListValues(component, 'Contact', 'Citizenship_Status__c', 'citizenshipStatusOptions');
         helper.getPickListValues(component, 'Contact', 'Marital_Status__c', 'meritalStatusOptions');
         helper.getPickListValues(component, 'Contact', 'Any_SpousalChild_support_payment__c', 'spousalChildSupportPmtOptions');
@@ -60,8 +61,11 @@
 
         helper.getPickListValues(component, 'Opportunity', 'Did_ELF_buyout_the_Loan__c', 'elfiBuyoutLoanOptions');
         helper.getPickListValues(component, 'Opportunity', 'Existing_Litigation_Loans__c', 'existingLitigationLoanOptions');
+        
+        helper.getPickListValues(component, 'Account', 'Primary_Insurance_Provider__c', 'insuranceProviderOptions');
 
         helper.getCurrentUser(component);
+        helper.getLoanSummaryInfo(component);
 
         var today = $A.localizationService.formatDate(new Date(), "YYYY-MM-DD");
         component.set('v.paymentDate', today);
@@ -262,30 +266,18 @@
 
             if (businessUnit != '' && businessUnit != null) {
 
-                helper.validateLTV(component).then(
-                    function(isValid) {
-                        if (isValid) {
-                            let accountObj = component.get("v.accountObj");
-                            accountObj.Reason_for_LTV__c = component.get("v.selectedReasonForLTV");
-                            component.set("v.accountObj", accountObj);
+                helper.saveAccountOpptyAndContact(component);
+                helper.getAccountInfo(component);
+                helper.getLatestContact(component);
 
-                            helper.saveAccountOpptyAndContact(component);
-                            helper.getAccountInfo(component);
-                            helper.getLatestContact(component);
-
-                            helper.getApprovalProcessHistoryInfo(component).then(
-                                function(result) {
-                                    component.set("v.approvalHistory", result);
-                                }
-                            ).catch(
-                                function(errors) {
-                                    console.log(errors);
-                                    helper.errorsHandler(errors);
-                                }
-                            );
-                        } else {
-                            helper.showToast('ERROR', 'Please select a reason for LTV.', 'Error');
-                        }
+                helper.getApprovalProcessHistoryInfo(component).then(
+                    function(result) {
+                        component.set("v.approvalHistory", result);
+                    }
+                ).catch(
+                    function(errors) {
+                        console.log(errors);
+                        helper.errorsHandler(errors);
                     }
                 );
             }
@@ -863,5 +855,48 @@
         console.log('handleCustomCellChanged ' + recordId);
         console.log(cellItem.itemName + ' ' + cellItem.value);
         helper.handleCustomCellChanged(component, recordId, cellItem);
-    },                     
+    },
+    openUnderwriterEvaluationModal : function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", true);
+    },
+    closeUnderwriterEvaluationModal: function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", false);
+        component.set("v.spinner", true);
+        helper.getAccountInfo(component);
+    },
+    saveUnderwriterEvaluationModal : function(component, event, helper) {
+        component.set("v.showUnderwriterEvaluationModal", false);
+        component.set("v.spinner", true);
+        helper.validateLTV(component).then(
+            function(isValid) {
+                if (isValid) {
+                    let accountObj = component.get("v.accountObj");
+                    accountObj.Reason_for_LTV__c = component.get("v.selectedReasonForLTV");
+                    component.set("v.accountObj", accountObj);
+
+                    helper.saveAccountPromise(component).then($A.getCallback(
+                        function(result){
+                            helper.showToast('SUCCESS', 'Your changes were successfully saved!', 'SUCCESS');
+                            return helper.getApprovalProcessHistoryInfo(component);
+                        }
+                    )).then(
+                        function(result) {
+                            component.set("v.spinner", false);
+                            component.set("v.approvalHistory", result);
+                            helper.getAccountInfo(component);
+                        }
+                    ).catch(
+                        function(errors){
+                            console.log(errors);
+                            component.set("v.spinner", false);
+                            helper.handleErrors(errors);
+                        }
+                    );
+                } else {
+                    component.set("v.spinner", false);
+                    helper.showToast('ERROR', 'Please select a reason for LTV.', 'Error');
+                }
+            }
+        );
+    }                  
 })

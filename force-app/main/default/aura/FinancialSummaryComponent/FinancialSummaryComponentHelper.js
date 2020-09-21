@@ -2,7 +2,7 @@
     getCalendarMin : function(component){
         var year = new Date().getFullYear() - 5;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);                  
     },
     

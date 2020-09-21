@@ -1,10 +1,10 @@
 /**
  * @File Name          : LawfirmSummaryCtlr.cls
  * @Description        : 
- * @Author             : fahad.khan@toptal.com
+ * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 02/07/2020, 7:11:49 pm
+ * @Last Modified On   : 09-15-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/7/2020   fahad.khan@toptal.com     Initial Version
@@ -43,6 +43,27 @@ public with sharing class LawfirmSummaryCtlr {
             {
                 System.debug('## getLawfirmAccounts - RESULT: ' + acc.Id);
             }
+
+
+            Map<Id, String> AccountParentToAttach = new Map<Id, String>();
+            for(Attachment attach : [Select id ,parentId
+                                        from Attachment 
+                                        where parentId IN : accountIds
+                                        and name like '%List of Clients%xlsx' and 
+                                        createddate = today order by createddate desc]){
+                            if(!AccountParentToAttach.containsKey(attach.parentId))
+                            AccountParentToAttach.put(attach.parentId, attach.Id);
+            }
+            Map<Id, String> AccountParentToAttachPDF = new Map<Id, String>();
+            for(Attachment attach : [Select id ,parentId
+                                        from Attachment 
+                                        where parentId IN : accountIds
+                                        and name like '%List of Clients%pdf' and 
+                                        createddate = today order by createddate desc]){
+                            if(!AccountParentToAttachPDF.containsKey(attach.parentId))
+                            AccountParentToAttachPDF.put(attach.parentId, attach.Id);
+            }
+
             
             strQuery = 'Select Law_firm__c, Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Law_firm__c in :accountIds AND StageName = \'Closed With Loan\' AND Drawdown_Total__c > 0';
             strQuery += ' AND Account.Exclude_from_Payout__c =: ExcludeFromPayout';
@@ -70,6 +91,8 @@ public with sharing class LawfirmSummaryCtlr {
                 AccountInfo info = new AccountInfo();
                 info.account = a;
                 info.noOfFiles = lawfirmToClients.containsKey(a.Id) ? lawfirmToClients.get(a.Id).size() : 0;
+                info.ExcelId = AccountParentToAttach.containsKey(a.Id) ? AccountParentToAttach.get(a.Id) : '';
+                info.PdfId = AccountParentToAttachPDF.containsKey(a.Id) ? AccountParentToAttachPDF.get(a.Id) : '';
                 if(info.noOfFiles > 0)
                 {
                     accountInfo.add(info);
@@ -128,12 +151,19 @@ public with sharing class LawfirmSummaryCtlr {
     }
     
     @AuraEnabled
-    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan){
+    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter, List<String> typeOfLoan, Boolean DefaultPDF){
 		
         try{
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;
             String ids = '';
+            String CongaField = '';
+
+            if(DefaultPDF == true){
+                CongaField = 'Conga_Batch_Law_Firm_Summary__c';
+            } else {
+                CongaField = 'Conga_Batch_Law_Firm_Summary_Excel__c';
+            }
             
             if(String.isEmpty(query) || query == null) {
                 ids = String.Join(selectedIds,',');
@@ -153,13 +183,13 @@ public with sharing class LawfirmSummaryCtlr {
                                                                   APXTConga4__Query__c = query);
                 insert congaQuery;
                 conductor = new APXT_BPM__Conductor__c(APXT_BPM__Title__c = 'Mass Law Firm Summary - ' + UserInfo.getName(), APXT_BPM__Query_Id__c = congaQuery.Id,
-                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Law_Firm_Summary__c');
+                                                       APXT_BPM__URL_Field_Name__c = CongaField);
                 insert conductor;            
                 customSettings.Conductor_Id_Law_Firm_Summary_Report__c = conductor.Id;
             }else{
                 conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:customSettings.Conductor_Id_Law_Firm_Summary_Report__c];
                 congaQuery = [SELECT Id, APXTConga4__Query__c FROM APXTConga4__Conga_Merge_Query__c WHERE Id =:conductor.APXT_BPM__Query_Id__c];
-                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Law_Firm_Summary__c';
+                conductor.APXT_BPM__URL_Field_Name__c = CongaField;
                 update conductor;
                 congaQuery.APXTConga4__Query__c = query;
                 update congaQuery;
@@ -218,6 +248,12 @@ public with sharing class LawfirmSummaryCtlr {
         
         @AuraEnabled
         public Boolean checked{get;set;} 
+
+        @AuraEnabled
+        public String ExcelId{get;set;} 
+
+        @AuraEnabled
+        public String PdfId{get;set;} 
     }
 
 }

@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 09-14-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   09-14-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 @isTest
 public class LawyerSummaryCtlrTest {
     @TestSetup
@@ -135,12 +145,12 @@ public class LawyerSummaryCtlrTest {
         Contact cc = [SELECT Id from Contact limit 1];
         List<String> selId = new List<String>{cc.Id};
             
-            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
+            LawyerSummaryCtlr.generate(strQuery, selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'}, false);
         
         Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
         system.assertNotEquals(customSettings.Conductor_Id_Lawyer_Summary_Report__c, null);
         
-        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'});
+        LawyerSummaryCtlr.generate('', selId, Date.today() + '' , Date.today() + '', 'All', 'ELFI', new List<String>{'Facility Loan'}, false);
         
         Test.stopTest();
     }

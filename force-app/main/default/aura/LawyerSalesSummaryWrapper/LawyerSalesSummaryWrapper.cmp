@@ -1,0 +1,8 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="recordId"  type="String"/>
+	<div style="width:100% !important; overflow-x: scroll;">
+        <div style="width:175%;">
+            <c:LawyerSalesSummary recordId="{!v.recordId}"/>
+        </div>
+    </div>
+</aura:component>

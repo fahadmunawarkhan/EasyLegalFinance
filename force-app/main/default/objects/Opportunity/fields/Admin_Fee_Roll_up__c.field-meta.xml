@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Admin_Fee_Roll_up__c</fullName>
+    <description>changing because there are some old loans on which we have halted payments against admin fee drawdowns.</description>
     <externalId>false</externalId>
     <label>Admin Fee Roll-up</label>
-    <summarizedField>Drawdown__c.Amount__c</summarizedField>
-    <summaryFilterItems>
-        <field>Drawdown__c.Reference_Notes__c</field>
-        <operation>equals</operation>
-        <value>Admin Fee, Assessment Fee</value>
-    </summaryFilterItems>
+    <summarizedField>Drawdown__c.Admin_Fee__c</summarizedField>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

@@ -99,6 +99,17 @@
         window.open('/servlet/servlet.FileDownload?file=' + attachmentId + '');
     },
     generateForSelected: function(component, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+        if(selectedMenuItemValue == 'generatePayoutDocForSelectedExcel'){
+            component.set("v.DefaultPDF", false);
+            helper.generateForSelected(component);
+        } else if(selectedMenuItemValue == 'generatePayoutDocForSelected'){
+            component.set("v.DefaultPDF", true);
+            helper.generateForSelected(component);
+        }
+    },
+    generateForSelectedExcel: function(component, event, helper){
+        component.set("v.DefaultPDF", false);
         helper.generateForSelected(component);
     },
     generateBalanceForSelected: function(component, event, helper) {
@@ -139,7 +150,7 @@
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let typeOfLoan = component.get('v.selectedTypeOfLoanFilter');
         
-        let fv6 = 'Active,Active - Partial Payment,Active - Collections';
+        let fv6 = 'Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan';
         if(loanFilterValue == "All" && oppStageStatus != null && oppStageStatus != undefined){
             fv6 = '';
             for(let i=6; i< oppStageStatus.length; i++){

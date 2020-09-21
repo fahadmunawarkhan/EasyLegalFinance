@@ -1,7 +1,15 @@
 ({
     searchButton: function(component, event, helper) {
         component.set("v.spinner", true);
-        helper.setCustomSettings(component).then($A.getCallback(
+        helper.validation(component, 'businessUnitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.setCustomSettings(component);
+            }
+        )).then($A.getCallback(
             function(result){
                 return helper.getDrawdown(component);
             }
