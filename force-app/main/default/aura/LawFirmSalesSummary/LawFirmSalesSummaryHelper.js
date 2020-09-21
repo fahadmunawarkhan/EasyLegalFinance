@@ -2,7 +2,7 @@
     getCalendarMin: function(component) {
         var year = new Date().getFullYear() - 5;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);
     },
     setDefaultTypeOfLoan : function(component){
@@ -142,7 +142,9 @@
         
         var InterestRepaidTotal = 0.0,
             AdminFeeReceivedTotal = 0.0,
-            ActiveFileTotal = 0;
+            ActiveFileTotal = 0,
+            ActivePFileTotal = 0,
+            TotalNetAmount = 0.0;
 
         console.log('----');
 
@@ -161,6 +163,8 @@
             OverAgeAmtTotal += (paymentData[i].totalOverAgeAmt == null) ? 0 : paymentData[i].totalOverAgeAmt;
             InterestRepaidTotal += (paymentData[i].totalInterestRepaid == null) ? 0 : paymentData[i].totalInterestRepaid;
             AdminFeeReceivedTotal += (paymentData[i].totalAdminFeeReceived == null) ? 0 : paymentData[i].totalAdminFeeReceived;
+            ActivePFileTotal += (paymentData[i].ActivePartialFileCount == null) ? 0 : paymentData[i].ActivePartialFileCount;
+            TotalNetAmount += (paymentData[i].NetAmount == null) ? 0 : paymentData[i].NetAmount;
         }
 
 
@@ -178,6 +182,8 @@
         component.set("v.InterestRepaidTotal", InterestRepaidTotal);
         component.set("v.AdminFeeReceivedTotal", AdminFeeReceivedTotal);
         component.set("v.ActiveFileTotal", ActiveFileTotal);
+        component.set("v.ActivePFileTotal", ActivePFileTotal);
+        component.set("v.TotalNetAmount", TotalNetAmount);
     },
 
     errorsHandler: function(errors) {
