@@ -74,6 +74,9 @@
     <aura:attribute name="ChosenFilter" type="string" />
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="List" />
+    
+    <aura:attribute name="ActivePFileTotal" type="integer" />
+    <aura:attribute name="TotalNetAmount" type="decimal" />
 
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
@@ -271,6 +274,11 @@
                                     <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF ACTIVE FILES</div>
                                 </span>
                             </th>
+                            <th style="width: 108px;">
+                                <span class="" title="# OF ACTIVE FILES WITH PARTIAL PAYMENT">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF ACTIVE FILES WITH P. PAYMENT</div>
+                                </span>
+                            </th>
                             <th style="width: 67px;">
                                 <span class="" title="# OF CLOSED FILES">
                                     <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF CLOSED FILES</div>
@@ -354,6 +362,11 @@
                                     <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">ADMIN FEE RECEIVED</div>
                                 </span>
                             </th>
+                            <th style="width:108px;">
+                                <span class="" title="NET">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">NET</div>
+                                </span>
+                            </th>
                         </tr>
 
                     </thead>
@@ -387,6 +400,16 @@
                                             0
                                             <aura:set attribute="else">
                                                 <lightning:formattedNumber value="{!item.totalActiveFileCount}" style="decimal" maximumFractionDigits="0" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td class="slds-cell-wrap">
+                                    <div class="">
+                                        <aura:if isTrue="{!item.ActivePartialFileCount == null}">
+                                            0
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.ActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
                                             </aura:set>
                                         </aura:if>
                                     </div>
@@ -512,6 +535,16 @@
                                         </aura:if>
                                     </div>
                                 </td>
+                                <td class="slds-cell-wrap">
+                                    <div class="">
+                                        <aura:if isTrue="{!item.NetAmount == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.NetAmount}" style="currency" maximumFractionDigits="2" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
                             </tr>
 
                         </aura:iteration>
@@ -539,6 +572,17 @@
                                         0
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </aura:set>
+                                    </aura:if>
+
+                                </div>
+                            </td>
+                            <td data-label="File Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    <aura:if isTrue="{!v.ActivePFileTotal == null}">
+                                        0
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.ActivePFileTotal}" style="decimal" maximumFractionDigits="0" />
                                         </aura:set>
                                     </aura:if>
 
@@ -665,6 +709,16 @@
                                         $0.00
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.AdminFeeReceivedTotal}" style="currency" maximumFractionDigits="2" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                    <aura:if isTrue="{!v.TotalNetAmount == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.TotalNetAmount}" style="currency" maximumFractionDigits="2" />
                                         </aura:set>
                                     </aura:if>
                                 </div>

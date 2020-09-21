@@ -31,19 +31,6 @@
     <aura:attribute name="OverageAmtTotal" type="decimal" default="0.0" />
     <aura:attribute name="InterestAmtTotal" type="decimal" default="0.0" />
     <aura:attribute name="AdminFeeReceivedTotal" type="decimal" default="0.0" />
-
-    <!--<aura:attribute name="ElfiBadDebtTotal" type="integer" default="0" />
-    <aura:attribute name="ElfiBadDebtAmtTotal" type="decimal" default="0.0" />
-    <aura:attribute name="ElfiShortfallTotal" type="integer" default="0" />
-    <aura:attribute name="ElfiShortfallAmtTotal" type="decimal" default="0.0" />
-    <aura:attribute name="ElfiOverageTotal" type="integer" default="0" />
-    <aura:attribute name="ElfiOverageAmtTotal" type="decimal" default="0.0" />
-
-    <aura:attribute name="ElfiamtTotal" type="decimal" />
-    <aura:attribute name="ElfifileTotal" type="integer" />
-    <aura:attribute name="ElfiClosedFileTotal" type="integer" />
-    <aura:attribute name="ElfiOpptyTotal" type="integer" />
-    <aura:attribute name="ElfiClosedAmtTotal" type="decimal" />-->
     <aura:attribute name="AmountByLawyer" type="AggregateResult[]" />
     <aura:attribute name="spinner" type="Boolean" />
     <aura:attribute name="customSetting" type="Object" />
@@ -63,7 +50,9 @@
     <aura:attribute name="selectedTypeOfLoanFilter" type="List" />
     
     <aura:attribute name="recordId" type="String" />
-
+    
+    <aura:attribute name="TotalActivePartialFileCount" type="integer" default="0" />
+    <aura:attribute name="TotalNetAmount" type="decimal" default="0.0" />
 
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
@@ -221,7 +210,7 @@
         </div>
         <div class="">
             <lightning:card title="Lawyer Sales Summary" iconName="standard:case" variant="base">
-                <div class="slds-table--header-fixed_container" style="height:500px;padding-top:4rem !important;">
+                <div class="slds-table--header-fixed_container" style="height:500px;padding-top:5rem !important;">
                 <div class="slds-scrollable_y" style="height:100%;">
                     <div class="date-in-table">
                     <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table--header-fixed">
@@ -233,16 +222,19 @@
                                 <th scope="col" class="slds-cell-wrap" style="width:10%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">LAW FIRM</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL # <br/>OF<br/>ACCOUNTS</div>
+                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL<br/># OF<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>ACTIVE<br/>ACCOUNTS</div>
+                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>ACTIVE<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>CLOSED<br/>ACCOUNTS</div>
+                                <th scope="col" class="slds-cell-wrap" style="width:18%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center" Title="# OF ACTIVE ACCOUNTS WITH PARTIAL PAYMENT"># OF<br/>ACTIVE<br/>ACCOUNTS<br/>WITH<br/>P. PAYMENTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:5%;">
+                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>CLOSED<br/>ACCOUNTS</div>
+                                </th>
+                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>OPPS</div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap" style="width:10%;">
@@ -251,11 +243,11 @@
                                 <th scope="col" class="slds-cell-wrap" style="width:10%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>BAD DEBT<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:0%;">
+                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">BAD DEBT<br/>AMOUNT</div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF <br/>SHORTFALL<br/>ACCOUNTS</div>
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>SHORTFALL<br/>ACCOUNTS</div>
                                 </th>
                                 <th scope="col" class="slds-cell-wrap" style="width:6%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">SHORTFALL<br/>AMOUNT</div>
@@ -274,6 +266,9 @@
                                 </th>
                                 <th scope="col" class="slds-cell-wrap" style="width:10%;">
                                     <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">ADMIN FEE<br/>RECEIVED</div>
+                                </th>
+                                <th scope="col" class="slds-cell-wrap" style="width:6%;">
+                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">NET</div>
                                 </th>
                             </tr>
                         </thead>
@@ -299,6 +294,9 @@
                                     </td>
                                     <td class="slds-cell-wrap">
                                         <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
+                                    </td>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.ActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
                                     <td class="slds-cell-wrap">
                                         <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
@@ -337,6 +335,9 @@
                                     <td class="slds-cell-wrap">
                                         <lightning:formattedNumber value="{!item.AdminFeeReceived}" style="currency" maximumFractionDigits="2" />
                                     </td>
+                                    <td class="slds-cell-wrap">
+                                        <lightning:formattedNumber value="{!item.NetAmount}" style="currency" maximumFractionDigits="2" />
+                                    </td>
                                 </tr>
                             </aura:iteration>
                             <tr>
@@ -354,6 +355,11 @@
                                 <td class="slds-cell-wrap">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.TotalActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>                                
                                 <td class="slds-cell-wrap">
@@ -414,6 +420,11 @@
                                 <td class="slds-cell-wrap">
                                     <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.AdminFeeReceivedTotal}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.TotalNetAmount}" style="currency" maximumFractionDigits="2" />
                                     </span>
                                 </td>
                             </tr>

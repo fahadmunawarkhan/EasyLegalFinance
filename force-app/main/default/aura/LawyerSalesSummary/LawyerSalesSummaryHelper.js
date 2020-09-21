@@ -249,7 +249,9 @@
         
         var ActiveFileTotal = 0,
             AdminFeeReceivedTotal = 0.0,
-            InterestAmtTotal = 0.0;
+            InterestAmtTotal = 0.0,
+            TotalNetAmount = 0.0,
+            TotalActivePartialFileCount = 0;
         
         if(paymentData != null && paymentData != undefined){
             
@@ -261,13 +263,8 @@
                 amountTotal += (paymentData[i].Amount == null) ? 0 : paymentData[i].Amount;
                 InterestAmtTotal += (paymentData[i].InterestRepaid == null) ? 0 : paymentData[i].InterestRepaid;
                 AdminFeeReceivedTotal += (paymentData[i].AdminFeeReceived == null) ? 0 : paymentData[i].AdminFeeReceived;
-                //ElfifileTotal += (paymentData[i].elfiFileCount == null) ? 0 : paymentData[i].elfiFileCount;
-                //ElfiOpptyTotal += (paymentData[i].elfiOpptyCount == null) ? 0 : paymentData[i].elfiOpptyCount;
-                //ElfiamountTotal += (paymentData[i].elfiAmount == null) ? 0 : paymentData[i].elfiAmount;
                 
                 ClosedAmtTotal += (paymentData[i].ClosedAmount == null) ? 0 : paymentData[i].ClosedAmount;
-                //ElfiClosedAmtTotal += (paymentData[i].elfiClosedAmount == null) ? 0 : paymentData[i].elfiClosedAmount;
-                //ElfiClosedFileTotal += (paymentData[i].elfiClosedFileCount == null) ? 0 : paymentData[i].elfiClosedFileCount;
                 ClosedFileTotal += (paymentData[i].ClosedFileCount == null) ? 0 : paymentData[i].ClosedFileCount;
                 
                 BadDebtTotal += (paymentData[i].BadDebtFileCount == null) ? 0 : paymentData[i].BadDebtFileCount;
@@ -277,20 +274,10 @@
                 OverageTotal += (paymentData[i].OverageFileCount == null) ? 0 : paymentData[i].OverageFileCount;
                 OverageAmtTotal += (paymentData[i].OverageAmount == null) ? 0 : paymentData[i].OverageAmount;
                 
-                //ElfiBadDebtTotal += (paymentData[i].elfiBadDebtFileCount == null) ? 0 : paymentData[i].elfiBadDebtFileCount;
-                //ElfiBadDebtAmtTotal += (paymentData[i].elfiBadDebtAmount == null) ? 0 : paymentData[i].elfiBadDebtAmount;
-                //ElfiShortfallTotal += (paymentData[i].elfiShortfallFileCount == null) ? 0 : paymentData[i].elfiShortfallFileCount;
-                //ElfiShortfallAmtTotal += (paymentData[i].elfiShortfallAmount == null) ? 0 : paymentData[i].elfiShortfallAmount;
-                //ElfiOverageTotal += (paymentData[i].elfiOverageFileCount == null) ? 0 : paymentData[i].elfiOverageFileCount;
-                //ElfiOverageAmtTotal += (paymentData[i].elfiOverageAmount == null) ? 0 : paymentData[i].elfiOverageAmount;
+                TotalActivePartialFileCount += (paymentData[i].ActivePartialFileCount == null) ? 0 : paymentData[i].ActivePartialFileCount;
+                TotalNetAmount += (paymentData[i].NetAmount == null) ? 0 : paymentData[i].NetAmount;
                 
-                /*if(paymentData[i].businessunit == "Rhino"){
-                RhinofileTotal += (paymentData[i].file == null) ? 0 : paymentData[i].file;
-                RhinoamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
-            }else if(paymentData[i].businessunit == "ELFI"){
-                ElfifileTotal += (paymentData[i].elfiCount == null) ? 0 : paymentData[i].file;
-                ElfiamountTotal += (paymentData[i].amt == null) ? 0 : paymentData[i].amt;
-            }*/
+                
             }
         }
         component.set("v.fileTotal", fileTotal);
@@ -299,14 +286,11 @@
         component.set("v.InterestAmtTotal", InterestAmtTotal);
         component.set("v.OpptyTotal", OpptyTotal);
         component.set("v.ClosedFileTotal", ClosedFileTotal);
-        //component.set("v.ElfiClosedFileTotal", ElfiClosedFileTotal); 
+        component.set("v.TotalActivePartialFileCount", TotalActivePartialFileCount);
+        component.set("v.TotalNetAmount", TotalNetAmount);
 
-        component.set("v.ClosedAmtTotal", ClosedAmtTotal);
-        //component.set("v.ElfiClosedAmtTotal", ElfiClosedAmtTotal);        
+        component.set("v.ClosedAmtTotal", ClosedAmtTotal);        
         component.set("v.amtTotal", amountTotal);
-        //component.set("v.ElfifileTotal", ElfifileTotal); 
-        //component.set("v.ElfiOpptyTotal", ElfiOpptyTotal); 
-        //component.set("v.ElfiamtTotal", ElfiamountTotal); 
 
         component.set("v.BadDebtTotal", BadDebtTotal);
         component.set("v.BadDebtAmtTotal", BadDebtAmtTotal);
