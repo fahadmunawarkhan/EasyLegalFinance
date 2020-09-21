@@ -43,7 +43,8 @@
                                                                 
                     //set restrictCommunication
                     component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No');
-                    
+                    component.set("v.canUpdateStageStatus", component.get("v.oppObj").Stage_Status__c != undefined && component.get("v.oppObj").StageName == 'Closed With Loan' && (component.get("v.oppObj").Stage_Status__c.includes('Closed') || component.get("v.oppObj").Stage_Status__c.includes('Active')) && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
+                    component.set("v.canUpdateStageName", component.get("v.oppObj").StageName == 'Closed With Loan' && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
                     

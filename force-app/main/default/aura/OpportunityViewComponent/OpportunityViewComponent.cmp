@@ -4,7 +4,7 @@
   @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 09-01-2020
+  @Last Modified On   : 09-21-2020
   @Modification Log   : 
   ===============================================================================
   Ver         Date                     Author      		      Modification
@@ -120,7 +120,8 @@
     <aura:attribute name="restrictCommunication" type="String" default="" />
     
     <aura:attribute name="currentUser" type="User" /> 
-
+    <aura:attribute name="canUpdateStageStatus" type="Boolean" default="true" />
+    <aura:attribute name="canUpdateStageName" type="Boolean" default="true" />
     <!-- OVERLAY -->
     <aura:attribute name="overlayPanel" type="Object" />
     <lightning:overlayLibrary aura:id="overlayLib" />
@@ -307,7 +308,8 @@
                                                   value="{!v.oppObj.StageName}"
                                                   label="Stage"
                                                   onchange="{!c.onControllerFieldChange}"
-                                                  tabindex="12" >
+                                                  tabindex="12" 
+                                                  disabled="{!not(v.canUpdateStageName)}">
                                     <aura:iteration items="{!v.listControllingValues}" var="val">
                                         <option value="{!val}" selected="{!val == v.oppObj.StageName}">{!val}</option>
                                     </aura:iteration>
@@ -329,7 +331,7 @@
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                             <div class="slds-form-element__control">
-                                <lightning:select name="dependentFld" value="{!v.oppObj.Stage_Status__c}" label="Stage Status" tabindex="13">
+                                <lightning:select name="dependentFld" value="{!v.oppObj.Stage_Status__c}" label="Stage Status" tabindex="13" disabled="{!not(v.canUpdateStageStatus)}">
                                     <aura:iteration items="{!v.listDependingValues}" var="val">
                                         <aura:if isTrue="{!!and(!v.oppObj.Is_Reserve_Applied__c, val=='Active - Collections')}">
                                             <option value="{!val}" selected="{!val == v.oppObj.Stage_Status__c}">{!val}</option>
