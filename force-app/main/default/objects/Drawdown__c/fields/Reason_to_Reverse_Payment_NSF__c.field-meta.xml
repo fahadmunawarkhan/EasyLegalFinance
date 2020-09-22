@@ -13,7 +13,7 @@
             <sorted>false</sorted>
             <value>
                 <fullName>NSF Cheque</fullName>
-                <default>true</default>
+                <default>false</default>
                 <label>NSF Cheque</label>
             </value>
             <value>
