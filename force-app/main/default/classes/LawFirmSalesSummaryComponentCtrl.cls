@@ -417,9 +417,9 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                         w.totalOverAgeAmt += (OverAgeResultMap.containsKey(key) ? (double)OverAgeResultMap.get(key).get('amt') : 0);
                     
                         w.totalInterestRepaid += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('interest') != null? (decimal)closedOppResultMap.get(key).get('interest') :0 : 0);
-                    	w.totalInterestRepaid += (BadDebtResultMap.containsKey(key) ? (decimal)BadDebtResultMap.get(key).get('interest') != null? (decimal)BadDebtResultMap.get(key).get('interest') :0 : 0);
-                    	w.totalInterestRepaid += (ShortFallResultMap.containsKey(key) ? (decimal)ShortFallResultMap.get(key).get('interest') != null? (decimal)ShortFallResultMap.get(key).get('interest') :0 : 0);
-                    	w.totalInterestRepaid += (OverAgeResultMap.containsKey(key) ? (decimal)OverAgeResultMap.get(key).get('interest') != null? (decimal)OverAgeResultMap.get(key).get('interest') :0 : 0);
+                    	//w.totalInterestRepaid += (BadDebtResultMap.containsKey(key) ? (decimal)BadDebtResultMap.get(key).get('interest') != null? (decimal)BadDebtResultMap.get(key).get('interest') :0 : 0);
+                    	//w.totalInterestRepaid += (ShortFallResultMap.containsKey(key) ? (decimal)ShortFallResultMap.get(key).get('interest') != null? (decimal)ShortFallResultMap.get(key).get('interest') :0 : 0);
+                    	//w.totalInterestRepaid += (OverAgeResultMap.containsKey(key) ? (decimal)OverAgeResultMap.get(key).get('interest') != null? (decimal)OverAgeResultMap.get(key).get('interest') :0 : 0);
                     
                     w.totalAdminFeeReceived += (AdminFeeRecResultMap.containsKey(key) ? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') != null? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') : 0 : 0);                    	
                     w.totalFileCount += (TotalFilesResultMap.containsKey(key) ? (Integer)TotalFilesResultMap.get(key).get('file') : 0);

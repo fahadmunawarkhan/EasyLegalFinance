@@ -222,7 +222,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                             
                             w.BadDebtAmount += Double.valueof(agr.get('amt'));
                             w.BadDebtFileCount += integer.valueof(agr.get('file'));
-                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
+                        	//w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
@@ -259,7 +259,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                             
                             w.ShortfallAmount += Double.valueof(agr.get('amt'));
                             w.ShortfallFileCount += integer.valueof(agr.get('file'));
-                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
+                        	//w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
@@ -295,7 +295,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                             
                             w.OverageAmount += Double.valueof(agr.get('amt'));
                             w.OverageFileCount += integer.valueof(agr.get('file'));
-                        	w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
+                        	//w.InterestRepaid += Double.valueof(agr.get('interest')) != null? Double.valueof(agr.get('interest')) : 0;
                         
                         agrMap.put(String.ValueOf(String.ValueOf(agr.get('lawyerId')) + '-' + agr.get('lawyer')) +'-'+String.ValueOf(agr.get('firmId')), w);
                         
