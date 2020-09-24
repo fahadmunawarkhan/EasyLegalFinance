@@ -1,10 +1,10 @@
 <!--
   @File Name          : ReportingViewComponent.cmp
   @Description        : 
-  @Author             : fahad.khan@toptal.com
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 08-13-2020
+  @Last Modified On   : 09-24-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -13,7 +13,7 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="currentUser" type="User" />
-    <aura:attribute name="_selectedTabId" type="String" default="LAWYER_SUMMARY" />
+    <aura:attribute name="_selectedTabId" type="String" default="CLIENT_SUMMARY" />
     <aura:attribute name="_selectedSecondaryTabId" type="String" default="" />
     <aura:handler event="aura:locationChange" action="{!c.onLocationChange}" />
 
@@ -36,9 +36,11 @@
 
         <lightning:tabset variant="default" selectedTabId="{!v._selectedTabId}" onselect="{!c.onPrimaryTabSelect}">
             
-            <!--<lightning:tab id="CLIENT_SUMMARY" label="Client Summary ">
-                <c:ClientSummaryReport />
-            </lightning:tab>-->
+            <aura:if isTrue="{!v.currentUser.Client_Summary_Report__c}">
+                <lightning:tab id="CLIENT_SUMMARY" label="Client Summary ">
+                    <c:ClientSummaryReport />
+                </lightning:tab>
+            </aura:if>
             <aura:if isTrue="{!v.currentUser.Lawyer_Summary__c}">
                 <lightning:tab id="LAWYER_SUMMARY" label="Lawyer Summary ">
                     <c:LawyerSummary />

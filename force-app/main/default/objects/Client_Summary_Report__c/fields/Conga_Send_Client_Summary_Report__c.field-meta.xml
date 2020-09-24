@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <fullName>Conga_Send_Client_Summary_Report__c</fullName>
+    <externalId>false</externalId>
+    <formula>SUBSTITUTE( Conga_Client_Summary_Report__c , &quot;&amp;qmode=Attachments&quot;, &quot;&amp;qmode=SendEmail&quot;) &amp;  
+&quot;&amp;CongaEmailTemplateId=a0oL00000059YYNIA2&quot;&amp;
+&quot;&amp;EmailToId=&quot; &amp; Id</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Send Client Summary Report</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

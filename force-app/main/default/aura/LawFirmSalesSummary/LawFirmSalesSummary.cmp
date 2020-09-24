@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08-11-2020
+  @Last Modified On   : 09-03-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    31/03/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -74,6 +74,9 @@
     <aura:attribute name="ChosenFilter" type="string" />
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="List" />
+    
+    <aura:attribute name="ActivePFileTotal" type="integer" />
+    <aura:attribute name="TotalNetAmount" type="decimal" />
 
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
@@ -223,118 +226,157 @@
                 </a>
             </div>
         </div>
-        <div class="table-container" style="overflow: scroll !important; height: 450px !important;">
+        <div class="table-container" style="height: 528px !important;">
             <lightning:card title="Law Firm Financial Summary" iconName="standard:case" variant="base">
-                <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
-                    <thead>
+        <div class="slds-table--header-fixed_container" style="height:500px;padding-top:4rem !important;">
+            <div class="slds-scrollable_y" style="height:100%;">
+                <div class="date-in-table">
+                <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered slds-table--header-fixed">
+                    <thead style="font-size:11px;">
 
                         <tr class="slds-line-height_reset">
-                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Firm" style="cursor: pointer;">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="Law Firm">LAW FIRM</span>
-                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Firm')}">
-                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                </aura:if>
-                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Firm')}">
-                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                </aura:if>
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Firm" style="cursor: pointer;width: 140px;">
+                                <span class="" title="Law Firm">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 140px;">
+                                        LAW FIRM
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Firm')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Firm')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </span>
                                 <!--
                                 <aura:if isTrue="{!and(not(and(v.sortOrder=='DESC',v.sortField=='Firm')), not(and(v.sortOrder=='ASC',v.sortField=='Firm')))}">
                                     <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                                 </aura:if>-->
                             </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Files" >
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL # OF ACCOUNTS">TOTAL # OF ACCOUNTS</span>
-                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Files')}">
-                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                </aura:if>
-                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Files')}">
-                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                </aura:if>
+                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" style="width: 67px;" data-field="Files" >
+                                <span class="" title="TOTAL # OF ACCOUNTS">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 60px;">
+                                        TOTAL # OF ACCOUNTS
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Files')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Files')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </span>
                                 <!--
                                 <aura:if isTrue="{!and(not(and(v.sortOrder=='DESC',v.sortField=='Files')), not(and(v.sortOrder=='ASC',v.sortField=='Files')))}">
                                     <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                                 </aura:if>-->
                             </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF ACTIVE FILES"># OF ACTIVE FILES</span>
+                            <th style="width: 67px;">
+                                <span class="" title="# OF ACTIVE FILES">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF ACTIVE FILES</div>
+                                </span>
                             </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF CLOSED FILES"># OF CLOSED FILES</span>
+                            <th style="width: 108px;">
+                                <span class="" title="# OF ACTIVE FILES WITH PARTIAL PAYMENT">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF ACTIVE FILES WITH P. PAYMENT</div>
+                                </span>
                             </th>
-                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="opptyCount" >
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OPPS"># OF TOTAL OPPS</span>
-                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='opptyCount')}">
-                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                </aura:if>
-                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='opptyCount')}">
-                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                </aura:if>
+                            <th style="width: 67px;">
+                                <span class="" title="# OF CLOSED FILES">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;"># OF CLOSED FILES</div>
+                                </span>
+                            </th>
+                            <th onclick="" class="slds-is-sortable slds-is-resizable slds-is-sorted" style="width: 67px;" data-field="opptyCount" >
+                                <span class="" title="# OF OPPS">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 67px;">
+                                        # OF TOTAL OPPS
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='opptyCount')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='opptyCount')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </span>
                             </th>
                             
-                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount" style="cursor: pointer;">
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="PRINCIPAL OUTSTANDING">PRINCIPAL OUTSTANDING</span>
-                                <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Amount')}">
-                                    <lightning:icon iconName="utility:arrowdown" size="xx-small" />
-                                </aura:if>
-                                <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Amount')}">
-                                    <lightning:icon iconName="utility:arrowup" size="xx-small" />
-                                </aura:if>
+                            <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Amount" style="cursor: pointer;width: 108px;">
+                                <span class="" title="PRINCIPAL OUTSTANDING">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width: 108px;">
+                                        PRINCIPAL OUTSTANDING
+                                        <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Amount')}">
+                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" />
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.sortOrder=='ASC',v.sortField=='Amount')}">
+                                            <lightning:icon iconName="utility:arrowup" size="xx-small" />
+                                        </aura:if>
+                                    </div>
+                                </span>
                                 <!--
                                 <aura:if isTrue="{!and(not(and(v.sortOrder=='DESC',v.sortField=='Amount')), not(and(v.sortOrder=='ASC',v.sortField=='Amount')))}">
                                     <lightning:icon iconName="utility:arrowup" size="xx-small"/>
                                 </aura:if>-->
                             </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF BAD DEBT ACCOUNTS"># OF BAD DEBT ACCOUNTS</span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="BAD DEBT AMOUNT">
-                                            BAD DEBT AMOUNT
-                                        </span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF SHORTFALL ACCOUNTS">
-                                            # OF SHORTFALL ACCOUNTS
-                                        </span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="SHORTFALL AMOUNT">
-                                            SHORTFALL AMOUNT
-                                        </span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="# OF OVERAGE ACCOUNTS">
-                                            # OF OVERAGE ACCOUNTS
-                                        </span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="OVERAGE AMOUNT">
-                                            OVERAGE AMOUNT
-                                        </span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="CLOSED AMOUNT">PAYOUT</span>
-                            </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="TOTAL INTEREST">
-                                    TOTAL INTEREST
+                            <th style="width:67px;">
+                                <span class="" title="# OF BAD DEBT ACCOUNTS">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">
+                                        # OF BAD DEBT ACCOUNTS
+                                    </div>
                                 </span>
                             </th>
-                            <th>
-                                <span class="slds-truncate makeBold slds-m-right_xxx-small" title="ADMIN FEE RECEIVED">
-                                    ADMIN FEE RECEIVED
+                            <th style="width: 99px;">
+                                <span class="" title="BAD DEBT AMOUNT">
+                                        <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:99px;">BAD DEBT AMOUNT</div>
+                                </span>
+                            </th>
+                            <th style="width:67px;">
+                                <span class="" title="# OF SHORTFALL ACCOUNTS">
+                                            <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;"># OF SHORTFALL ACCOUNTS</div>
+                                        </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="SHORTFALL AMOUNT">
+                                            <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:108px;">SHORTFALL AMOUNT</div>
+                                        </span>
+                            </th>
+                            <th style="width:67px;">
+                                <span class="" title="# OF OVERAGE ACCOUNTS">
+                                            <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;"># OF OVERAGE ACCOUNTS</div>
+                                        </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="OVERAGE AMOUNT">
+                                           <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:108px;"> OVERAGE AMOUNT</div>
+                                        </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="CLOSED AMOUNT">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:108px;">PAYOUT</div>
+                                </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="TOTAL INTEREST">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">TOTAL INTEREST</div>
+                                </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="ADMIN FEE RECEIVED">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">ADMIN FEE RECEIVED</div>
+                                </span>
+                            </th>
+                            <th style="width:108px;">
+                                <span class="" title="NET">
+                                    <div class="slds-truncate slds-cell-fixed slds-text-align_center slds-cell-wrap" style="width:67px;">NET</div>
                                 </span>
                             </th>
                         </tr>
 
                     </thead>
-                    <tbody>
+                    <tbody style="font-size: 11px;">
 
                         <aura:iteration items="{!v.AmountByLawFirm}" var="item">
 
                             <tr class="slds-hint-parent">
-                                <td class="">
-                                    <div class="slds-truncate ">
+                                <td class="slds-cell-wrap">
+                                    <div class=" ">
                                         <aura:if isTrue="{!item.firm == null}">
                                             <aura:set attribute="else">
                                                 <a href="{!'/'+item.firmId}">{!item.firm}</a>
@@ -342,8 +384,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalFileCount == null}">
                                             0
                                             <aura:set attribute="else">
@@ -352,8 +394,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalActiveFileCount == null}">
                                             0
                                             <aura:set attribute="else">
@@ -362,8 +404,18 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
+                                        <aura:if isTrue="{!item.ActivePartialFileCount == null}">
+                                            0
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.ActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalClosedFileCount == null}">
                                             0
                                             <aura:set attribute="else">
@@ -372,8 +424,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalOpptyCount == null}">
                                             0
                                             <aura:set attribute="else">
@@ -383,8 +435,8 @@
                                     </div>
                                 </td>
                                 
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalAmount == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -393,8 +445,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalbdfile == null}">
                                             0
                                             <aura:set attribute="else">
@@ -403,8 +455,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalbdamount == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -413,8 +465,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalShortFallFile == null}">
                                             0
                                             <aura:set attribute="else">
@@ -423,8 +475,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalShortFallAmt == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -433,8 +485,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalOverAgeFile == null}">
                                             0
                                             <aura:set attribute="else">
@@ -443,8 +495,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalOverAgeAmt == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -453,8 +505,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td class="">
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalClosedAmount == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -463,8 +515,8 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalInterestRepaid == null}">
                                             $0.00
                                             <aura:set attribute="else">
@@ -473,12 +525,22 @@
                                         </aura:if>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="slds-truncate">
+                                <td class="slds-cell-wrap">
+                                    <div class="">
                                         <aura:if isTrue="{!item.totalAdminFeeReceived == null}">
                                             $0.00
                                             <aura:set attribute="else">
                                                 <lightning:formattedNumber value="{!item.totalAdminFeeReceived}" style="currency" maximumFractionDigits="2" />
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </td>
+                                <td class="slds-cell-wrap">
+                                    <div class="">
+                                        <aura:if isTrue="{!item.NetAmount == null}">
+                                            $0.00
+                                            <aura:set attribute="else">
+                                                <lightning:formattedNumber value="{!item.NetAmount}" style="currency" maximumFractionDigits="2" />
                                             </aura:set>
                                         </aura:if>
                                     </div>
@@ -510,6 +572,17 @@
                                         0
                                         <aura:set attribute="else">
                                             <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </aura:set>
+                                    </aura:if>
+
+                                </div>
+                            </td>
+                            <td data-label="File Grand Total">
+                                <div class="slds-truncate makeBoldBlue" title="File Grand Total">
+                                    <aura:if isTrue="{!v.ActivePFileTotal == null}">
+                                        0
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.ActivePFileTotal}" style="decimal" maximumFractionDigits="0" />
                                         </aura:set>
                                     </aura:if>
 
@@ -640,10 +713,23 @@
                                     </aura:if>
                                 </div>
                             </td>
+                            <td>
+                                <div class="slds-truncate makeBoldBlue" title="Amount Grand Total">
+                                    <aura:if isTrue="{!v.TotalNetAmount == null}">
+                                        $0.00
+                                        <aura:set attribute="else">
+                                            <lightning:formattedNumber value="{!v.TotalNetAmount}" style="currency" maximumFractionDigits="2" />
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </td>
                         </tr>
                         <!-- / This section will be outside of the iteration above -->
                     </tbody>
                 </table>
+                </div>
+            </div>
+        </div>
             </lightning:card>
         </div>
     </lightning:card>
