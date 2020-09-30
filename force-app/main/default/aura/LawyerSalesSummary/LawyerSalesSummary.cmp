@@ -10,7 +10,7 @@
   1.0    07/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
 -->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction,force:hasRecordId" access="global" controller="LawyerSalesSummaryComponentCtrl">
-
+    
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:attribute name="calendarMin" type="date" />
     <aura:attribute name="calendarMax" type="date" />
@@ -22,7 +22,7 @@
     <aura:attribute name="ActiveFileTotal" type="integer" />
     <aura:attribute name="OpptyTotal" type="integer" />
     <aura:attribute name="ClosedAmtTotal" type="decimal" />
-
+    
     <aura:attribute name="BadDebtTotal" type="integer" default="0" />
     <aura:attribute name="BadDebtAmtTotal" type="decimal" default="0.0" />
     <aura:attribute name="ShortfallTotal" type="integer" default="0" />
@@ -40,12 +40,12 @@
     <aura:attribute name="sortOrder" type="String" default="DESC" />
     <aura:attribute name="showWarning" type="Boolean" default="false" />
     <aura:attribute name="searchByName" type="String" default="" />
-
+    
     <aura:attribute name="ChosenFilter" type="string" default="ELFI" />
     <!-- Business Unit Picklist -->
     <aura:attribute name="businessUnitOptions" type="List" />
     <aura:attribute name="selectedBusinessUnitFilter" type="List" />
-
+    
     <aura:attribute name="typeOfLoanOptions" type="List" />
     <aura:attribute name="selectedTypeOfLoanFilter" type="List" />
     
@@ -53,7 +53,11 @@
     
     <aura:attribute name="TotalActivePartialFileCount" type="integer" default="0" />
     <aura:attribute name="TotalNetAmount" type="decimal" default="0.0" />
-
+    <aura:attribute name="TotalPrincipalAdvancedClosed" type="decimal" default="0.0" />
+    <aura:attribute name="TotalPrincipalAdvancedOpen" type="decimal" default="0.0" />
+    <aura:attribute name="TotalPrincipalRepaid" type="decimal" default="0.0" />
+    <aura:attribute name="TotalROI" type="decimal" default="0.0" />
+    
     <lightning:card title="Date Range" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
@@ -110,7 +114,7 @@
                         </div>
                     </div>
                 </lightning:layoutItem>
-
+                
                 <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small">
                         <div class="slds-form-element__control">
@@ -118,10 +122,10 @@
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">                                                
                                     <!-- <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/> -->
                                     <c:MultiSelect aura:id="businessunitMS" showFilterInput="false" 
-                                                showClearButton="false" showRefreshButton="false" 
-                                                mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
-                                                selectedOptions="{!v.selectedBusinessUnitFilter}"
-                                                comboboxcontainer="false" />
+                                                   showClearButton="false" showRefreshButton="false" 
+                                                   mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
+                                                   selectedOptions="{!v.selectedBusinessUnitFilter}"
+                                                   comboboxcontainer="false" />
                                 </div>
                             </span>
                         </div>
@@ -139,9 +143,9 @@
                                         placeholder="Type of Loan" 
                                         options="{! v.typeOfLoanOptions }"/> -->
                                     <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
-                                                showClearButton="false" showRefreshButton="false" 
-                                                mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
-                                                selectedOptions="{!v.selectedTypeOfLoanFilter}" />
+                                                   showClearButton="false" showRefreshButton="false" 
+                                                   mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                   selectedOptions="{!v.selectedTypeOfLoanFilter}" />
                                 </div>
                             </span>
                         </div>
@@ -184,23 +188,23 @@
             <div class="slds-col slds-size_9-of-12">
                 <span style="font-style:italic;font-size:smaller">
                     <span style="color:red;margin-left:10px;"> Note</span>: This Table Show Active Files Where Payment Method is "e-Transfer", "Cheque" and "Admin Fee",<br/>
-                <span style="margin-left:39px;">
+                    <span style="margin-left:39px;">
                         Closed Files Where Opportunity Stage Status is "Closed - Paid" and Reference Notes equals to "Loan Payout" OR "Partial Payment",
                     </span><br/>
-                <span style="margin-left:39px;">
+                    <span style="margin-left:39px;">
                         Bad Debt Files Where Reference Notes equals to "Bad Debt",
                     </span><br/>
-                <span style="margin-left:39px;">
+                    <span style="margin-left:39px;">
                         ShortFall Files Where Opportunity Stage is "Closed With Loan", Stage Status "Closed - ShortFall", Payment Method "Payment" and Reference Notes equals to "Payment ShortFall",
                     </span><br/>
-                <span style="margin-left:39px;">
+                    <span style="margin-left:39px;">
                         Overage Files Where Opportunity Stage is "Closed With Loan", Stage Status "Closed - Surplus", Payment Method "Payment" and Reference Notes equals to "Payment Surplus"
                     </span><br/>
-                <span style="margin-left:39px;">
+                    <span style="margin-left:39px;">
                         Drawdowns Falling under Selected Date Range and Type of Loan.
                     </span><br/>
-                <!--This Table Shows Only "e-Transfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and Opportunities being "Closed With Loan". <br/>-->
-                <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
+                    <!--This Table Shows Only "e-Transfer", "Cheque" and "Admin Fee" Drawdowns Falling under Selected Date Range and Opportunities being "Closed With Loan". <br/>-->
+                    <!--<span style="margin-left:40px;"># Of Files are number of Opportunities that a specific Law firm has given in the Selected Date Range.</span>-->
                 </span>
                 <br />
                 <a href="/lightning/r/Report/00O0L000003mqYfUAI/view" target="_BLANK">
@@ -210,133 +214,142 @@
         </div>
         <div class="">
             <lightning:card title="Lawyer Sales Summary" iconName="standard:case" variant="base">
-                <div class="slds-table--header-fixed_container" style="height:500px;padding-top:5rem !important;">
-                <div class="slds-scrollable_y" style="height:100%;">
-                    <div class="date-in-table">
-                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table--header-fixed">
+                <div class="tableFixHead ">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
                         <thead>
-                            <tr class="slds-text-heading_label"  style="font-size:10px; font-weight:bold;">
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center" style="height: 15px;">LAWYER</div>
+                            <tr class="slds-text-title_caps table-tr" style="font-size:10px; font-weight:bold;">
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">LAWYER</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">LAW FIRM</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">LAW FIRM</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL<br/># OF<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Total Accounts<br/>(open and closed)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>ACTIVE<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF<br/>ACTIVE<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:18%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center" Title="# OF ACTIVE ACCOUNTS WITH PARTIAL PAYMENT"># OF<br/>ACTIVE<br/>ACCOUNTS<br/>WITH<br/>P. PAYMENTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF<br/>CLOSED<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>CLOSED<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF<br/>BAD DEBT<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:12%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>OPPS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF<br/>SHORTFALL<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">PRINCIPAL<br/>OUTSTANDING</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF<br/>SURPLUS<br/>ACCOUNTS</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>BAD DEBT<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center"># OF OPP<br/>(Open + Closed)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">BAD DEBT<br/>AMOUNT</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Principal Advanced<br/>(Open)</div>
+                                </th>                               
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Principal Advanced<br/>(closed)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>SHORTFALL<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Principal Repaid<br/>(closed)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:6%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">SHORTFALL<br/>AMOUNT</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Principal +<br/>Admin Fee +<br/>Interest Received<br/>(cash paid)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center"># OF<br/>OVERAGE<br/>ACCOUNTS</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Interest Recovered</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">OVERAGE<br/>AMOUNT</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Admin Fee<br/>Recovered</div>
+                                </th>                                
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Surplus</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:5%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">PAYOUT</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Shortfall</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">TOTAL<br/>INTEREST</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Bad Debt</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:10%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">ADMIN FEE<br/>RECEIVED</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">Net ($)</div>
                                 </th>
-                                <th scope="col" class="slds-cell-wrap" style="width:6%;">
-                                    <div class="slds-p-top_small slds-p-left_small slds-cell-fixed slds-text-align_center">NET</div>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-align_center">ROI (%)</div>
                                 </th>
                             </tr>
                         </thead>
                         <tbody style="font-size:11px;">
                             <aura:iteration items="{!v.AmountByLawyer}" var="item">
                                 <tr>
-                                    <td class="slds-cell-wrap">
+                                    <th class="">
                                         <aura:if isTrue="{!item.lawyer == null}">
                                             <aura:set attribute="else">
                                                 <a href="{! '/' + item.lawyerId}">{!item.lawyer}</a>
                                             </aura:set>
                                         </aura:if>
-                                    </td>
-                                    <td class="slds-cell-wrap">
+                                    </th>
+                                    <td class="">
                                         <aura:if isTrue="{!item.firm == null}">
                                             <aura:set attribute="else">
                                                 <a href="{! '/' + item.firmId}">{!item.firm}</a>
                                             </aura:set>
                                         </aura:if>
                                     </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.ActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
-                                    </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
-                                    </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.Amount}" style="currency" maximumFractionDigits="2" />
-                                    </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.BadDebtAmount}" style="currency" maximumFractionDigits="2" />
-                                    </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.ShortfallAmount}" style="currency" maximumFractionDigits="2" />
-                                    </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    <td class="slds-cell-wrap">
-                                        <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
-                                    
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.PrincipalAdvancedOpen}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.PrincipalAdvancedClosed}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.PrincipalRepaid}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.ClosedAmount}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.InterestRepaid}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.AdminFeeReceived}" style="currency" maximumFractionDigits="2" />
                                     </td>
-                                    <td class="slds-cell-wrap">
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.OverageAmount}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.ShortfallAmount}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.BadDebtAmount}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.NetAmount}" style="currency" maximumFractionDigits="2" />
+                                    </td>
+                                    <td class="slds-cell-wrap slds-text-align_right">
+                                        <lightning:formattedNumber value="{!item.ROI}" style="percent" maximumFractionDigits="2" />
                                     </td>
                                 </tr>
                             </aura:iteration>
@@ -347,97 +360,104 @@
                                 <td class="slds-cell-wrap">
                                     <span class="makeBold" title=""></span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
-                                </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.TotalActivePartialFileCount}" style="decimal" maximumFractionDigits="0" />
-                                    </span>
                                 </td>                                
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ClosedFileTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.OpptyTotal}" style="decimal" maximumFractionDigits="0" />
-                                    </span>
-                                </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="Amount Grand Total">
-                                        <lightning:formattedNumber value="{!v.amtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </span>
-                                </td>                                
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="Amount Grand Total">
-                                        <lightning:formattedNumber value="{!v.BadDebtAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </span>
-                                </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.ShortfallTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="Amount Grand Total">
-                                        <lightning:formattedNumber value="{!v.ShortfallAmtTotal}" style="currency" maximumFractionDigits="2" />
-                                    </span>
-                                </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
                                         <lightning:formattedNumber value="{!v.OverageTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
-                                    <span class="makeBoldBlue" title="Amount Grand Total">
-                                        <lightning:formattedNumber value="{!v.OverageAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="File Grand Total">
+                                        <lightning:formattedNumber value="{!v.OpptyTotal}" style="decimal" maximumFractionDigits="0" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.TotalPrincipalAdvancedOpen}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>   
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.TotalPrincipalAdvancedClosed}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>                                
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.TotalPrincipalRepaid}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.ClosedAmtTotal}" style="currency" maximumFractionDigits="2" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.InterestAmtTotal}" style="currency" maximumFractionDigits="2" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.AdminFeeReceivedTotal}" style="currency" maximumFractionDigits="2" />
                                     </span>
                                 </td>
-                                <td class="slds-cell-wrap">
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.OverageAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.ShortfallAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="Amount Grand Total">
+                                        <lightning:formattedNumber value="{!v.BadDebtAmtTotal}" style="currency" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
+                                <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="Amount Grand Total">
                                         <lightning:formattedNumber value="{!v.TotalNetAmount}" style="currency" maximumFractionDigits="2" />
                                     </span>
                                 </td>
+                                <td class="slds-cell-wrap slds-text-align_right">
+                                    <span class="makeBoldBlue" title="%">
+                                        <lightning:formattedNumber value="{!v.TotalROI}" style="percent" maximumFractionDigits="2" />
+                                    </span>
+                                </td>
                             </tr>
-                            <!-- / This section will be outside of the iteration above -->
                         </tbody>
                     </table>
-                </div>
-                </div>
                 </div>
             </lightning:card>
         </div>
     </lightning:card>
-
+    
     <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
     <aura:if isTrue="{!v.spinner}">
         <div class="demo-only demo--inverse" style="height: 6rem;">

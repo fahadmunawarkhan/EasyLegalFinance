@@ -251,7 +251,12 @@
             AdminFeeReceivedTotal = 0.0,
             InterestAmtTotal = 0.0,
             TotalNetAmount = 0.0,
-            TotalActivePartialFileCount = 0;
+            TotalActivePartialFileCount = 0,
+            PrincipalAdvancedOpen = 0.0,
+            PrincipalAdvancedClosed = 0.0,
+            TotalNetAmount = 0.0,
+            TotalPrincipalRepaid = 0.0,
+            TotalROI = 0.0;
         
         if(paymentData != null && paymentData != undefined){
             
@@ -260,7 +265,9 @@
                 fileTotal += (paymentData[i].FileCount == null) ? 0 : paymentData[i].FileCount;
                 ActiveFileTotal += (paymentData[i].ActiveFileCount == null) ? 0 : paymentData[i].ActiveFileCount;
                 OpptyTotal += (paymentData[i].OpptyCount == null) ? 0 : paymentData[i].OpptyCount;
-                amountTotal += (paymentData[i].Amount == null) ? 0 : paymentData[i].Amount;
+                amountTotal += (paymentData[i].PrincipalAdvanced == null) ? 0 : paymentData[i].PrincipalAdvanced;
+                PrincipalAdvancedOpen += (paymentData[i].PrincipalAdvancedOpen == null) ? 0 : paymentData[i].PrincipalAdvancedOpen;
+                PrincipalAdvancedClosed += (paymentData[i].PrincipalAdvancedClosed == null) ? 0 : paymentData[i].PrincipalAdvancedClosed;
                 InterestAmtTotal += (paymentData[i].InterestRepaid == null) ? 0 : paymentData[i].InterestRepaid;
                 AdminFeeReceivedTotal += (paymentData[i].AdminFeeReceived == null) ? 0 : paymentData[i].AdminFeeReceived;
                 
@@ -276,6 +283,8 @@
                 
                 TotalActivePartialFileCount += (paymentData[i].ActivePartialFileCount == null) ? 0 : paymentData[i].ActivePartialFileCount;
                 TotalNetAmount += (paymentData[i].NetAmount == null) ? 0 : paymentData[i].NetAmount;
+                TotalPrincipalRepaid += (paymentData[i].PrincipalRepaid == null) ? 0 : paymentData[i].PrincipalRepaid;
+                TotalROI += (paymentData[i].ROI == null) ? 0 : parseFloat(paymentData[i].ROI);
                 
                 
             }
@@ -299,12 +308,12 @@
         component.set("v.OverageTotal", OverageTotal);
         component.set("v.OverageAmtTotal", OverageAmtTotal);
 
-        //component.set("v.ElfiBadDebtTotal", ElfiBadDebtTotal);
-        //component.set("v.ElfiBadDebtAmtTotal", ElfiBadDebtAmtTotal);
-        //component.set("v.ElfiShortfallTotal", ElfiShortfallTotal);
-        //component.set("v.ElfiShortfallAmtTotal", ElfiShortfallAmtTotal);
-        //component.set("v.ElfiOverageTotal", ElfiOverageTotal);
-        //component.set("v.ElfiOverageAmtTotal", ElfiOverageAmtTotal);
+        component.set("v.TotalPrincipalAdvancedOpen", PrincipalAdvancedOpen);
+        component.set("v.TotalPrincipalAdvancedClosed", PrincipalAdvancedClosed);
+        component.set("v.TotalPrincipalRepaid", TotalPrincipalRepaid);
+        component.set("v.TotalROI", TotalROI/(paymentData.length >0? paymentData.length : 1));
+        console.log("ROI SUM = " + TotalROI);
+        
     },
 
     errorsHandler: function(errors) {

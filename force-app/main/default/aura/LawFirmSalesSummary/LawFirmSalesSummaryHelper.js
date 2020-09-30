@@ -144,7 +144,11 @@
             AdminFeeReceivedTotal = 0.0,
             ActiveFileTotal = 0,
             ActivePFileTotal = 0,
-            TotalNetAmount = 0.0;
+            TotalNetAmount = 0.0,
+            totalPrincipalAdvanceOpen = 0.0,
+            totalPrincipalAdvanceClosed = 0.0,
+            totalPrincipalRepaid = 0.0,
+            totalROI = 0.0;
 
         console.log('----');
 
@@ -154,7 +158,7 @@
             closedFileTotal += (paymentData[i].totalClosedFileCount == null) ? 0 : paymentData[i].totalClosedFileCount;
             opptyTotal += (paymentData[i].totalOpptyCount == null) ? 0 : paymentData[i].totalOpptyCount;
             closedAmountTotal += (paymentData[i].totalClosedAmount == null) ? 0 : paymentData[i].totalClosedAmount;
-            amountTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalAmount;
+            //amountTotal += (paymentData[i].totalAmount == null) ? 0 : paymentData[i].totalAmount;
             NoBadDebtTotal += (paymentData[i].totalbdfile == null) ? 0 : paymentData[i].totalbdfile;
             BadDebtAmtTotal += (paymentData[i].totalbdamount == null) ? 0 : paymentData[i].totalbdamount;
             ShortFallFileTotal += (paymentData[i].totalShortFallFile == null) ? 0 : paymentData[i].totalShortFallFile;
@@ -165,6 +169,10 @@
             AdminFeeReceivedTotal += (paymentData[i].totalAdminFeeReceived == null) ? 0 : paymentData[i].totalAdminFeeReceived;
             ActivePFileTotal += (paymentData[i].ActivePartialFileCount == null) ? 0 : paymentData[i].ActivePartialFileCount;
             TotalNetAmount += (paymentData[i].NetAmount == null) ? 0 : paymentData[i].NetAmount;
+            totalPrincipalAdvanceOpen += (paymentData[i].PrincipalAdvancedOpen == null) ? 0 : paymentData[i].PrincipalAdvancedOpen;
+            totalPrincipalAdvanceClosed += (paymentData[i].PrincipalAdvancedClosed == null) ? 0 : paymentData[i].PrincipalAdvancedClosed;
+            totalPrincipalRepaid += (paymentData[i].PrincipalRepaid == null) ? 0 : paymentData[i].PrincipalRepaid;
+            totalROI += (paymentData[i].ROI == null) ? 0 : parseFloat(paymentData[i].ROI);
         }
 
 
@@ -172,7 +180,7 @@
         component.set("v.closedFileTotal", closedFileTotal);
         component.set("v.opptyTotal", opptyTotal);
         component.set("v.closedAmtTotal", closedAmountTotal);
-        component.set("v.amtTotal", amountTotal);
+        //component.set("v.amtTotal", amountTotal);
         component.set("v.NoBadDebtTotal", NoBadDebtTotal);
         component.set("v.BadDebtAmtTotal", BadDebtAmtTotal);
         component.set("v.ShortFallFileTotal", ShortFallFileTotal);
@@ -184,6 +192,11 @@
         component.set("v.ActiveFileTotal", ActiveFileTotal);
         component.set("v.ActivePFileTotal", ActivePFileTotal);
         component.set("v.TotalNetAmount", TotalNetAmount);
+        
+        component.set("v.totalPrincipalAdvanceOpen", totalPrincipalAdvanceOpen);
+        component.set("v.totalPrincipalAdvanceClosed", totalPrincipalAdvanceClosed);
+        component.set("v.totalPrincipalRepaid", totalPrincipalRepaid);
+        component.set("v.totalROI", totalROI/(paymentData.length >0? paymentData.length : 1));
     },
 
     errorsHandler: function(errors) {

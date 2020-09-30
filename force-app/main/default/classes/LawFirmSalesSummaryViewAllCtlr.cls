@@ -28,7 +28,6 @@ public class LawFirmSalesSummaryViewAllCtlr {
     public Integer NoOfClosedFiles {get;set;}
     public Integer NoOfOpps {get;set;}
     public double PayoutsTotal {get;set;}
-    public double AmountTotal {get;set;}
     public Integer NoOfBadDebtFilesTotal {get;set;}
     public double BadDebtAmtTotal {get;set;}
     public Integer NoOfShortFallFilesTotal {get;set;}
@@ -70,7 +69,6 @@ public class LawFirmSalesSummaryViewAllCtlr {
         this.NoOfClosedFiles = 0;
         this.NoOfOpps = 0;
         this.PayoutsTotal = 0;
-        this.AmountTotal = 0;
         this.NoOfBadDebtFilesTotal = 0;
         this.BadDebtAmtTotal = 0;
         this.NoOfShortFallFilesTotal = 0;
@@ -259,7 +257,6 @@ public class LawFirmSalesSummaryViewAllCtlr {
                 this.NoOfClosedFiles += LawSalesInfo.totalClosedFileCount;
                 this.NoOfOpps += LawSalesInfo.totalOpptyCount;
                 this.PayoutsTotal += LawSalesInfo.totalClosedAmount;
-                this.AmountTotal += LawSalesInfo.totalAmount;
                 this.NoOfBadDebtFilesTotal += LawSalesInfo.totalbdfile;
                 this.BadDebtAmtTotal += LawSalesInfo.totalbdamount;
                 this.NoOfShortFallFilesTotal += LawSalesInfo.totalShortFallFile;
