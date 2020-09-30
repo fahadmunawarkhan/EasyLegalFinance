@@ -24,8 +24,6 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         @AuraEnabled
         public integer totalOpptyCount {get; set;}
         @AuraEnabled
-        public decimal totalAmount {get; set;}
-        @AuraEnabled
         public decimal totalClosedAmount {get; set;}
         @AuraEnabled
         public integer totalbdfile {get; set;}
@@ -47,6 +45,16 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
         public integer ActivePartialFileCount {get; set;}
         @AuraEnabled
         public double NetAmount {get; set;}
+        @AuraEnabled
+        public decimal PrincipalAdvanced {get; set;}
+        @AuraEnabled
+        public decimal PrincipalAdvancedOpen {get; set;}
+        @AuraEnabled
+        public decimal PrincipalAdvancedClosed {get; set;}
+        @AuraEnabled
+        public decimal PrincipalRepaid {get; set;}
+        @AuraEnabled
+        public decimal ROI {get; set;}
         
         
         public wrapper(string f, string frmId){
@@ -56,7 +64,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             totalFileCount = 0;
             totalClosedFileCount = 0;
             totalOpptyCount = 0;
-            totalAmount = 0.00;
+            PrincipalAdvanced = 0.00;
             totalClosedAmount = 0.00;
             totalbdfile = 0;
             totalbdamount = 0.00;
@@ -69,6 +77,10 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
             totalActiveFileCount = 0;
             ActivePartialFileCount = 0;
             NetAmount = 0;
+            PrincipalAdvancedOpen = 0.00;
+            PrincipalAdvancedClosed = 0.00;
+            PrincipalRepaid = 0.00;
+            ROI = 0.00;
         }
     }
     @AuraEnabled
@@ -144,7 +156,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 
                 String closedWLoanQuery = 'Select Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId,'; 
                 closedWLoanQuery += ' COUNT_Distinct(Opportunity__r.AccountId) file, COUNT_Distinct(Opportunity__c) opptyCount, ';
-                closedWLoanQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest';
+                closedWLoanQuery += ' SUM(Amount__c) amt, SUM(Interest_Repaid__c) interest, SUM(Principal_Repaid__c) principal';
                 closedWLoanQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
                 closedWLoanQuery += ' AND Date__c <= :endDt';
                 closedWLoanQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
@@ -398,33 +410,62 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                     }
                 }
                 
+                /**
+                 * Closed Principal Advance
+                 * */
+                
+                strQuery = 'Select Opportunity__r.Account.Business_Unit__c unit, Opportunity__r.Law_firm__r.name firm, Opportunity__r.Law_firm__c firmId, ';
+                strQuery += ' SUM(Amount__c) amt';
+                strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDt';
+                strQuery += ' AND Date__c <= :endDt';
+                strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
+                strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
+                strQuery += ' OR (Payment_Method__c =:Cheque)';
+                strQuery += ' OR (Payment_Method__c =:AdminFee))';
+                strQuery += ' AND Opportunity__r.Stage_Status__c LIKE \'%Closed%\'';
+                strQuery += (BusinessUnit.isEmpty()) ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :BusinessUnit';
+                strQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
+                strQuery += ' Group by Opportunity__r.Law_firm__c, Opportunity__r.Law_firm__r.name, Opportunity__r.Account.Business_Unit__c';
+                List<AggregateResult> closedPrincipalAdvance = Database.query(strQuery);
+                
+                Map<String, AggregateResult> closedPrincipalAdvanceResultMap = new Map<String, AggregateResult>();
+                if(!closedPrincipalAdvance.isEmpty()){
+                    for(AggregateResult aggr : closedPrincipalAdvance)
+                    {
+                        String key = String.valueOf(aggr.get('firmId'));
+                        closedPrincipalAdvanceResultMap.put(key, aggr);
+                    }
+                }
+                
                 for(String f : lawfirmIdsSet)
                 {
                     String fName = lawfirmMap.get(f);
                     String key = f;
                     Wrapper w = new Wrapper(fName, result.containsKey(key) ? (String)result.get(key).get('firmId') : '');
-                        // ========== RHINO, ELFI, Consolidated ========//
-                        w.totalActiveFileCount += (ActiveFilesResultMap.containsKey(key) ? (Integer)ActiveFilesResultMap.get(key).get('file') : 0);
-                        w.totalClosedFileCount += (ClosedFilesResultMap.containsKey(key) ? (Integer)ClosedFilesResultMap.get(key).get('file') : 0);
-                        W.totalOpptyCount += (result.containsKey(key) ? (Integer)result.get(key).get('opptyCount') : 0);
-                        w.totalClosedAmount += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('amt') : 0);
-                        w.totalAmount += (result.containsKey(key) ? (decimal)result.get(key).get('amt') : 0);
-                        w.totalbdfile += (BadDebtResultMap.containsKey(key) ? (integer)BadDebtResultMap.get(key).get('file') : 0);
-                        w.totalbdamount += (BadDebtResultMap.containsKey(key) ? (double)BadDebtResultMap.get(key).get('amt'): 0);
-                        w.totalShortFallFile += (ShortFallResultMap.containsKey(key) ? (integer)ShortFallResultMap.get(key).get('file') : 0);
-                        w.totalShortFallAmt += (ShortFallResultMap.containsKey(key) ? (double)ShortFallResultMap.get(key).get('amt') : 0);
-                        w.totalOverAgeFile += (OverAgeResultMap.containsKey(key) ? (Integer)OverAgeResultMap.get(key).get('file') : 0);
-                        w.totalOverAgeAmt += (OverAgeResultMap.containsKey(key) ? (double)OverAgeResultMap.get(key).get('amt') : 0);
+                    w.totalActiveFileCount += (ActiveFilesResultMap.containsKey(key) ? (Integer)ActiveFilesResultMap.get(key).get('file') : 0);
+                    w.totalClosedFileCount += (ClosedFilesResultMap.containsKey(key) ? (Integer)ClosedFilesResultMap.get(key).get('file') : 0);
+                    W.totalOpptyCount += (result.containsKey(key) ? (Integer)result.get(key).get('opptyCount') : 0);
+                    w.totalClosedAmount += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('amt') : 0);
+                    w.PrincipalAdvanced += (result.containsKey(key) ? (decimal)result.get(key).get('amt') : 0);
+                    w.totalbdfile += (BadDebtResultMap.containsKey(key) ? (integer)BadDebtResultMap.get(key).get('file') : 0);
+                    w.totalbdamount += (BadDebtResultMap.containsKey(key) ? (double)BadDebtResultMap.get(key).get('amt'): 0);
+                    w.totalShortFallFile += (ShortFallResultMap.containsKey(key) ? (integer)ShortFallResultMap.get(key).get('file') : 0);
+                    w.totalShortFallAmt += (ShortFallResultMap.containsKey(key) ? (double)ShortFallResultMap.get(key).get('amt') : 0);
+                    w.totalOverAgeFile += (OverAgeResultMap.containsKey(key) ? (Integer)OverAgeResultMap.get(key).get('file') : 0);
+                    w.totalOverAgeAmt += (OverAgeResultMap.containsKey(key) ? (double)OverAgeResultMap.get(key).get('amt') : 0);
+                    w.PrincipalAdvancedClosed += (closedPrincipalAdvanceResultMap.containsKey(key) ? (decimal)closedPrincipalAdvanceResultMap.get(key).get('amt') : 0); 
                     
-                        w.totalInterestRepaid += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('interest') != null? (decimal)closedOppResultMap.get(key).get('interest') :0 : 0);
-                    	//w.totalInterestRepaid += (BadDebtResultMap.containsKey(key) ? (decimal)BadDebtResultMap.get(key).get('interest') != null? (decimal)BadDebtResultMap.get(key).get('interest') :0 : 0);
-                    	//w.totalInterestRepaid += (ShortFallResultMap.containsKey(key) ? (decimal)ShortFallResultMap.get(key).get('interest') != null? (decimal)ShortFallResultMap.get(key).get('interest') :0 : 0);
-                    	//w.totalInterestRepaid += (OverAgeResultMap.containsKey(key) ? (decimal)OverAgeResultMap.get(key).get('interest') != null? (decimal)OverAgeResultMap.get(key).get('interest') :0 : 0);
+                    w.totalInterestRepaid += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('interest') != null? (decimal)closedOppResultMap.get(key).get('interest') :0 : 0);
+                    w.PrincipalRepaid += (closedOppResultMap.containsKey(key) ? (decimal)closedOppResultMap.get(key).get('principal') != null? (decimal)closedOppResultMap.get(key).get('principal') :0 : 0);
                     
                     w.totalAdminFeeReceived += (AdminFeeRecResultMap.containsKey(key) ? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') != null? (double)AdminFeeRecResultMap.get(key).get('adminfeeRec') : 0 : 0);                    	
                     w.totalFileCount += (TotalFilesResultMap.containsKey(key) ? (Integer)TotalFilesResultMap.get(key).get('file') : 0);
                     w.ActivePartialFileCount += (ActivePFilesResultMap.containsKey(key) ? (Integer)ActivePFilesResultMap.get(key).get('file') : 0);
                     w.NetAmount = (((w.totalInterestRepaid + w.totalAdminFeeReceived + w.totalOverAgeAmt) - w.totalShortFallAmt) - w.totalbdamount);
+                    
+                    w.PrincipalAdvancedOpen = w.PrincipalAdvanced - w.PrincipalAdvancedClosed;
+                    w.ROI = (w.PrincipalAdvanced != null && w.PrincipalAdvanced != 0)? (w.NetAmount / w.PrincipalAdvanced) : 0;
+                    
                     wrapers.add(w);
                 }
                 system.debug('this is wrapper');
