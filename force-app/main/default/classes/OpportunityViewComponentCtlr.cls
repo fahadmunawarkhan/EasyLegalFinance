@@ -4,7 +4,7 @@
  * @Author             : Victoria Ventura
  * @Group              : 
  * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 4/28/2020, 1:28:57 PM
+ * @Last Modified On   : 09-30-2020
  * @Modification Log   : 
  *==============================================================================
  * Ver         Date                     Author      		      Modification
@@ -24,7 +24,7 @@ public class OpportunityViewComponentCtlr {
         try{
         if(String.isEmpty(oppId))
         {
-            List<Opportunity> lastOppty = [select id, Lawyer__c, Law_Firm__c, Date_Financing_Statement_Done__c ,
+            List<Opportunity> lastOppty = [select id, Name, Lawyer__c, Law_Firm__c, Date_Financing_Statement_Done__c ,
                                            Date_Financing_Statement_Expires__c, Assessment_Provider__c, Assessment_Provider__r.Name,
                                            Date_Applied__c, Have_you_ever_declared_bankruptcy__c, Bankruptcy_Details__c,
                                            Other_Lawyer_Law_Firm_that_acted__c, NOTE_For_Paralegals__c, Date_of_Loss__c,
@@ -32,7 +32,7 @@ public class OpportunityViewComponentCtlr {
                                            Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c 
                                            from Opportunity
                                            where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' AND Lawyer__c != null ORDER BY Loan_Requests__c DESC Nulls LAST LIMIT 1];
-            oppInfo.Name = ''; 
+            oppInfo.Name = (lastOppty.isEmpty() ? '' : lastOppty[0].Name); 
             oppInfo.StageName='Prospecting';
             oppInfo.closeDate = Date.today(); 
             oppInfo.AccountId=accId;
