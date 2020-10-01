@@ -1,4 +1,14 @@
-<apex:page standardController="Account" extensions="AccountNotesPrintableCtrl" renderAs="pdf" >
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 10-01-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   10-01-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+<apex:page Controller="AccountNotesPrintableCtrl" renderAs="pdf" >
     <head>
         <style>
             .odd {
@@ -11,7 +21,7 @@
     </head>
     
     <h3>
-        {!account.Name}'s Notes
+       {!ObjName} 's Notes
     </h3>
     <br />
     <apex:pageBlock >
