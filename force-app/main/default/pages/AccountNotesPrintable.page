@@ -25,10 +25,10 @@
     </h3>
     <br />
     <apex:pageBlock >
-        <table width="100%" style="padding: 5px">
+        <table width="100%" style="padding: 5px;">
             <thead>
                 <th style="font-family: 'Salesforce Sans', Arial, sans-serif;">DATE</th>
-                <th style="font-family: 'Salesforce Sans', Arial, sans-serif;">DETAILED NOTES</th>
+                <th style="font-family: 'Salesforce Sans', Arial, sans-serif; width:55%">DETAILED NOTES</th>
                 <th style="font-family: 'Salesforce Sans', Arial, sans-serif;">CREATED BY</th>
             </thead>
             <tbody>
