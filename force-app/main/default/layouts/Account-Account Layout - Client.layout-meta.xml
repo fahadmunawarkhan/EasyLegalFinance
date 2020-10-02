@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>spanning__SpanningAccountRestore</customButtons>
+    <excludeButtons>DataDotComAccountInsights</excludeButtons>
+    <excludeButtons>DataDotComClean</excludeButtons>
+    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -48,6 +51,42 @@
                 <behavior>Readonly</behavior>
                 <field>Total_Shortfall__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Outstanding_Balance_With_Reserve_To_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Principal_With_Reserve_To_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Reserved_Loans_Count__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Value_At_Reserve_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Unbilled_Revenue__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Settlement_Loan_Number__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Lawyer_Loan_Number__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Assessment_Loan_Number__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>General_Business_Number__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -56,11 +95,43 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>RecordTypeId</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Account_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Related_Law_Firm__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Exclude_from_Payout__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Projected_Loan_Value__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Offers_to_Settle__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Offer_to_Settle_Amount__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Liability__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Underwriter_Notes__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Reason_for_LTV__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -127,10 +198,6 @@
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>RecordTypeId</field>
-            </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>AccountNumber</field>
@@ -251,6 +318,10 @@
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedEntityHistoryList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <relatedList>Payment__c.Account__c</relatedList>
     </relatedLists>
     <relatedObjects>ParentId</relatedObjects>
     <showEmailCheckbox>false</showEmailCheckbox>

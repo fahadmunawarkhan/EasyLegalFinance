@@ -245,8 +245,8 @@
                         <br/>
                         <aura:if isTrue="{! v.selectedOpportunity.Type_of_Loan__c == 'Lump-Sum'}">
                             <div class="slds-form-element">
-                                <lightning:input type="Number" formatter="currency" tabindex="2" value="{!v.selectedOpportunity.Amount_Paid_to_Borrower__c}" step="0.01" 
-                                                label="Amount Paid to Borrower" />
+                                <lightning:input type="Number" formatter="currency" tabindex="2" value="{!v.selectedOpportunity.Amount_Paid_to_Borrower_Formula__c}" step="0.01" 
+                                                disabled="true" label="Amount Paid to Borrower" />
                             </div>
 
                             <aura:set attribute="else">
@@ -303,7 +303,7 @@
                         </div>
                         <br/>
                         <div class="slds-form-element">
-                            <lightning:input type="Number" formatter="currency" tabindex="2" value="{!v.selectedOpportunity.Amount_Paid_to_Borrower__c}" step="0.01" 
+                            <lightning:input type="Number" formatter="currency" tabindex="2" value="{!v.selectedOpportunity.Amount_Paid_to_Borrower_Formula__c}" step="0.01" 
                                              disabled="true" label="Amount Paid to Borrower" />
                         </div>
                         <br/>                                                

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amount_that_you_would_like__c</fullName>
+    <externalId>false</externalId>
+    <label>Amount that you would like $</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

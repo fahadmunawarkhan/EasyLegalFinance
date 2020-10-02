@@ -38,8 +38,8 @@ public class PaymentSummaryItemHelperTest {
     public static void insertDrawdowns(String OppId){
         List<Drawdown__c> drawdownList = new List<Drawdown__c>();
         for(Integer i=0; i < 1; i++){
-            drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = OppId,
-                                            Amount__c = 2000 + (i * 50)));
+            drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.today(), Opportunity__c = OppId, Payment_Method__c='e-Transfer',
+                                             Reference_Notes__c='Payment to Client', Amount__c = 2000 + (i * 50)));
         }
         if(drawdownList.size() > 0){
             insert drawdownList;
@@ -185,6 +185,7 @@ public class PaymentSummaryItemHelperTest {
         insert drawdown;
         Test.startTest();                
         List<PaymentSummaryItem> items = PaymentSummaryItemHelper.getPaymentSummaryItems(clientOpportunities[0].AccountId);
+        //System
         System.assertEquals(1, items.size());
         System.assertEquals(2000.0, items[0].principal);
         System.assertEquals(9.04, items[0].interest);
@@ -230,5 +231,98 @@ public class PaymentSummaryItemHelperTest {
         System.assertEquals(9.04, items[0].badDebtInterest);
         Test.stopTest();
     }
+    
+    public static testMethod void testGetPaymentDetails() {          
+        Account acc = [select Id from Account where Name='Test Client Account' LIMIT 1];        
+        List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        insertDrawdowns(clientOpportunities[0].Id);
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='1'));
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='2'));
+        insert payments;
+        Test.startTest();                
+        List<PaymentDetailsInfo> paymentDetails = PaymentSummaryItemHelper.getPaymentDetails(acc.Id);                
+        System.assertEquals(2, paymentDetails.size());
+        System.assertEquals(1000.0, paymentDetails[0].amount);
+        System.assertEquals('1', paymentDetails[0].chequeNumber);
+        System.assertEquals(1000.0, paymentDetails[1].amount);
+        System.assertEquals('2', paymentDetails[1].chequeNumber);        
+        Test.stopTest();
+    } 
 
+    public static testMethod void testGetPaymentDetailsWithSurplus() {          
+        Account acc = [select Id from Account where Name='Test Client Account' LIMIT 1];        
+        List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        insertDrawdowns(clientOpportunities[0].Id);
+        insert new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(200), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='1');
+        Test.startTest();                
+        List<Drawdown__c> payments = new List<Drawdown__c>();        
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='2'));
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Payment Surplus', Amount__c = 100.0));
+        insert payments;
+
+        List<PaymentDetailsInfo> paymentDetails = PaymentSummaryItemHelper.getPaymentDetails(acc.Id);                
+        System.assertEquals(2, paymentDetails.size());
+        System.assertEquals(1000.0, paymentDetails[0].amount);
+        System.assertEquals('1', paymentDetails[0].chequeNumber);
+        System.assertEquals(1100.0, paymentDetails[1].amount);
+        System.assertEquals(100.0, paymentDetails[1].surplus);
+        System.assertEquals('2', paymentDetails[1].chequeNumber);        
+        Test.stopTest();
+    } 
+    
+    
+    public static testMethod void testGroupPaymentDetails() {          
+        Account acc = [select Id from Account where Name='Test Client Account' LIMIT 1];        
+        List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        insertDrawdowns(clientOpportunities[0].Id);
+        List<Drawdown__c> payments = new List<Drawdown__c>();
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='123'));
+        payments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='123'));
+        insert payments;
+        Test.startTest();                
+        List<PaymentDetailsInfo> paymentDetails = PaymentSummaryItemHelper.getPaymentDetails(acc.Id);                
+        System.assertEquals(1, paymentDetails.size());
+        System.assertEquals(2000.0, paymentDetails[0].amount);
+        System.assertEquals('123', paymentDetails[0].chequeNumber);
+        Test.stopTest();
+    } 
+    
+    public static testMethod void testGroupPaymentDetails1() {          
+        Account acc = [select Id from Account where Name='Test Client Account' LIMIT 1];        
+        List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];
+        insertDrawdowns(clientOpportunities[0].Id);        
+        Payment__c payment = new Payment__c();
+        payment.FV_at_Payout_Date__c = 5000.0;
+        payment.Account__c = clientOpportunities[0].AccountId;
+        insert payment;
+        List<Drawdown__c> drawdownPayments = new List<Drawdown__c>();
+        drawdownPayments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, Payment__c=payment.Id));
+        drawdownPayments.add(new Drawdown__c(Opportunity__c = clientOpportunities[0].Id, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, Payment__c=payment.Id));
+        insert drawdownPayments;                
+        Test.startTest();                
+        List<PaymentDetailsInfo> paymentDetails = PaymentSummaryItemHelper.getPaymentDetails(acc.Id);                
+        System.assertEquals(1, paymentDetails.size());
+        System.assertEquals(2000.0, paymentDetails[0].amount);        
+        System.assertEquals(5000.0, paymentDetails[0].fvAtPayoutDate);
+        Test.stopTest();
+    }    
+    public static testMethod void testAppendClientRebates() { 
+        List<Opportunity> clientOpportunities = [SELECT AccountId, Payout_Date__c, Reserve_Date__c, Reserve_Amount__c, Is_Reserve_Applied__c FROM Opportunity  LIMIT 1];        
+        PaymentDetailsInfo info1 = new PaymentDetailsInfo();
+        info1.amount = 100.0;
+        info1.opportunityId = clientOpportunities[0].Id;
+        info1.referenceNotes = 'Partial Payment';
+        info1.paymentDate = Date.today();
+        List<PaymentDetailsInfo> paymentDetails = new List<PaymentDetailsInfo>{info1};
+        PaymentDetailsInfo clientRebate = new PaymentDetailsInfo();
+        clientRebate.amount = 20.0;
+        clientRebate.opportunityId = clientOpportunities[0].Id;
+        clientRebate.referenceNotes = 'Client Rebate';
+        clientRebate.paymentDate = Date.today();
+        List<PaymentDetailsInfo> clientRebates = new List<PaymentDetailsInfo>{clientRebate};
+		PaymentSummaryItemHelper.appendAdditionalPayments(paymentDetails, clientRebates);
+        System.assertEquals(120, paymentDetails[0].amount);
+        System.assertEquals(20, paymentDetails[0].clientRebate);
+    }
 }

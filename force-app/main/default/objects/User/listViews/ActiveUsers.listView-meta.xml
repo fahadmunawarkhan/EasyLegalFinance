@@ -9,6 +9,7 @@
     <columns>CORE.PROFILE.NAME</columns>
     <columns>Drawdowns__c</columns>
     <columns>Treatment_Providers__c</columns>
+    <columns>EFT_Originator_Id__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>CORE.USERS.ACTIVE</field>

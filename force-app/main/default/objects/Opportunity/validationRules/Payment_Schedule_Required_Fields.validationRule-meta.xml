@@ -3,7 +3,7 @@
     <fullName>Payment_Schedule_Required_Fields</fullName>
     <active>true</active>
     <errorConditionFormula>IF(
-    ISPICKVAL(Payment_Schedule__c, &#39;Yes&#39;),
+    ISPICKVAL(Payment_Schedule__c, &apos;Yes&apos;),
     OR(
         ISBLANK(TEXT(Payment_Schedule_Mode__c)),
         AND(
@@ -14,11 +14,11 @@
         ISBLANK(TEXT(Day_of_Month__c)),
         ISBLANK(Start_Date__c),
         AND(
-            ISPICKVAL(Payment_Schedule_Mode__c, &#39;Amount&#39;),
+            ISPICKVAL(Payment_Schedule_Mode__c, &apos;Amount&apos;),
             ISBLANK(Drawdown_Amount__c)
         ),
         AND(
-            ISPICKVAL(Payment_Schedule_Mode__c, &#39;Date&#39;),
+            ISPICKVAL(Payment_Schedule_Mode__c, &apos;Date&apos;),
             ISBLANK(End_Date__c)
         )
     ),

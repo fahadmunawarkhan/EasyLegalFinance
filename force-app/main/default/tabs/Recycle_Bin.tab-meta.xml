@@ -3,7 +3,7 @@
     <frameHeight>600</frameHeight>
     <hasSidebar>false</hasSidebar>
     <label>Recycle Bin</label>
-
+    <mobileReady>false</mobileReady>
     <motif>Custom59: Can</motif>
     <url>/search/UndeletePage</url>
     <urlEncodingKey>UTF-8</urlEncodingKey>

@@ -6,4 +6,4 @@
         <c:scheduledPaymentForm recordId="{!v.recordId}"></c:scheduledPaymentForm>
     </lightning:card>
 
-</aura:component>	
+</aura:component>

@@ -36,7 +36,7 @@
     <columns>
         <field>PHONE</field>
     </columns>
-    <description>Stephen&#39;s prospect list</description>
+    <description>Stephen&apos;s prospect list</description>
     <format>Tabular</format>
     <name>Alberta Sales Campgain</name>
     <params>

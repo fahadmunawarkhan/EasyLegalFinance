@@ -20,7 +20,7 @@
 &amp;IF(ISBLANK(Primary_Contact__c),&quot;\\nPrimary Contact&quot;,&quot;&quot;)
 &amp;IF(ISBLANK(Primary_Contact_Email__c),&quot;\\nPrimary Contact e-Mail Address&quot;,&quot;&quot;) &amp;IF(ISBLANK(Primary_Contact_Street__c)||ISBLANK(Primary_Contact_City__c)||ISBLANK(Primary_Contact_Province__c)||ISBLANK(Primary_Contact_Postal_Code__c),&quot;\\nPrimary Contact Address&quot;,&quot;&quot;)
 &amp;IF(AND(ISPICKVAL(Type_of_Loan__c,&quot;Lump-Sum&quot;), ISBLANK(Loan_Amt_minus_Admin_Fee__c)),&quot;\\nFirst Draw Amount&quot;,&quot;&quot;)
-&amp;IF(AND(ISPICKVAL(Type_of_Loan__c,&quot;Facility Loan&quot;),OR(ISBLANK(First_Drawdown_Amount__c),ISBLANK(Amount_Paid_to_Borrower__c))),&quot;Amount Paid to Borrower&quot;,&quot;&quot;)
+&amp;IF(AND(ISPICKVAL(Type_of_Loan__c,&quot;Facility Loan&quot;),OR(ISBLANK(First_Drawdown_Amount__c),ISBLANK(Amount_Paid_to_Borrower_Formula__c))),&quot;Amount Paid to Borrower&quot;,&quot;&quot;)
 &amp;IF(ISBLANK( Scenario__c ),&quot;\\nProvince of Residency and Type of Loan do not match a valid document&quot;,&quot;&quot;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Conga Doc Error</label>

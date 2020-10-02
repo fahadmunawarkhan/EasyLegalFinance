@@ -74,24 +74,7 @@
                     <lightning:layoutItem size="6">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">{!v.fieldLabels.ELF_File_No__c}</span>
                             <div class="slds-form-element__control">
-                                <aura:if isTrue="{!notequals(v.clickSource , 'ELF_File_No__c')}">
-                                    
-                                    <span class="slds-form-element__static">{!v.leadObj.ELF_File_No__c}</span>
-                                    
-                                    <button data-source ="ELF_File_No__c" onclick="{!c.inlineEditName}" class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="3" title="Edit Name">
-                                        <lightning:icon iconName="utility:edit" size="xx-small" alternativeText="edit"/>
-                                    </button>
-                                    <aura:set attribute="else">
-                                        <section class="slds-popover slds-popover_edit" > 
-                                            <ui:inputText class="slds-input inputFieldWidth"
-                                                          aura:id="ELF_File_No__c"
-                                                          blur="{!c.closeNameBox}"
-                                                          change="{!c.onNameChange}"
-                                                          required="true"
-                                                          value="{!v.leadObj.ELF_File_No__c}" />
-                                        </section>
-                                    </aura:set>
-                                </aura:if>
+                                <span class="slds-form-element__static">{!v.leadObj.ELF_File_No__c}</span>
                             </div>
                         </div>
                     </lightning:layoutItem>

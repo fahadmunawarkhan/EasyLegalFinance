@@ -28,21 +28,18 @@
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Type_of_Loan__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Assessment</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Assessment_Provider__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value/>

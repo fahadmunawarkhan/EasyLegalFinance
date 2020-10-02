@@ -804,5 +804,20 @@ public class CustomerViewComponentCtlrTest {
         test.startTest();        
         CustomerViewComponentCtlr.needAsyncProcessing(new List<Id>{oppId});        
         test.stopTest();
-    }
+    }  
+    
+    public static testmethod void testLinkPayments(){    
+        Account acc = [select Id from Account where Name='account' LIMIT 1];        
+        String oppId = [select id from opportunity where name = 'Test Opportunity'].id;
+        List<Drawdown__c> paymentDrawdowns = new List<Drawdown__c>();
+        paymentDrawdowns.add(new Drawdown__c(Opportunity__c = oppId, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='1'));
+        paymentDrawdowns.add(new Drawdown__c(Opportunity__c = oppId, Date__c = Date.today().addDays(300), Payment_Method__c = 'Payment', Reference_Notes__c = 'Partial Payment', Amount__c = 1000.0, CHQ__c='2'));
+        insert paymentDrawdowns;
+        Test.startTest();                
+        CustomerViewComponentCtlr.linkPayments(acc.Id, new List<String>{paymentDrawdowns[0].Id, paymentDrawdowns[1].Id}, 1000.0);
+        List<Payment__c> payments = [select Id from Payment__c];
+        System.assertEquals(1, payments.size());
+        Test.stopTest();
+    } 
+
 }

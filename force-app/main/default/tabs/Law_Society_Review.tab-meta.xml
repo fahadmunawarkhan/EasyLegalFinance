@@ -2,5 +2,6 @@
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <auraComponent>lawSocietyReviewReport</auraComponent>
     <label>Law Society Review</label>
+    <mobileReady>false</mobileReady>
     <motif>Custom43: Jewel</motif>
 </CustomTab>

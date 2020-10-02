@@ -39,12 +39,6 @@
             <operator>greaterThan</operator>
             <value>0</value>
         </criteriaItems>
-        <criteriaItems>
-            <column>Account$Active_Loan_Count__c</column>
-            <isUnlocked>true</isUnlocked>
-            <operator>greaterThan</operator>
-            <value>0</value>
-        </criteriaItems>
     </filter>
     <format>Tabular</format>
     <name>ELFI 1 (Active Loans)</name>
@@ -58,10 +52,10 @@
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
     <sortColumn>Account$AccountNumber</sortColumn>
-    <sortOrder>Asc</sortOrder>
+    <sortOrder>Desc</sortOrder>
     <timeFrameFilter>
-        <dateColumn>Account$CreatedDate</dateColumn>
-        <endDate>2020-12-31</endDate>
+        <dateColumn>Account$Date_of_Advance__c</dateColumn>
+        <endDate>2020-04-27</endDate>
         <interval>INTERVAL_CUSTOM</interval>
         <startDate>2000-01-01</startDate>
     </timeFrameFilter>

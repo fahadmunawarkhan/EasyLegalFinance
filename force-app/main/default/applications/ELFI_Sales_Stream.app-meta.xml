@@ -13,5 +13,6 @@
     <tabs>standard-Opportunity</tabs>
     <tabs>standard-Dashboard</tabs>
     <tabs>standard-report</tabs>
-    <tabs>Critical_Date__c</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
 </CustomApplication>

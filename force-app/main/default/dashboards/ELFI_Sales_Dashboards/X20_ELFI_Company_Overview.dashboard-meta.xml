@@ -11,7 +11,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <header>Company Drawdown Summary</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -25,7 +24,6 @@
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
             <footer>All Drawdowns for Loans registered in the system.</footer>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -42,7 +40,6 @@
             <drillToDetailEnabled>false</drillToDetailEnabled>
             <enableHover>true</enableHover>
             <expandOthers>true</expandOthers>
-            <groupingSortProperties/>
             <header>WIP List - Case Management</header>
             <legendPosition>Bottom</legendPosition>
             <report>ELFI_Company_Reports/WIP_List_Case_Management</report>
@@ -58,7 +55,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <header>ELFI Drawdown Summary</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -72,7 +68,6 @@
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
             <footer>All Drawdowns for Loans where customer is tagged as ELFI (Business Unit)</footer>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -87,7 +82,6 @@
             </chartSummary>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <header>ELFI - Loan Overview</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -100,7 +94,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -112,7 +105,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -128,7 +120,6 @@
             </chartSummary>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -140,7 +131,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -157,7 +147,6 @@
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
             <footer>All Closed With Loan opportunities with an Expected Loan Date of This Month / This Quarter / This Year</footer>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -172,7 +161,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <header>Rhino Drawdown Summary</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -186,7 +174,6 @@
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
             <footer>All Drawdowns for Loans where customer is tagged as Rhino (Business Unit)</footer>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -198,7 +185,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <header>Rhino - Loan Overview</header>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
@@ -211,7 +197,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -223,7 +208,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -235,7 +219,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -247,7 +230,6 @@
             <autoselectColumnsFromReport>true</autoselectColumnsFromReport>
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -260,7 +242,6 @@
             <componentType>Metric</componentType>
             <displayUnits>Auto</displayUnits>
             <footer>All Closed With Loan opportunities with an Expected Loan Date of This Month / This Quarter / This Year - where the customer is set to the RHINO Business Unit.</footer>
-            <groupingSortProperties/>
             <indicatorHighColor>#54C254</indicatorHighColor>
             <indicatorLowColor>#C25454</indicatorLowColor>
             <indicatorMiddleColor>#C2C254</indicatorMiddleColor>
@@ -269,6 +250,7 @@
             <showRange>false</showRange>
         </components>
     </rightSection>
+    <runningUser>seth.elfi@toptal.com</runningUser>
     <textColor>#000000</textColor>
     <title>20 - ELFI Company Overview</title>
     <titleColor>#000000</titleColor>

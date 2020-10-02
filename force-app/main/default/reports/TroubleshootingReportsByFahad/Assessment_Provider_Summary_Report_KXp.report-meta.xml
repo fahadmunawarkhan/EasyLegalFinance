@@ -22,13 +22,6 @@
     <columns>
         <field>Account.Opportunities__r.Drawdowns__r$Reference_Notes__c</field>
     </columns>
-    <customDetailFormulas>
-        <calculatedFormula>Opportunity.Lawyer__c.Name__lookup + &quot; ( Lmt: &quot; + TEXT(Opportunity.Lawyer__c.Approved_Credit_Limit__c) + &quot;, Utl: &quot; + TEXT(Opportunity.Lawyer__c.Utilized_Credit_Limit__c) + &quot;, Avl: &quot; + TEXT((Opportunity.Lawyer__c.Approved_Credit_Limit__c - Opportunity.Lawyer__c.Utilized_Credit_Limit__c)) + &quot;)&quot;</calculatedFormula>
-        <dataType>Text</dataType>
-        <developerName>CDF1</developerName>
-        <label>Lawyer Info</label>
-        <scale>2</scale>
-    </customDetailFormulas>
     <filter>
         <criteriaItems>
             <column>Account$RecordType</column>
@@ -47,11 +40,6 @@
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
         <field>Account$Name</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
-        <field>CDF1</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <groupingsDown>

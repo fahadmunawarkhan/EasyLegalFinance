@@ -7,17 +7,18 @@
     ISNEW(), 
     OR( 
         AND(
-            ISPICKVAL(Opportunity__r.Minimum_Interest_Period__c, &#39;&#39;), 
-            NOT(OR(IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&#39;0&#39;), 
-                   IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&#39;&#39;)))
+            ISPICKVAL(Opportunity__r.Minimum_Interest_Period__c, &apos;&apos;), 
+            NOT(OR(IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&apos;0&apos;), 
+                   IsPickVal(Opportunity__r.Interest_Deferral_Period__c,&apos;&apos;)))
             ),
-        ISBLANK( Opportunity__r.Interest_Rate__c), 
-		ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&#39;&#39;),
+        AND(ISBLANK( Opportunity__r.Interest_Rate__c), NOT(IsPickVal(Opportunity__r.Interest_Rate_Type__c, &apos;Variable&apos;))), 
+		ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&apos;&apos;),
 		AND(
-            ISPICKVAL(Opportunity__r.Compounding_Interest__c, &#39;&#39;),
-			ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&#39;Compounding Interest&#39;)
+            ISPICKVAL(Opportunity__r.Compounding_Interest__c, &apos;&apos;),
+			ISPICKVAL(Opportunity__r.Interest_Compounding_Period__c,&apos;Compounding Interest&apos;)
            )
-		) 
+		),
+		NOT(ISPICKVAL(Opportunity__r.Type_of_Loan__c, &apos;Lawyer Loan-Contingency Fee Acceleration&apos;))
     )</errorConditionFormula>
     <errorMessage>You cannot create drawdowns before populating the loan set up.</errorMessage>
 </ValidationRule>

@@ -22,6 +22,11 @@
                 <label>AIG</label>
             </value>
             <value>
+                <fullName>Alberta Motors Association</fullName>
+                <default>false</default>
+                <label>Alberta Motors Association</label>
+            </value>
+            <value>
                 <fullName>Allstate</fullName>
                 <default>false</default>
                 <label>Allstate</label>
@@ -32,14 +37,34 @@
                 <label>Aviva</label>
             </value>
             <value>
+                <fullName>Ayr Farmers Mutual</fullName>
+                <default>false</default>
+                <label>Ayr Farmers Mutual</label>
+            </value>
+            <value>
                 <fullName>Belair Direct</fullName>
                 <default>false</default>
                 <label>Belair Direct</label>
             </value>
             <value>
+                <fullName>Brant</fullName>
+                <default>false</default>
+                <label>Brant</label>
+            </value>
+            <value>
                 <fullName>CAA</fullName>
                 <default>false</default>
                 <label>CAA</label>
+            </value>
+            <value>
+                <fullName>Canadian Medical Protection Association</fullName>
+                <default>false</default>
+                <label>Canadian Medical Protection Association</label>
+            </value>
+            <value>
+                <fullName>Cayuga</fullName>
+                <default>false</default>
+                <label>Cayuga</label>
             </value>
             <value>
                 <fullName>Cayuga Mutual Insurance Company</fullName>
@@ -52,14 +77,29 @@
                 <label>Certas</label>
             </value>
             <value>
+                <fullName>Chartis Insurance</fullName>
+                <default>false</default>
+                <label>Chartis Insurance</label>
+            </value>
+            <value>
                 <fullName>Chubb</fullName>
                 <default>false</default>
                 <label>Chubb</label>
             </value>
             <value>
+                <fullName>Cigna</fullName>
+                <default>false</default>
+                <label>Cigna</label>
+            </value>
+            <value>
                 <fullName>Coachman</fullName>
                 <default>false</default>
                 <label>Coachman</label>
+            </value>
+            <value>
+                <fullName>Commonwealth</fullName>
+                <default>false</default>
+                <label>Commonwealth</label>
             </value>
             <value>
                 <fullName>Commonwell Mutual</fullName>
@@ -97,6 +137,11 @@
                 <label>Dominion</label>
             </value>
             <value>
+                <fullName>Durham Region Transit</fullName>
+                <default>false</default>
+                <label>Durham Region Transit</label>
+            </value>
+            <value>
                 <fullName>Echelon</fullName>
                 <default>false</default>
                 <label>Echelon</label>
@@ -110,6 +155,11 @@
                 <fullName>Edge Mutual</fullName>
                 <default>false</default>
                 <label>Edge Mutual</label>
+            </value>
+            <value>
+                <fullName>Erie</fullName>
+                <default>false</default>
+                <label>Erie</label>
             </value>
             <value>
                 <fullName>Federal</fullName>
@@ -127,6 +177,16 @@
                 <label>Gore</label>
             </value>
             <value>
+                <fullName>Great West Life</fullName>
+                <default>false</default>
+                <label>Great West Life</label>
+            </value>
+            <value>
+                <fullName>Green Shield</fullName>
+                <default>false</default>
+                <label>Green Shield</label>
+            </value>
+            <value>
                 <fullName>Guarantee</fullName>
                 <default>false</default>
                 <label>Guarantee</label>
@@ -137,6 +197,16 @@
                 <label>Heartland Farm</label>
             </value>
             <value>
+                <fullName>ICBC</fullName>
+                <default>false</default>
+                <label>ICBC</label>
+            </value>
+            <value>
+                <fullName>ING</fullName>
+                <default>false</default>
+                <label>ING</label>
+            </value>
+            <value>
                 <fullName>Intact</fullName>
                 <default>false</default>
                 <label>Intact</label>
@@ -145,6 +215,26 @@
                 <fullName>Jevco</fullName>
                 <default>false</default>
                 <label>Jevco</label>
+            </value>
+            <value>
+                <fullName>Liberty</fullName>
+                <default>false</default>
+                <label>Liberty</label>
+            </value>
+            <value>
+                <fullName>Lloyd&apos;s</fullName>
+                <default>false</default>
+                <label>Lloyd&apos;s</label>
+            </value>
+            <value>
+                <fullName>Manitoba Public Insurance</fullName>
+                <default>false</default>
+                <label>Manitoba Public Insurance</label>
+            </value>
+            <value>
+                <fullName>Manulife</fullName>
+                <default>false</default>
+                <label>Manulife</label>
             </value>
             <value>
                 <fullName>McKillop</fullName>
@@ -162,6 +252,11 @@
                 <label>Middlesex Mutual</label>
             </value>
             <value>
+                <fullName>Motors Insurance Promutual de L&apos;est</fullName>
+                <default>false</default>
+                <label>Motors Insurance Promutual de L&apos;est</label>
+            </value>
+            <value>
                 <fullName>MVACF</fullName>
                 <default>false</default>
                 <label>MVACF</label>
@@ -177,6 +272,16 @@
                 <label>Northbridge</label>
             </value>
             <value>
+                <fullName>Old Republic</fullName>
+                <default>false</default>
+                <label>Old Republic</label>
+            </value>
+            <value>
+                <fullName>Ontario Blue Cross</fullName>
+                <default>false</default>
+                <label>Ontario Blue Cross</label>
+            </value>
+            <value>
                 <fullName>Optimum</fullName>
                 <default>false</default>
                 <label>Optimum</label>
@@ -190,6 +295,16 @@
                 <fullName>Pafco</fullName>
                 <default>false</default>
                 <label>Pafco</label>
+            </value>
+            <value>
+                <fullName>Pease Hills</fullName>
+                <default>false</default>
+                <label>Pease Hills</label>
+            </value>
+            <value>
+                <fullName>Peel</fullName>
+                <default>false</default>
+                <label>Peel</label>
             </value>
             <value>
                 <fullName>Pembridge</fullName>
@@ -212,6 +327,16 @@
                 <label>RBC</label>
             </value>
             <value>
+                <fullName>Regional Municipality of York</fullName>
+                <default>false</default>
+                <label>Regional Municipality of York</label>
+            </value>
+            <value>
+                <fullName>Regional Municipalty of York</fullName>
+                <default>false</default>
+                <label>Regional Municipalty of York</label>
+            </value>
+            <value>
                 <fullName>Royal &amp; Sun Alliance (RSA)</fullName>
                 <default>false</default>
                 <label>Royal &amp; Sun Alliance (RSA)</label>
@@ -227,6 +352,36 @@
                 <label>SGI</label>
             </value>
             <value>
+                <fullName>SIR - AC</fullName>
+                <default>false</default>
+                <label>SIR - AC</label>
+            </value>
+            <value>
+                <fullName>SIR - Bell</fullName>
+                <default>false</default>
+                <label>SIR - Bell</label>
+            </value>
+            <value>
+                <fullName>SIR - City of Toronto</fullName>
+                <default>false</default>
+                <label>SIR - City of Toronto</label>
+            </value>
+            <value>
+                <fullName>SIR - Fly Jamaica</fullName>
+                <default>false</default>
+                <label>SIR - Fly Jamaica</label>
+            </value>
+            <value>
+                <fullName>SIR - J&amp;J</fullName>
+                <default>false</default>
+                <label>SIR - J&amp;J</label>
+            </value>
+            <value>
+                <fullName>SIR - Medtronic Inc.</fullName>
+                <default>false</default>
+                <label>SIR - Medtronic Inc.</label>
+            </value>
+            <value>
                 <fullName>Sovereign</fullName>
                 <default>false</default>
                 <label>Sovereign</label>
@@ -240,6 +395,11 @@
                 <fullName>State Farm</fullName>
                 <default>false</default>
                 <label>State Farm</label>
+            </value>
+            <value>
+                <fullName>Sun Life</fullName>
+                <default>false</default>
+                <label>Sun Life</label>
             </value>
             <value>
                 <fullName>TD</fullName>
@@ -285,6 +445,11 @@
                 <fullName>ZENITH</fullName>
                 <default>false</default>
                 <label>ZENITH</label>
+            </value>
+            <value>
+                <fullName>Zurich</fullName>
+                <default>false</default>
+                <label>Zurich</label>
             </value>
         </valueSetDefinition>
     </valueSet>

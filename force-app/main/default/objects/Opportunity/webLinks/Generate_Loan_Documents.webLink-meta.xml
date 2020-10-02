@@ -10,23 +10,23 @@
     <url>//Ensure the button at the visualforce page RDS_Opportunity has the same parameters to ensure a consistent user experience.
 {!REQUIRESCRIPT(&quot;/soap/ajax/35.0/connection.js&quot;)} 
 //Define the Conga URL and its parameters
-var BaseUrl = &#39;/apex/APXTConga4__Conga_Composer?id={!Opportunity.Id}&#39;;
-var BackgroundMode = &#39;&amp;DS7=3&amp;DefaultPDF=1&#39;;
-var LumpSum = &#39;&amp;TemplateID=a0x0L00000KhmJu&#39;;
-var Facility = &#39;&amp;TemplateID=a0x0L00000KhmJz&#39;;
+var BaseUrl = &apos;/apex/APXTConga4__Conga_Composer?id={!Opportunity.Id}&apos;;
+var BackgroundMode = &apos;&amp;DS7=3&amp;DefaultPDF=1&apos;;
+var LumpSum = &apos;&amp;TemplateID=a0x0L00000KhmJu&apos;;
+var Facility = &apos;&amp;TemplateID=a0x0L00000KhmJz&apos;;
 var PrepUrl = BaseUrl + BackgroundMode;
 
 //Query the required fields
-var result = sforce.connection.query(&quot;SELECT Id, Type_of_Loan__c FROM Opportunity WHERE Id =&#39;{!Opportunity.Id}&#39;&quot;); 
+var result = sforce.connection.query(&quot;SELECT Id, Type_of_Loan__c FROM Opportunity WHERE Id =&apos;{!Opportunity.Id}&apos;&quot;); 
 var records = result.getArray(&quot;records&quot;); 
 
 //Assign the field values to variables to be used in validations
 var TypeOfLoan = records[0].Type_of_Loan__c;
 
-if(TypeOfLoan == &#39;Lump-Sum&#39;){
+if(TypeOfLoan == &apos;Lump-Sum&apos;){
 	FinalUrl = PrepUrl + LumpSum;
 	window.open(FinalUrl, &quot;_blank&quot;,&quot;width=350,height=150,menubar=0&quot;);
-}else if(TypeOfLoan == &#39;Facility Loan&#39;){
+}else if(TypeOfLoan == &apos;Facility Loan&apos;){
 	FinalUrl = PrepUrl + Facility;
 	window.open(FinalUrl, &quot;_blank&quot;,&quot;width=350,height=150,menubar=0&quot;);
 }else{

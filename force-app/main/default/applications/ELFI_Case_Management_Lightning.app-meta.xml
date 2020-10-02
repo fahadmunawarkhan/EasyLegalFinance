@@ -13,266 +13,6 @@
     <navType>Standard</navType>
     <profileActionOverrides>
         <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter External User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Admin</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Standard</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>StandardAul</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>SolutionManager</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>ReadOnly</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>MarketingProfile</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Guest License User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Sales Profile</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Sales</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Case Management</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Admin</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Standard</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>StandardAul</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>SolutionManager</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ReadOnly</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>MarketingProfile</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Guest License User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Sales Profile</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Sales</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Case Management</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Operations</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ELFI - Admin - Sales</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>dominik</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>ContractManager</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter Moderator User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter Free User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>System Admin - Legacy Layouts</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>Custom_Home_Page</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>ELFI - Case Management</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
         <content>Account_Custom</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
@@ -438,61 +178,30 @@
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
         <type>Flexipage</type>
-        <profile>ELFI - Operations</profile>
+        <profile>SolutionManager</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
         <type>Flexipage</type>
-        <profile>ELFI - Admin - Sales</profile>
+        <profile>StandardAul</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
         <type>Flexipage</type>
-        <profile>dominik</profile>
+        <profile>Standard</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>ContractManager</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter Moderator User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter Free User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.General_Business</recordType>
         <type>Flexipage</type>
         <profile>System Admin - Legacy Layouts</profile>
     </profileActionOverrides>
@@ -501,31 +210,6 @@
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
-        <recordType>Account.Law_Firm</recordType>
-        <type>Flexipage</type>
-        <profile>Chatter External User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>Custom_Home_Page</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>ELFI - Operations</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>Custom_Home_Page</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>ELFI - Admin - Sales</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>Custom_Home_Page</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
         <type>Flexipage</type>
         <profile>Admin</profile>
     </profileActionOverrides>
@@ -535,23 +219,151 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>Chatter External User</profile>
+        <profile>ReadOnly</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
-        <content>Account_Standard</content>
+        <content>Lawyer_Contact_Record_Page</content>
         <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
-        <type>Flexipage</type>
-        <profile>Chatter Free User</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Account_Standard</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Account</pageOrSobjectType>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
         <type>Flexipage</type>
         <profile>Chatter Moderator User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ContractManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>dominik</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Admin - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales Profile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>Guest License User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>MarketingProfile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>ReadOnly</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>SolutionManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>StandardAul</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>Standard</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>System Admin - Legacy Layouts</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
@@ -631,7 +443,7 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>ReadOnly</profile>
+        <profile>Chatter External User</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
@@ -639,7 +451,7 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>SolutionManager</profile>
+        <profile>Chatter Free User</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
@@ -647,21 +459,50 @@
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>StandardAul</profile>
+        <profile>Chatter Moderator User</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
-        <content>Account_Standard</content>
+        <content>Assessment_Provider_Account_Layout</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
         <type>Flexipage</type>
-        <profile>System Admin - Legacy Layouts</profile>
+        <profile>ELFI - Admin - Sales</profile>
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
-        <content>Account_Standard</content>
+        <content>Assessment_Provider_Account_Layout</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
         <type>Flexipage</type>
         <profile>Admin</profile>
     </profileActionOverrides>
@@ -670,8 +511,342 @@
         <content>Account_Standard</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Guest License User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales Profile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Admin - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>dominik</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ContractManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter Moderator User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter Free User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>System Admin - Legacy Layouts</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter External User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
         <type>Flexipage</type>
         <profile>Standard</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>StandardAul</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>SolutionManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ReadOnly</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>MarketingProfile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>Guest License User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales Profile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Admin - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>dominik</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>ContractManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter Moderator User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter Free User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Law_Firm</recordType>
+        <type>Flexipage</type>
+        <profile>System Admin - Legacy Layouts</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>MarketingProfile</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter External User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Lawyer_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Contact</pageOrSobjectType>
+        <recordType>Contact.Lawyers</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter Free User</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Standard</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>StandardAul</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>SolutionManager</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>ReadOnly</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Standard</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.General_Business</recordType>
+        <type>Flexipage</type>
+        <profile>Chatter External User</profile>
     </profileActionOverrides>
     <tabs>standard-home</tabs>
     <tabs>standard-Lead</tabs>
@@ -680,12 +855,16 @@
     <tabs>standard-Opportunity</tabs>
     <tabs>standard-report</tabs>
     <tabs>standard-Dashboard</tabs>
+    <tabs>Critical_Dates_Report</tabs>
     <tabs>Custom_Reports</tabs>
     <tabs>Drawdown__c</tabs>
     <tabs>Portfolio_Report__c</tabs>
     <tabs>Funding_Details1</tabs>
-    <tabs>Critical_Date__c</tabs>
     <tabs>Loan_Simulator</tabs>
+    <tabs>Law_Society_Review</tabs>
+    <tabs>Assessment_Loans</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>ELFI_Case_Management_UtilityBar</utilityBar>
 </CustomApplication>

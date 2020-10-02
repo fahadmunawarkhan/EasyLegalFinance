@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Interest_Accrual_Days_to_Reserve_Dt__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(Is_Reserve_Applied__c, IF((Interest_End_Date_Reserve_Date__c-Interest_Start_Date_Reserve_Date__c)&lt;0,0,(Interest_End_Date_Reserve_Date__c-Interest_Start_Date_Reserve_Date__c)+1), 0)</formula>
+    <formula>IF(AND(Is_Reserve_Applied__c, Reserve_Date__c &gt;= Interest_Start_Date_Reserve_Date__c), MAX(Interest_End_Date_Reserve_Date__c-Interest_Start_Date_Reserve_Date__c + 1, 0), 0)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Interest Accrual (Days) to Reserve Dt</label>
     <precision>18</precision>

@@ -29,28 +29,43 @@
         <aggregateTypes>Sum</aggregateTypes>
         <field>Opportunity.Admin_Fee_Roll_up__c</field>
     </columns>
+    <crossFilters>
+        <criteriaItems>
+            <column>Reference_Notes__c</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>Admin Fee,Assessment Fee</value>
+        </criteriaItems>
+        <operation>without</operation>
+        <primaryTableColumn>OPPORTUNITY_ID</primaryTableColumn>
+        <relatedTable>Drawdown__c</relatedTable>
+        <relatedTableJoinColumn>Opportunity__c</relatedTableJoinColumn>
+    </crossFilters>
     <description>Accounts without admin/assessment fee or less then equal to zero admin/assessment fee.</description>
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
-            <isUnlocked>true</isUnlocked>
-            <operator>notEqual</operator>
-            <value>Closed No Loan</value>
-        </criteriaItems>
-        <criteriaItems>
-            <column>Opportunity.Admin_Fee__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value/>
+            <value>Closed With Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Lawyer Loan</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

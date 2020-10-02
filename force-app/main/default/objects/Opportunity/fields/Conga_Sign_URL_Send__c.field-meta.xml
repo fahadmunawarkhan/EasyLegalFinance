@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Sign_URL_Send__c</fullName>
+    <externalId>false</externalId>
+    <formula>Conga_Sign_URL_Doc_Base__c
+&amp; &quot;&amp;QueryStringField=Conga_Sign_Parameters__c&quot;
+&amp; &quot;&amp;CSBusinessUnit=&quot; &amp; TEXT(Account.Business_Unit__c) 
+&amp; &quot;&amp;CSRecipient1=&quot; &amp; Primary_Contact__c 
+&amp; &quot;&amp;csRole1=SIGNER&quot;
+&amp; &quot;&amp;CSRecipient2=&quot; &amp; Lawyer__c
+&amp; &quot;&amp;csRole2=SIGNER&quot;
+&amp; &quot;&amp;DS7=1142&quot;
+&amp; &quot;&amp;CSVisible=1&quot;
+&amp; &quot;&amp;CSRoutingType=SERIAL&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Sign URL Send</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
