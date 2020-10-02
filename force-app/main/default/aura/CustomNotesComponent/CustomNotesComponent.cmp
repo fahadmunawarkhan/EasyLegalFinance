@@ -2,7 +2,7 @@
   @description       : 
   @author            : ChangeMeIn@UserSettingsUnder.SFDoc
   @group             : 
-  @last modified on  : 10-01-2020
+  @last modified on  : 10-02-2020
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
   Modifications Log 
   Ver   Date         Author                               Modification
@@ -42,7 +42,7 @@
                             <div class="slds-truncate" title="Column 1">Created By</div>
                         </th>
                         <aura:if isTrue="{!v.currentUser.Modify_Notes__c}">
-                            <th style="width:13%">
+                            <th style="width:19%">
                                 <div class="slds-truncate" title=""></div>
                             </th>
                         </aura:if>
