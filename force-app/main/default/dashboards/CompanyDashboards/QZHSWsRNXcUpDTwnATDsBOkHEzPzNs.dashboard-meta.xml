@@ -19,12 +19,14 @@
                     <column>RowCount</column>
                 </chartSummary>
                 <componentType>Donut</componentType>
+                <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>true</expandOthers>
                 <groupingColumn>BucketField_94690964</groupingColumn>
+                <groupingSortProperties/>
                 <header>Size of Loans (by number of loans)</header>
                 <legendPosition>Right</legendPosition>
                 <report>Portfolio_Reports/ELFI_Portfolio_Stats_1_EPR</report>
@@ -49,12 +51,14 @@
                     <column>Account$Principal_Borrowed_as_of_To_Date__c</column>
                 </chartSummary>
                 <componentType>Donut</componentType>
+                <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>true</expandOthers>
                 <groupingColumn>BucketField_94690964</groupingColumn>
+                <groupingSortProperties/>
                 <header>Size of Loans (by $ allocated)</header>
                 <legendPosition>Right</legendPosition>
                 <maxValuesDisplayed>6</maxValuesDisplayed>

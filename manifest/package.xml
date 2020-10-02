@@ -1,290 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>AccountNotesPrintableCtrl</members>
-        <members>AccountNotesPrintableCtrlTest</members>
-        <members>AC_ScenarioTool</members>
-        <members>AC_ScenarioToolTest</members>
-        <members>AmendmentTriggerHandler</members>
-        <members>AmendmentTriggerHandlerTest</members>
-        <members>AssessmentProviderSummaryReportCtlr</members>
-        <members>AssessmentProviderSummaryReportCtlrTest</members>
-        <members>AssessmentSummaryReportCtlr</members>
-        <members>AssessmentSummaryReportCtlrTest</members>
-        <members>BadDebtSummaryReportCtlr</members>
-        <members>BadDebtSummaryReportCtlrTest</members>
-        <members>BankAccountsController</members>
-        <members>BankAccountsControllerTest</members>
-        <members>BatchCriticalDatesPayoutRecalculateTest</members>
-        <members>BatchCriticalDatesPayoutRecalculation</members>
-        <members>Batch_MergeAdminFeeWithOpptyDrawdown</members>
-        <members>Batch_MergeAdminFeeWithOpptyDrawdownTest</members>
-        <members>BatchUpdateOpportunityFields</members>
-        <members>BirdEyeData</members>
-        <members>Constants</members>
-        <members>contactTriggerHandler</members>
-        <members>ContactTriggerHandlerTest</members>
-        <members>CriticalDateReportCtlr</members>
-        <members>CriticalDateReportCtlrTest</members>
-        <members>criticalDateTriggerHandler</members>
-        <members>criticalDateTriggerHandlerTest</members>
-        <members>CSL_AssessmentOpportunityCtlr</members>
-        <members>CSL_FacilityDrawdownCtlr</members>
-        <members>CSL_FacilityDrawdownCtlrTest</members>
-        <members>CSL_OpportunityServiceProviderCtlr</members>
-        <members>CSL_OpportunityServiceProviderCtlrTest</members>
-        <members>CustomerViewComponentCtlr</members>
-        <members>CustomerViewComponentCtlrTest</members>
-        <members>customLookUpController</members>
-        <members>customLookUpControllerTest</members>
-        <members>DatabaseErrorAuraHandledExceptionHelper</members>
-        <members>DataTableField</members>
-        <members>DeletePaymentAllocations</members>
-        <members>DeletePaymentAllocationsTest</members>
-        <members>deleteScheduledFacilityPayments</members>
-        <members>DependentPicklistCtrl</members>
-        <members>DependentPicklistCtrlTest</members>
-        <members>dlrs_ContactTest</members>
-        <members>dlrs_Drawdown_Payment_AllocationTest</members>
-        <members>dlrs_DrawdownTest</members>
-        <members>dlrs_dsfs_DocuSign_StatusTest</members>
-        <members>dlrs_Opportunity_Service_ProviderTest</members>
-        <members>dlrs_OpportunityTest</members>
-        <members>dlrs_Scheduled_PaymentTest</members>
-        <members>dlrs_TaskTest</members>
-        <members>DrawdownHelper</members>
-        <members>DrawdownHelperTest</members>
-        <members>DrawdownTriggerHandler</members>
-        <members>DrawdownTriggerHandlerTest</members>
-        <members>EFTFile</members>
-        <members>EFTFileDetail</members>
-        <members>EFTFileErrorListException</members>
-        <members>EFTFileException</members>
-        <members>EFTFileHeader</members>
-        <members>EFTFileTest</members>
-        <members>EFTFileTrailer</members>
-        <members>EFTHelper</members>
-        <members>ELUtilTest</members>
-        <members>FetchCustomPermissions</members>
-        <members>FinancialReportCalculateData</members>
-        <members>FinancialReportCalculateDataTest</members>
-        <members>FinancialSummaryReportCtrl</members>
-        <members>FinancialSummaryReportCtrlTest</members>
-        <members>FirmHandler</members>
-        <members>FirmHandlerTest</members>
-        <members>FObject</members>
-        <members>FObjectTest</members>
-        <members>ForceeaException</members>
-        <members>FundingDashboardCtrl</members>
-        <members>FundingDashboardCtrlTest</members>
-        <members>FundingDashboardReportVFCtlr</members>
-        <members>FundingDashboardReportVFCtlrTest</members>
-        <members>FundingDetailsComponentCtlr</members>
-        <members>FundingDetailsComponentCtlrTest</members>
-        <members>FundingSummaryCtrl</members>
-        <members>HttpRestClient</members>
-        <members>InterestCalculatorTests</members>
-        <members>LawFirmCountController</members>
-        <members>LawFirmCountControllerTest</members>
-        <members>LawFirmSalesSummaryComponentCtrl</members>
-        <members>LawFirmSalesSummaryComponentCtrlTest</members>
-        <members>LawfirmSalesSummaryPayoutReportCtlr</members>
-        <members>LawfirmSalesSummaryPayoutReportCtlrTest</members>
-        <members>LawfirmSummaryCtlr</members>
-        <members>LawfirmSummaryCtlrTest</members>
-        <members>LawyerCountController</members>
-        <members>LawyerCountControllerTest</members>
-        <members>LawyerSalesSummaryComponentCtrl</members>
-        <members>LawyerSalesSummaryComponentCtrlTest</members>
-        <members>LawyerSalesSummaryPayoutReportCtlr</members>
-        <members>LawyerSalesSummaryPayoutReportCtlrTest</members>
-        <members>LawyerSummaryCtlr</members>
-        <members>LawyerSummaryCtlrTest</members>
-        <members>leadHelper</members>
-        <members>leadHelperTest</members>
-        <members>LeadsPerMonthReportCtlr</members>
-        <members>LeadsPerMonthReportCtlrTest</members>
-        <members>LeadsPerMonthReportPrintController</members>
-        <members>LeadsPerMonthReportPrintControllerTest</members>
-        <members>LeadTriggerHandler</members>
-        <members>LeadTriggerHandlerTest</members>
-        <members>LeadViewComponentCtlr</members>
-        <members>LeadViewComponentCtlrTest</members>
-        <members>LoanProgressionReportCtlr</members>
-		<members>LoanProgressionReportCtlrTest</members>
-        <members>LoanSimulatorController</members>
-        <members>LoanSimulatorControllerTest</members>
-        <members>MassUpdater</members>
-        <members>MassUpdateSimpleController</members>
-        <members>MassUpdateSimpleControllerTest</members>
-        <members>NewLeadComponentCtlr</members>
-        <members>NewLeadComponentCtlrTest</members>
-        <members>NotYetImplementedException</members>
-        <members>OpportunityViewComponentCtlr</members>
-        <members>OpportunityViewComponentCtlrTest</members>
-        <members>PaymentAllocator</members>
-        <members>PaymentAllocatorTest</members>
-        <members>PaymentController</members>
-        <members>PaymentControllerTest</members>
-        <members>PaymentHelper</members>
-        <members>PaymentRejectionTriggerHandler</members>
-        <members>PaymentRejectionTriggerHandlerTest</members>
-        <members>PaymentSummaryComponentCtlr</members>
-        <members>PaymentSummaryComponentCtrlTest</members>
-        <members>PayoutStatementController</members>
-        <members>PayoutStatementControllerTest</members>
-        <members>PortfolioReportCalculateData</members>
-        <members>PortfolioReportCalculateDataTest</members>
-        <members>QueueableCricitalDateRecalculate</members>
-        <members>RDS_AccountPrintableViewCtlr</members>
-        <members>RDS_AccountPrintableViewCtlrTest</members>
-        <members>RDS_CustomerCtlr</members>
-        <members>RDS_CustomerCtlrTest</members>
-        <members>RDS_CustomerDisapatcherTest</members>
-        <members>RDS_CustomerDispatcher</members>
-        <members>RDS_DispatcherComponentControllerApex</members>
-        <members>RDS_DispatcherComponentControllerTest</members>
-        <members>RDS_LeadEditCtlr</members>
-        <members>RDS_LeadEditCtlrTest</members>
-        <members>RDS_LeadViewCtlr</members>
-        <members>RDS_LeadViewCtlrTest</members>
-        <members>RDS_OpportunityCtlr</members>
-        <members>RDS_OpportunityCtlrTest</members>
-        <members>RDS_SObject</members>
-        <members>RDS_Util</members>
-        <members>reportComponentController</members>
-        <members>ReportingViewComponentCtlr</members>
-        <members>ReportingViewComponentCtlrTest</members>
-        <members>ScheduledPaymentHelper</members>
-        <members>ScheduledPaymentHelperTest</members>
-        <members>ScheduledPaymentTriggerHandler</members>
-        <members>ScheduledPaymentTriggerHandlerTest</members>
-        <members>SchemaHelper</members>
-        <members>SendCustomerDataToBirdEye</members>
-        <members>SendCustomerDataToBirdEyeMock</members>
-        <members>SendCustomerDataToBirdEyeTest</members>
-        <members>SystemMonitoring_DrawdownsAdminFee</members>
-        <members>TestDataFactory</members>
-        <members>TestUpdater</members>
-        <members>TriggerHandler</members>
-        <members>TriggerHandler_Test</members>
-        <members>TriggerHelper</members>
-        <members>PermissionAssigner</members>
-        <members>PermissionAssignerTest</members>
-        <members>UserTriggerHandler</members>
-        <members>LawSocietyReviewController</members>
-        <members>LawSocietyReviewControllerTest</members>
-        <members>LawyerLawSocietyPageTabCtlr</members>
-        <members>LawyerLawSocietyPageTabCtlrTest</members>
-        <members>OpportunityTriggerHandler</members>         
-        <members>OpportunityViewComponentCtlr</members>  
-        <members>AssessmentProviderScheduleCtlr</members>
-        <members>AssessmentProviderScheduleTriggerHandler</members>
-        <members>AssessmentProviderScheduleCtlrTest</members>
-        <members>AssessmentProviderScheduleTriggerTest</members>
-        <members>LawyerAvailableCreditComponentCtlrTest</members>
-        <members>Batch_UpdatePayoutDateOnOppty</members>
-        <members>Batch_UpdateSelectedForAssessmentPayout</members>
-        <members>GenerateConsolidatedAssessmentPayoutCtlr</members>
-        <members>GenerateConsolidatedAssessmentPayoutTest</members>
-        <members>PreApprovedInvoiceCtlr</members>
-        <members>PreApprovedInvoiceCtlrTest</members>
-        <members>ApprovelProcessUnlock</members>
-        <members>ApprovelProcessUnlockTest</members>
-        <members>RecallApprovalProcess</members>
-        <members>LawyerSalesSummaryViewAllCtlr</members>
-        <members>LawyerSalesSummaryViewAllCtlrTest</members>
-        <members>LawFirmSalesSummaryViewAllCtlr</members>
-        <members>LawFirmSalesSummaryViewAllCtlrTest</members>
-        <members>LawyerSummaryGeneratePayoutBalance</members>
-        <members>LawyerSummaryGeneratePayoutBalanceTest</members>
-        <members>FundingSummaryReportCtlr<members>
-        <members>FundingSummaryReportCtlrTest</members>
-        <members>LawfirmSummaryGeneratePayoutBalance<members>
-        <members>LawfirmSummaryGeneratePayoutBalanceTest</members>
+        <members>*</members>
         <name>ApexClass</name>
     </types>
     <types>
+		<members>*</members>
         <members>RDS_Picklist</members>
         <name>ApexComponent</name>
     </types>
     <types>
-        <members>AC_AccountNotes</members>
-        <members>AC_AccountPrintableView</members>
-        <members>AccountNotesPrintable</members>
-        <members>CSL_FacilityDrawdown</members>
-        <members>CSL_LumpSumDrawdown</members>
-        <members>CSL_OpportunityServiceProvider</members>
-        <members>CSL_Re_Assessments</members>
-        <members>FundingDashboardPrintReport</members>
-        <members>FundingDashboardViewAll</members>
-        <members>LawFirmSalesSummaryPayoutReportVF</members>
-        <members>LawyerSalesSummaryPayoutReportVF</members>
-        <members>LeadsPerMonthReportPrint</members>
-        <members>MassEditAccount</members>
-        <members>MassEditAsset</members>
-        <members>MassEditCampaign</members>
-        <members>MassEditCase</members>
-        <members>MassEditContact</members>
-        <members>MassEditContract</members>
-        <members>MassEditLead</members>
-        <members>MassEditOpp</members>
-        <members>MassEditProduct</members>
-        <members>MassEditSolution</members>
-        <members>MassUpdateAccount</members>
-        <members>MassUpdateAsset</members>
-        <members>MassUpdateCampaign</members>
-        <members>MassUpdateCase</members>
-        <members>MassUpdateContact</members>
-        <members>MassUpdateContract</members>
-        <members>MassUpdateLead</members>
-        <members>MassUpdateOpportunity</members>
-        <members>MassUpdateProduct2</members>
-        <members>MassUpdateSolution</members>
-        <members>PayoutStatement</members>
-        <members>RDS_AccountPrintableView</members>
-        <members>RDS_ApplicantPersonalInformation</members>
-        <members>RDS_ContactDispatcher</members>
-        <members>RDS_Customer</members>
-        <members>RDS_CustomerDispatcher</members>
-        <members>RDS_CustomerV1</members>
-        <members>RDS_LeadEdit</members>
-        <members>RDS_LeadPrintableView</members>
-        <members>RDS_LeadView</members>
-        <members>RDS_Opportunity</members>
-        <members>RDS_OpportunityDispatcher</members>
-        <members>Template_MassEditCustomObject</members>
-        <members>Template_MassUpdateCustomObject</members>
-        <members>LawSocietyReviewPrint</members>
-        <memebers>GenerateConsolidatedAssessmentPayout</memebers>
-        <memebers>LawyerSalesSummaryPrintPDF</memebers>
-        <memebers>LawyerSalesSummaryViewAllVF</memebers>
-        <memebers>LawFirmSalesSummaryViewAllVF</memebers>
-        <memebers>LawFirmSalesSummaryPrintPDF</memebers>
+        <members>*</members>
         <name>ApexPage</name>
     </types>
     <types>
-        <members>AmendmentTrigger</members>
-        <members>ContactTrigger</members>
-        <members>criticalDateTrigger</members>
-        <members>dlrs_ContactTrigger</members>
-        <members>dlrs_Drawdown_Payment_AllocationTrigger</members>
-        <members>dlrs_DrawdownTrigger</members>
-        <members>dlrs_dsfs_DocuSign_StatusTrigger</members>
-        <members>dlrs_Opportunity_Service_ProviderTrigger</members>
-        <members>dlrs_OpportunityTrigger</members>
-        <members>dlrs_Scheduled_PaymentTrigger</members>
-        <members>dlrs_TaskTrigger</members>
-        <members>DrawdownTrigger</members>
-        <members>FirmTrigger</members>
-        <members>handleLeadTrigger</members>
-        <members>LeadTrigger</members>
-        <members>PaymentRejectionTrigger</members>
-        <members>PortfolioReportTrigger</members>
-        <members>ScheduledPaymentTrigger</members>
-        <members>UserTrigger</members>
-        <members>OpportunityTrigger</members>
-        <members>AssessmentProviderScheduleTrigger</members>
+        <members>*</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -292,63 +22,7 @@
         <name>AssignmentRule</name>
     </types>
     <types>
-        <members>appEvent</members>
-        <members>BadDebtSummaryReport</members>
-        <members>bankAccounts</members>
-        <members>CheckboxUtil</members>
-        <members>createPayments</members>
-        <members>CriticalDateComponent</members>
-        <members>CustomerViewComponent</members>
-        <members>CustomerViewComponent1</members>
-        <members>CustomerViewComponentApp</members>
-        <members>customLookup</members>
-        <members>customLookupResult</members>
-        <members>FinancialSummaryComponent</members>
-        <members>FundingDashboardComponent</members>
-        <members>FundingDetailsComponent</members>
-        <members>FundingDetailsEFTSetupTableComponent</members>
-        <members>FundingDetailsLoanSetupCheckComponent</members>
-        <members>FundingSummary</members>
-        <members>LawFirmCount</members>
-        <members>LawFirmSalesSummary</members>
-        <members>lawfirmSummary</members>
-        <members>LawyerSalesSummary</members>
-        <members>LawyerSummary</members>
-        <members>LawyerSummaryWithDateRange</members>
-        <members>LeadEditComponent</members>
-        <members>LeadPrintableView</members>
-        <members>LeadsPerMonthReport</members>
-        <members>LeadViewComponent</members>
-        <members>LoanProgressionReport</members>
-        <members>loanSimulator</members>
-        <members>NewLeadComponent</members>
-        <members>OpportunityViewComponent</members>
-        <members>PaymentActionsComponent</members>
-        <members>PaymentActionSelectedEvent</members>
-        <members>PaymentActionValidatedEvent</members>
-        <members>PaymentSummaryComponent</members>
-        <members>payoutDetails</members>
-        <members>printPayments</members>
-        <members>RDS_DispatcherComponent</members>
-        <members>ReportingViewComponent</members>
-        <members>selectedsObjectRecordEvent</members>
-        <members>sethDebugApp</members>
-        <members>Test</members>
-        <members>threeRegionHomeTemplate</members>
-        <members>viewPayments</members>
-        <members>AssessmentSummaryReport</members>
-        <members>AssessmentLoans</members>
-        <members>AssessmentProviderSummaryReport</members>
-        <members>LawyerAssessmentOpportunities</members>
-        <members>LawyerApprovedCreditHistory</members>
-        <members>LawyerAvailableCreditComponent</members>
-        <members>lawSocietyReviewReport</members>
-        <members>LawyerLawSocietyPageTab</members>
-        <members>AssessmentProviderSchedule</members>
-        <members>AssessmentScheduleLawyerTab</members>
-        <members>EditAssessmentProviderSchedule</members>
-        <members>PreApprovedInvoices</members>
-        <members>FundingSummaryReport</members>
+        <members>*</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -356,6 +30,7 @@
         <name>AutoResponseRule</name>
     </types>
     <types>
+		<members>*</members>
         <members>Lead.Customer Lead Process</members>
         <members>Lead.Lawyer Lead Process</members>
         <members>Opportunity.Client Sales Fast-Track Process</members>
@@ -364,24 +39,29 @@
         <name>BusinessProcess</name>
     </types>
     <types>
+		<members>*</members>
         <members>CloudPhoneAppAdapter</members>
         <members>LightningCallCenterExport</members>
         <name>CallCenter</name>
     </types>
     <types>
+		<members>*</members>
         <members>Internal Community</members>
         <name>Community</name>
     </types>
     <types>
+		<members>*</members>
         <members>Lead.No_Fields</members>
         <name>CompactLayout</name>
     </types>
     <types>
+		<members>*</members>
         <members>gceEk9oqi</members>
         <members>gceEk9oqi1</members>
         <name>ContentAsset</name>
     </types>
     <types>
+		<members>*</members>
         <members>Administration_Tools</members>
         <members>ELFI_Case_Management_Lightning</members>
         <members>ELFI_Sales_Stream_Lightning</members>
@@ -391,6 +71,7 @@
         <name>CustomApplication</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account.Account_Type__c</members>
         <members>Account.Active_Loan_Count__c</members>
         <members>Account.Additional_Information__c</members>
@@ -1402,6 +1083,7 @@
         <name>CustomLabel</name>
     </types>
     <types>
+		<members>*</members>
         <members>Bird_Eye_Settings.Bird_Eye_Settings</members>
         <members>dlrs__LookupRollupSummary2.ContactLastActivityBy</members>
         <members>dlrs__LookupRollupSummary2.ContactLastActivityDate</members>
@@ -1448,6 +1130,7 @@
         <name>CustomMetadata</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c</members>
         <members>Actual_Sales_by_Month_Report__c</members>
         <members>Amendment__c</members>
@@ -1498,12 +1181,14 @@
         <name>CustomObject</name>
     </types>
     <types>
+		<members>*</members>
         <members>Can_Process_Scheduled_Payments</members>
         <members>Can_Schedule_Payments</members>
         <members>EFT_Permission</members>
         <name>CustomPermission</name>
     </types>
     <types>
+		<members>*</members>
         <members>About_Mass_Update_and_Mass_Edit</members>
         <members>Assessment_Loans</members>
         <members>Critical_Date__c</members>
@@ -1529,6 +1214,7 @@
         <name>CustomTab</name>
     </types>
     <types>
+		<members>*</members>
         <members>CompanyDashboards</members>
         <members>CompanyDashboards/AdoptionDashboard</members>
         <members>CompanyDashboards/CompanyPerformanceDashboard</members>
@@ -1543,18 +1229,21 @@
         <name>Dashboard</name>
     </types>
     <types>
+		<members>*</members>
         <members>ELFI_Email_Templates</members>
         <members>ELFI_Email_Templates/ELFIWebtoLeademailresponse</members>
         <members>ELFI_Email_Templates/eSignature_Project</members>
         <name>EmailTemplate</name>
     </types>
     <types>
+		<members>*</members>
         <members>Bank_Account__c.BankAccounts</members>
         <members>Scheduled_Payment__c.PrintPayments</members>
         <members>Scheduled_Payment__c.ViewPayments</members>
         <name>FieldSet</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account_Custom</members>
         <members>Account_Standard</members>
         <members>Case_Management_Home</members>
@@ -1574,6 +1263,7 @@
         <name>FlexiPage</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account_Residency_bump_Opportunities</members>
         <members>Bank_Account_Create_Edit_Handler</members>
         <members>Contact_Account_Address_Update_Sync</members>
@@ -1599,6 +1289,7 @@
         <name>Flow</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account_Residency_bump_Opportunities</members>
         <members>Bank_Account_Create_Edit_Handler</members>
         <members>Contact_Account_Address_Update_Sync</members>
@@ -1624,6 +1315,7 @@
         <name>FlowDefinition</name>
     </types>
     <types>
+		<members>*</members>
         <members>Business_Unit</members>
         <members>Legal_Role</members>
         <members>Products_of_Interest</members>
@@ -1631,10 +1323,12 @@
         <name>GlobalValueSet</name>
     </types>
     <types>
+		<members>*</members>
         <members>Dashboard Home Page Default</members>
         <name>HomePageLayout</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c-abc Layout</members>
         <members>Account-Account Layout - Assessment Provider</members>
         <members>Account-Account Layout</members>
@@ -1708,15 +1402,18 @@
         <name>Layout</name>
     </types>
     <types>
+		<members>*</members>
         <members>LeadConvertSettings</members>
         <name>LeadConvertSettings</name>
     </types>
     <types>
+		<members>*</members>
         <members>ELFI_Logo</members>
         <members>ELF_Letterhead</members>
         <name>Letterhead</name>
     </types>
     <types>
+		<members>*</members>
         <members>additionalPayeeAccountForm</members>
         <members>additionalPayeeAccountsTable</members>
         <members>auraPubsub</members>
@@ -1772,6 +1469,7 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c.All</members>
         <members>Account.Adesse_Legal_Services</members>
         <members>Account.AllAccounts</members>
@@ -1885,6 +1583,7 @@
         <name>MatchingRule</name>
     </types>
     <types>
+		<members>*</members>
         <members>Can_Process_Payments</members>
         <members>Converted_Leads</members>
         <members>EFT_Permission</members>
@@ -1896,6 +1595,7 @@
         <name>PermissionSet</name>
     </types>
     <types>
+		<members>*</members>
         <members>Admin</members>
         <members>Chatter External User</members>
         <members>Chatter Free User</members>
@@ -1917,6 +1617,7 @@
         <name>Profile</name>
     </types>
     <types>
+		<members>*</members>
         <members>Case.NewChildCase</members>
         <members>CollaborationGroup.NewGroupMember</members>
         <members>CollaborationGroup.NewGroupRecord</members>
@@ -1939,6 +1640,7 @@
         <name>QuickAction</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account.Assessment_Provider</members>
         <members>Account.Client</members>
         <members>Account.General_Business</members>
@@ -1962,6 +1664,7 @@
         <name>RecordType</name>
     </types>
     <types>
+		<members>*</members>
         <members>Bird_Eye_Site</members>
         <members>Cirrus_Files_Metadata_API</members>
         <members>Conga_Front_End</members>
@@ -1974,6 +1677,7 @@
         <name>RemoteSiteSetting</name>
     </types>
     <types>
+		<members>*</members>
         <members>ELFI_Company_Reports/Active_Loans_w_o_Drawdowns</members>
         <members>ELFI_Company_Reports/Activities_with_Opportunities_Report</members>
         <members>ELFI_Company_Reports/Alberta_Sales_Campgain</members>
@@ -2148,6 +1852,7 @@
         <name>Report</name>
     </types>
     <types>
+		<members>*</members>
         <members>Accounts_and_Opportunities</members>
         <members>Bank_Accounts</members>
         <members>Drawdown_Custom_Report</members>
@@ -2165,6 +1870,7 @@
         <name>ReportType</name>
     </types>
     <types>
+		<members>*</members>
         <members>Operations</members>
         <members>Operations_Team</members>
         <members>President</members>
@@ -2172,6 +1878,7 @@
         <name>Role</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c</members>
         <members>Actual_Sales_by_Month_Report__c</members>
         <members>Bad_Debt_Summary_Report__c</members>
@@ -2199,6 +1906,7 @@
         <name>SharingRules</name>
     </types>
     <types>
+		<members>*</members>
         <members>Chartjs</members>
         <members>Chartjscss</members>
         <members>ELFI_Logo</members>
@@ -2231,6 +1939,7 @@
         <name>StaticResource</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c</members>
         <members>Account</members>
         <members>Amendment__c</members>
@@ -2329,6 +2038,7 @@
         <name>TopicsForObjects</name>
     </types>
     <types>
+		<members>*</members>
         <members>Account.ACVR01_Ownership_Control</members>
         <members>Bank_Account__c.Account_Only_Number_and_Separators</members>
         <members>Bank_Account__c.Bank_Number_Format</members>
@@ -2361,6 +2071,7 @@
         <name>ValidationRule</name>
     </types>
     <types>
+		<members>*</members>
         <members>abc__c.Mass_Edit</members>
         <members>abc__c.Mass_t</members>
         <members>abc__c.Mass_Update</members>
@@ -2439,8 +2150,8 @@
         <name>WebLink</name>
     </types>
     <types>
+		<members>*</members>
         <name>WorkflowRule</name>
-        <members>*</members>
     </types>
     <types>
         <members>*</members>

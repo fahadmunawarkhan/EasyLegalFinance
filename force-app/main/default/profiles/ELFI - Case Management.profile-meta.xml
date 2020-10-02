@@ -8355,13 +8355,6 @@
         <apexPage>Template_MassUpdateCustomObject</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
-    <profileActionOverrides>
-        <actionName>Tab</actionName>
-        <content>Custom_Home_Page</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>standard-home</pageOrSobjectType>
-        <type>Flexipage</type>
-    </profileActionOverrides>
     <recordTypeVisibilities>
         <default>false</default>
         <recordType>Account.Assessment_Provider</recordType>

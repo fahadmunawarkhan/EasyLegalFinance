@@ -20,6 +20,7 @@
                 <drillToDetailEnabled>false</drillToDetailEnabled>
                 <enableHover>false</enableHover>
                 <expandOthers>false</expandOthers>
+                <groupingSortProperties/>
                 <header>Funding Summary</header>
                 <report>Supporting_Reports/Accounts_and_Opportunities_Report_ZSd</report>
                 <showPercentage>false</showPercentage>

@@ -47,6 +47,16 @@
         </criteriaItems>
     </filter>
     <format>Summary</format>
+    <formattingRules>
+        <columnName>FORMULA1</columnName>
+        <values>
+            <rangeUpperBound>1.0</rangeUpperBound>
+        </values>
+        <values>
+            <backgroundColor>#B50E03</backgroundColor>
+            <rangeUpperBound>60.0</rangeUpperBound>
+        </values>
+    </formattingRules>
     <groupingsDown>
         <aggregateType>RowCount</aggregateType>
         <dateGranularity>Day</dateGranularity>
