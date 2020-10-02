@@ -19,6 +19,16 @@
         <operation>notEqual</operation>
         <value>Payment Shortfall</value>
     </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Is_Rejected__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Is_Rejection_Drawdown__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

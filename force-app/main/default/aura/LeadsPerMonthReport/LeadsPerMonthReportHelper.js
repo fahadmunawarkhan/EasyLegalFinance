@@ -2,23 +2,29 @@
     getCalendarMin : function(component){
         var year = new Date().getFullYear() - 5;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);                  
     },
     
     getCalendarMax : function(component){
-        var year = new Date().getFullYear() + 5;
+        var year = new Date().getFullYear() + 10;
         var max = year+'-12-31';
         component.set("v.calendarMax", max);                
     },
+    setDefaultBussinessUnit: function(component){
+        let selectedBusinessUnitFilter = [];
+        selectedBusinessUnitFilter.push({Id:"ELFI",Name:"ELFI"});
+        component.set("v.selectedBusinessUnitFilter", selectedBusinessUnitFilter); 
+    },
 	getLeadsByMonth : function(component) {
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "");
         return new Promise($A.getCallback(
             function(resolve,reject){
                 let action = component.get('c.getLeadsByMonth');
                 action.setParams({
                     startDate : component.get('v.startDate'),
                     endDate : component.get('v.endDate'),
-                    businessUnit : component.get("v.selectedBusinessUnitFilter")
+                    businessUnit : businessunitArr
                 });
                 action.setCallback(this, function(response){
                     let state = response.getState();
@@ -78,61 +84,49 @@
         });
         toastEvent.fire();
     },
-    getPickListValues : function(component, object, field, attributeId){
-        return new Promise($A.getCallback(function(resolve, reject){
-            
-            var picklistgetter = component.get('c.getPickListValues');
-            picklistgetter.setParams({
-                objectType: object,
-                field: field
-            });
-            
-            
-            picklistgetter.setCallback(this, function(response){
-                var opts = [];
-                console.log('picklist recieved with status: '+response.getState());
-                if(response.getState() == 'SUCCESS')
-                {
-                    var allValues = response.getReturnValue();
-                    console.log('picklist recieved with values: '+JSON.stringify(response.getReturnValue()));
-                    /*if (allValues != undefined && allValues.length > 0) {
-                    opts.push({
-                        class: "optionClass",
-                        label: "All",
-                        value: "All"
-                    });
-                }*/
+    getPickListValues : function(component, object, field, attributeId, selectedFilterValue){
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            let selectedFilter = component.get("v."+selectedFilterValue);
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
                 for (var i = 0; i < allValues.length; i++) {
                     if(allValues[i].includes('===SEPERATOR==='))
                     {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i].split('===SEPERATOR===')[0],
-                            value: allValues[i].split('===SEPERATOR===')[1]
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
                         });
                     }
                     else
                     {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i],
-                            value: allValues[i]
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
                         });
                     }
                 }
-                opts.push({
-                    class: "optionClass",
-                    label: 'Consolidated',
-                    value: 'Consolidated'
-                });                
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedFilter.length; j++){
+                        if(opts[i].Name == selectedFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
                 component.set('v.'+attributeId, opts);
-                resolve(opts);
             }
+            console.log('test===>>');
+        console.log(opts);
         });
-            $A.enqueueAction(picklistgetter);
-            
-        }));
-        
+        $A.enqueueAction(picklistgetter);
     },
     getCustomSettings : function(component){
         //get report dates from custom setting
@@ -162,7 +156,7 @@
         try{
                 component.set("v.endDate", customSetting.End_Date__c == null ? defaultEndDate : customSetting.End_Date__c);
                 component.set("v.startDate", customSetting.Start_Date__c == null ? defaultStartDate : customSetting.Start_Date__c); 
-                component.set("v.selectedBusinessUnitFilter", customSetting.Business_Unit__c == null ? '' : customSetting.Business_Unit__c); 
+                // component.set("v.selectedBusinessUnitFilter", customSetting.Business_Unit__c == null ? '' : customSetting.Business_Unit__c); 
                 component.set("v.selectedBusinessUnit", customSetting.Business_Unit__c == null ? '' : customSetting.Business_Unit__c); 
                 resolve(true);
             }catch(e){
@@ -171,12 +165,13 @@
         });
     },
     setCustomSettings : function(component){
+        let businessunitArr = this.getSelectedBusinessUnitArr(component, "'");
         return new Promise($A.getCallback(function(resolve, reject){
             let action = component.get('c.saveCustomSettings');
             action.setParams({
                 startDate : component.get('v.startDate'),
                 endDate : component.get('v.endDate'),
-                businessUnit: component.get('v.selectedBusinessUnitFilter')
+                businessUnit: businessunitArr
             });
             action.setCallback(this,function(response){
                 let state = response.getState();
@@ -191,5 +186,27 @@
             });
             $A.enqueueAction(action);
         }));
+    },
+    getSelectedBusinessUnitArr : function(component, quote){
+        let selectedBusinessUnitOptions = component.find("businessunitMS").get("v.selectedOptions");
+        let businessUnitArr = [];
+        for(let i=0; i<selectedBusinessUnitOptions.length; i++){
+            businessUnitArr.push(quote + selectedBusinessUnitOptions[i].Name + quote);
+        }
+        return businessUnitArr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

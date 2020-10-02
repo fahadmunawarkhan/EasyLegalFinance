@@ -5,7 +5,7 @@
     <formula>IF(
     NOT(ISBLANK(TEXT(Scheduled_Payment__r.Status__c))),
     TEXT(Scheduled_Payment__r.Status__c),
-    &#39;Ready to Schedule&#39;
+    &apos;Ready to Schedule&apos;
 )</formula>
     <label>Status</label>
     <required>false</required>

@@ -4,6 +4,9 @@
         <field>Opportunity$Account</field>
     </columns>
     <columns>
+        <field>Opportunity$File_No__c</field>
+    </columns>
+    <columns>
         <field>Opportunity$Name</field>
     </columns>
     <columns>
@@ -21,21 +24,18 @@
     <filter>
         <criteriaItems>
             <column>Opportunity$RecordType</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity$StageName</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Re_Assessment__r$StageName</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>Closed With Loan</value>

@@ -43,8 +43,10 @@
                                                                 
                     //set restrictCommunication
                     component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No');
+
                     component.set("v.canUpdateStageStatus", component.get("v.oppObj").Stage_Status__c != undefined && component.get("v.oppObj").StageName == 'Closed With Loan' && (component.get("v.oppObj").Stage_Status__c.includes('Closed') || component.get("v.oppObj").Stage_Status__c.includes('Active')) && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
                     component.set("v.canUpdateStageName", component.get("v.oppObj").StageName == 'Closed With Loan' && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
+                    
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
                     
@@ -64,6 +66,42 @@
             
         }));
                 
+    },
+    getAccountInfo : function(component){
+        return new Promise($A.getCallback( function(resolve, reject){
+            var accountId = component.get("v.accountId");
+            var action = component.get('c.getAccountDetails');             
+            action.setParams(
+                {
+                    AccId: accountId
+                });
+            
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                console.log("statis uis " + state);
+                if (state === 'SUCCESS') {
+                    let result = response.getReturnValue();
+                    component.set("v.accObj", result);
+                    let AccObj = result;
+                    if(AccObj.Total_Amount_Loaned__c > 0 && AccObj.Projected_Loan_Value__c > 0){
+                        if(AccObj.Total_Amount_Loaned__c / AccObj.Projected_Loan_Value__c > 0.15){
+                            component.set("v.LTVCheck", true);
+                        }
+                    }
+                } else if (state === 'ERROR') {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            self.errorsHandler(errors)
+                        }
+                    } else {
+                        self.unknownErrorsHandler();
+                    }
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }));
     },
     validateRequired : function(component, Id) {
         var inputCmp = component.find(Id);
@@ -1136,7 +1174,7 @@
         });
         toastEvent.fire();
     },
-    getPickListValues: function(component, object, field, attributeId)
+    getPickListValues: function(component, object, field, attributeId, hideNone)
     {
         var picklistgetter = component.get('c.getPickListValues');
         picklistgetter.setParams({
@@ -1150,7 +1188,7 @@
             {
                 var allValues = response.getReturnValue();
                 
-                if (allValues != undefined && allValues.length > 0) {
+                if (allValues != undefined && allValues.length > 0 && !hideNone) {
                     opts.push({
                         class: "optionClass",
                         label: "--- None ---",
@@ -1735,5 +1773,24 @@
                 }
             }
         );
-    }        
+    },
+    selectDefaultReferenceNotes : function(component, newPaymentMethod, index){   
+        let drawdowns = component.get("v.drawDownList");
+        console.log(drawdowns);
+        console.log(index);        
+        if (newPaymentMethod=='Admin Fee'){            
+            let result = component.find('Reference_Notes__c');
+            let notes=[];
+            if(result.constructor === Array )
+                notes = result;
+            else
+                notes.push(result);           
+            if(notes[index]){
+                let feeType = component.get("v.oppObj.Fee_Type__c");   
+                console.log(feeType);
+                if (feeType != 'Variable Fee')
+                	notes[index].set("v.value",feeType);
+            }
+        }
+    }                
 })

@@ -166,7 +166,8 @@ public class ReserveHelperTest {
             TimeZoneSidKey = 'America/Los_Angeles',
             EmailEncodingKey = 'UTF-8',
             LanguageLocaleKey = 'en_US',
-            LocaleSidKey = 'en_US',            
+            LocaleSidKey = 'en_US',
+			IsActive = true,            
 			Reserve__c = true
         );
         insert testUser;
@@ -210,7 +211,54 @@ public class ReserveHelperTest {
     }
     
     public static testMethod void testGetEMailRecipients(){
-        ReserveHelper.getEMailRecipients();
+        User testUser = insertUser();        
+        Test.startTest();        	
+        List<String> recipients = ReserveHelper.getEMailRecipients();                
+        Test.stopTest();
     }
+    
+    public static testMethod void testGetReserveEMailSubject(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = false);
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true);
+        System.assertEquals( 'Reserve Enabled on John Smith account', ReserveHelper.getReserveEMailSubject(false, oldOpp, opp));
+    }
+
+    public static testMethod void testGetReserveEMailSubject1(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true);
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = false);
+        System.assertEquals( 'Reserve Disabled on John Smith account', ReserveHelper.getReserveEMailSubject(false, oldOpp, opp));
+    }
+    
+    public static testMethod void testGetReserveEMailSubject2(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.today());
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.today().addDays(1));
+        System.assertEquals( 'Reserve Details Updated on John Smith account', ReserveHelper.getReserveEMailSubject(false, oldOpp, opp));
+    }
+
+    public static testMethod void testGetReserveEMailMessage(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = false, Reserve_Date__c = Date.newInstance(2019, 12, 27));
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.newInstance(2019, 12, 28));
+        System.assertEquals( 'Reserve date of Dec 28, 2019 was set for this account.', ReserveHelper.getReserveEMailMessage(false, oldOpp, opp));
+    }
+    
+    public static testMethod void testGetReserveEMailMessage1(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.newInstance(2019, 12, 27));
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.newInstance(2019, 12, 28));
+        System.assertEquals( 'Reserve date of Dec 28, 2019 was set for this account.', ReserveHelper.getReserveEMailMessage(false, oldOpp, opp));
+    }
+    
+
+    public static testMethod void testGetReserveEMailMessage2(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Amount__c = 500.0);
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Amount__c = 1000.0);
+        System.assertEquals( 'Reserve of 1,000.00$ was added to account John Smith', ReserveHelper.getReserveEMailMessage(false, oldOpp, opp));
+    }
+
+    public static testMethod void testGetReserveEMailMessage3(){
+        Opportunity oldOpp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.newInstance(2019, 12, 27), Reserve_Amount__c = 500.0);
+        Opportunity opp = new Opportunity(Name = 'John Smith', Is_Reserve_Applied__c = true, Reserve_Date__c = Date.newInstance(2019, 12, 28), Reserve_Amount__c = 1000.0);
+        System.assertEquals( 'Multiple fields updated', ReserveHelper.getReserveEMailMessage(false, oldOpp, opp));
+    }
+
     
 }

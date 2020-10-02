@@ -19,5 +19,10 @@
             }
         }
         component.set("v.data", data);		
-	}
+	},
+    removeRow : function(component, rowIndex){
+        var data = component.get("v.data");
+        data.splice(rowIndex, 1);
+        component.set("v.data", data);		        
+    }
 })

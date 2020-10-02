@@ -17,6 +17,7 @@
     <relationshipLabel>Scheduled Payments</relationshipLabel>
     <relationshipName>Scheduled_Payments</relationshipName>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>

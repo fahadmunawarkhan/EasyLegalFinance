@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Include_in_Drawdown_wo_Payment_Rollup__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(AND(NOT(ISPICKVAL(Payment_Method__c, &apos;Payment&apos;)), NOT(OR(ISPICKVAL(Reference_Notes__c, &apos;Payment Rejected&apos;),ISPICKVAL(Reference_Notes__c, &apos;Payment Re-processed&apos;),ISPICKVAL(Reference_Notes__c, &apos;Referral Fee&apos;)))), True,  IF(ISPICKVAL(Reference_Notes__c, &apos;Payment Halted&apos;), true, false))</formula>
+    <formula>IF(AND(NOT(ISPICKVAL(Payment_Method__c, &apos;Payment&apos;)), NOT(OR(ISPICKVAL(Reference_Notes__c, &apos;Payment Rejected&apos;),ISPICKVAL(Reference_Notes__c, &apos;Payment Re-processed&apos;),ISPICKVAL(Reference_Notes__c, &apos;Referral Fee&apos;)))), True, IF(ISPICKVAL(Reference_Notes__c, &apos;Payment Halted&apos;), true, false))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Include in Drawdown w/o Payment Rollup</label>
     <trackHistory>false</trackHistory>

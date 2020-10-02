@@ -1,0 +1,27 @@
+<aura:component >
+	<aura:attribute name="paymentInfo" type="Object" />
+    <div class="slds-grid">    
+        <div class="slds-col slds-size_5-of-5 slds-text-align_center text-title">
+        	{!v.paymentInfo.description}
+    	</div>
+    </div>
+    <br/>
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-2">
+            <lightning:input type="number" value="{!v.paymentInfo.amount}" label="Amount" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="date" value="{!v.paymentInfo.paymentDate}" label="Date" variant="label-inline"/>
+            <lightning:input type="text" value="{!v.paymentInfo.chequeNumber}" label="Cheque#" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.fvAtPayoutDate}" label="FV at time of payout" formatter="currency" step="0.01" variant="label-inline" disabled="true"/>
+            <lightning:input type="number" value="{!v.paymentInfo.principal}" label="Principal" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.interest}" label="Interest" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.surplus}" label="Surplus" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.clientRebate}" label="Client Rebate Amount" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.shortfall}" label="Shortfall" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.badDebt}" label="Bad Debt" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.paymentInfo.badDebtRecovery}" label="Bad Debt Recovery" formatter="currency" step="0.01" variant="label-inline"/>
+			<lightning:input type="number" value="{!v.paymentInfo.refund}" label="Refund" formatter="currency" step="0.01" variant="label-inline"/>            
+            <lightning:input type="number" value="{!v.paymentInfo.wireFee}" label="Wire Fee" formatter="currency" step="0.01" variant="label-inline"/>            
+        </div>
+    </div>
+</aura:component>

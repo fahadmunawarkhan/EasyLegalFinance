@@ -1,22 +1,34 @@
 <aura:component >    
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="displayButtons" type="Boolean" default="true"/>
 	<aura:attribute name="columns" type="List" />
     <aura:attribute name="data" type="List" />    
     <aura:attribute name="changedRecordIdsMap" type="Map" default="{}"/>    
+    <aura:attribute name="addRowLinkItem" type="Object"/> 
+    <aura:attribute name="tableName" type="String" />
 
     <aura:registerEvent name="resetClickedEvent" type="c:CustomTableResetClickedEvent"/>
     <aura:registerEvent name="saveClickedEvent" type="c:customTableSaveClickedEvent"/>
     
-    <aura:handler name="cellChangedEvent" event="c:CustomCellChangedEvent" action="{!c.handleCustomCellChanged}"/>
+    <aura:handler name="cellChangedEvent" event="c:CustomCellChangedEvent" action="{!c.handleCustomCellChanged}"/>        
     
     <aura:method name="updateCell" action="{!c.updateCell}"> 
         <aura:attribute name="recordId" type="String"/> 
         <aura:attribute name="cellItem" type="Object"/>         
     </aura:method>
+    
+    <aura:method name="removeRow" action="{!c.removeRow}"> 
+        <aura:attribute name="rowIndex" type="Integer"/>        
+    </aura:method>    
+    
+    <aura:method name="getData" action="{!c.getData}" />
+    <aura:method name="setData" action="{!c.setData}"> 
+        <aura:attribute name="data" type="List"/>        
+    </aura:method>    
 
     <div >
-        <div style="overflow: auto; ">
-            <table class="slds-table slds-table_bordered ">
+        <div >
+            <table class="slds-table slds-table_bordered slds-no-row-hover">
                 <thead>
                     <tr >
                         <aura:iteration items="{!v.columns}" var="column">
@@ -27,20 +39,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <aura:iteration items="{!v.data}" var="row">
+                    <aura:iteration items="{!v.data}" var="row" indexVar="index">
                         <tr>
-                            <aura:iteration items="{!row.items}" var="item">                        
-                                <c:CustomTableCellComponent cellItem="{!item}" recordId="{!row.id}" />                            
+                            <aura:iteration items="{!row.items}" var="item" >                                        
+                                	<c:CustomTableCellComponent cellItem="{!item}" recordId="{!row.id}" rowIndex="{!index}" tableName="{!v.tableName}"/>                                                                                            
                             </aura:iteration>
                         </tr>
                     </aura:iteration>
                 </tbody>
             </table>
         </div>
-        <div class="slds-m-top_large slds-text-align_center">
-            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Reset" onclick="{!c.reset}" />
-            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.save}" />
-        </div>
+        <aura:if isTrue="{!v.displayButtons == true}">
+            <div class="slds-m-top_large slds-text-align_center">
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Reset" onclick="{!c.reset}" />
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.save}" />
+            </div>
+        </aura:if>
 
     </div>
 </aura:component>

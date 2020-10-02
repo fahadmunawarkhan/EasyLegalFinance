@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AccidentImpact__c</fullName>
+    <externalId>false</externalId>
+    <label>Accident Impact</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Struck Object</fullName>
+                <default>false</default>
+                <label>Struck Object</label>
+            </value>
+            <value>
+                <fullName>Off Road Left</fullName>
+                <default>false</default>
+                <label>Off Road Left</label>
+            </value>
+            <value>
+                <fullName>Right Angle</fullName>
+                <default>false</default>
+                <label>Right Angle</label>
+            </value>
+            <value>
+                <fullName>Passing - Left Turn</fullName>
+                <default>false</default>
+                <label>Passing - Left Turn</label>
+            </value>
+            <value>
+                <fullName>Left Turn- Across Path</fullName>
+                <default>false</default>
+                <label>Left Turn- Across Path</label>
+            </value>
+            <value>
+                <fullName>Sideswipe-Opposite Direction</fullName>
+                <default>false</default>
+                <label>Sideswipe-Opposite Direction</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Rear-End</fullName>
+                <default>false</default>
+                <label>Rear-End</label>
+            </value>
+            <value>
+                <fullName>Off Road Right</fullName>
+                <default>false</default>
+                <label>Off Road Right</label>
+            </value>
+            <value>
+                <fullName>Head On</fullName>
+                <default>false</default>
+                <label>Head On</label>
+            </value>
+            <value>
+                <fullName>Passing- Right Turn</fullName>
+                <default>false</default>
+                <label>Passing- Right Turn</label>
+            </value>
+            <value>
+                <fullName>Sideswipe- Same Direction</fullName>
+                <default>false</default>
+                <label>Sideswipe- Same Direction</label>
+            </value>
+            <value>
+                <fullName>Backing</fullName>
+                <default>false</default>
+                <label>Backing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

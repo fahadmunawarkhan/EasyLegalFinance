@@ -10,6 +10,11 @@
         <default>false</default>
         <label>Rhino</label>
     </customValue>
+    <customValue>
+        <fullName>Seahold</fullName>
+        <default>false</default>
+        <label>Seahold</label>
+    </customValue>
     <masterLabel>Business Unit</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>

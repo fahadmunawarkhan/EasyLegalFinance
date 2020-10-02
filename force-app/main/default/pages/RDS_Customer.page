@@ -193,7 +193,7 @@
                         {!$ObjectType.Contact.fields.ELF_File_No__c.label}
                       </label>
                       <div class="slds-form-element__control">
-                        <apex:inputField value="{!conSObj.ELF_File_No__c}" styleClass="slds-input" taborderhint="100" />
+                        <apex:outputField value="{!conSObj.ELF_File_No__c}" />
                       </div>
                     </div>
                     <div class="slds-form-element">

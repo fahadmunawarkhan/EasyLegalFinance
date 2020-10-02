@@ -7,6 +7,9 @@
         <field>ACCOUNT_NUMBER</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -26,10 +29,10 @@
         <criteriaItems>
             <column>Reference_Notes__c</column>
             <isUnlocked>false</isUnlocked>
-            <operator>notEqual</operator>
+            <operator>equals</operator>
             <value>Payment Surplus</value>
         </criteriaItems>
-        <operation>with</operation>
+        <operation>without</operation>
         <primaryTableColumn>OPPORTUNITY_ID</primaryTableColumn>
         <relatedTable>Drawdown__c</relatedTable>
         <relatedTableJoinColumn>Opportunity__c</relatedTableJoinColumn>
@@ -38,14 +41,12 @@
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Stage_Status__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed - Surplus</value>

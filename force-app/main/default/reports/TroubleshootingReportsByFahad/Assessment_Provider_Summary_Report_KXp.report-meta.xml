@@ -51,11 +51,6 @@
     </groupingsDown>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>CDF1</field>
-        <sortOrder>Asc</sortOrder>
-    </groupingsDown>
-    <groupingsDown>
-        <dateGranularity>Day</dateGranularity>
         <field>Account.Opportunities__r$Law_Firm__c.Name_Formula__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>

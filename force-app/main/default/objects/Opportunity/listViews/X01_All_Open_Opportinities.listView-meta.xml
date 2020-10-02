@@ -3,8 +3,8 @@
     <fullName>X01_All_Open_Opportinities</fullName>
     <columns>OPPORTUNITY.NAME</columns>
     <columns>ACCOUNT.NAME</columns>
-    <columns>What_Happened_from_W2L__c</columns>
     <columns>Funding_Requested__c</columns>
+    <columns>Data_Load_Identifier__c</columns>
     <columns>OPPORTUNITY.AMOUNT</columns>
     <columns>OPPORTUNITY.CLOSE_DATE</columns>
     <columns>OPPORTUNITY.STAGE_NAME</columns>

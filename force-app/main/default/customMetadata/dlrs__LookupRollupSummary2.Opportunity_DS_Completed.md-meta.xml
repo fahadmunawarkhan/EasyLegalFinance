@@ -56,7 +56,7 @@
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:type="xsd:string">dsfs__Envelope_Status__c = &#39;Completed&#39;</value>
+        <value xsi:type="xsd:string">dsfs__Envelope_Status__c = &apos;Completed&apos;</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>

@@ -47,7 +47,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c,
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower_Formula__c, Loan_Available_to_Drawdown__c,
                 Funding_Details_Status__c, Drawdown_Total__c,
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
@@ -404,7 +404,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id, Name,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c, 
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower_Formula__c, Loan_Available_to_Drawdown__c, 
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
                 /* Loan Details Fields */
