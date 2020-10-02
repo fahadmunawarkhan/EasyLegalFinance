@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 10-01-2020
+ * @Last Modified On   : 10-02-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -1403,7 +1403,7 @@ return allOpts;*/
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, 
                             Treatment_Providers__c,Payments_tab__c, Schedule_Payments__c,
                             Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c, Reserve__c, Assign_Details__c,
-                            Can_Generate_Payout_Statement__c, Can_Send_Email_Payout_Statement__c FROM User Where Id = :UserInfo.getUserId()];
+                            Can_Generate_Payout_Statement__c, Can_Send_Email_Payout_Statement__c, Can_Change_Opportunity_Status__c FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
 
