@@ -1465,8 +1465,18 @@
                                                         </td>
                                                         <!--<td class="slds-cell-buffer_left slds-cell-buffer_right"><ui:outputCurrency value="{!item.totalPerOpportunity}"/></td>-->
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right">
+                                                            <aura:if isTrue="{!item.interestRateType == 'Variable'}">                                                            
+                                                                <aura:if isTrue="{!item.variableRateHelpText != null}">                                                            
+                                                                	<c:customHelpTextComponent text="{!item.variableRateText}" helpText="{!item.variableRateHelpText}"/>
+                                                                    <aura:set attribute="else">  
+                                                                        {!item.variableRateText}
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                                <aura:set attribute="else">                                                                    
                                                             {!item.interestRate}
                                                             <aura:if isTrue="{!item.interestRate != null}">%</aura:if>
+                                                                </aura:set>
+                                                            </aura:if>                                                                                                                 
                                                         </td>
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right">{!item.eft}</td>
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right">{!item.chq}</td>
