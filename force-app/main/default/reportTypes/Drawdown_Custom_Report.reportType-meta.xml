@@ -581,7 +581,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Opportunity__c.Amount_Paid_to_Borrower__c</field>
+            <field>Opportunity__c.Amount_Paid_to_Borrower_Formula__c</field>
             <table>Drawdown__c</table>
         </columns>
         <columns>

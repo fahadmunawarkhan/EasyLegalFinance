@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Sign_URL_Doc_Base__c</fullName>
+    <externalId>false</externalId>
+    <formula>&quot;/apex/APXTConga4__Conga_Composer?id=&quot; &amp; Id
+&amp; &quot;&amp;TemplateID=&quot; &amp; Scenario__r.DocumentTemplate__c
+&amp; &apos;&amp;OFN=&apos;&amp;Name&amp;&apos; - Loan Document&apos;
+&amp; &apos;&amp;csEmailFromID=0D2E0000000k9sdKAA&apos;
+&amp; &apos;EmailReplyToId=0D2E0000000k9sdKAA&apos;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Sign URL Doc Base</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

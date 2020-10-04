@@ -15,5 +15,6 @@
     <tabs>standard-Dashboard</tabs>
     <tabs>standard-Product2</tabs>
     <tabs>standard-Forecasting3</tabs>
-    <tabs>Critical_Date__c</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
 </CustomApplication>

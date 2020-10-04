@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Rhino Loan Setup Lump Sum</label>
+    <protected>false</protected>
+    <values>
+        <field>Business_Unit__c</field>
+        <value xsi:type="xsd:string">Rhino</value>
+    </values>
+    <values>
+        <field>Effective_At__c</field>
+        <value xsi:type="xsd:string">Loan Setup</value>
+    </values>
+    <values>
+        <field>Fee_Type__c</field>
+        <value xsi:type="xsd:string">$</value>
+    </values>
+    <values>
+        <field>Is_BOM__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Month__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Order__c</field>
+        <value xsi:type="xsd:double">1.0</value>
+    </values>
+    <values>
+        <field>Rate__c</field>
+        <value xsi:type="xsd:double">375.0</value>
+    </values>
+    <values>
+        <field>Type_of_Loan__c</field>
+        <value xsi:type="xsd:string">Lump-Sum</value>
+    </values>
+</CustomMetadata>

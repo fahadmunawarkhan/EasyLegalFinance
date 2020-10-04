@@ -66,6 +66,26 @@
                 <label>Trial Decision Date</label>
             </value>
             <value>
+                <fullName>Notice of Assignment - 1st Notice</fullName>
+                <default>false</default>
+                <label>Notice of Assignment - 1st Notice</label>
+            </value>
+            <value>
+                <fullName>Notice of Assignment - Follow up</fullName>
+                <default>false</default>
+                <label>Notice of Assignment - Follow up</label>
+            </value>
+            <value>
+                <fullName>Notice of Assignment - Collections</fullName>
+                <default>false</default>
+                <label>Notice of Assignment - Collections</label>
+            </value>
+            <value>
+                <fullName>Notice of Assignment - Judgment</fullName>
+                <default>false</default>
+                <label>Notice of Assignment - Judgment</label>
+            </value>
+            <value>
                 <fullName>Other - see notes</fullName>
                 <default>false</default>
                 <label>Other - see notes</label>

@@ -1,13 +1,3 @@
-/**
- * @description       : 
- * @author            : fahad.khan@toptal.com
- * @group             : 
- * @last modified on  : 09-30-2020
- * @last modified by  : fahad.khan@toptal.com
- * Modifications Log 
- * Ver   Date         Author                  Modification
- * 1.0   09-30-2020   fahad.khan@toptal.com   Initial Version
-**/
 @isTest
 public class OpportunityViewComponentCtlrTest {
     
@@ -390,7 +380,7 @@ public class OpportunityViewComponentCtlrTest {
         //System.assertEquals(null, clientOpportunity.Accrued_Interest_as_of_Reserve_Date__c);
 
         Test.stopTest();
-    }    
+    }   
     public static testMethod void needAsyncDeleteTest() {        
         Opportunity clientOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];        
         Test.startTest();
@@ -404,5 +394,5 @@ public class OpportunityViewComponentCtlrTest {
         Test.startTest();        
 		OpportunityViewComponentCtlr.deleteDrawdownAsync(d.Id, clientOpportunity.AccountId);
         Test.stopTest();
-    }        
+    }            
 }

@@ -28,6 +28,10 @@
                 <behavior>Edit</behavior>
                 <field>WhoId</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>rcsfl__Call_Recording__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>

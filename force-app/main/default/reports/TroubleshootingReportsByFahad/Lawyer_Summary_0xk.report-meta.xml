@@ -14,48 +14,60 @@
         <field>CUST_NAME</field>
     </columns>
     <filter>
-        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND 6</booleanFilter>
+        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND 6 AND 7 AND 8 AND 9</booleanFilter>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Is_Rejected__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Admin Fee,Cheque,e-Transfer</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Lawyer_Id__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>0030L00001vsNLq</value>
+            <value>0030L00001nTXwe</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Law_Firm_Id__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>0010L00001rtV40</value>
+            <value>001E000001K1M2u</value>
         </criteriaItems>
         <criteriaItems>
             <column>Account.Business_Unit__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>ELFI</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,Facility Loan,Lump-Sum,Treatment Loan,Treatment Loan 2,Assessment,Lawyer Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>,1st Week,2nd Week,File for Review,Add&apos;l Docs Required,In Progress,F/U with PC/Facility,Approved,Assessor Declined,Legal Representative Declined,Non-Responsive (Legal Representative/Plaintiff),Competitor,Contact Sheet Completed; Part I of App Sent to Lead for Signature,Part II of App Sent to Firm w/ Request for Supporting Docs,Waiting for Additional Supporting Documents,Waiting for Payout From Other Lender,File Sent to Assessors Review,Awaiting Final Client Signature,Funds Advanced/Awaiting Signed Loan Documents,Awaiting Final Lawyer Signature,File Sent for EFT,See Notes,Completed,Declined,Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan,Closed - Bad Debt,Closed - Paid,Closed - Surplus,Closed - Shortfall,Payments Halted,Invoice Pre-Approved</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Exclude_from_Payout__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

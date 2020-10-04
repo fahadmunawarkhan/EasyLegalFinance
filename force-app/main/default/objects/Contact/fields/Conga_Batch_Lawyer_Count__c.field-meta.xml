@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Batch_Lawyer_Count__c</fullName>
+    <externalId>false</externalId>
+    <formula>&quot;&amp;solmgr=1&quot; &amp;
+&quot;&amp;id=&quot; &amp; Id &amp;
+&quot;&amp;queryid=&quot; &amp; IF($Setup.Conga_batch_setting__c.Query_Selector_Lawyer_Count_Report__c = &quot;Active&quot;, &quot;[LawyerActiveClient]a0pL0000007q7SWIAY&quot;,&quot;[LawyerClient]a0pL0000007q7Sb&quot;) &amp; &quot;?pv0=&quot; &amp; Id &amp;
+&quot;~pv1%3D&quot;&amp; $Setup.Conga_batch_setting__c.Lawyer_Count_Business_Unit__c &amp;
+&quot;~pv2%3D&quot;&amp; $Setup.Conga_batch_setting__c.Lawyer_Count_Type_Of_Loan__c &amp;
+&quot;&amp;templateid=&quot; &amp; IF( $Setup.Conga_batch_setting__c.Lawyer_Count_Business_Unit__c = &quot;&apos;Rhino&apos;&quot;, &quot;a0x0L00000PH6QI&quot;, IF( $Setup.Conga_batch_setting__c.Lawyer_Count_Business_Unit__c = &quot;&apos;Seahold&apos;&quot;, &quot;a0x0L00000QCQoYQAX&quot;, &quot;a0x0L00000PVUFQ&quot;)) &amp;
+&quot;&amp;defaultpdf=1&quot; &amp;
+&quot;&amp;attachmentparentid=&quot; &amp; Id &amp;
+&quot;&amp;ac0=1&quot; &amp;
+&quot;&amp;sc0=1&quot; &amp;
+&quot;&amp;sc1=SalesforceFile&quot; &amp;
+&quot;&amp;DS7=5&quot; &amp;
+&quot;&amp;qmode=Attachments&quot; &amp;
+&quot;&amp;returnpath=/lightning/n/Custom_Reports?0.source=alohaHeader&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Batch Lawyer Count</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

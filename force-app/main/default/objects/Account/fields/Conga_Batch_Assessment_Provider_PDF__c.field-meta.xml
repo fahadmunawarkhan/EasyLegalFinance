@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Batch_Assessment_Provider_PDF__c</fullName>
+    <externalId>false</externalId>
+    <formula>Conga_Batch_Assessment_Provider__c &amp; &quot;&amp;defaultpdf=1&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Batch Assessment Provider PDF</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

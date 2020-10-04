@@ -29,10 +29,10 @@ public class OpportunityViewComponentCtlr {
                                            Date_Applied__c, Have_you_ever_declared_bankruptcy__c, Bankruptcy_Details__c,
                                            Other_Lawyer_Law_Firm_that_acted__c, NOTE_For_Paralegals__c, Date_of_Loss__c,
                                            What_Happened_from_W2L__c, Nature_of_Injury_from_W2L__c, Existing_Litigation_Loans__c,
-                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c 
+                                           Funding_Requested__c, Pre_Existing_Loan_Amount__c, Name_of_Lender__c, Accident_Location_from_W2L__c, Account.Business_Unit__c,
+                                           Primary_Contact__c, Primary_Contact__r.Name
                                            from Opportunity
-                                           where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' AND Lawyer__c != null ORDER BY Loan_Requests__c DESC Nulls LAST LIMIT 1];
-            oppInfo.Name = (lastOppty.isEmpty() ? '' : lastOppty[0].Name); 
+                                           where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' AND Lawyer__c != null ORDER BY Loan_Requests__c DESC Nulls LAST LIMIT 1];            
             oppInfo.StageName='Prospecting';
             oppInfo.closeDate = Date.today(); 
             oppInfo.AccountId=accId;
@@ -61,6 +61,21 @@ public class OpportunityViewComponentCtlr {
             oppInfo.Pre_Existing_Loan_Amount__c = (lastOppty.isEmpty() ? null : lastOppty[0].Pre_Existing_Loan_Amount__c);
             oppInfo.Name_of_Lender__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Name_of_Lender__c);
             oppInfo.Accident_Location_from_W2L__c = (lastOppty.isEmpty() ? '' : lastOppty[0].Accident_Location_from_W2L__c);
+            if (!lastOppty.isEmpty()){
+                if (lastOppty[0].Account.Business_Unit__c=='ELFI' || lastOppty[0].Account.Business_Unit__c=='Rhino')
+                    oppInfo.Fee_Type__c = 'Admin Fee';
+                else if (lastOppty[0].Account.Business_Unit__c=='Seahold')
+                    oppInfo.Fee_Type__c = 'No Fee';
+            }
+            List<Opportunity> firstOppty = [select Name, Primary_Contact__c, Primary_Contact__r.Name 
+                                           from Opportunity
+                                           where AccountId = :accId AND RecordTypeDev__c != 'Loan_Re_Assessment_Opportunity' and Name != Null and Primary_Contact__c != Null  
+                                            ORDER BY Loan_Requests__c ASC Nulls LAST LIMIT 1];
+            if (!firstOppty.isEmpty()){
+                oppInfo.Name = firstOppty[0].Name;            
+                oppInfo.Primary_Contact__c = firstOppty[0].Primary_Contact__c;                        
+                oppInfo.Primary_Contact__r  = firstOppty[0].Primary_Contact__r;                         
+            }
         }
         else
         {
@@ -94,6 +109,11 @@ public class OpportunityViewComponentCtlr {
         }
         system.debug('## oppInfo: ' + oppInfo);        
         return oppInfo;
+    }
+
+    @AuraEnabled
+    public static Account getAccountDetails(String AccId){
+        return CustomerViewComponentCtlr.getAccountInfo(AccId);
     }
     
     /******************* Method to get dependent picklist values *********************/

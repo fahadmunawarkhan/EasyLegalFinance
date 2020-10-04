@@ -56,7 +56,7 @@
         <field>STAGE_NAME</field>
     </columns>
     <filter>
-        <booleanFilter>(1 OR 2) AND 3</booleanFilter>
+        <booleanFilter>(1 OR 2) AND 3 AND 4</booleanFilter>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
             <isUnlocked>true</isUnlocked>
@@ -74,6 +74,12 @@
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Facility Loan,Lump-Sum,Treatment Loan,Treatment Loan 2</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-20-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-13-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public with sharing class LawFirmCountController {
 	
 	 /******************* Method to get all picklists values for Account *********************/  
@@ -9,11 +19,10 @@ public with sharing class LawFirmCountController {
     
     /******************* Method to return all lawyers *********************/
     @AuraEnabled
-    public static List<AccountInfo> getLawfirmAccounts(String strQuery, String LoanFilter, String businessUnitFilter, String startDate, String endDate) {
+    public static List<AccountInfo> getLawfirmAccounts(String strQuery, String LoanFilter, List<String> businessUnitFilter, String startDate, String endDate, List<String> typeofloan) {
         try{
             system.debug('Query ' + strQuery);
             LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
-            businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             system.debug('LoanFilter ' + LoanFilter);
             
             // Initializing the Account variable
@@ -41,8 +50,9 @@ public with sharing class LawFirmCountController {
             }
             
             strQuery = 'Select Law_firm__c, Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Law_firm__c in :accountIds ';
-            strQuery += LoanFilter == 'Active'? ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'' : '';
-            strQuery += (businessUnitFilter == '' || businessUnitFilter == null) ? ' AND Account.Business_Unit__c = \'ELFI\'' : (businessUnitFilter == 'Consolidated' ? ' AND (Account.Business_Unit__c = \'ELFI\' OR Account.Business_Unit__c = \'Rhino\')' : ' AND Account.Business_Unit__c = :businessUnitFilter');
+            strQuery += LoanFilter == 'Active'? ' AND stagename = \'Closed With Loan\' AND Stage_Status__c != \'Paid Off\'' : '';
+            strQuery += (businessUnitFilter.isEmpty()) ? ' AND Account.Business_Unit__c = \'ELFI\'' : ' AND Account.Business_Unit__c IN :businessUnitFilter';
+            strQuery += (typeofloan.isEmpty()) ? ' AND Type_of_Loan__c = \'Facility Loan\'' : ' AND Type_of_Loan__c IN :typeofloan';
             
             List<Opportunity> oppties = new List<Opportunity>();
             oppties = Database.query(strQuery);
@@ -74,6 +84,23 @@ public with sharing class LawFirmCountController {
         }
     }    
     @AuraEnabled
+    public static void SaveCustomSettings(String startdate, String enddate, String payoutDate, String reportDate, String LoanFilter, List<String> businessUnitFilter, List<String> typeofloanFilter){
+        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
+        customSettings.Start_Date_Law_Firm_Report__c = (!String.isEmpty(startdate) && startdate != null) ? Date.valueOf(startdate) : customSettings.Start_Date_Law_Firm_Report__c;
+        customSettings.End_Date_Law_Firm_Report__c = (!String.isEmpty(enddate) && enddate != null) ? Date.valueOf(enddate) : customSettings.End_Date_Law_Firm_Report__c;
+        customSettings.Payout_Date_Law_Firm_Report__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date_Law_Firm_Report__c;
+        customSettings.Report_Date_Law_Firm_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Law_Firm_Report__c;
+        customSettings.Query_Selector_Law_Firm_Report__c = LoanFilter;
+        customSettings.Business_Unit_Law_Firm_Report__c = String.join(businessUnitFilter, '|');
+        customSettings.Type_of_Loan_Law_Firm_Report__c = String.join(typeofloanFilter, '|');
+        upsert customSettings;
+    }
+    @AuraEnabled
+    public static Conga_batch_setting__c GetCustomSettings(){
+        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
+        return customSettings;
+    }
+    @AuraEnabled
     public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailRecipientId, String emailBody, String LoanFilter, String businessUnitFilter){       
         try{
             APXT_BPM__Conductor__c conductor;
@@ -91,7 +118,7 @@ public with sharing class LawFirmCountController {
             customSettings.Email_Additional_Notes_Law_Firm_Report__c = emailBody;
             customSettings.Email_To_Id_Law_Firm_Summary__c = (!String.isEmpty(emailRecipientId) && emailRecipientId != null) ? emailRecipientId : '';
             customSettings.Query_Selector_Law_Firm_Report__c = LoanFilter;
-            customSettings.Business_Unit_Lawfirm_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+            customSettings.Business_Unit_Law_Firm_Report__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
             
             if(String.isEmpty(customSettings.Conductor_Id_Law_Firm_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Law firm summary conductor query - ' + UserInfo.getName(),
@@ -135,7 +162,7 @@ public with sharing class LawFirmCountController {
             customSettings.Report_Date_Law_Firm_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Law_Firm_Report__c;
             //customSettings.Email_To_Id_Law_Firm_Summary__c = (!String.isEmpty(emailRecipientId) && emailRecipientId != null) ? emailRecipientId : '';
             customSettings.Query_Selector_Law_Firm_Report__c = LoanFilter;
-            customSettings.Business_Unit_Lawfirm_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+            customSettings.Business_Unit_Law_Firm_Report__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
             
             if(String.isEmpty(customSettings.Conductor_Id_Law_Firm_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Law firm summary conductor query - ' + UserInfo.getName(),

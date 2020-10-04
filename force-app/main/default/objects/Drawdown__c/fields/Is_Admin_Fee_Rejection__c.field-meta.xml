@@ -2,8 +2,8 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Is_Admin_Fee_Rejection__c</fullName>
     <externalId>false</externalId>
-    <formula>OR(ISPICKVAL(Payment_To_Reverse__r.Reference_Notes__c, &#39;Admin Fee&#39;),
-ISPICKVAL(Payment_To_Reverse__r.Reference_Notes__c, &#39;Assessment Fee&#39;))</formula>
+    <formula>OR(ISPICKVAL(Payment_To_Reverse__r.Reference_Notes__c, &apos;Admin Fee&apos;),
+ISPICKVAL(Payment_To_Reverse__r.Reference_Notes__c, &apos;Assessment Fee&apos;))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Is Admin Fee Rejection</label>
     <trackHistory>false</trackHistory>
