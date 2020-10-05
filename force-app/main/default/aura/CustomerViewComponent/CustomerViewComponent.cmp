@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 09-11-2020
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 10-01-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -33,8 +33,6 @@
     <aura:attribute name="selectedLookUpLawyer" type="sObject" default="{}" />
     <aura:attribute name="selectedLookUpAccOwner" type="sObject" default="{}" />
     <aura:attribute name="note" type="ContentNote" default="{'sobjectType': 'ContentNote','Title': 'N/A','Content': ''}" />
-    <aura:attribute name="noteContent" type="String" default="" />
-    <aura:attribute name="showNotePopup" type="boolean" default="false" />
     <aura:attribute name="selectedNoteId" type="String" default="" />
     <aura:attribute name="criticalDateList" type="Critical_Date__c[]" />
     <aura:attribute name="criticalDateName" type="List" default="[]" />
@@ -954,103 +952,7 @@
 
             <!-- <<<<<< ACCOUNT NOTES TAB >>>>>>>> -->
             <lightning:tab id="ACCOUNT_NOTES" label="ACCOUNT NOTES" >
-                <lightning:card class="slds-card slds-card_boundary" title="Account Notes" variant="base">
-                    <aura:set attribute="actions">
-                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="New" onclick="{!c.newNote}" />
-                        <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Printable Notes View" onclick="{!c.accountNotesPrintView}" />
-                    </aura:set>
-                    <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
-                        <thead>
-                            <tr class="slds-text-title_caps">
-                                <th>
-                                    <div class="slds-truncate" title="Column 1">DATE</div>
-                                </th>
-                                <th>
-                                    <div class="slds-truncate" title="Column 1">DETAILED NOTES</div>
-                                </th>
-                                <th>
-                                    <div class="slds-truncate" title="Column 1">Created By</div>
-                                </th>
-                                <aura:if isTrue="{!v.currentUser.Modify_Notes__c}">
-                                    <th style="width:10%">
-                                        <div class="slds-truncate" title=""></div>
-                                    </th>
-                                </aura:if>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <aura:iteration items="{!v.notes}" var="n" indexVar="index">
-                                <tr class="slds-hint-parent">
-                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
-                                        <ui:outputDateTime  aura:id="startDateFilter" value="{!n.noteDateTime}" />
-                                    </td>
-                                    <td class="slds-cell-buffer_left slds-cell-buffer_right" style="white-space: pre-wrap;">
-                                        <ui:outputRichText value="{!n.body}"/>
-                                    </td>
-                                    <td class="slds-cell-buffer_left slds-cell-buffer_right">
-                                        <ui:outputText value="{!n.note.CreatedBy.Name}"/>
-                                    </td>
-                                    <aura:if isTrue="{!v.currentUser.Modify_Notes__c}">
-                                        <td class="slds-cell-buffer_left slds-cell-buffer_right">
-                                            <button class="slds-button slds-button_brand" onclick="{!c.editNote}" id="{!n.note.Id}">Edit</button>&nbsp;&nbsp;
-                                            <button class="slds-button slds-button_destructive" onclick="{!c.deleteNote}" id="{!n.note.Id}">Del</button>
-                                        </td>
-                                    </aura:if>
-                                </tr>
-                            </aura:iteration>
-                        </tbody>
-                    </table>
-                </lightning:card>
-                <aura:if isTrue="{!v.showNotePopup==true}" >
-                    <div class="slds-m-around--xx-large">
-                        <div class="slds-backdrop slds-backdrop--open" aura:id="backGroundSectionId">
-                            <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
-                                <div class="slds-modal__container">
-                                    <div class="slds-modal__header">
-                                        <table width="100%">
-                                            <tr>
-                                                <td>
-                                                    <aura:if isTrue="{!v.selectedNoteId==''}">
-                                                        <h2 id="header99" class="slds-text-heading--medium">New Note</h2>
-                                                        <aura:set attribute="else">
-                                                            <h2 id="header99" class="slds-text-heading--medium">Update Note</h2>
-                                                        </aura:set>
-                                                    </aura:if>
-
-                                                </td>
-                                                <td style="text-align: right">
-                                                    <lightning:icon iconName="action:close" alternativeText="Close" size="xx-small" onclick="{!c.closeNoteModal}" />
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div class="slds-modal__content slds-p-around--medium">
-                                        <!--
-                                        <b>Title:</b>
-                                        <br/>
-                                        <ui:inputText class="form-control" value="{!v.note.Title}"/>
-                                        <br/>
-                                        <b>Content:</b>
-                                        <br/>-->
-                                        <lightning:inputRichText value="{!v.noteContent}" placeholder="Type something interesting" />
-                                        <br/>
-                                        <div class="slds-modal__footer">
-                                            <div class="col-md-4 text-center">
-                                                <aura:if isTrue="{!v.selectedNoteId==''}">
-                                                    <ui:button class="btn btn-default" disabled="{!v.createButtonDisabled}" press="{!c.createNote}">Create</ui:button>
-                                                    <aura:set attribute="else">
-                                                        <ui:button class="btn btn-default" press="{!c.updateNote}">Update</ui:button>
-                                                    </aura:set>
-                                                </aura:if>
-                                                <ui:button class="btn btn-default" press="{!c.closeNoteModal}">Cancel</ui:button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </aura:if>
+                <c:CustomNotesComponent recordId="{!v.recordId}" />
             </lightning:tab>
 
             <!-- <<<<<< LOAN OVERVIEW TAB >>>>>>>> -->
