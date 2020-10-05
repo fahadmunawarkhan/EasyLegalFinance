@@ -1789,5 +1789,24 @@
             var updatedCellItem = {itemName: 'Reserve_Date__c', value: isInterestFrozen ? today : '-', align: 'right', type: isInterestFrozen ? 'date' : 'text', editable: isInterestFrozen};
             tableComp.updateCell(recordId, updatedCellItem);
         }        
-    }
+    },
+    runAction: function(component, actionName, params){ 
+        console.log('runAction ' + params);
+        var action = component.get(actionName); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams(params)                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },  	
 })
