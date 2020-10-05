@@ -28,8 +28,15 @@ public class AccountNotesPrintableCtrlTest {
         clnk.ShareType = 'I';
         
         insert clnk;
-        ApexPages.StandardController sc = new ApexPages.StandardController(acc);
-        AccountNotesPrintableCtrl accNotesPrintableCtrl = new AccountNotesPrintableCtrl(sc);
+       	ApexPages.StandardController sc = new ApexPages.StandardController(acc);
+        PageReference myVfPage = Page.AccountNotesPrintable;
+        Test.setCurrentPage(myVfPage);
+        
+        // Put Id into the current page Parameters
+        ApexPages.currentPage().getParameters().put('id',acc.Id);
+        String id = ApexPages.currentPage().getParameters().get('id');
+        system.debug(id);
+        AccountNotesPrintableCtrl accNotesPrintableCtrl = new AccountNotesPrintableCtrl();
         Test.stopTest();
     }
 }
