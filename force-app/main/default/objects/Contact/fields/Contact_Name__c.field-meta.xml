@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Contact_Name__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( ISBLANK( FirstName ), &#39;&#39; , FirstName &amp; &#39; &#39; )&amp;
-IF( ISBLANK( MiddleName ), &#39;&#39; , MiddleName &amp; &#39; &#39; )&amp;
-IF( ISBLANK( LastName ), &#39;&#39; , LastName )</formula>
+    <formula>IF( ISBLANK( FirstName ), &apos;&apos; , FirstName &amp; &apos; &apos; )&amp;
+IF( ISBLANK( MiddleName ), &apos;&apos; , MiddleName &amp; &apos; &apos; )&amp;
+IF( ISBLANK( LastName ), &apos;&apos; , LastName )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Contact Name</label>
     <required>false</required>

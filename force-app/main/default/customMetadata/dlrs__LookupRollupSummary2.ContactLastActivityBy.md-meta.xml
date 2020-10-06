@@ -57,7 +57,7 @@ Assigned_To_Role__c</value>
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:type="xsd:string">IsClosed = true AND Assigned_To_Role__c = &#39;Sales Team&#39;</value>
+        <value xsi:type="xsd:string">IsClosed = true AND Assigned_To_Role__c = &apos;Sales Team&apos;</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>

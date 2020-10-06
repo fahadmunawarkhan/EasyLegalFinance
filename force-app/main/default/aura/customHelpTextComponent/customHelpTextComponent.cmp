@@ -1,0 +1,20 @@
+<aura:component >
+  <aura:attribute name="text" type="String" required="true"/>
+  <aura:attribute name="helpText" type="String" required="true"/>
+
+  <div>
+    <a href="javascript:void(0);" 
+      onclick="{!c.handleOnClick}"
+      onmouseout="{!c.handleMouseLeave}"
+      onmouseover="{!c.handleMouseEnter}"
+      tabindex="-1">
+        {!v.text}
+	</a>
+    <div aura:id="divHelp" class="slds-popover slds-popover_tooltip slds-nubbin_top-left ms-help-popup-in-header slds-hide"
+      role="tooltip" aria-live="polite">
+      <div class="slds-popover__body ms-help-popup-body">
+	    <ui:outputText value="{!v.helpText}"/>
+	  </div>
+    </div>
+  </div>
+</aura:component>

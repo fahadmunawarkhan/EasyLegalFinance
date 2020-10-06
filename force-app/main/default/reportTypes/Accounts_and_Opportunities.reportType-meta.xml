@@ -570,11 +570,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Amount_Paid_to_Borrower__c</field>
-            <table>Account.Opportunities</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Amount_Paid_to_Client__c</field>
             <table>Account.Opportunities</table>
         </columns>
@@ -1571,6 +1566,12 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>IsWon</field>
+            <table>Account.Opportunities</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Amount Paid to Borrower</displayNameOverride>
+            <field>Amount_Paid_to_Borrower_Formula__c</field>
             <table>Account.Opportunities</table>
         </columns>
         <masterLabel>Opportunities</masterLabel>

@@ -4,6 +4,9 @@
         <field>ACCOUNT_NUMBER</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -22,6 +25,9 @@
         <field>Opportunity.Date_Applied__c</field>
     </columns>
     <columns>
+        <field>Opportunity.Effective_Date__c</field>
+    </columns>
+    <columns>
         <aggregateTypes>Sum</aggregateTypes>
         <field>Opportunity.Admin_Fee__c</field>
     </columns>
@@ -31,41 +37,48 @@
     </columns>
     <description>Loans where type of loan is Lawyer Loans and admin/assessment fee is equal to zero  or empty.</description>
     <filter>
-        <booleanFilter>1 AND 2 AND (3 OR 4) AND 5</booleanFilter>
+        <booleanFilter>1 AND 2 AND (3 OR 4) AND 5 AND 6 AND 7</booleanFilter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
-            <operator>notEqual</operator>
-            <value>Closed No Loan</value>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Admin_Fee__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value/>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Admin_Fee__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Type_of_Loan__c</column>
-            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Lawyer Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Seahold</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Lawyer Loan</value>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

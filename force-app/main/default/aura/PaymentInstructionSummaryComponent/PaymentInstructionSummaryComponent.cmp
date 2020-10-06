@@ -1,5 +1,6 @@
 <aura:component >    
     <aura:attribute name="paymentSummaryItems" type="Object" />
+    <aura:attribute name="isTransactionDetails" type="Boolean" />
     <aura:iteration items="{!v.paymentSummaryItems}" var="paymentSummaryItem" indexVar="index">
         <div class="slds-section slds-is-close" aura:id="sections">
             <h3 class="slds-section__title">
@@ -17,13 +18,18 @@
                                         class="slds-button__icon_left slds-m-horizontal__small"
                                         alternativeText="" />
                     </span>
-                    <span class="slds-truncate" title="PaymentSummaryItem">{!paymentSummaryItem.opportunityName +' - ' + paymentSummaryItem.description}</span>
+                    <span class="slds-truncate" title="PaymentSummaryItem">{!paymentSummaryItem.title}</span>
                 </button>
             </h3>            
-            <div class="slds-section__content" id="items">
+            <div class="slds-section__content" id="items">                
                 <div class="cPaymentInstructionSummaryComponent payment-instruction-section">
-				<c:PaymentInstructionComponent paymentInfo="{!paymentSummaryItem}"/>            
-                    </div>
+                    <aura:if isTrue="{!v.isTransactionDetails}">
+                    	<c:PaymentInstructionComponent paymentInfo="{!paymentSummaryItem}"/>            
+                        <aura:set attribute="else">
+                            <c:PaymentDetailsComponent paymentInfo="{!paymentSummaryItem}"/>            
+                        </aura:set>    
+                    </aura:if>
+                </div>
             </div>
         </div>
     </aura:iteration>                               

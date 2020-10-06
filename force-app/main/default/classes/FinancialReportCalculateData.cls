@@ -38,7 +38,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
         String strQuery = 'SELECT Id, Opportunity__c FROM Drawdown__c WHERE Date__c >= :fromDate';
         strQuery += ' AND Date__c <= :toDate AND Opportunity__r.StageName = \'Closed With Loan\'';
         strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
-        strQuery += ' AND (Opportunity__r.Stage_Status__c =\'Active\' OR Opportunity__r.Stage_Status__c =\'Active - Collections\' OR Opportunity__r.Stage_Status__c = \'Active - Partial Payment\'';
+        strQuery += ' AND (Opportunity__r.Stage_Status__c =\'Active\' OR Opportunity__r.Stage_Status__c =\'Active - Contingent Loan\' OR Opportunity__r.Stage_Status__c =\'Active - Collections\' OR Opportunity__r.Stage_Status__c = \'Active - Partial Payment\'';
         strQuery += ' OR Opportunity__r.Stage_Status__c =\'Closed - Paid\' OR Opportunity__r.Stage_Status__c = \'Closed - Shortfall\'';
         strQuery += ' OR Opportunity__r.Stage_Status__c =\'Closed - Surplus\' OR Opportunity__r.Stage_Status__c =\'Closed - Bad Debt\')';
         strQuery += ' AND (Payment_Method__c =\'Cheque\' or Payment_Method__c = \'e-Transfer\')';
@@ -60,6 +60,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
         String partialPayment = 'Active - Partial Payment';
         String active = 'Active';
         String activeCollections = 'Active - Collections';
+        String activeContingent = 'Active - Contingent Loan';
         String closedSurplus = 'Closed - Surplus';
         String closedShortfall = 'Closed - Shortfall';
         String closedPaid = 'Closed - Paid';
@@ -71,7 +72,7 @@ global class FinancialReportCalculateData implements Database.Batchable<sObject>
             'Accrued_Interest_as_of_Temp_Date__c from drawdown__c where Opportunity__r.StageName =:closedWithLoan';
         query += !oppIds.isEmpty()? ' AND Opportunity__c in :oppIds' : ''; 
         query += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
-        query += ' AND (Opportunity__r.Stage_Status__c =:none OR Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:partialPayment';
+        query += ' AND (Opportunity__r.Stage_Status__c =:none OR Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeContingent OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:partialPayment';
         query += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
         query += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
         query += ' AND Interest_Rate__c > 0 AND Payment_Method__c != \'Payment\' ';

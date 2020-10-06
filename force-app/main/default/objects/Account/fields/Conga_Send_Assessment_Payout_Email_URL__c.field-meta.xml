@@ -7,7 +7,7 @@ $Api.Partner_Server_URL_370
 &amp; &quot;&amp;QueryId=[AccOppty]a0p0L00000JSOkK?pv0=&quot;&amp; Id &amp; &quot;,&quot;
 &amp; &quot;[AccTrans]a0p0L00000JSOkP?pv0=&quot;&amp; Id &amp; &quot;,&quot;
 &amp; &quot;[AccTransTreatment]a0p0L00000JSOkU?pv0=&quot;&amp; Id
-&amp; &quot;&amp;TemplateId=&quot; &amp; IF( ISPICKVAL( Business_Unit__c , &quot;Rhino&quot;) , &quot;a0x0L00000PEzSeQAL&quot;, &quot;a0x0L00000PEzT5QAL&quot;)
+&amp; &quot;&amp;TemplateId=&quot; &amp; IF( ISPICKVAL( Business_Unit__c , &quot;Rhino&quot;) , &quot;a0x0L00000PEzSeQAL&quot;, IF( ISPICKVAL( Business_Unit__c , &quot;Seahold&quot;), &quot;a0x0L00000QCQoJQAX&quot;, &quot;a0x0L00000PEzT5QAL&quot;))
 &amp; &quot;&amp;EmailTemplateId=a0o0L00000LLxJ1QAL&quot;
 &amp; &quot;&amp;defaultpdf=1&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

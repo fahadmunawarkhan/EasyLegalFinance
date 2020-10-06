@@ -7,6 +7,9 @@
         <field>ACCOUNT_NUMBER</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -25,28 +28,34 @@
     <columns>
         <field>Opportunity.Date_Applied__c</field>
     </columns>
+    <columns>
+        <field>Opportunity.Effective_Date__c</field>
+    </columns>
     <description>Opportunities with status Closed with Loan and without any drawdown.</description>
     <filter>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Date_of_advance__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value/>
         </criteriaItems>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

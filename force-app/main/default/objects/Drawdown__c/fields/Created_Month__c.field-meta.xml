@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Created_Month__c</fullName>
     <externalId>false</externalId>
-    <formula>Text(YEAR( ( Date__c ))) + &#39; - &#39; + ( IF( MONTH( ( Date__c ) ) &lt; 10, &#39;0&#39;, &#39;&#39;)) + TEXT( MONTH( ( Date__c ) ) ) + &#39; (&#39;+ 
+    <formula>Text(YEAR( ( Date__c ))) + &apos; - &apos; + ( IF( MONTH( ( Date__c ) ) &lt; 10, &apos;0&apos;, &apos;&apos;)) + TEXT( MONTH( ( Date__c ) ) ) + &apos; (&apos;+ 
 CASE( MONTH( ( Date__c ) ) , 
 1, &quot;January&quot;, 
 2, &quot;February&quot;, 
@@ -15,7 +15,7 @@ CASE( MONTH( ( Date__c ) ) ,
 9, &quot;September&quot;, 
 10, &quot;October&quot;, 
 11, &quot;November&quot;, 
-&quot;December&quot;)+&#39;)&#39;</formula>
+&quot;December&quot;)+&apos;)&apos;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Created Month</label>
     <required>false</required>

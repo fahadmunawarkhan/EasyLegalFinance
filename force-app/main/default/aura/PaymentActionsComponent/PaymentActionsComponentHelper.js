@@ -16,7 +16,7 @@
         var tempPaymentReceived= component.get('v.tempPaymentReceived');
         var surplus = component.get('v.surplus');
         var stageStatus = component.get('v.stageStatus');
-		var isStageStatusActive = (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active' || stageStatus == 'Active - Collections');
+		var isStageStatusActive = (stageStatus == 'Active - Partial Payment' || stageStatus == 'Active' || stageStatus == 'Active - Collections' || stageStatus == 'Active - Contingent Loan');
         var stageName = component.get('v.stageName');
         var actions = new Array();
         var searchType = component.get('v.searchType');
