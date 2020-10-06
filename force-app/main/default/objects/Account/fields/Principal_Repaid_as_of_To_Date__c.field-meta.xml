@@ -4,6 +4,11 @@
     <externalId>false</externalId>
     <label>Principal Repaid as of To Date</label>
     <summarizedField>Opportunity.Principal_Repaid_as_of_To_Date__c</summarizedField>
+    <summaryFilterItems>
+        <field>Opportunity.Include_In_Portfolio_Report__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
     <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>
