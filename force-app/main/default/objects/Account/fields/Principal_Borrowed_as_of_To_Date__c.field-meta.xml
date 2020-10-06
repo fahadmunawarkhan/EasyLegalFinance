@@ -6,6 +6,11 @@
     <inlineHelpText>Drawdowns with balance outstanding or accrued interest in reporting period. This condition naturally excludes those created and closed before/after reporting period and things which do not accrue interest(Payments, Referral Fees, Payments Re-Proc/Rejectd)</inlineHelpText>
     <label>Principal Borrowed as of To Date</label>
     <summarizedField>Opportunity.Principal_Borrowed_as_of_To_Date__c</summarizedField>
+    <summaryFilterItems>
+        <field>Opportunity.Include_In_Portfolio_Report__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
     <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

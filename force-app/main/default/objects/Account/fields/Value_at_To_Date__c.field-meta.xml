@@ -4,6 +4,16 @@
     <externalId>false</externalId>
     <label>Value at To Date</label>
     <summarizedField>Opportunity.Value_at_To_Date__c</summarizedField>
+    <summaryFilterItems>
+        <field>Opportunity.Outstanding_Balance_as_of_To_Date__c</field>
+        <operation>greaterThan</operation>
+        <value>0.0</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Opportunity.Include_In_Portfolio_Report__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
     <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

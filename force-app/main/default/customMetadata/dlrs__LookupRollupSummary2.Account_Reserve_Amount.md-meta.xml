@@ -52,11 +52,11 @@
     </values>
     <values>
         <field>dlrs__RelationshipCriteriaFields__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">Include_In_Portfolio_Report__c</value>
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">Include_In_Portfolio_Report__c=True</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>
