@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Include_In_Portfolio_Report__c</fullName>
+    <externalId>false</externalId>
+    <formula>OR ( ISPICKVAL( StageName , &apos;Closed With Loan&apos;), ISPICKVAL( StageName , &apos;Re-Assessment&apos;))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Include In Portfolio Report</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
