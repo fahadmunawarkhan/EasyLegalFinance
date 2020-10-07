@@ -9,7 +9,8 @@
 + IF(ISPICKVAL(Payment_Schedule__c, &quot;Yes&quot;), Payment_Scheduled_Allotment_Remaining__c, 0)
 + Scheduled_Non_Facility_Treatment_Total__c 
 + Total_Service_Providers_Allowance__c
-- Principal_Reversed_wo_Providers__c))</formula>
+- Principal_Reversed_wo_Providers__c
+- Amount_Currently_Allocated_Offset__c))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Amount Currently Allocated</label>
     <precision>18</precision>
