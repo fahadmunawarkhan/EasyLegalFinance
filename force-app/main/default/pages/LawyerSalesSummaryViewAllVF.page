@@ -4,7 +4,7 @@
   @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 07/05/2020, 5:15:18 pm
+  @Last Modified On   : 09-03-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    4/7/2020   fahad.khan@toptal.com     Initial Version
@@ -93,6 +93,9 @@
                                     <span><font size="1" face="Arial Unicode MS">Business Unit</font></span>
                                 </th>
                                 <th>
+                                    <span><font size="1" face="Arial Unicode MS">Opportunity #</font></span>
+                                </th>
+                                <th>
                                     <span><font size="1" face="Arial Unicode MS">Drawdown Date</font></span>
                                 </th>
                                 <th>
@@ -109,6 +112,9 @@
                                 </th>
                                 <th>
                                     <span><font size="1" face="Arial Unicode MS">Interest Repaid</font></span>
+                                </th>
+                                <th>
+                                    <span><font size="1" face="Arial Unicode MS">Stage Status</font></span>
                                 </th>
                             </tr>
                         </thead>
@@ -135,6 +141,9 @@
                                     </td>
                                     <td>
                                         <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Account.Business_Unit__c}</font>                                
+                                    </td>
+                                    <td>
+                                        <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Loan_Requests__c}</font>                                
                                     </td>
                                     <td align="right">
                                         <font size="1" face="Arial Unicode MS">
@@ -168,12 +177,19 @@
                                         </font>
                                         <apex:variable value="{!drawdown.Interest_Repaid__c + totalInterestRepaid}" var="totalInterestRepaid"/>
                                     </td>
+                                    <td>
+                                        <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.StageName}</font>
+                                    </td>
+                                    <td>
+                                        <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Stage_Status__c}</font>
+                                    </td>
                                 </tr>
                             </apex:repeat>  
                             <tr>
                                 <td>
                                     <span><font size="1" face="Arial Unicode MS">TOTAL</font></span>
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -196,7 +212,11 @@
                                             <apex:param value="{!totalInterestRepaid}" />                                    
                                         </apex:outputText>
                                     </font>
-                                </td>                                
+                                </td>
+                                <td>
+                                </td> 
+                                <td>
+                                </td>
                             </tr>
                         </tbody>                
                     </table>
