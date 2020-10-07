@@ -113,6 +113,9 @@
                                 <th>
                                     <span><font size="1" face="Arial Unicode MS">Interest Repaid</font></span>
                                 </th>
+                                <th>
+                                    <span><font size="1" face="Arial Unicode MS">Stage Status</font></span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,6 +177,12 @@
                                         </font>
                                         <apex:variable value="{!drawdown.Interest_Repaid__c + totalInterestRepaid}" var="totalInterestRepaid"/>
                                     </td>
+                                    <td>
+                                        <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.StageName}</font>
+                                    </td>
+                                    <td>
+                                        <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Stage_Status__c}</font>
+                                    </td>
                                 </tr>
                             </apex:repeat>  
                             <tr>
@@ -203,7 +212,11 @@
                                             <apex:param value="{!totalInterestRepaid}" />                                    
                                         </apex:outputText>
                                     </font>
-                                </td>                                
+                                </td>
+                                <td>
+                                </td> 
+                                <td>
+                                </td>
                             </tr>
                         </tbody>                
                     </table>
