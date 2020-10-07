@@ -4,7 +4,7 @@
   @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 08-11-2020
+  @Last Modified On   : 09-03-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    02/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -89,6 +89,9 @@
                                 <span><font size="1" face="Arial Unicode MS">Business Unit</font></span>
                             </th>
                             <th>
+                                <span><font size="1" face="Arial Unicode MS">Opportunity #</font></span>
+                            </th>
+                            <th>
                                 <span><font size="1" face="Arial Unicode MS">Drawdown Date</font></span>
                             </th>
                             <th>
@@ -128,6 +131,9 @@
                                 <td>
                                     <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Account.Business_Unit__c}</font>
                                 </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Loan_Requests__c}</font>
+                                </td>
                                 <td align="left">
                                     <font size="1" face="Arial Unicode MS">
                                         <apex:outputText value="{0,date, yyyy'-'MM'-'dd}">
@@ -160,12 +166,19 @@
                                     </font>
                                     <apex:variable value="{!totalInterestRepaid + drawdown.Interest_Repaid__c}" var="totalInterestRepaid"/>
                                 </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.StageName}</font>
+                                </td>
+                                <td>
+                                    <font size="1" face="Arial Unicode MS">{!drawdown.Opportunity__r.Stage_Status__c}</font>
+                                </td>
                             </tr>
                         </apex:repeat>
                         <tr>
                             <td>
                                 <font size="1" face="Arial Unicode MS">TOTAL</font>
                             </td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -187,6 +200,10 @@
                                         <apex:param value="{!totalInterestRepaid}" />                                    
                                     </apex:outputText>
                                 </font>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
                             </td>
                         </tr>
                     </tbody>
