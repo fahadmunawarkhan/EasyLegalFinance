@@ -34,10 +34,21 @@
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Account.Client</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Account_Type__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Client</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>ACCOUNT_NUMBER</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value/>
         </criteriaItems>
     </filter>
     <format>Summary</format>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fractured_Shoulder_Bone_Collar_Bone__c</fullName>
+    <defaultValue>false</defaultValue>
+    <externalId>false</externalId>
+    <label>Fractured Shoulder Bone/Collar Bone</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

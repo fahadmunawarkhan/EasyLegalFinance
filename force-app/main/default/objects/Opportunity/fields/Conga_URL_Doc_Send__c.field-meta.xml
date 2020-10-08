@@ -8,6 +8,7 @@
 &amp; &quot;&amp;DocuSignR1Type=Signer&amp;DocuSignR1Role=Signer+1&amp;DocuSignR1RoutingOrder=1&quot;
 &amp; &quot;&amp;DocuSignR2Id=&quot; &amp; Lawyer__c
 &amp; &quot;&amp;DocuSignR2Type=Signer&amp;DocuSignR2Role=Signer+2&amp;DocuSignR2RoutingOrder=2&quot;
+&amp; &quot;&amp;DocuSign7=0&quot;
 &amp; &quot;&amp;DocuSignEndPoint=NA3&amp;DocuSignBrandName=&quot; &amp; TEXT(Account.Business_Unit__c) &amp; &quot;Signing&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Conga URL Doc Send</label>

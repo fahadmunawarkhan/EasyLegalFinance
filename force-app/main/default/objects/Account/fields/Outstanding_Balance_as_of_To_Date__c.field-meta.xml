@@ -5,6 +5,11 @@
     <inlineHelpText>Outstanding Balance on the Reporting To date. Used for ELFI 1 report. Note that this field is just labeled &quot;Outstanding Balance&quot; on the report (label changed via report type).</inlineHelpText>
     <label>Outstanding Balance as of To Date</label>
     <summarizedField>Opportunity.Outstanding_Balance_as_of_To_Date__c</summarizedField>
+    <summaryFilterItems>
+        <field>Opportunity.Include_In_Portfolio_Report__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
     <summaryForeignKey>Opportunity.AccountId</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

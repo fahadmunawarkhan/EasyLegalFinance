@@ -3,24 +3,23 @@
  * @Description        : 
  * @Author             : fahad.khan@toptal.com
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 5/5/2020, 1:49:24 PM
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 10-01-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/5/2020   fahad.khan@toptal.com     Initial Version
 **/
 public class AccountNotesPrintableCtrl {
     public list<NoteWrapper> contentNotes{get;set;}
-    public AccountNotesPrintableCtrl(Apexpages.StandardController sc)
+    public String ObjName {get;set;}
+    public String ObjId {get;set;}
+    public AccountNotesPrintableCtrl()
     {
+        ObjId = System.currentPageReference().getParameters().get('Id');
         Set<Id> noteIds = new Set<Id>();
-        List<Account> acc = [Select id ,
-                             (Select id from AttachedContentNotes)
-                             from account
-                             where id = :sc.getId()];
-        for(AttachedContentNote n : acc[0].AttachedContentNotes)
+        for(ContentDocumentLink n : [select ContentDocumentId from ContentDocumentLink where LinkedEntityId =: ObjId])
         {
-            noteIds.add(n.Id);
+            noteIds.add(n.ContentDocumentId);
         }
         
         contentNotes = new List<NoteWrapper>();
@@ -44,6 +43,8 @@ public class AccountNotesPrintableCtrl {
             contentNotes.add(w);            
         }
         contentNotes.sort();
+        if(!String.isEmpty(ObjId))
+            ObjName = CustomNotesComponentCtrl.getObjectName(ObjId);
     }
     public class NoteWrapper implements Comparable
     {

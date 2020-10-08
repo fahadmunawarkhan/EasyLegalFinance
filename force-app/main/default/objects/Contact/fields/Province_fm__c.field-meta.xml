@@ -25,7 +25,7 @@
 )
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <inlineHelpText>Attempts to match Contact&#39;s province with a known value in order to update residency on parent Account of a Client.</inlineHelpText>
+    <inlineHelpText>Attempts to match Contact&apos;s province with a known value in order to update residency on parent Account of a Client.</inlineHelpText>
     <label>Province formula</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

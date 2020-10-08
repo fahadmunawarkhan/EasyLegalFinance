@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TypeofAccident__c</fullName>
+    <externalId>false</externalId>
+    <label>Type of Accident</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Collision - 2 Vehicles</fullName>
+                <default>false</default>
+                <label>Collision - 2 Vehicles</label>
+            </value>
+            <value>
+                <fullName>Collision - More than 2</fullName>
+                <default>false</default>
+                <label>Collision - More than 2</label>
+            </value>
+            <value>
+                <fullName>Rollover</fullName>
+                <default>false</default>
+                <label>Rollover</label>
+            </value>
+            <value>
+                <fullName>Loss of Control</fullName>
+                <default>false</default>
+                <label>Loss of Control</label>
+            </value>
+            <value>
+                <fullName>Pedestrian Struck</fullName>
+                <default>false</default>
+                <label>Pedestrian Struck</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

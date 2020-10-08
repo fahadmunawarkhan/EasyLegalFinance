@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PPSA_Expiry_Summary_Report__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This checkbox is for enable and disable of PPSA Expiry Summary report of front end</description>
+    <externalId>false</externalId>
+    <label>PPSA Expiry Summary Report</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

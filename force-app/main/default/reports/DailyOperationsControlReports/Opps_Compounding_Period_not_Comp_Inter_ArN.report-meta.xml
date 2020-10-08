@@ -7,6 +7,9 @@
         <field>Opportunity.File_No__c</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -26,30 +29,42 @@
         <field>Opportunity.Date_Applied__c</field>
     </columns>
     <columns>
+        <field>Opportunity.Effective_Date__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.Interest_Compounding_Period__c</field>
     </columns>
     <description>Loans on which Interest Compounding Period is not Compounding Interest.</description>
     <filter>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
-            <operator>notEqual</operator>
-            <value>Closed No Loan</value>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Interest_Compounding_Period__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>Compounding Interest</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Lawyer Loan-Contingency Fee Acceleration</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

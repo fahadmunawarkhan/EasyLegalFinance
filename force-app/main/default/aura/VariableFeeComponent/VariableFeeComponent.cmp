@@ -1,0 +1,20 @@
+<aura:component  controller="VariableRateCtlr">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="deleteCustomTableRowEvent" event="c:deleteCustomTableRowEvent" action="{!c.handleDeleteRow}"/>   
+    <aura:handler name="addCustomTableRowEvent" event="c:addCustomTableRowEvent" action="{!c.handleAddRow}"/>
+    <aura:handler name="cellChangedEvent" event="c:CustomCellChangedEvent" action="{!c.handleCustomCellChanged}"/>
+    <aura:attribute name="accountId" type="String" access="public" />
+    <aura:attribute name="recordId" type="String" /> 
+    <aura:attribute name="onlyBOM" type="Boolean" />
+    <aura:attribute name="_variableFeeColumns" type="List" />
+    <aura:attribute name="_variableFeeData" type="List" />
+    <aura:attribute name="componentName" type="String" />
+    <aura:method name="reset" action="{!c.reset}"> 
+    </aura:method>
+    <aura:method name="save" action="{!c.save}">     
+        <aura:attribute name="callback" type="Function" />
+    </aura:method>
+
+    <c:CustomTableComponent columns="{!v._variableFeeColumns}" data="{!v._variableFeeData}" displayButtons="false" tableName="{!v.componentName}" aura:id="variablefeetable"/>
+
+</aura:component>

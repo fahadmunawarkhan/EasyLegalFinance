@@ -84,7 +84,10 @@ public with sharing class ScheduledPaymentHelper {
                 reference_note = 'Assessment Fee';
             }
             if (sp.Opportunity__r.Admin_Fee__c == 0) {
-                reference_note = 'Waived Fee';
+                if (!String.isBlank(sp.Opportunity__r.Fee_Type__c) && sp.Opportunity__r.Fee_Type__c != 'Variable Fee')
+                    reference_note = sp.Opportunity__r.Fee_Type__c;
+                else
+                	reference_note = 'Waived Fee';
             }
             adminDrawdowns.put(
                 sp.Opportunity__c,
@@ -162,7 +165,7 @@ public with sharing class ScheduledPaymentHelper {
             sp.Drawdown_Created__c = true;
         }
         Map<Id, Opportunity> oppMap = New Map<Id, Opportunity>([
-            Select Id, Funding_Details_Status__c, Amount_Paid_to_Borrower__c, First_Drawdown_Amount__c
+            Select Id, Funding_Details_Status__c, Amount_Paid_to_Borrower_Formula__c, First_Drawdown_Amount__c
             From Opportunity
             Where Id in :oppIds
         ]);
@@ -203,6 +206,7 @@ public with sharing class ScheduledPaymentHelper {
                 Id,
                 Opportunity__c,
                 Opportunity__r.Admin_Fee__c,
+            	Opportunity__r.Fee_Type__c,
                 Opportunity__r.Admin_Fee_Roll_up__c,
                 Opportunity__r.AccountId,
                 Opportunity_Service_Provider__c,
@@ -236,6 +240,7 @@ public with sharing class ScheduledPaymentHelper {
                     Id,
                     Opportunity__c,
                     Opportunity__r.Admin_Fee__c,
+                	Opportunity__r.Fee_Type__c,
                     Opportunity__r.Admin_Fee_Roll_up__c,
                     Opportunity__r.AccountId,
                     Current_Account_Id__c,

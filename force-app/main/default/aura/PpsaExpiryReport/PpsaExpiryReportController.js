@@ -6,8 +6,10 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
 
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
-        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions');
+        helper.setDefaultTypeOfLoan(component);
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions', 'selectedBusinessUnitFilter');
         helper.OrgCheck(component);
 
         helper.getCustomSettings(component).then($A.getCallback(
@@ -46,7 +48,16 @@
     },
     searchButton: function(component, event, helper) {
         component.set("v.spinner", true);
-        helper.getPPSExpiryLoans(component).then($A.getCallback(
+
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getPPSExpiryLoans(component);
+            }
+        )).then($A.getCallback(
                 function(result) {
                     component.set('v.LoansList', result);
                     component.set("v.ChosenFilter", component.get("v.selectedBusinessUnitFilter"));

@@ -13,6 +13,51 @@
     <navType>Console</navType>
     <profileActionOverrides>
         <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Admin - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
         <content>Account_Custom</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>Account</pageOrSobjectType>
@@ -174,11 +219,19 @@
         <profile>ELFI - Operations</profile>
     </profileActionOverrides>
     <tabs>System_Monitoring__c</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>System_Monitoring_UtilityBar</utilityBar>
     <workspaceConfig>
         <mappings>
+            <tab>Integration_Log__c</tab>
+        </mappings>
+        <mappings>
             <tab>System_Monitoring__c</tab>
+        </mappings>
+        <mappings>
+            <tab>Underwriter_Evaluation_History__c</tab>
         </mappings>
     </workspaceConfig>
 </CustomApplication>

@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
- * @Last Modified By   : fahad.khan@toptal.com
- * @Last Modified On   : 09-21-2020
+ * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @Last Modified On   : 10-02-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    5/12/2020   fahad.khan@toptal.com     Initial Version
@@ -83,15 +83,11 @@ public class CustomerViewComponentCtlr {
     
     /******************* Method to return all notes for the account *********************/
     @AuraEnabled
-    public static List<NoteWrapper> getEnhancedNotes(String accountId) {
+    public static List<NoteWrapper> getEnhancedNotes(String ObjId) {
         Set<Id> noteIds = new SEt<Id>();
-        List<Account> acc = [Select id ,
-                             (Select id from AttachedContentNotes)
-                             from account
-                             where id = :accountId];
-        for(AttachedContentNote n : acc[0].AttachedContentNotes)
+        for(ContentDocumentLink n : [select ContentDocumentId from ContentDocumentLink where LinkedEntityId =: ObjId] )
         {
-            noteIds.add(n.Id);
+            noteIds.add(n.ContentDocumentId);
         }
         
         List<NoteWrapper> notes = new List<NoteWrapper>();
@@ -640,10 +636,11 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 oppToTrans.put(o.Id, new List<TransactionsWrapper>());
             }
             Set<Id> oppSet = oppsIds.keyset();
+            Map<Id, List<Variable_Rate__c>> oppIdToVariableRates = VariableRateHelper.getVariableRatesByOppIdMap(oppSet);
             
             // Building the query
-            String strQuery = 'SELECT Name, EFT__c, CHQ__c, Amount__c, Total_Amount__c, Admin_Fee__c, Reference_Notes__c, Date__c, Opportunity__c, Opportunity__r.Interest_Rate__c, Opportunity__r.Amount, Opportunity__r.Loan_Requests__c,';
-            strQuery += ' Total_Outstanding_Balance__c, Total_Accrued_Interest__c, Total_Per_Diem__c, Admin_Outstanding_Balance__c, Admin_Accrued_Interest__c, Admin_Per_Diem__c, Accrued_Interest_as_of_Payout_Date__c,';
+            String strQuery = 'SELECT Name, EFT__c, CHQ__c, Amount__c, Total_Amount__c, Admin_Fee__c, Reference_Notes__c, Date__c, Opportunity__c, Opportunity__r.Interest_Rate__c, Opportunity__r.Amount, Opportunity__r.Loan_Requests__c,Opportunity__r.Interest_Rate_Type__c,';
+            strQuery += ' Total_Outstanding_Balance__c, Total_Accrued_Interest__c, Total_Per_Diem__c, Admin_Outstanding_Balance__c, Admin_Accrued_Interest__c, Admin_Per_Diem__c, Accrued_Interest_as_of_Payout_Date__c,Opportunity__r.Date_Of_Advance__c,';
             strQuery += ' Outstanding_Balance_as_of_Payout_Date__c, Per_Diem_as_of_Payout_Date__c, Payment_Method__c, Principal_Repaid__c, Payout_Date__c, Formula_Amount__c, Interest_Repaid__c, Principal_Reversed__c, Payment_To_Reverse__r.Payment_Method__c'; 
             strQuery += ' FROM Drawdown__c where reference_notes__c!=\'Referral Fee\' and reference_notes__c!=\'Assessment Fee\' and reference_notes__c!=\'Admin Fee\' and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc, Name asc ';
             // and reference_notes__c!=\'Admin Fee\'
@@ -661,9 +658,17 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 t.line = lineAux;
                 t.eft = d.EFT__c;
                 t.chq = d.CHQ__c;
-                t.interestRate = d.Opportunity__r.Interest_Rate__c;
                 t.description = d.Reference_Notes__c;
                 t.opportunityNumber = d.Opportunity__r.Loan_Requests__c;
+                t.interestRateType = d.Opportunity__r.Interest_Rate_Type__c;
+                if (d.Opportunity__r.Interest_Rate_Type__c == 'Variable'){
+                    List<Variable_Rate__c> vrs = oppIdToVariableRates.get(d.Opportunity__c);
+                    VariableRateHelper.VariableRateDescription vrDescription = VariableRateHelper.getVariableRateDescription(vrs, d.Opportunity__r.Date_Of_Advance__c, d.Payout_Date__c);
+                    t.variableRateText = vrDescription.variableRateText;
+                    t.variableRateHelpText = vrDescription.variableRateHelpText;
+                }
+                else
+                    t.interestRate = d.Opportunity__r.Interest_Rate__c;
                 //Larry requested to not show admin fee drawdown on transaction table so thefollowing code 
                 //is not needed and we can simply pull paymentAmount in all cases
                 /*
@@ -981,13 +986,17 @@ t.adminFee =  d.Amount__c;
         if(payoutDate != null){
             // Grab the list of opportunities for this account
             List<Opportunity> oppsList = getOpportunities(accountId);
+            List<Opportunity> vrOppsList = new List<Opportunity>();
             
             for(Opportunity o : oppsList){
                 o.Payout_Date__c = Date.valueOf(payoutDate);
                 o.Temp_Payment_Received__c = 0;
+                if (o.Interest_Rate_Type__c == 'Variable')
+                    vrOppsList.add(o);
             }
-            
             update oppsList;
+            if (!vrOppsList.isEmpty())
+                InterestCalculator.calculateVariableRates(vrOppsList);
         } else {
             throw new AuraHandledException('Date of payment needs to be populated');
         }        
@@ -1047,6 +1056,7 @@ t.adminFee =  d.Amount__c;
             loanSummary.balance = opp.Account.All_Payout_Balance__c;
             loanSummary.payoutDate = opp.Payout_Date__c;
             loanSummary.rebateDiscount = opp.Account.Total_Rebate_Discount__c;
+            loanSummary.interestRateType = opp.Interest_Rate_Type__c;
             
             AggregateResult[] groupedResults = new AggregateResult[]{};
                 //if(opp.Type_of_Loan__c == 'Lump-Sum' || opp.Type_of_Loan__c == 'Facility Loan'){
@@ -1159,13 +1169,15 @@ loanSummary.balancePrincipal += Decimal.valueOf(String.valueOf(totalDDtreatment[
         List<Opportunity> oppties = getOpportunitiesToGeneratePayout(accountId);
         if(payoutDate != null){
             if(oppties.size() != 0){
-                if(existingLoanSummary.interestRate != null && existingLoanSummary.minimumInterest != null && (existingLoanSummary.interestCompoundingPeriod == 'Simple Interest' || 
+                if((existingLoanSummary.interestRate != null || existingLoanSummary.interestRateType == 'Variable')  && existingLoanSummary.minimumInterest != null && (existingLoanSummary.interestCompoundingPeriod == 'Simple Interest' || 
                                                                                                                (existingLoanSummary.interestCompoundingPeriod == 'Compounding Interest'  && existingLoanSummary.compounding != null))){
                                                                                                                    try{
                                                                                                                        for(Opportunity opp : oppties){
                                                                                                                            opp.Payout_Date__c = Date.valueOf(payoutDate); 
                                                                                                                        }
                                                                                                                        update oppties;
+                                                                                                                       if (existingLoanSummary.interestRateType == 'Variable')
+                                                                                                                       		InterestCalculator.calculateVariableRates(oppties);
                                                                                                                    }
                                                                                                                    catch (DMLException e){
                                                                                                                        throw new AuraHandledException(e.getDmlMessage(0));
@@ -1328,6 +1340,8 @@ return allOpts;*/
         public List<Opportunity> oppsList {get; set;}
         @AuraEnabled
         public decimal rebateDiscount {get;set;}
+        @AuraEnabled
+        public string interestRateType {get;set;}        
     }
     
     /******************* Wrapper Class for Transactions *********************/    
@@ -1366,6 +1380,13 @@ return allOpts;*/
         public string paymentMethod {get;set;}   
         @AuraEnabled
         public string referenceNotes {get;set;}          
+        @AuraEnabled
+        public string interestRateType {get;set;}          
+        @AuraEnabled
+        public string variableRateText {get;set;}         
+        @AuraEnabled
+        public string variableRateHelpText {get;set;}         
+        
     }  
     /*******************get Latest oppty orderd by Loan request*******************/
     @AuraEnabled
@@ -1407,8 +1428,7 @@ return allOpts;*/
                             Financing_Statement_Details__c, Loan_Set_up__c, Lump_Sum_drawdowns__c, 
                             Treatment_Providers__c,Payments_tab__c, Schedule_Payments__c,
                             Modify_Notes__c, Payout_Details__c, Can_Send_for_Google_Review__c, Reserve__c, Assign_Details__c,
-                            Can_Generate_Payout_Statement__c, Can_Send_Email_Payout_Statement__c, Can_Change_Opportunity_Status__c
-                            FROM User Where Id = :UserInfo.getUserId()];
+                            Can_Generate_Payout_Statement__c, Can_Send_Email_Payout_Statement__c, Can_Change_Opportunity_Status__c FROM User Where Id = :UserInfo.getUserId()];
         return currentUser;
     } 
 
@@ -1704,6 +1724,24 @@ return allOpts;*/
     @AuraEnabled 
     public static List<PaymentSummaryItem> getLastPaymentSummaryItems(String accountId, List<Id> paymentIds){
         return PaymentSummaryItemHelper.getLastPaymentSummaryItems(accountId, paymentIds);
+	}    
+
+    @AuraEnabled 
+    public static List<PaymentDetailsInfo> getPaymentItems(String accountId){
+        List<PaymentDetailsInfo> result = PaymentSummaryItemHelper.getPaymentDetails(accountId);                       
+        return result;
+	}
+	@AuraEnabled 
+    public static void linkPayments(String accountId, List<String> drawdownIds, Decimal balance){
+        Payment__c payment = new Payment__c();
+        payment.FV_at_Payout_Date__c = balance;
+        payment.Account__c = accountId;
+        insert payment;
+        List<Drawdown__c> drawdowns = [select Id, Payment__c from Drawdown__c where Id in :drawdownIds];
+        for (Drawdown__c drawdown : drawdowns){
+            drawdown.Payment__c = payment.Id;
+		}
+        update drawdowns;        
 	}    
 
     public Class ApprovalHistoryWrapper{

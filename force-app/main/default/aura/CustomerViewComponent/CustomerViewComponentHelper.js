@@ -1,16 +1,13 @@
 ({
-    getAccountInfo : function(component) {
+    getAccountInfo: function(component) {
         // ********************* GET ACCOUNT LABEL VALUES ********************* //
         var fieldsMapAction = component.get('c.getAccountLabelsMap');
         component.set("v.spinner", true);
-        fieldsMapAction.setCallback(this, function (response){
+        fieldsMapAction.setCallback(this, function(response) {
             var state = response.getState();
-            if(state === 'SUCCESS')
-            {
-                component.set('v.fieldLabels',response.getReturnValue());
-            }
-            else if (state ==='ERROR')
-            {
+            if (state === 'SUCCESS') {
+                component.set('v.fieldLabels', response.getReturnValue());
+            } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
@@ -141,77 +138,6 @@
             }
         ));
         return promise;
-    },
-    deleteNote: function(component, event) {
-        let selectedId = event.target.id;
-        let action = component.get('c.delContentNote');
-        action.setParams({ cnoteId: selectedId })
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                component.set("v.spinner", false);
-                this.showToast('SUCCESS', 'Note is deleted successfully!', 'SUCCESS');
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
-                    }
-                } else {
-                    this.unknownErrorsHandler();
-                }
-            }
-        });
-        $A.enqueueAction(action);
-        component.set("v.spinner", false);
-    },
-    updateNote: function(component, event) {
-        let selectedId = component.get("v.selectedNoteId");
-        let action = component.get('c.updateContentNote');
-        action.setParams({ cnoteId: selectedId, body: component.get("v.noteContent") })
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                component.set("v.selectedNoteId", "");
-                component.set('v.showNotePopup', false);
-                component.set("v.spinner", false);
-                this.showToast('SUCCESS', 'Note is updated successfully!', 'SUCCESS');
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
-                    }
-                } else {
-                    this.unknownErrorsHandler();
-                }
-            }
-        });
-        $A.enqueueAction(action);
-        component.set("v.spinner", false);
-    },
-    getEnhancedNotes: function(component) {
-
-        // ********************* GET ACCOUNT RECORD DETAILS ********************* //
-        var recordId = component.get("v.recordId");
-        var action = component.get('c.getEnhancedNotes');
-        action.setParams({ accountId: recordId })
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                component.set("v.notes", response.getReturnValue());
-            } else if (state === 'ERROR') {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.errorsHandler(errors)
-                    }
-                } else {
-                    this.unknownErrorsHandler();
-                }
-            }
-        });
-        $A.enqueueAction(action);
     },
 
     getOpportunitiesList: function(component) {
@@ -951,12 +877,14 @@
         $A.enqueueAction(action);
     },
 
-    clearAllTabs: function(component, event) {
+    clearAllTabs: function(component, event) {        
         // this method set all tabs to hide and inactive
         var getAllLI = document.getElementsByClassName("customClassForTab");
         var getAllDiv = document.getElementsByClassName("customClassForTabData");
         for (var i = 0; i < getAllLI.length; i++) {
             getAllLI[i].className = "slds-tabs--scoped__item customClassForTab";
+        }
+        for (var i = 0; i < getAllDiv.length; i++) {            
             getAllDiv[i].className = "slds-tabs--scoped__content slds-hide customClassForTabData";
         }
         if (component.find('reserveTabLinkId'))
@@ -1066,6 +994,7 @@
         component.set('v.accountObj', accountObj);
 
         contact.AccountId = accountObj.Id;
+        contact.ELF_File_No__c = accountObj.AccountNumber;
         contact.Existing_Litigation_Loans__c = opportunity.Existing_Litigation_Loans__c;
         contact.Have_you_ever_declared_bankruptcy__c = opportunity.Have_you_ever_declared_bankruptcy__c;
         component.set('v.conObj', contact);
@@ -1166,24 +1095,7 @@
         });
         $A.enqueueAction(actionMethod);
     },
-    runAction: function(component, actionName, params){                
-        var action = component.get(actionName); 
-        var self = this;
-        return new Promise($A.getCallback(
-            function(resolve, reject){        
-                action.setParams(params)                        
-                action.setCallback(this, function (response) {
-                    var state = response.getState();                                
-                    if (state === 'SUCCESS') {                
-                        resolve(response.getReturnValue()); 
-                    } else if (state === 'ERROR') {                        
-                        reject(response.getError());
-                    }
-                });
-                $A.enqueueAction(action); 
-            }
-        ));
-    },                
+              
     submitPaymentsAsync: function(component) {
         var accountId = component.get("v.recordId");
         var actionMethod = component.get('c.applyPaymentAsync');
@@ -1284,14 +1196,16 @@
                         component.set("v.createdPaymentList", createdPaymentList);
                     }
                     if (oppsIds.length == 0){                        
-                        component.set("v.displayPaymentValidationErrors", false);
+                        component.set("v.displayPaymentValidationErrors", false);                                        
                         this.postSubmitPayments(component, true);              
                         var paymentIds = [];
                         for (var i = 0; i < createdPaymentList.length; i++){
                             paymentIds.push(createdPaymentList[i].Id);
                         }
-                        /*if (paymentIds.length > 0)
-                            this.showPaymentInstructionDialog(component, paymentIds);*/
+                        if (paymentIds.length > 0){
+                            this.linkPayments(component, paymentIds);
+                            //this.showPaymentInstructionDialog(component, paymentIds);
+                        }
                         this.showToast('SUCCESS','Success!','SUCCESS');                        
                     }
                     else this.submitNextPayment(component);
@@ -1313,25 +1227,25 @@
             $A.enqueueAction(actionMethod);
         }
     },
-    submitPayments : function(component) {
+    submitPayments: function(component) {
         this.validatePaymentAction(component);
         component.set("v.displayPaymentValidationErrors", true);
         var errorMessage = component.get("v.paymentsError");
-        if (errorMessage != ""){
+        if (errorMessage != "") {
             component.set("v.spinner", false);
             return;
         }
         var paymentActionsMap = component.get("v.paymentActionsMap");
         var oppsList = component.get("v.oppList");
         var oppsIds = new Array();
-        for (var oppIndex in oppsList){
+        for (var oppIndex in oppsList) {
             //console.log(paymentActionsMap[oppsList[oppIndex].Id]);
-            if (paymentActionsMap[oppsList[oppIndex].Id]){
+            if (paymentActionsMap[oppsList[oppIndex].Id]) {
                 oppsIds.push(oppsList[oppIndex].Id);
                 //console.log(oppsList[oppIndex].Id);
             }
         }
-        if (oppsIds.length > 0){
+        if (oppsIds.length > 0) {
             component.set("v.oppIdList", oppsIds);
             component.set("v.createdPaymentList", []);
             this.runAction(component, 'c.needAsyncProcessing', {oppIds: oppsIds})
@@ -1363,15 +1277,23 @@
         }
         return BadDebtArr[OppId];
     },
-    estimateTotalBalance : function(component)    {
+    getBadReasons : function(component, OppId){
+        var oppsList = component.get("v.oppList");
+        var BadDebtArr = [];
+        for (var oppIndex in oppsList){
+                BadDebtArr[oppsList[oppIndex].Id] = (!oppsList[oppIndex].Bad_Debt_Reason__c) ? '' : oppsList[oppIndex].Bad_Debt_Reason__c;
+        }
+        return BadDebtArr[OppId];
+    },
+    estimateTotalBalance: function(component) {
         var opps = component.get("v.oppList");
         //console.log(opps);
         var estTotalBalance = 0.0;
-        for (var oppIndex in opps){
+        for (var oppIndex in opps) {
             var opp = opps[oppIndex];
             //  console.log(opp);
             if (opp.Is_Stage_Status_Active__c)
-            	estTotalBalance += opp.Total_Payout__c;
+                estTotalBalance += opp.Total_Payout__c;
         }
 
         component.set("v.estimatedTotalBalance", estTotalBalance);
@@ -1408,21 +1330,21 @@
             }
         );        
     },
-    formatCurrency : function(amount) {
+    formatCurrency: function(amount) {
         //https://developer.salesforce.com/index.php?title=Format_Number_as_Currency.js&oldid=9020
-        if(isNaN(amount)) { return '0.00'; }
+        if (isNaN(amount)) { return '0.00'; }
         var s = new String(amount);
-        if(s.indexOf('.') < 0) { s += '.00'; }
-        if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
+        if (s.indexOf('.') < 0) { s += '.00'; }
+        if (s.indexOf('.') == (s.length - 2)) { s += '0'; }
         var delimiter = ",";
-        var a = s.split('.',2);
+        var a = s.split('.', 2);
         var d = a[1];
         var n = a[0];
         var a = [];
-        while(n.length > 3) {
-            var block = n.substr(n.length-3);
+        while (n.length > 3) {
+            var block = n.substr(n.length - 3);
             a.unshift(block);
-            n = n.substr(0,n.length-3);
+            n = n.substr(0, n.length - 3);
         }
         if (n.length > 0) { a.unshift(n); }
         n = a.join(delimiter);
@@ -1469,16 +1391,26 @@
         let accountObj = component.get("v.accountObj");
 
         let options = [];
-        options.push({'label' : 'Business Development', 'value' : 'Business Development'});
-            if(accountObj.Projected_Loan_Value__c > 0 && accountObj.Total_Amount_Loaned__c > 0){
+            /*if(accountObj.Projected_Loan_Value__c > 0 && accountObj.Total_Amount_Loaned__c > 0){
                 if(accountObj.Total_Amount_Loaned__c/accountObj.Projected_Loan_Value__c == 0){
                     options.push({'label' : 'Lawyer Relationship', 'value' : 'Lawyer Relationship'});
                 }
             }else{
                 options.push({'label' : 'Lawyer Relationship', 'value' : 'Lawyer Relationship'});
+            }*/
+            if(accountObj.Total_Amount_Loaned__c > 0 && accountObj.Projected_Loan_Value__c > 0){
+                if(accountObj.Total_Amount_Loaned__c / accountObj.Projected_Loan_Value__c <= 0.15){
+                    component.set("v.reasonavailability", false);
+                }
+                if(accountObj.Total_Amount_Loaned__c / accountObj.Projected_Loan_Value__c > 0.15){
+                    component.set("v.reasonavailability", true);
+                    options.push({'label' : 'Business Development', 'value' : 'Business Development'});
+                    options.push({'label' : 'Lawyer Relationship', 'value' : 'Lawyer Relationship'});
+                    options.push({'label' : 'Assessment Loan - NA', 'value' : 'Assessment Loan - NA'});
+                    options.push({'label' : 'Strong Case', 'value' : 'Strong Case'});
+                    options.push({'label' : 'Settled File', 'value' : 'Settled File'});
+                }
             }
-            options.push({'label' : 'Assessment Loan', 'value' : 'Assessment Loan'});
-            
         let selectedReason = '';
         for (let i = 0; i < options.length; i++) {
             if (options[i].value == accountObj.Reason_for_LTV__c) {
@@ -1531,8 +1463,8 @@
         var recordId = component.get("v.recordId");
         var action = component.get('c.getAccountReserveInfo');
         component.set("v.spinner", true);
-        action.setParams({ accountId : recordId})
-        action.setCallback(this, function (response) {
+        action.setParams({ accountId: recordId })
+        action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
                 component.set("v.spinner", false);
@@ -1587,7 +1519,7 @@
             var name = opp.Name;
             var isInterestFrozen = opp.Is_Reserve_Applied__c && opp.Stop_Interest__c;
             if (opp.Loan_Requests__c)
-                name += ' - ' + opp.Loan_Requests__c;
+                name += ' - ' + opp.Loan_Requests__c;            
             var items = [{itemName: 'Is_Reserve_Applied__c', value: opp.Is_Reserve_Applied__c, align: 'center', type: 'boolean', editable: true},
                 {itemName: 'Stop_Interest__c', value: opp.Stop_Interest__c, align: 'center', type: 'boolean', editable: true},                       
                 {itemName: name, value: name, align: 'left', type: 'text', editable: false},
@@ -1600,26 +1532,26 @@
                 {itemName: 'Value_At_Reserve_Date__c', value: opp.Value_At_Reserve_Date__c, align: 'right', type: 'currency', editable: false},
                 {itemName: 'Reserve_Amount__c', value: opp.Reserve_Amount__c, align: 'right', type: 'currency', editable: true},
                 {itemName: 'Reserve_Exposure__c', value: opp.Reserve_Exposure__c, align: 'right', type: 'currency', editable: false }];
-          var row = {id: opp.Id, items: items};
+            var row = {id: opp.Id, items: items};
             data.push(row);
             if (isInterestFrozen){
-            if (opp.Principal_Advanced_To_Reserve_Date__c)
-                totalPrincipalAtFreezeDate += opp.Principal_Advanced_To_Reserve_Date__c;
-            if (opp.Interest_Accrued_as_of_Reserve_Date__c)
-                totalAccruedInterestAtFreezeDate += opp.Interest_Accrued_as_of_Reserve_Date__c;
-            if (opp.FV_at_Freeze_Date__c)
-                fvAtFreezeDate += opp.FV_at_Freeze_Date__c;            
-            if (opp.Advances_after_Reserve_Date__c)
-                totalAdvancesAfterFreezeDate += opp.Advances_after_Reserve_Date__c;                        
-            if (opp.Payments_after_Reserve_Date__c)
-                totalPaymentsAfterFreezeDate += opp.Payments_after_Reserve_Date__c;                                    
+                if (opp.Principal_Advanced_To_Reserve_Date__c)
+                    totalPrincipalAtFreezeDate += opp.Principal_Advanced_To_Reserve_Date__c;
+                if (opp.Interest_Accrued_as_of_Reserve_Date__c)
+                    totalAccruedInterestAtFreezeDate += opp.Interest_Accrued_as_of_Reserve_Date__c;
+                if (opp.FV_at_Freeze_Date__c)
+                    fvAtFreezeDate += opp.FV_at_Freeze_Date__c;            
+                if (opp.Advances_after_Reserve_Date__c)
+                    totalAdvancesAfterFreezeDate += opp.Advances_after_Reserve_Date__c;                        
+                if (opp.Payments_after_Reserve_Date__c)
+                    totalPaymentsAfterFreezeDate += opp.Payments_after_Reserve_Date__c;                                    
             }
             if (opp.Value_At_Reserve_Date__c)
                 valueAtReserveDate += opp.Value_At_Reserve_Date__c;
             if (opp.Reserve_Amount__c)
                 totalReserveAmount += opp.Reserve_Amount__c;
             if (opp.Reserve_Exposure__c)
-                totalExposure += opp.Reserve_Exposure__c;
+                totalExposure += opp.Reserve_Exposure__c;            
         }
         var totalItems = [{ value: '', align: 'center', type: 'text', editable: false, bold: true },
             { value: '', align: 'right', type: 'text', editable: false, bold: true },
@@ -1670,8 +1602,8 @@
                     }
                 }
                 var action = component.get('c.applyReserve');
-                action.setParams({ reserveInfos : records});
-                action.setCallback(this, function (response) {
+                action.setParams({ reserveInfos: records });
+                action.setCallback(this, function(response) {
                     var state = response.getState();
                     console.log(state);
                     if (state === 'SUCCESS') {
@@ -1755,58 +1687,52 @@
             })
         );
     },
-    getPaymentSummary: function(component){        
+    getPaymentSummary: function(component, loadPayments){        
         var recordId = component.get("v.recordId");
-        var action = component.get('c.getPaymentSummaryItems'); 
-        var self = this;
-        return new Promise($A.getCallback(
-            function(resolve, reject){        
-                action.setParams({ accountId : recordId})                        
-                action.setCallback(this, function (response) {
-                    var state = response.getState();                                
-                    if (state === 'SUCCESS') {                
-                        resolve(response.getReturnValue()); 
-                    } else if (state === 'ERROR') {                        
-                        reject(response.getError());
-                    }
-                });
-                $A.enqueueAction(action); 
-            }
-        ));
+        return this.runAction(component, loadPayments ? 'c.getPaymentItems' : 'c.getPaymentSummaryItems', { accountId : recordId});
+    },
+    getPaymentSummary: function(component, loadPayments){        
+        var recordId = component.get("v.recordId");
+        return this.runAction(component, loadPayments ? 'c.getPaymentItems' : 'c.getPaymentSummaryItems', { accountId : recordId});
     },
     getLastPaymentsSummary: function(component, paymentIds){        
         var recordId = component.get("v.recordId");
-        var action = component.get('c.getLastPaymentSummaryItems'); 
-        var self = this;
-        return new Promise($A.getCallback(
-            function(resolve, reject){        
-                action.setParams({ accountId : recordId, paymentIds : paymentIds})                        
-                action.setCallback(this, function (response) {
-                    var state = response.getState();                                
-                    if (state === 'SUCCESS') {                
-                        resolve(response.getReturnValue()); 
-                    } else if (state === 'ERROR') {                        
-                        reject(response.getError());
-                    }
-                });
-                $A.enqueueAction(action); 
-            }
-        ));
+        return this.runAction(component, 'c.getLastPaymentSummaryItems', { accountId : recordId, paymentIds : paymentIds});
+    },                
+	getLastPaymentsSummary: function(component, paymentIds){        
+        var recordId = component.get("v.recordId");        
+        return this.runAction(component, 'c.getLastPaymentSummaryItems', { accountId : recordId, paymentIds : paymentIds});
+    },    
+    linkPayments : function(component, paymentIds){
+        var recordId = component.get("v.recordId"); 
+        var balance = component.get("v.LoanSummary.balance");
+        console.log();
+        return this.runAction(component, 'c.linkPayments', { accountId : recordId, drawdownIds : paymentIds, balance : balance});             
     },                
 	loadPaymentSummaryTab: function(component){                
-        this.getPaymentSummary(component)
+        this.getPaymentSummary(component, false)
+        .then(
+            (result) => {                                
+                console.log(result);
+                component.set("v.PaymentSummaryItems", result);
+                return this.getPaymentSummary(component, true)
+            },
+            (error) => {
+                component.set("v.spinner", false);
+            }
+        )
         .then(
             (result) => {                
                 component.set("v.spinner", false);
                 console.log(result);
-                component.set("v.PaymentSummaryItems", result);
+                component.set("v.paymentDetailsItems", result);
             },
             (error) => {
                 component.set("v.spinner", false);
             }
         )
     },
-    excludeFromLawyerStatements : function(component){
+	excludeFromLawyerStatements : function(component){
         let accountObj = component.get("v.accountObj");
 
         var recordId = component.get("v.recordId");
@@ -1863,5 +1789,24 @@
             var updatedCellItem = {itemName: 'Reserve_Date__c', value: isInterestFrozen ? today : '-', align: 'right', type: isInterestFrozen ? 'date' : 'text', editable: isInterestFrozen};
             tableComp.updateCell(recordId, updatedCellItem);
         }        
-    }
+    },
+    runAction: function(component, actionName, params){ 
+        console.log('runAction ' + params);
+        var action = component.get(actionName); 
+        var self = this;
+        return new Promise($A.getCallback(
+            function(resolve, reject){        
+                action.setParams(params)                        
+                action.setCallback(this, function (response) {
+                    var state = response.getState();                                
+                    if (state === 'SUCCESS') {                
+                        resolve(response.getReturnValue()); 
+                    } else if (state === 'ERROR') {                        
+                        reject(response.getError());
+                    }
+                });
+                $A.enqueueAction(action); 
+            }
+        ));
+    },  	
 })

@@ -56,7 +56,7 @@
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:type="xsd:string">Type_of_Loan__c = &#39;Assessment&#39;</value>
+        <value xsi:type="xsd:string">Type_of_Loan__c = &apos;Assessment&apos;</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>

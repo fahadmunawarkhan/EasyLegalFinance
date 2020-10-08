@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Created_Month_Integer__c</fullName>
     <externalId>false</externalId>
-    <formula>Text(YEAR( ( Date__c ))) + &#39; - &#39; + ( IF( MONTH( ( Date__c ) ) &lt; 10, &#39;0&#39;, &#39;&#39;)) + TEXT( MONTH( ( Date__c ) ) )</formula>
+    <formula>Text(YEAR( ( Date__c ))) + &apos; - &apos; + ( IF( MONTH( ( Date__c ) ) &lt; 10, &apos;0&apos;, &apos;&apos;)) + TEXT( MONTH( ( Date__c ) ) )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Created Month Integer</label>
     <required>false</required>

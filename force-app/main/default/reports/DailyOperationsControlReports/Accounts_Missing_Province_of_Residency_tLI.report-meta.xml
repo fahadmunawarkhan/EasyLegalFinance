@@ -18,18 +18,16 @@
     <columns>
         <field>USERS.NAME</field>
     </columns>
-    <description>any account having prov residency = none, &#39;&#39;</description>
+    <description>any account having prov residency = none, &apos;&apos;</description>
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Account.Client</value>
         </criteriaItems>
         <criteriaItems>
             <column>Account.ProvinceResidency__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value/>

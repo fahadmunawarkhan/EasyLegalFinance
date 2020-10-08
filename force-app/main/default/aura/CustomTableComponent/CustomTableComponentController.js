@@ -1,5 +1,5 @@
 ({
-    doInit : function(component, event, helper) {
+    doInit : function(component, event, helper) {                
     },
     reset: function(component, event, helper) {
         var resetClickedEvent = component.getEvent("resetClickedEvent");
@@ -33,5 +33,23 @@
             console.log(recordId + ' ' + cellItem.itemName  + ' '+ cellItem.type + ' ' +  cellItem.editable + ' ' +  cellItem.value);
             helper.updateCell(component, recordId, cellItem);
         }
-    },      
+    },   
+    removeRow: function(component, event, helper) {
+        var params = event.getParam('arguments');
+        if (params) {
+            var rowIndex = params.rowIndex;
+        	helper.removeRow(component, rowIndex);
+        }
+    },
+    getData: function(component, event, helper){
+        var data = component.get("v.data");
+        return data;
+	},
+    setData: function(component, event, helper){
+        var params = event.getParam('arguments');
+        if (params) {
+            var data = params.data;
+            component.set("v.data", data);
+        }
+	}
 })

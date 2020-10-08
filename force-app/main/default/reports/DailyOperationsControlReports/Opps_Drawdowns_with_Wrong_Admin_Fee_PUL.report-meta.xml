@@ -7,6 +7,9 @@
         <field>ACCOUNT_NUMBER</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -29,40 +32,66 @@
         <field>Drawdown__c.Reference_Notes__c</field>
     </columns>
     <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND 6 AND 7 AND (8 OR (9 AND 10))</booleanFilter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Admin Fee</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Reference_Notes__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Admin Fee,Assessment Fee</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Amount__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>375</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Amount__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>475</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ELFI,Seahold</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Rhino</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Effective_Date__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>4/1/2020</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

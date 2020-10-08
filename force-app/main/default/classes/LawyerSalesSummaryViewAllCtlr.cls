@@ -84,7 +84,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         strQuery += ' Opportunity__r.Loan_Requests__c, Opportunity__r.Type_of_Loan__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name,'; 
         strQuery += ' Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c,';
         strQuery += ' Opportunity__r.Account.Name, Opportunity__r.Account.AccountNumber, Opportunity__c, ';
-        strQuery += ' Amount__c, Interest_Repaid__c';
+        strQuery += ' Amount__c, Interest_Repaid__c, Opportunity__r.StageName, Opportunity__r.Stage_Status__c';
         strQuery += ' FROM Drawdown__c WHERE Date__c >= :startDate'; 
         strQuery += ' AND Date__c <= :endDate'; 
         strQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan AND ((Payment_Method__c =:eTransfer)';
@@ -114,7 +114,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         closedOppQuery += ' Opportunity__r.Loan_Requests__c, Opportunity__r.Type_of_Loan__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name,'; 
         closedOppQuery += ' Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c,';
         closedOppQuery += ' Opportunity__r.Account.Name, Opportunity__r.Account.AccountNumber, Opportunity__c, ';
-        closedOppQuery += ' Amount__c, Interest_Repaid__c';        
+        closedOppQuery += ' Amount__c, Interest_Repaid__c, Opportunity__r.StageName, Opportunity__r.Stage_Status__c';        
         closedOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDate';
         closedOppQuery += ' AND Date__c <= :endDate';
         closedOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
@@ -137,7 +137,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         badDebtOppQuery += ' Opportunity__r.Loan_Requests__c, Opportunity__r.Type_of_Loan__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name,'; 
         badDebtOppQuery += ' Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c,';
         badDebtOppQuery += ' Opportunity__r.Account.Name, Opportunity__r.Account.AccountNumber, Opportunity__c, ';
-        badDebtOppQuery += ' Amount__c, Interest_Repaid__c';
+        badDebtOppQuery += ' Amount__c, Interest_Repaid__c, Opportunity__r.StageName, Opportunity__r.Stage_Status__c';
         badDebtOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDate';
         badDebtOppQuery += ' AND Date__c <= :endDate';
         badDebtOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
@@ -158,7 +158,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         shortFallOppQuery += ' Opportunity__r.Loan_Requests__c, Opportunity__r.Type_of_Loan__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name,'; 
         shortFallOppQuery += ' Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c,';
         shortFallOppQuery += ' Opportunity__r.Account.Name, Opportunity__r.Account.AccountNumber, Opportunity__c, ';
-        shortFallOppQuery += ' Amount__c, Interest_Repaid__c';
+        shortFallOppQuery += ' Amount__c, Interest_Repaid__c, Opportunity__r.StageName, Opportunity__r.Stage_Status__c';
         shortFallOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDate';
         shortFallOppQuery += ' AND Date__c <= :endDate';
         shortFallOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
@@ -181,7 +181,7 @@ public class LawyerSalesSummaryViewAllCtlr {
         overageOppQuery += ' Opportunity__r.Loan_Requests__c, Opportunity__r.Type_of_Loan__c, Opportunity__r.Lawyer__c, Opportunity__r.Lawyer__r.Name,'; 
         overageOppQuery += ' Opportunity__r.Law_firm__r.name, Opportunity__r.Law_firm__c, Opportunity__r.Account.Business_Unit__c,';
         overageOppQuery += ' Opportunity__r.Account.Name, Opportunity__r.Account.AccountNumber, Opportunity__c, ';
-        overageOppQuery += ' Amount__c, Interest_Repaid__c';
+        overageOppQuery += ' Amount__c, Interest_Repaid__c, Opportunity__r.StageName, Opportunity__r.Stage_Status__c';
         overageOppQuery += ' FROM Drawdown__c WHERE Date__c >= :startDate';
         overageOppQuery += ' AND Date__c <= :endDate';
         overageOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';

@@ -143,6 +143,11 @@
                 <label>Active - Collections</label>
             </value>
             <value>
+                <fullName>Active - Contingent Loan</fullName>
+                <default>false</default>
+                <label>Active - Contingent Loan</label>
+            </value>
+            <value>
                 <fullName>Closed - Bad Debt</fullName>
                 <default>false</default>
                 <label>Closed - Bad Debt</label>
@@ -234,6 +239,10 @@
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
             <valueName>Active - Collections</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed With Loan</controllingFieldValue>
+            <valueName>Active - Contingent Loan</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Closed With Loan</controllingFieldValue>
