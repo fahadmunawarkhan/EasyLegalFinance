@@ -417,8 +417,10 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         opp = getSingleOpportunity(oppId);
         opp.Temp_Payment_Received__c = 0;   
-        opp.Stage_Status__c = 'Active - Partial Payment';
-        opp.Loan_Status__c = 'Active - Partial Payment';
+        if (opp.Stage_Status__c != 'Active - Collections'){
+            opp.Stage_Status__c = 'Active - Partial Payment';
+            opp.Loan_Status__c = 'Active - Partial Payment';
+        }
         update opp;
         
         return new List<Drawdown__c>{dd};
