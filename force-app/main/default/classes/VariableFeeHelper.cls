@@ -28,6 +28,13 @@ public class VariableFeeHelper {
             opp.Admin_Fee__c = loanSetup;
             update opp;
         }
+        List<Drawdown__c> advances = [select Id, Date__c, Variable_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
+        for (Integer i = 0; i < advances.size(); i++){
+            Drawdown__c advance = advances[i];
+            advance.Variable_Fees_Generated__c = true;
+        }
+        update advances;
+        
     }
     
     public static void createBOMFeesForOpp(Id oppId){        
@@ -40,12 +47,17 @@ public class VariableFeeHelper {
         }
         System.debug(variableFees.size());
         Opportunity opp = [select Id, Minimum_Interest_Period_Number__c, Date_Of_Advance__c, Compounding_Frequency__c, Interest_Deferral_Period__c from Opportunity where Id=:oppId];
-        List<Drawdown__c> advances = [select Id, Date__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
+        List<Drawdown__c> advances = [select Id, Date__c, BOM_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
         Integer advancesCount = advances.size();
         List<Drawdown__c> drawdownsToInsert = new List<Drawdown__c>();
         List<Drawdown__c> newDrawdowns = createBOMDrawdowns(advances, advancesCount, variableFees, opp);
         drawdownsToInsert.addAll(newDrawdowns);
         insert drawdownsToInsert;
+        for (Integer i = 0; i < advancesCount; i++){
+            Drawdown__c advance = advances[i];
+            advance.BOM_Fees_Generated__c = true;
+        }
+        update advances;
     }
     
     public static List<Variable_Fee__c> produceVariableFeesForAdvance(Drawdown__c advance, List<Variable_Fee__c> variableFees){
@@ -107,7 +119,8 @@ public class VariableFeeHelper {
         for (Drawdown__c d : advances){
             Boolean needAdd = false;
             if (d.Id != advance.Id){
-                if (isFirstAdvance && d.Payment_Method__c == 'Admin Fee' && d.Date__c < toDate && (d.Reference_Notes__c != 'Admin Fee - BOM' || d.BOM_Fee_Advance__c == advance.Id))
+                if (isFirstAdvance && d.Payment_Method__c == 'Admin Fee' && d.Reference_Notes__c != 'Other fee - no interest'
+                    && d.Date__c < toDate && (d.Reference_Notes__c != 'Admin Fee - BOM' || d.BOM_Fee_Advance__c == advance.Id))
                     needAdd = true;                    
                 else if (!isFirstAdvance && d.Date__c < toDate && d.BOM_Fee_Advance__c == advance.Id)
                     needAdd = true;
@@ -129,6 +142,8 @@ public class VariableFeeHelper {
         System.debug('createBOMDrawdowns');
         Id oppId = opp.Id;        
         List<Variable_Rate__c> variableRates = [Select Month_Start__c, Month_End__c, Rate__c, Opportunity__c  from Variable_Rate__c where Opportunity__c = :oppId order by Opportunity__c, Month_Start__c asc];        
+        if (variableRates == null || variableRates.isEmpty())
+            throw new VariableFeeException('Variable Rates are not set');
         List<Drawdown__c> bomDrawdowns = new List<Drawdown__c>();
         String referenceNotes = 'Admin Fee - BOM';
         Boolean isFirstAdvance = true;
@@ -144,14 +159,20 @@ public class VariableFeeHelper {
                 for (Variable_Fee__c vf : vfList){
                     System.debug('vfs ' + vf.Effective_At__c + ' ' + vf.Month__c);
                     Date dt = advance.Date__c;
-                    dt = dt.addMonths((Integer)vf.Month__c);                          
+                    System.debug(dt);
+                    //dt = dt.addMonths((Integer)vf.Month__c);               
+                    Integer daysOffset = (Integer)((vf.Month__c / 12.0) * 365.0);
+                    dt = dt.addDays(daysOffset);
+                    System.debug('dt ' + daysOffset  + ' '  + dt + ' '  + dt.addDays(daysOffset));
                     {
                         List<Drawdown__c> advanceWithFees = new List<Drawdown__c>{advance};
                         advanceWithFees.addAll(addLinkedDrawdowns(advance, advances, isFirstAdvance, processedDrawdownIds, dt));                        
                         advanceWithFees.addAll(addLinkedDrawdowns(advance, bomDrawdowns, isFirstAdvance, processedDrawdownIds, dt));
                         Decimal amount = getBOMAmount(advanceWithFees, vf, variableRates, dt, opp);                
                         Drawdown__c d = createDrawdown(vf, referenceNotes, dt, amount);
-                        d.BOM_Fee_Advance__c = advance.Id;                        
+                        d.BOM_Fee_Advance__c = advance.Id;
+                        d.Variable_Fees_Generated__c = true;   
+						d.BOM_Fees_Generated__c = true;                        
                         bomDrawdowns.add(d);                        
                     }
                 }
@@ -165,7 +186,7 @@ public class VariableFeeHelper {
     public static Decimal getBOMAmount(List<Drawdown__c> drds, Variable_Fee__c vf, List<Variable_Rate__c> variableRates, Date dt, Opportunity opp){
         if (vf.Fee_Type__c=='$')
             return vf.Rate__c;
-        InterestCalculator.calculateVariableRates(drds, variableRates, dt, opp);
+        InterestCalculator.calculateVariableRates(drds, variableRates, dt, opp, true);
         Decimal totalAmount = 0.0;        
         for (Drawdown__c d : drds){            
             Decimal advanceBalance = d.Outstanding_Balance_VR__c;
