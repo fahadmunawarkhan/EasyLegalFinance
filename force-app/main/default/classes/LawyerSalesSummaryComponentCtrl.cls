@@ -131,7 +131,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 closedOppQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
                 closedOppQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 closedOppQuery += ' AND Payment_Method__c =:payment';  
-                closedOppQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment)'; 
+                closedOppQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment OR Reference_Notes__c =:paymentSurplus)'; 
                 //closedOppQuery += ' AND (Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
                 closedOppQuery += ' AND Opportunity__r.Lawyer__c in :lawyerIdsSet';
                 closedOppQuery += ' AND Is_Rejected__c = false';
@@ -405,7 +405,7 @@ public with sharing class LawyerSalesSummaryComponentCtrl {
                 for(Wrapper w : finalWrapper){
                     w.NetAmount = (((w.InterestRepaid + w.AdminFeeReceived + w.OverageAmount) - w.ShortfallAmount) - w.BadDebtAmount);
                     w.PrincipalAdvancedOpen = w.PrincipalAdvanced - w.PrincipalAdvancedClosed;
-                    w.ROI = (w.PrincipalAdvanced != null && w.PrincipalAdvanced != 0)? (w.NetAmount / w.PrincipalAdvanced) : 0;
+                    w.ROI = (w.PrincipalAdvancedClosed != null && w.PrincipalAdvancedClosed != 0)? (w.ClosedAmount / w.PrincipalAdvancedClosed) : 0;
                 }
                 
                 return finalWrapper;
