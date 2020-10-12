@@ -161,7 +161,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                 closedWLoanQuery += ' AND Date__c <= :endDt';
                 closedWLoanQuery += ' AND Opportunity__r.StageName =:ClosedWithLoan';
                 closedWLoanQuery += ' AND Payment_Method__c =:payment';  
-                closedWLoanQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment'; 
+                closedWLoanQuery += ' AND (Reference_Notes__c =:loanPayout OR Reference_Notes__c =:partialPayment OR Reference_Notes__c =:paymentSurplus'; 
                 closedWLoanQuery += ' )'; 
                 //closedWLoanQuery += ' AND (Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
                 closedWLoanQuery += ' AND Opportunity__r.Law_firm__c in :lawfirmIdsSet';
@@ -464,7 +464,7 @@ public with sharing class LawFirmSalesSummaryComponentCtrl {
                     w.NetAmount = (((w.totalInterestRepaid + w.totalAdminFeeReceived + w.totalOverAgeAmt) - w.totalShortFallAmt) - w.totalbdamount);
                     
                     w.PrincipalAdvancedOpen = w.PrincipalAdvanced - w.PrincipalAdvancedClosed;
-                    w.ROI = (w.PrincipalAdvanced != null && w.PrincipalAdvanced != 0)? (w.NetAmount / w.PrincipalAdvanced) : 0;
+                    w.ROI = (w.PrincipalAdvancedClosed != null && w.PrincipalAdvancedClosed != 0)? (w.totalClosedAmount / w.PrincipalAdvancedClosed) : 0;
                     
                     wrapers.add(w);
                 }
