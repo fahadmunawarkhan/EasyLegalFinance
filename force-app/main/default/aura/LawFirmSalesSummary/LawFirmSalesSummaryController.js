@@ -48,7 +48,7 @@
     filterButton: function(component, event, helper) {
 
         component.set("v.spinner", true);
-
+        helper.resetGrandTotal(component);
         helper.validation(component, 'businessunitMS').then($A.getCallback(
             function(result){
                 return helper.validation(component, 'typeOfLoanMS');
@@ -102,7 +102,7 @@
         component.set('v.sortOrder', sortOrder);
 
         component.set("v.spinner", true);
-
+        helper.resetGrandTotal(component);
         //helper.getLawyersList(component,event);
         helper.getAmountGroupByLawFirm(component).then($A.getCallback(
             function(result) {

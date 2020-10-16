@@ -55,6 +55,7 @@ console.log(component.get("v.businessUnitOptions"));
     searchButton : function(component, event, helper){
         
         component.set("v.spinner", true);
+        helper.resetGrandTotal(component);
         helper.validation(component, 'businessunitMS').then($A.getCallback(
             function(result){
                 return helper.validation(component, 'typeOfLoanMS');
