@@ -286,5 +286,28 @@
                 }
             })
         );
+    },
+    resetGrandTotal: function(component){
+        component.set("v.fileTotal", 0);
+        component.set("v.closedFileTotal", 0);
+        component.set("v.opptyTotal", 0);
+        component.set("v.closedAmtTotal", 0.0);
+        //component.set("v.amtTotal", amountTotal);
+        component.set("v.NoBadDebtTotal", 0);
+        component.set("v.BadDebtAmtTotal", 0.0);
+        component.set("v.ShortFallFileTotal", 0);
+        component.set("v.ShortFallAmtTotal", 0.0);
+        component.set("v.OverAgeFileTotal", 0);
+        component.set("v.OverAgeAmtTotal", 0.0);
+        component.set("v.InterestRepaidTotal", 0.0);
+        component.set("v.AdminFeeReceivedTotal", 0.0);
+        component.set("v.ActiveFileTotal", 0);
+        component.set("v.ActivePFileTotal", 0);
+        component.set("v.TotalNetAmount", 0.0);
+        
+        component.set("v.totalPrincipalAdvanceOpen", 0.0);
+        component.set("v.totalPrincipalAdvanceClosed", 0.0);
+        component.set("v.totalPrincipalRepaid", 0.0);
+        component.set("v.totalROI", 0);
     }
 })
