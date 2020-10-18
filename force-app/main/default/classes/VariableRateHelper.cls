@@ -16,6 +16,8 @@ public class VariableRateHelper {
             return variableRates.size();
         if (variableRates.size() == 0)
             return 0;
+        if (loanStartDate > payoutDate)
+            return variableRates.size();
         Date dt = loanStartDate;
         Integer index = 0;
         while ( dt <= payoutDate && index < variableRates.size()){            
@@ -30,19 +32,12 @@ public class VariableRateHelper {
     
     public static VariableRateDescription getVariableRateDescription(List<Variable_Rate__c> variableRates, Date loanStartDate, Date payoutDate){
         VariableRateDescription vrd = new VariableRateDescription();
+        vrd.variableRateText = 'Variable...';
         Integer affectedVariableRatesCount = getAffectedVariableRatesCount(variableRates, loanStartDate, payoutDate);
         for (Integer i = 0; i < affectedVariableRatesCount; i++){
             Variable_Rate__c vr = variableRates[i];
-            if (i <= 1)
-            	vrd.variableRateText += 'Months ' + vr.Month_Start__c + (vr.Month_End__c == null ? '+' : ('-' + vr.Month_End__c)) + ': ' +vr.Rate__c + '%, ';            
-            else if (i == 2)
-                vrd.variableRateText += '...';
             vrd.variableRateHelpText += 'Months ' + vr.Month_Start__c + (vr.Month_End__c == null ? '+' : ('-' + vr.Month_End__c)) + ': ' +vr.Rate__c + '%\r\n';            
         }
-        if (vrd.variableRateText.endsWith(', '))
-            vrd.variableRateText = vrd.variableRateText.substring(0, vrd.variableRateText.length()-2);
-        if (affectedVariableRatesCount <= 2)
-            vrd.variableRateHelpText = null;
         
         return vrd;
 	}

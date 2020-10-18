@@ -150,6 +150,23 @@
             </aura:if>
 
             <div class="slds-card__body_inner">
+                <aura:if isTrue="{!v.oppObj.VR_Fees_Generating_In_Progress__c == true}">
+                    <lightning:layout>
+                        <lightning:layoutItem size="12">
+                            <div class="slds-m-bottom_x-large">
+                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                    <span class="slds-assistive-text">warning</span>
+                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                                        <lightning:icon iconName="utility:warning" alternativeText="help!" size="xx-small" />
+                                    </span>
+                                    <h2>Generating drawdowns. Modifying any loan fields now will result in error. Please wait for generation to complete
+                                    </h2>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:if>
+
                 <aura:if isTrue="{!v.oppObj.Business_Unit__c=='Rhino'}">
                 <lightning:layout class="slds-m-left_xx-large slds-m-top_large">      
                     
@@ -1823,6 +1840,7 @@
                                         <aura:if isTrue="{!v.currentUser.Lump_Sum_drawdowns__c}">
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveDrawdowns}" />
+                                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate variable rate drawdowns" onclick="{!c.generateVRDrawdowns}" />
                                         </aura:if>
                                     </aura:set>   
                                     <table class="slds-table slds-table_bordered slds-table_col-bordered">
@@ -1913,6 +1931,7 @@
                                         <aura:if isTrue="{!v.currentUser.Drawdowns__c}">
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Add New" onclick="{!c.addNewDrawdown}" />
                                             <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveDrawdowns}" />
+                                            <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate variable rate drawdowns" onclick="{!c.generateVRDrawdowns}" />
                                         </aura:if>
                                     </aura:set>   
                                     <table class="slds-table slds-table_bordered slds-table_col-bordered">
