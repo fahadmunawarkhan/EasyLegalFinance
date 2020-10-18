@@ -79,7 +79,7 @@
         var effectiveAtOptions = this.getEffectiveAtOptions(component);
         var items = [
             { value: effectiveAtOptions[0].value, align: 'left', type: 'combobox', options: effectiveAtOptions, editable: true, bold: false, hideEditButton: true, label: 'Effective At'  },
-            { value: '13', align: 'center', type: 'number', editable: true, bold: false, hideEditButton: true, label: 'Month'  },
+            { value: '12', align: 'center', type: 'number', editable: true, bold: false, hideEditButton: true, label: 'Month'  },
             { value: feeTypeOptions[0].value, align: 'center', type: 'radiogroup', editable: true, options: feeTypeOptions, bold: false, hideEditButton: true  },
             { value: 0.0, align: 'right', type: feeTypeOptions[0].value=='%' ? 'percentage' : 'currency', editable: true, bold: false, hideEditButton: true, label: feeTypeOptions[0].value=='%' ? 'Amount %' : 'Amount' },
             { value: '', align: 'left', type: 'none', editable: false, hideEditButton: true, hideDeleteButton: false}
@@ -126,17 +126,19 @@
                     (result) => { 
                         this.populateVariableFeeTableData(component);
                         var msg = onlyBOM ? 'BOM Fees are saved' : 'Variable Fees are saved';
-                        this.showToast('SUCCESS',msg,'SUCCESS');                                                        
-                        return this.runAction(component, 'c.createFees', { oppId: recordId, onlyBOM: onlyBOM})
+                        this.showToast('SUCCESS',msg,'SUCCESS');     
+                        if (callback)
+                        	callback();
+                        //return this.runAction(component, 'c.createFees', { oppId: recordId, onlyBOM: onlyBOM})
                     }
                )
-               .then(                                
+               /*.then(                                
                     (result) => {                              
                         if (callback)
                         	callback();
                         this.showToast('SUCCESS','SUCCESS','SUCCESS');                                                        
                     }                    
-               )
+               )*/
                .catch((errors) => {
                    console.log('errors');
                    if (callback)

@@ -2,7 +2,7 @@ global class VariableFeeScheduler implements Schedulable{
 	global void execute(SchedulableContext sc)    
     {
         createFees(Date.today());
-    }
+    }    
     public static void createFees(Date dt){        
         Map<Id, List<Drawdown__c>> oppIdToDrawdowns = getExistingDrawdowns(dt);        
         List<Variable_Fee__c> variableFeesToProcess = getVariableFeesToProcess(dt);
@@ -17,6 +17,7 @@ global class VariableFeeScheduler implements Schedulable{
         }
         if (!drawdownsToInsert.isEmpty())
             insert drawdownsToInsert;
+        generatePastFees();
     }
     public static Map<Id, List<Drawdown__c>> getExistingDrawdowns(Date dt){
         List<Drawdown__c> existingDrawdowns = [select Id, Opportunity__c, Variable_Fee_Effected_At__c from Drawdown__c where Variable_Fee_Effected_At__c != null and Payment_Method__c='Admin Fee' and Date__c=:dt order by Opportunity__c];
@@ -68,5 +69,14 @@ global class VariableFeeScheduler implements Schedulable{
                 return true;
         }
         return false;
+    }
+    public static void generatePastFees(){
+        List<Drawdown__c> drawdowns = [select Id, Date__c, Opportunity__c, Opportunity__r.Date_Of_Advance__c, Opportunity__r.Interest_Rate_Type__c from Drawdown__c 
+                                       where Opportunity__r.Variable_Fees_Count__c > 0 and (Variable_Fees_Generated__c != true or BOM_Fees_Generated__c != true) and Has_Interest__c=true];
+        Set<Id> oppIds = new Set<Id>();
+        for (Drawdown__c d : drawdowns){
+            oppIds.add(d.Opportunity__c);
+        }        
+        System.enqueueJob(new CreateVariableFeesQueueable(new List<Id>(oppIds)));        
     }
 }

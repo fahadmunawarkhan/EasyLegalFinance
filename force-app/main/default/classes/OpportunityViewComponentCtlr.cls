@@ -664,4 +664,13 @@ public class OpportunityViewComponentCtlr {
         }
         return null;
     }
+    @AuraEnabled
+    public static void createFees(String oppId){
+		Opportunity opp = [select Id, VR_Fees_Generating_In_Progress__c from Opportunity where Id=:oppId];
+        if (opp.VR_Fees_Generating_In_Progress__c == true)
+            throw new AuraHandledException('The process has already started');
+        opp.VR_Fees_Generating_In_Progress__c = true;
+        update opp;
+        System.enqueueJob(new CreateFeesForOppQueueable(oppId));                
+    }    
 }

@@ -28,12 +28,13 @@ public class VariableFeeHelper {
             opp.Admin_Fee__c = loanSetup;
             update opp;
         }
-        List<Drawdown__c> advances = [select Id, Date__c, Variable_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
+        List<Drawdown__c> advances = [select Id, Date__c, Variable_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment' and Variable_Fees_Generated__c != true];
         for (Integer i = 0; i < advances.size(); i++){
             Drawdown__c advance = advances[i];
             advance.Variable_Fees_Generated__c = true;
         }
-        update advances;
+        if (!advances.isEmpty())
+        	update advances;
         
     }
     
@@ -46,18 +47,21 @@ public class VariableFeeHelper {
             Database.delete(existingFees, false);            
         }
         System.debug(variableFees.size());
-        Opportunity opp = [select Id, Minimum_Interest_Period_Number__c, Date_Of_Advance__c, Compounding_Frequency__c, Interest_Deferral_Period__c from Opportunity where Id=:oppId];
+        Opportunity opp = [select Id, Minimum_Interest_Period_Number__c, Interest_Rate_Type__c, Interest_Rate__c, Date_Of_Advance__c, Compounding_Frequency__c, Interest_Deferral_Period__c from Opportunity where Id=:oppId];
         List<Drawdown__c> advances = [select Id, Date__c, BOM_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
         Integer advancesCount = advances.size();
         List<Drawdown__c> drawdownsToInsert = new List<Drawdown__c>();
         List<Drawdown__c> newDrawdowns = createBOMDrawdowns(advances, advancesCount, variableFees, opp);
         drawdownsToInsert.addAll(newDrawdowns);
         insert drawdownsToInsert;
+        List<Drawdown__c> drawdownsToUpdate = new List<Drawdown__c>();
         for (Integer i = 0; i < advancesCount; i++){
             Drawdown__c advance = advances[i];
             advance.BOM_Fees_Generated__c = true;
+            drawdownsToUpdate.add(advance);
         }
-        update advances;
+        if (!drawdownsToUpdate.isEmpty())
+        	update drawdownsToUpdate;
     }
     
     public static List<Variable_Fee__c> produceVariableFeesForAdvance(Drawdown__c advance, List<Variable_Fee__c> variableFees){
@@ -135,13 +139,21 @@ public class VariableFeeHelper {
         }
         
         return result;
-	}
-        
+	}        
     
     public static List<Drawdown__c> createBOMDrawdowns(List<Drawdown__c> advances, Integer advancesCount, List<Variable_Fee__c> variableFees, Opportunity opp){     
         System.debug('createBOMDrawdowns');
         Id oppId = opp.Id;        
-        List<Variable_Rate__c> variableRates = [Select Month_Start__c, Month_End__c, Rate__c, Opportunity__c  from Variable_Rate__c where Opportunity__c = :oppId order by Opportunity__c, Month_Start__c asc];        
+        List<Variable_Rate__c> variableRates;
+        if (opp.Interest_Rate_Type__c == 'Variable')
+        	variableRates = [Select Month_Start__c, Month_End__c, Rate__c, Opportunity__c  from Variable_Rate__c where Opportunity__c = :oppId order by Opportunity__c, Month_Start__c asc];        
+        else{
+            Variable_Rate__c vr = new Variable_Rate__c();
+            vr.Month_Start__c = 1;
+            vr.Rate__c = opp.Interest_Rate__c;
+            vr.Opportunity__c = opp.Id;
+            variableRates = new List<Variable_Rate__c>{vr};
+        }
         if (variableRates == null || variableRates.isEmpty())
             throw new VariableFeeException('Variable Rates are not set');
         List<Drawdown__c> bomDrawdowns = new List<Drawdown__c>();

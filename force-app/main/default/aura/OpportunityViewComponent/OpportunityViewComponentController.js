@@ -728,7 +728,7 @@
                         variableFeeComponent.save(
                             ()=>{
                                 component.set("v.spinner", false);
-                                helper.reInitSomeData(component);                    
+                                //helper.reInitSomeData(component);                    
                             }
                 		);                
                     }
@@ -748,9 +748,31 @@
             bomFeeComponent.save(
                 ()=>{
                 	component.set("v.spinner", false);
-                    helper.reInitSomeData(component);                    
+                    //helper.reInitSomeData(component);                    
             	}
             );                
         }            	        
+    },
+	generateVRDrawdowns : function(component, event, helper){ 
+        var recordId = component.get("v.recordId");        
+        component.set("v.spinner", true);
+        helper.runAction(component, 'c.createFees', {oppId: recordId})
+        .then(
+            (result) => {       
+                component.set("v.spinner", false);
+                helper.showToast('SUCCESS','Generating drawdowns. Modifying any loan fields now will result in error. Please wait for generation to complete','SUCCESS');
+                component.set("v.oppObj.VR_Fees_Generating_In_Progress__c", true);
+            },
+            (errors) => {    
+                component.set("v.spinner", false);
+                if (errors){
+                	if (errors[0] && errors[0].message) {
+               			helper.errorsHandler(errors)
+            		}else {
+            			helper.unknownErrorsHandler();
+    				}    
+                }
+            }
+        )                	        
     }                  
 })

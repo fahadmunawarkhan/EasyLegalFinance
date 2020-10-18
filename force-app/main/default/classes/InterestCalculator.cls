@@ -25,7 +25,7 @@ public class InterestCalculator {
         return result;
     }    
     public static void calculateVariableRates(Id oppId){
-        List<Opportunity> opps = [select Id, Date_Of_Advance__c, Payout_Date__c, Minimum_Interest_Period_Number__c, 
+        List<Opportunity> opps = [select Id, Date_Of_Advance__c, Payout_Date__c, Minimum_Interest_Period_Number__c, Interest_Rate_Type__c, Interest_Rate__c,  
                                   Interest_Deferral_Period__c, Compounding_Frequency__c from Opportunity where Id = :oppId];
         if (!opps.isEmpty()){
             Date payoutDate = opps[0].Payout_Date__c;
@@ -39,7 +39,7 @@ public class InterestCalculator {
             update opps;
         }
         calculateVariableRates(opps);
-    }
+    }    
     public static Date getInterestStartDate(Drawdown__c d, Opportunity opp, Boolean isBOM){
         if (d.Interest_Start_Date__c != null)
             return d.Interest_Start_Date__c;
@@ -125,8 +125,18 @@ public class InterestCalculator {
                 if (d.Opportunity__c == opp.Id)
                     drawdownsForOpp.add(d);
             }
-            if (!drawdownsForOpp.isEmpty()){
-                List<Variable_Rate__c> vrs = oppIdToVRs.get(opp.Id);
+            if (!drawdownsForOpp.isEmpty()){                
+                List<Variable_Rate__c> vrs;
+                if (opp.Interest_Rate_Type__c == 'Variable')
+                	vrs = oppIdToVRs.get(opp.Id);
+                else{
+                    Variable_Rate__c vr = new Variable_Rate__c();
+                    vr.Month_Start__c = 1;
+                    vr.Rate__c = opp.Interest_Rate__c;
+                    vr.Opportunity__c = opp.Id;
+                    variableRates = new List<Variable_Rate__c>{vr};
+                    vrs = new List<Variable_Rate__c>{vr};
+                }                
                 calculateVariableRates(drawdownsForOpp, vrs, opp.Payout_Date__c, opp, false);
                 drawdownsToUpdate.addAll(drawdownsForOpp);
             }
