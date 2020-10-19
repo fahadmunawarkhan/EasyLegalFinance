@@ -59,4 +59,6 @@
 }
 .THIS .toggle-reserve .slds-checkbox_toggle [type=checkbox]:checked+.slds-checkbox_faux_container .slds-checkbox_faux {
     background-color: #ad321c !important;
+}.THIS .horizontalRadioCls .slds-form-element__control .slds-radio{
+    display : inline-block !important;
 }

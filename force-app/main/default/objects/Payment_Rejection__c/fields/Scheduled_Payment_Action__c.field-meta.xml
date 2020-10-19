@@ -21,9 +21,9 @@
                 <label>Set to Rejected</label>
             </value>
             <value>
-                <fullName>Set to Won&#39;t Send</fullName>
+                <fullName>Set to Won&apos;t Send</fullName>
                 <default>false</default>
-                <label>Set to Won&#39;t Send</label>
+                <label>Set to Won&apos;t Send</label>
             </value>
         </valueSetDefinition>
     </valueSet>

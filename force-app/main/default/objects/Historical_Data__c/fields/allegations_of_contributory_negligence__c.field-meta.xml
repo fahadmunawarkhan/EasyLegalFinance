@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>allegations_of_contributory_negligence__c</fullName>
+    <externalId>false</externalId>
+    <label>allegations of contributory negligence</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <controllingField>Are_there_allegations_negligence__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Seatbelt</fullName>
+                <default>false</default>
+                <label>Seatbelt</label>
+            </value>
+            <value>
+                <fullName>Joint venture</fullName>
+                <default>false</default>
+                <label>Joint venture</label>
+            </value>
+            <value>
+                <fullName>Assumption of risk (VOLENTI)</fullName>
+                <default>false</default>
+                <label>Assumption of risk (VOLENTI)</label>
+            </value>
+            <value>
+                <fullName>Failure to mitigate</fullName>
+                <default>false</default>
+                <label>Failure to mitigate</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Seatbelt</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Joint venture</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Assumption of risk (VOLENTI)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Yes</controllingFieldValue>
+            <valueName>Failure to mitigate</valueName>
+        </valueSettings>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

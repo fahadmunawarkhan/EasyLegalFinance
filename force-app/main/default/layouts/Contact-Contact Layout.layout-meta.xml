@@ -488,7 +488,9 @@
         <fields>OPPORTUNITY.NAME</fields>
         <fields>ACCOUNT.NAME</fields>
         <fields>OPPORTUNITY.STAGE_NAME</fields>
+        <fields>Stage_Status__c</fields>
         <fields>OPPORTUNITY.AMOUNT</fields>
+        <fields>Type_of_Loan__c</fields>
         <fields>OPPORTUNITY.CLOSE_DATE</fields>
         <relatedList>Opportunity.Lawyer__c</relatedList>
         <sortField>OPPORTUNITY.STAGE_NAME</sortField>

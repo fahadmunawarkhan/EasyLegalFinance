@@ -156,6 +156,11 @@
                 <default>false</default>
                 <label>Other fee - no interest</label>
             </value>
+            <value>
+                <fullName>Admin Fee - BOM</fullName>
+                <default>false</default>
+                <label>Admin Fee - BOM</label>
+            </value>
         </valueSetDefinition>
         <valueSettings>
             <controllingFieldValue>Cheque</controllingFieldValue>
@@ -237,6 +242,10 @@
         <valueSettings>
             <controllingFieldValue>Admin Fee</controllingFieldValue>
             <valueName>Other fee - no interest</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Admin Fee</controllingFieldValue>
+            <valueName>Admin Fee - BOM</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Payment</controllingFieldValue>

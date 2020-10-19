@@ -1,4 +1,5 @@
 <aura:event type="COMPONENT" description="Event template" >
     <aura:attribute name="recordId" type="String" description="Record Id"/>    
+    <aura:attribute name="rowIndex" type="Integer" description="Row Index"/>
     <aura:attribute name="cellItem" type="Object" description="Cell Item"/>
 </aura:event>

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Deferred_Revenue__c</fullName>
     <externalId>false</externalId>
-    <formula>Amount_Paid_to_Borrower__c - Amount_Paid_to_Assessment_Provider__c</formula>
+    <formula>Amount_Paid_to_Borrower_Formula__c - Amount_Paid_to_Assessment_Provider__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Deferred Revenue</label>
     <precision>18</precision>

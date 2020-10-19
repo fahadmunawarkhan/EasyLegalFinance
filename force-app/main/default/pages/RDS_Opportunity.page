@@ -529,7 +529,7 @@
                                 Amount Paid to Borrower
                               </label>
                               <div class="slds-form-element__control">
-                                <apex:inputField value="{!currentOppSObj.Amount_Paid_to_Borrower__c}" styleClass="slds-input" taborderhint="802" />
+                                <apex:outputField value="{!currentOppSObj.Amount_Paid_to_Borrower_Formula__c}" styleClass="slds-input" />
                               </div>
                             </div>
                             <div class="slds-form-element">

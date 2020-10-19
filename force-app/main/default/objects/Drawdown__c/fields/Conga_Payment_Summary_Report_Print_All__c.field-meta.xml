@@ -10,17 +10,17 @@
 &quot;[byprovinceps]a0p0L00000J8lU4%3F&quot;&amp;
 &quot;pv0%3D&quot;&amp; Conga_Payment_Summary_Rpt_Start_Date__c&amp;
 &quot;~pv1%3D&quot;&amp; Conga_Payment_Summary_Rpt_End_Date__c&amp;
-&quot;~pv2%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Business_Unit__c == &#39;Consolidated&#39;,&#39;&#39;,$Setup.Payment_Summary_Report__c.Business_Unit__c) &amp; &quot;~pv3%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Type_of_Loan__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Payment_Summary_Report__c.Type_of_Loan__c) &amp;&quot;,&quot;&amp;
+&quot;~pv2%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Business_Unit__c &amp; &quot;~pv3%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Type_of_Loan__c &amp;&quot;,&quot;&amp;
 
 &quot;[outstandingps]a0p0L00000J8lU9%3F&quot;&amp;
 &quot;pv0%3D&quot;&amp; Conga_Payment_Summary_Rpt_Start_Date__c&amp;
 &quot;~pv1%3D&quot;&amp; Conga_Payment_Summary_Rpt_End_Date__c&amp;
-&quot;~pv2%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Business_Unit__c == &#39;Consolidated&#39;,&#39;Rhino&#39;,$Setup.Payment_Summary_Report__c.Business_Unit__c) &amp; &quot;~pv3%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Type_of_Loan__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Payment_Summary_Report__c.Type_of_Loan__c) &amp;&quot;,&quot;&amp;
+&quot;~pv2%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Business_Unit__c &amp; &quot;~pv3%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Type_of_Loan__c &amp;&quot;,&quot;&amp;
 
 &quot;[principalpaidps]a0p0L00000J8lU0%3F&quot;&amp;
 &quot;pv0%3D&quot;&amp; Conga_Payment_Summary_Rpt_Start_Date__c&amp;
 &quot;~pv1%3D&quot;&amp;Conga_Payment_Summary_Rpt_End_Date__c&amp;
-&quot;~pv2%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Business_Unit__c == &#39;Consolidated&#39;,&#39;Rhino&#39;,$Setup.Payment_Summary_Report__c.Business_Unit__c) &amp; &quot;~pv3%3D&quot;&amp; IF($Setup.Payment_Summary_Report__c.Type_of_Loan__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Payment_Summary_Report__c.Type_of_Loan__c) &amp;&quot;,&quot;</formula>
+&quot;~pv2%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Business_Unit__c &amp; &quot;~pv3%3D&quot;&amp; $Setup.Payment_Summary_Report__c.Type_of_Loan__c &amp;&quot;,&quot;</formula>
     <label>Conga Payment Summary Report Print All</label>
     <required>false</required>
     <trackHistory>false</trackHistory>

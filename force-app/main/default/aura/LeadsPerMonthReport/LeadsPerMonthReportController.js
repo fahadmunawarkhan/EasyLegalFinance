@@ -4,10 +4,9 @@
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
         helper.getSampleLead(component);
-        helper.getPickListValues(component, 'Lead','Business_Unit__c','businessUnitOptions').then($A.getCallback(function(result){
-            return helper.getCustomSettings(component);
-            
-        })).then($A.getCallback(function(result){
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Lead','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getCustomSettings(component).then($A.getCallback(function(result){
             component.set('v.customSetting', result);
             return helper.setDefaultDates(component);
             
@@ -33,7 +32,9 @@
 	filterButton: function(component, event, helper){
         component.set('v.spinner', true);
         component.set('v.selectedBusinessUnit', component.get('v.selectedBusinessUnitFilter'));
-		helper.getLeadsByMonth(component).then($A.getCallback(function(result){
+        helper.validation(component, 'businessunitMS').then($A.getCallback(function(result){
+            return helper.getLeadsByMonth(component);
+        })).then($A.getCallback(function(result){
             component.set("v.LeadsByMonth",result);
             return helper.calculateTotal(component);
             

@@ -1,41 +1,79 @@
 <aura:component >
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-	<aura:attribute name="cellItem" type="Object" />
+    <aura:attribute name="rowIndex" type="Integer" />
+	<aura:attribute name="cellItem" type="Object" />    
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="showErrorClass" type="boolean" default="false"/>
     <aura:attribute name="needCloseEditBox" type="boolean" default="false" />
-    <aura:attribute name="isChanged" type="boolean" default="false" />
+    <aura:attribute name="isChanged" type="boolean" default="false" />       
+    <aura:attribute name="tableName" type="String" />
+    <aura:attribute name="periodStart" type="Integer" />
+    <aura:attribute name="periodEnd" type="Integer" />
+    <aura:attribute name="periodText" type="String" />
     
     <aura:registerEvent name="cellChangedEvent" type="c:CustomCellChangedEvent"/>
+    <aura:registerEvent name="addCustomTableRowEvent" type="c:addCustomTableRowEvent"/>
+    <aura:registerEvent name="deleteCustomTableRowEvent" type="c:deleteCustomTableRowEvent"/>
     
-	<td ondblclick="{!c.inlineEdit}" class="{!v.isChanged ? 'slds-is-edited' : ''}">
+	<td  onclick="{!c.inlineEdit}" class="{!v.isChanged ? 'slds-is-edited' : ''}">
             <span class = "{!v.cellItem.align == 'center' ? 'slds-grid slds-grid_align-center ' :  (v.cellItem.align == 'left' ? 'slds-grid slds-grid_align-spread' : 'slds-grid slds-grid_align-end')}">
 
                 <!-- show input and output section based on boolean flag --> 
                 <aura:if isTrue="{!v.cellItem.editMode == false}">
-                    
                     <span  >
                     	<aura:if isTrue="{!v.cellItem.type=='boolean'}">
                     		<lightning:input type="checkbox" aura:id="inputId" checked="{!v.cellItem.value}" disabled="{!!v.cellItem.editable}" onchange="{!c.onValueChange}" />
-                    	</aura:if>
+                    	</aura:if>                        
                     	<aura:if isTrue="{!v.cellItem.type=='text'}">
                     		<span class="{!'slds-truncate ' + (v.cellItem.bold ? 'bold' : '')}">{!v.cellItem.value}</span>
                     	</aura:if>
+                    	<aura:if isTrue="{!v.cellItem.type=='period'}">
+                    		<span class="{!'slds-truncate ' + (v.cellItem.bold ? 'bold' : '')}">{!v.cellItem.value + v.cellItem.periodStart + (v.cellItem.periodEnd ? '-' : (v.cellItem.periodStart ? '+' : '')) + v.cellItem.periodEnd }</span>
+                    	</aura:if>                                                
                     	<aura:if isTrue="{!v.cellItem.type=='currency'}">
                             <ui:outputCurrency class="{!v.cellItem.bold ? 'bold' : ''}" value="{!v.cellItem.value}" />
                     	</aura:if>
+                    	<aura:if isTrue="{!v.cellItem.type=='percentage'}">
+                            <lightning:formattedNumber class="{!v.cellItem.bold ? 'bold' : ''}" value="{!v.cellItem.value}" />%
+                    	</aura:if>                        
                     	<aura:if isTrue="{!v.cellItem.type=='date'}">
                             <span class="{!'slds-truncate ' + (v.cellItem.bold ? 'bold' : '')}">{!v.cellItem.value}</span>
-                    	</aura:if>                    
-                        </span>
-                    	<aura:if isTrue="{!and(v.cellItem.editable == true, v.cellItem.type != 'boolean')}">
+                    	</aura:if>
+                        <aura:if isTrue="{!v.cellItem.type=='link'}">
+                            <lightning:button variant="base" class="link-button" label="{!v.cellItem.linklabel}" onclick="{! c.handleLinkClick }"/>
+                    	</aura:if>
+                    	<aura:if isTrue="{!v.cellItem.type=='combobox'}">
+                    		<span class="{!'slds-truncate ' + (v.cellItem.bold ? 'bold' : '')}">{!v.cellItem.value}</span>
+                    	</aura:if>                        
+                        <aura:if isTrue="{!v.cellItem.type=='number'}">
+                            <lightning:formattedNumber class="{!v.cellItem.bold ? 'bold' : ''}" value="{!v.cellItem.value}" />
+                    	</aura:if>                        
+                        <aura:if isTrue="{!v.cellItem.type=='radiogroup'}">
+                            <lightning:radioGroup name="{!'radioGroup' + v.tableName + ' ' +v.rowIndex}"
+                                                  label=""
+                                                  options="{! v.cellItem.options }"
+                                                  value="{! v.cellItem.value }"
+                                                  class="horizontalRadioCls"
+                                                  disabled="{!!v.cellItem.editable}"
+                                                  onchange="{!c.onValueChange}"
+                                                  type="radio"/>                            
+                    	</aura:if>
+                        <aura:if isTrue="{!v.cellItem.hideDeleteButton == false}">                            
+                            <span >
+                                <button onclick="{!c.inlineDelete}" class="slds-button slds-button_icon slds-cell-edit__button slds-p-left_none slds-m-left_none" tabindex="0" title="Remove">
+                                    <lightning:icon iconName="utility:undo" size="xx-small" alternativeText="edit"/>
+                                </button>
+                            </span>
+                        </aura:if>                                            	                    
+
+						</span>                                       	
+                        <aura:if isTrue="{!and(v.cellItem.editable == true, v.cellItem.hideEditButton == false)}">                            
                             <span >
                                 <button onclick="{!c.inlineEdit}" class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small" tabindex="0" title="Edit">
                                     <lightning:icon iconName="utility:edit" size="xx-small" alternativeText="edit"/>
                                 </button>
                             </span>
-                    	</aura:if>
-                   
+                        </aura:if>                                            	
                     <!-- Inline Edit Section in else case-->  
                     <aura:set attribute="else">
                         <section  tabindex="0" class="slds-popover slds-popover_edit" role="dialog" style="position: absolute; top: 0px">
@@ -48,30 +86,82 @@
                                                       labelClass="slds-form-element__label slds-form-element__label_edit slds-no-flex"
                                                       aura:id="inputId"
                                                       onblur="{!c.closeEditBox}"
-                                                      onchange="{!c.onValueChange}"
+                                                      oncommit="{!c.onValueChange}"
                                                       value="{!v.cellItem.value}" />
                                             </span>
-                                        </aura:if>                                            
+                                        </aura:if>    
+										<aura:if isTrue="{!v.cellItem.type=='period'}">
+                                            <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">                                                
+                                                   
+                                                        <lightning:input type="number"
+                                                                         class="customInput"
+                                                                         label="{!v.cellItem.label}"                                                                         
+                                                                         aura:id="inputId"      
+                                                                         onblur="{!c.closeEditBox}"
+                                                                         onfocus="{!c.onFocus}"                                                                 
+                                                                         oncommit="{!c.onValueChange}"
+                                                                         value="{!v.cellItem.periodEnd}"/>
+                                            </span>                                            
+                                        </aura:if>                                              
                                         <aura:if isTrue="{!v.cellItem.type=='currency'}">
                                             <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">
                                         		<lightning:input type="currency"                                                       
                                                       aura:id="inputId"
+                                                      class="customInput"
+                                                      label="{!v.cellItem.label}"
                                                       onblur="{!c.closeEditBox}"
-                                                      onchange="{!c.onValueChange}"                                                      
-                                                      value="{!v.cellItem.value}" />
+                                                      oncommit="{!c.onValueChange}"                                                      
+                                                      value="{!v.cellItem.value}" 
+                                                      step="0.01"/>
                                             </span>
                                         </aura:if> 
+                                        <aura:if isTrue="{!v.cellItem.type=='percentage'}">
+                                            <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">
+                                        		<lightning:input type="number"                                                       
+                                                      aura:id="inputId"
+                                                      class="customInput"
+                                                      label="{!v.cellItem.label}"
+                                                      onblur="{!c.closeEditBox}"
+                                                      oncommit="{!c.onValueChange}"                                                      
+                                                      value="{!v.cellItem.value}"                                                      
+                                                      step="0.01"/>
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.cellItem.type=='number'}">
+                                            <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">
+                                        		<lightning:input type="number"                                                       
+                                                      aura:id="inputId"
+                                                      class="customInput"
+                                                      label="{!v.cellItem.label}"
+                                                      onblur="{!c.closeEditBox}"
+                                                      oncommit="{!c.onValueChange}"                                                      
+                                                      value="{!v.cellItem.value}"/>
+                                            </span>
+                                        </aura:if>                                          
 										<aura:if isTrue="{!v.cellItem.type=='date'}">  
                                             <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">
                                             	<lightning:input                                                              
                                                       aura:id="inputId" 
                                                       type="date" 
                                                       value="{!v.cellItem.value}" 
-                                                      onchange="{!c.onValueChange}"                                                      
+                                                      oncommit="{!c.onValueChange}"                                                      
                                                       onblur="{!c.closeEditBox}" 
                                                       onfocus="{!c.onFocus}"/>
                                             </span>
                                         </aura:if>                                        
+                                        <aura:if isTrue="{!v.cellItem.type=='combobox'}">
+                                            <span onkeypress="{!c.keyCheck}" class="slds-size--11-of-12">
+                                        		<lightning:combobox 
+                                                                    aura:id="inputId" 
+                                                                    name="progress" 
+                                                                    label="{!v.cellItem.label}" 
+                                                                    value="{!v.cellItem.value}" 
+                                                                    placeholder="" 
+                                                                    options="{! v.cellItem.options }" 
+                                                                    onblur="{!c.closeEditBox}"
+                                                                    oncommit="{! c.onValueChange }"/>
+                                            </span>
+                                        </aura:if>
                                     </div>
                                 </div>
                             </div>

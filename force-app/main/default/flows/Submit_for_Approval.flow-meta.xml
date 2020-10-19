@@ -299,7 +299,7 @@
                 <leftValueReference>myVariable_current.Loan_To_Value__c</leftValueReference>
                 <operator>GreaterThanOrEqualTo</operator>
                 <rightValue>
-                    <numberValue>15.0</numberValue>
+                    <numberValue>0.15</numberValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -374,7 +374,7 @@
                 <stringValue>PRIORVALUE([Account].Projected_Loan_Value__c) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_9477003332</name>
+        <name>formula_3_myRule_1_A1_0755937258</name>
         <dataType>Currency</dataType>
         <expression>PRIORVALUE({!myVariable_current.Projected_Loan_Value__c})</expression>
         <scale>18</scale>
@@ -390,7 +390,7 @@
         <dataType>Boolean</dataType>
         <expression>AND(ISCHANGED({!myVariable_current.Loan_To_Value__c} ) , {!myVariable_current.Loan_To_Value__c} &lt;= 0.15)</expression>
     </formulas>
-    <interviewLabel>Submit_for_Approval-10_InterviewLabel</interviewLabel>
+    <interviewLabel>Submit_for_Approval-3_InterviewLabel</interviewLabel>
     <label>Submit for Approval</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -495,13 +495,13 @@
             </processMetadataValues>
             <field>Old_Projected_Loan_Value__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_9477003332</elementReference>
+                <elementReference>formula_3_myRule_1_A1_0755937258</elementReference>
             </value>
         </inputAssignments>
         <object>Account</object>
     </recordUpdates>
     <startElementReference>isChangedDecision2_myRule_1_Loan_To_Value_c</startElementReference>
-    <status>Active</status>
+    <status>Obsolete</status>
     <variables>
         <name>myVariable_current</name>
         <dataType>SObject</dataType>

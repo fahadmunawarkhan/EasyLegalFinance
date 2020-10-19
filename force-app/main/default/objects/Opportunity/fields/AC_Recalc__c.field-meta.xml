@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>AC_Recalc__c</fullName>
     <externalId>false</externalId>
-    <inlineHelpText>This is an internal field which is bumped whenever the Account&#39;s province of residency changes, triggering a recalculation of the Scenario.</inlineHelpText>
+    <inlineHelpText>This is an internal field which is bumped whenever the Account&apos;s province of residency changes, triggering a recalculation of the Scenario.</inlineHelpText>
     <label>AC_Recalc</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>

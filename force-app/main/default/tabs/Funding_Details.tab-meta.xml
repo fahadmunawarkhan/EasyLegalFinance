@@ -2,5 +2,5 @@
 <CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
     <auraComponent>FundingDetailsComponent</auraComponent>
     <label>Funding Details</label>
-        <motif>Custom7: Square</motif>
+    <motif>Custom7: Square</motif>
 </CustomTab>
