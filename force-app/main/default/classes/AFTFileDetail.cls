@@ -5,7 +5,7 @@ public with sharing class AFTFileDetail {
     Private String aftlogicalRecordTypeId = 'D';
     private String aftLogicalRecordCount = '000000002';
     public String cwbFileNumber = '0001';
-    private String aftTransactionType = '200';
+    private String aftTransactionType = '351';//'200';
     private Decimal amount;
     private Date dueDate;
     private AFTFile.CWBFileSetting cwbFileSetting; 
