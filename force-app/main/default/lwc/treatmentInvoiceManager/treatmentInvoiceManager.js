@@ -14,14 +14,7 @@ const PERMISSION_CLASSES = [
 
 export default class TreatmentInvoiceManager extends LightningElement {
     @wire(CurrentPageReference) pageRef;
-    _osp;
-    @api oppServiceProvider
-    get oppServiceProvider() {
-        return this._osp
-    }
-    set oppServiceProvider(value) {
-        this._osp = value;
-    }
+    @api oppServiceProvider;
     @api invoices;
 
     //@api oppObj;
