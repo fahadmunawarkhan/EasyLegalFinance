@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : Seth Boyd
   @Group              : 
-  @Last Modified By   : Seth Boyd
-  @Last Modified On   : 5/10/2019, 1:58:05 PM
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 10-22-2020
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -12,6 +12,31 @@
   1.0    4/26/2019, 1:08:12 PM   Seth Boyd     Initial Version
 -->
 <template>
+    <div class="spinner">
+        <template if:true={loading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+    
+    <lightning-layout>
+        <lightning-layout-item size="2" flexibility="no-grow" padding="around-small">
+            
+            <lightning-input
+                name="fileNumbers" 
+                type="text" 
+                label="Sheet #" 
+                variant="label-inline"
+                value={sheetNumber}
+                onchange={sheetNumberChange}
+                placeholder="e.g. ELFI - 0001">
+            </lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item size="2" flexibility="no-grow" padding="around-small" >
+            <lightning-button variant="destructive" label="Send Back to Rejections" title="Send Back to Rejections" class="slds-m-left_x-small" onclick={sendBacktoRejectionsButton} ></lightning-button>
+        </lightning-layout-item> 
+    </lightning-layout>
+
     <lightning-tree-grid
         class="fd-opp-table"
         data={data}
