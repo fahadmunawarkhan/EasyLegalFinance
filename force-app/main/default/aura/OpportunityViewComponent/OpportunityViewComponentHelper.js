@@ -1136,7 +1136,7 @@
         });
         toastEvent.fire();
     },
-    getPickListValues: function(component, object, field, attributeId)
+    getPickListValues: function(component, object, field, attributeId, hideNone)
     {
         var picklistgetter = component.get('c.getPickListValues');
         picklistgetter.setParams({
@@ -1150,7 +1150,7 @@
             {
                 var allValues = response.getReturnValue();
                 
-                if (allValues != undefined && allValues.length > 0) {
+                if (allValues != undefined && allValues.length > 0 && !hideNone) {
                     opts.push({
                         class: "optionClass",
                         label: "--- None ---",
@@ -1735,5 +1735,24 @@
                 }
             }
         );
+    },
+    selectDefaultReferenceNotes : function(component, newPaymentMethod, index){   
+        let drawdowns = component.get("v.drawDownList");
+        console.log(drawdowns);
+        console.log(index);        
+        if (newPaymentMethod=='Admin Fee'){            
+            let result = component.find('Reference_Notes__c');
+            let notes=[];
+            if(result.constructor === Array )
+                notes = result;
+            else
+                notes.push(result);           
+            if(notes[index]){
+                let feeType = component.get("v.oppObj.Fee_Type__c");   
+                console.log(feeType);
+                if (feeType != 'Variable Fee')
+                	notes[index].set("v.value",feeType);
+            }
+        }
     }        
 })

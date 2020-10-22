@@ -73,7 +73,7 @@
 0) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A2_4090665647</name>
+        <name>formula_2_myRule_1_A2_7505940029</name>
         <dataType>Number</dataType>
         <expression>CASE(Text({!myVariable_current.Compounding_Interest__c}), 
 &quot;Annual&quot;,1,
@@ -91,7 +91,7 @@
                 <stringValue>IF(Ispickval([Opportunity].Interest_Compounding_Period__c ,&quot;Compounding Interest&quot;),TRUE,FALSE)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A2_5403132233</name>
+        <name>formula_3_myRule_1_A2_5029865505</name>
         <dataType>Boolean</dataType>
         <expression>IF(Ispickval({!myVariable_current.Interest_Compounding_Period__c} ,&quot;Compounding Interest&quot;),TRUE,FALSE)</expression>
     </formulas>
@@ -102,7 +102,7 @@
                 <stringValue>Value(Text([Opportunity].Interest_Deferral_Period__c ))</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_4_myRule_1_A2_3447285349</name>
+        <name>formula_4_myRule_1_A2_7367651299</name>
         <dataType>Number</dataType>
         <expression>Value(Text({!myVariable_current.Interest_Deferral_Period__c} ))</expression>
         <scale>18</scale>
@@ -128,7 +128,7 @@
 </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_1_A2_8408317965</name>
+        <name>formula_5_myRule_1_A2_7353801236</name>
         <dataType>Number</dataType>
         <expression>Case(Text({!myVariable_current.Minimum_Interest_Period__c} ),
 &quot;1 month&quot;,1,
@@ -159,7 +159,7 @@
 0) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_6_myRule_1_A1_0283902189</name>
+        <name>formula_6_myRule_1_A1_9434916179</name>
         <dataType>Number</dataType>
         <expression>CASE(Text({!myVariable_current.Compounding_Interest__c}), 
 &quot;Annual&quot;,1,
@@ -177,7 +177,7 @@
                 <stringValue>IF(Ispickval([Opportunity].Interest_Compounding_Period__c ,&quot;Compounding Interest&quot;),TRUE,FALSE)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_7_myRule_1_A1_6100196568</name>
+        <name>formula_7_myRule_1_A1_5516725258</name>
         <dataType>Boolean</dataType>
         <expression>IF(Ispickval({!myVariable_current.Interest_Compounding_Period__c} ,&quot;Compounding Interest&quot;),TRUE,FALSE)</expression>
     </formulas>
@@ -188,7 +188,7 @@
                 <stringValue>Value(Text([Opportunity].Interest_Deferral_Period__c ))</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_8_myRule_1_A1_5697019158</name>
+        <name>formula_8_myRule_1_A1_5559740571</name>
         <dataType>Number</dataType>
         <expression>Value(Text({!myVariable_current.Interest_Deferral_Period__c} ))</expression>
         <scale>18</scale>
@@ -214,7 +214,7 @@
 </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_1_A1_7424993187</name>
+        <name>formula_9_myRule_1_A1_1332664879</name>
         <dataType>Number</dataType>
         <expression>Case(Text({!myVariable_current.Minimum_Interest_Period__c} ),
 &quot;1 month&quot;,1,
@@ -239,6 +239,7 @@
                 <stringValue>OR(
   ISCHANGED([Opportunity].Payout_Date__c ),
   ISCHANGED([Opportunity].Interest_Rate__c  ),
+  ISCHANGED([Opportunity].Interest_Rate_Type__c  ),
   ISCHANGED([Opportunity].Compounding_Interest__c ),
   ISCHANGED([Opportunity].Interest_Compounding_Period__c ),
   ISCHANGED([Opportunity].Interest_Deferral_Period__c  ),
@@ -250,6 +251,7 @@
         <expression>OR(
   ISCHANGED({!myVariable_current.Payout_Date__c} ),
   ISCHANGED({!myVariable_current.Interest_Rate__c}  ),
+  ISCHANGED({!myVariable_current.Interest_Rate_Type__c}  ),
   ISCHANGED({!myVariable_current.Compounding_Interest__c} ),
   ISCHANGED({!myVariable_current.Interest_Compounding_Period__c} ),
   ISCHANGED({!myVariable_current.Interest_Deferral_Period__c}  ),
@@ -266,7 +268,7 @@
         <dataType>Boolean</dataType>
         <expression>  ISCHANGED({!myVariable_current.Payout_Date__c} )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Replicate_Loan_Setup_Info_to_Drawdown-3_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Replicate_Loan_Setup_Info_to_Drawdown-4_InterviewLabel</interviewLabel>
     <label>Opportunity - Replicate Loan Setup Info to Drawdown</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -458,6 +460,19 @@
             <processMetadataValues>
                 <name>implicit</name>
                 <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
                     <booleanValue>false</booleanValue>
                 </value>
             </processMetadataValues>
@@ -501,19 +516,6 @@
             <operator>EqualTo</operator>
             <value>
                 <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <processMetadataValues>
-                <name>implicit</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </processMetadataValues>
-            <field>Opportunity__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -598,7 +600,7 @@
             </processMetadataValues>
             <field>Compounding_Frequency__c</field>
             <value>
-                <elementReference>formula_6_myRule_1_A1_0283902189</elementReference>
+                <elementReference>formula_6_myRule_1_A1_9434916179</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -634,7 +636,7 @@
             </processMetadataValues>
             <field>Compounding_Interest__c</field>
             <value>
-                <elementReference>formula_7_myRule_1_A1_6100196568</elementReference>
+                <elementReference>formula_7_myRule_1_A1_5516725258</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -670,7 +672,43 @@
             </processMetadataValues>
             <field>Interest_Deferral_Period__c</field>
             <value>
-                <elementReference>formula_8_myRule_1_A1_5697019158</elementReference>
+                <elementReference>formula_8_myRule_1_A1_5559740571</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Interest Rate Type</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Interest_Rate_Type__c</field>
+            <value>
+                <elementReference>myVariable_current.Interest_Rate_Type__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -742,7 +780,7 @@
             </processMetadataValues>
             <field>Minimum_Interest_Period__c</field>
             <value>
-                <elementReference>formula_9_myRule_1_A1_7424993187</elementReference>
+                <elementReference>formula_9_myRule_1_A1_1332664879</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -855,6 +893,19 @@
             <processMetadataValues>
                 <name>implicit</name>
                 <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
                     <booleanValue>false</booleanValue>
                 </value>
             </processMetadataValues>
@@ -898,19 +949,6 @@
             <operator>EqualTo</operator>
             <value>
                 <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <processMetadataValues>
-                <name>implicit</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </processMetadataValues>
-            <field>Opportunity__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -995,7 +1033,7 @@
             </processMetadataValues>
             <field>Compounding_Frequency__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A2_4090665647</elementReference>
+                <elementReference>formula_2_myRule_1_A2_7505940029</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1031,7 +1069,7 @@
             </processMetadataValues>
             <field>Compounding_Interest__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A2_5403132233</elementReference>
+                <elementReference>formula_3_myRule_1_A2_5029865505</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1067,7 +1105,43 @@
             </processMetadataValues>
             <field>Interest_Deferral_Period__c</field>
             <value>
-                <elementReference>formula_4_myRule_1_A2_3447285349</elementReference>
+                <elementReference>formula_4_myRule_1_A2_7367651299</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Interest Rate Type</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Interest_Rate_Type__c</field>
+            <value>
+                <elementReference>myVariable_current.Interest_Rate_Type__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1139,7 +1213,7 @@
             </processMetadataValues>
             <field>Minimum_Interest_Period__c</field>
             <value>
-                <elementReference>formula_5_myRule_1_A2_8408317965</elementReference>
+                <elementReference>formula_5_myRule_1_A2_7353801236</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

@@ -1,0 +1,23 @@
+.THIS .slds-icon{
+    width: 1.1rem !important;
+}
+
+.THIS .ms-help-popup-in-header {
+    display: inline-block;
+    position: absolute !important;
+    top: 30px !important;
+    left: 50px !important;
+    margin-left: -1rem !important;
+    max-width: 20rem !important;
+    overflow: visible !important;
+    text-transform: none !important;
+}
+
+
+.THIS .ms-help-popup-body {
+    white-space: unset !important;
+    word-break: keep-all;
+    overflow: visible !important;
+    overflow-wrap: break-word;
+    width: 200px;
+}
