@@ -1,9 +1,9 @@
 public class VariableFeeHelper {
     public class VariableFeeException extends Exception {} 
     
-    public static void createFeesForOpp(Id oppId, Boolean onlyBOM){        
-        List<Variable_Fee__c> variableFees = getVariableFees(oppId, onlyBOM);
-        String referenceNotes = onlyBOM ? 'Admin Fee - BOM' : 'Admin Fee';
+    public static void createFeesForOpp(Id oppId){        
+        List<Variable_Fee__c> variableFees = getVariableFees(oppId, false);
+        String referenceNotes = 'Admin Fee';
         List<Drawdown__c> existingFees = [select Id from Drawdown__c where Opportunity__c=:oppId and Reference_Notes__c=:referenceNotes];
         System.debug(existingFees.size());
         if (!existingFees.isEmpty()){
@@ -214,7 +214,7 @@ public class VariableFeeHelper {
     
     public static List<Drawdown__c> createDrawdowns(Variable_Fee__c vf){
         List<Drawdown__c> drawdowns = new List<Drawdown__c>();
-        String referenceNotes = vf.Is_BOM__c ? 'Admin Fee - BOM' : 'Admin Fee';
+        String referenceNotes = 'Admin Fee';
         Date dt = vf.Opportunity__r.Date_of_advance__c;
         if (dt == null)
             throw new VariableFeeException('Drawdowns are not generated. Funding Date is empty. Advance is not found');

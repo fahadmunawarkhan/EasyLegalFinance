@@ -7,7 +7,7 @@ public class CreateFeesForOppQueueable implements Queueable{
     
    	public void execute(QueueableContext context) {        
         try{
-        	VariableFeeHelper.createFeesForOpp(oppId, false);                
+        	VariableFeeHelper.createFeesForOpp(oppId);                
             VariableFeeHelper.createBOMFeesForOpp(oppId);        
         	InterestCalculator.calculateVariableRates(oppId);
         }

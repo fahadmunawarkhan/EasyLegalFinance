@@ -175,9 +175,10 @@ public class VariableRateCtlr {
     
     @AuraEnabled
     public static void createFees(String oppId, Boolean onlyBOM){
-        SYstem.debug('createFees');
+        SYstem.debug('createFees');        
+        //System.enqueueJob(new CreateFeesForOppQueueable(oppId, onlyBOM));        
         if (!onlyBOM)
-        	VariableFeeHelper.createFeesForOpp(oppId, onlyBOM);        
+        	VariableFeeHelper.createFeesForOpp(oppId);        
         else
             VariableFeeHelper.createBOMFeesForOpp(oppId);        
         InterestCalculator.calculateVariableRates(oppId);

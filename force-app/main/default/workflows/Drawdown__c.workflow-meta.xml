@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Calc_Simple_Interest_Balance</fullName>
+        <field>Outstanding_Balance_Simple_Interest__c</field>
+        <formula>Amount_Adjusted_for_Repayments__c*(1+((Interest_Rate__c/365)* Interest_Accrual_Days__c))</formula>
+        <name>Calc Simple Interest Balance</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>Calc Simple Interest Balance</fullName>
+        <actions>
+            <name>Calc_Simple_Interest_Balance</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Drawdown__c.Compounding_Interest__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Drawdown__c.Payment_Method__c</field>
+            <operation>notEqual</operation>
+            <value>Payment</value>
+        </criteriaItems>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>

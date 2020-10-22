@@ -73,7 +73,7 @@
 0) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A2_3034918504</name>
+        <name>formula_2_myRule_1_A2_7505940029</name>
         <dataType>Number</dataType>
         <expression>CASE(Text({!myVariable_current.Compounding_Interest__c}), 
 &quot;Annual&quot;,1,
@@ -91,7 +91,7 @@
                 <stringValue>IF(Ispickval([Opportunity].Interest_Compounding_Period__c ,&quot;Compounding Interest&quot;),TRUE,FALSE)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A2_2592114406</name>
+        <name>formula_3_myRule_1_A2_5029865505</name>
         <dataType>Boolean</dataType>
         <expression>IF(Ispickval({!myVariable_current.Interest_Compounding_Period__c} ,&quot;Compounding Interest&quot;),TRUE,FALSE)</expression>
     </formulas>
@@ -102,7 +102,7 @@
                 <stringValue>Value(Text([Opportunity].Interest_Deferral_Period__c ))</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_4_myRule_1_A2_2943578047</name>
+        <name>formula_4_myRule_1_A2_7367651299</name>
         <dataType>Number</dataType>
         <expression>Value(Text({!myVariable_current.Interest_Deferral_Period__c} ))</expression>
         <scale>18</scale>
@@ -128,7 +128,7 @@
 </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_1_A2_3114298646</name>
+        <name>formula_5_myRule_1_A2_7353801236</name>
         <dataType>Number</dataType>
         <expression>Case(Text({!myVariable_current.Minimum_Interest_Period__c} ),
 &quot;1 month&quot;,1,
@@ -159,7 +159,7 @@
 0) </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_6_myRule_1_A1_5091289520</name>
+        <name>formula_6_myRule_1_A1_9434916179</name>
         <dataType>Number</dataType>
         <expression>CASE(Text({!myVariable_current.Compounding_Interest__c}), 
 &quot;Annual&quot;,1,
@@ -177,7 +177,7 @@
                 <stringValue>IF(Ispickval([Opportunity].Interest_Compounding_Period__c ,&quot;Compounding Interest&quot;),TRUE,FALSE)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_7_myRule_1_A1_3526064435</name>
+        <name>formula_7_myRule_1_A1_5516725258</name>
         <dataType>Boolean</dataType>
         <expression>IF(Ispickval({!myVariable_current.Interest_Compounding_Period__c} ,&quot;Compounding Interest&quot;),TRUE,FALSE)</expression>
     </formulas>
@@ -188,7 +188,7 @@
                 <stringValue>Value(Text([Opportunity].Interest_Deferral_Period__c ))</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_8_myRule_1_A1_7829407888</name>
+        <name>formula_8_myRule_1_A1_5559740571</name>
         <dataType>Number</dataType>
         <expression>Value(Text({!myVariable_current.Interest_Deferral_Period__c} ))</expression>
         <scale>18</scale>
@@ -214,7 +214,7 @@
 </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_1_A1_8586671498</name>
+        <name>formula_9_myRule_1_A1_1332664879</name>
         <dataType>Number</dataType>
         <expression>Case(Text({!myVariable_current.Minimum_Interest_Period__c} ),
 &quot;1 month&quot;,1,
@@ -460,6 +460,19 @@
             <processMetadataValues>
                 <name>implicit</name>
                 <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
                     <booleanValue>false</booleanValue>
                 </value>
             </processMetadataValues>
@@ -503,19 +516,6 @@
             <operator>EqualTo</operator>
             <value>
                 <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <processMetadataValues>
-                <name>implicit</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </processMetadataValues>
-            <field>Opportunity__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -600,7 +600,7 @@
             </processMetadataValues>
             <field>Compounding_Frequency__c</field>
             <value>
-                <elementReference>formula_6_myRule_1_A1_5091289520</elementReference>
+                <elementReference>formula_6_myRule_1_A1_9434916179</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -636,7 +636,7 @@
             </processMetadataValues>
             <field>Compounding_Interest__c</field>
             <value>
-                <elementReference>formula_7_myRule_1_A1_3526064435</elementReference>
+                <elementReference>formula_7_myRule_1_A1_5516725258</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -672,7 +672,7 @@
             </processMetadataValues>
             <field>Interest_Deferral_Period__c</field>
             <value>
-                <elementReference>formula_8_myRule_1_A1_7829407888</elementReference>
+                <elementReference>formula_8_myRule_1_A1_5559740571</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -780,7 +780,7 @@
             </processMetadataValues>
             <field>Minimum_Interest_Period__c</field>
             <value>
-                <elementReference>formula_9_myRule_1_A1_8586671498</elementReference>
+                <elementReference>formula_9_myRule_1_A1_1332664879</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -893,6 +893,19 @@
             <processMetadataValues>
                 <name>implicit</name>
                 <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
                     <booleanValue>false</booleanValue>
                 </value>
             </processMetadataValues>
@@ -936,19 +949,6 @@
             <operator>EqualTo</operator>
             <value>
                 <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <filters>
-            <processMetadataValues>
-                <name>implicit</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </processMetadataValues>
-            <field>Opportunity__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -1033,7 +1033,7 @@
             </processMetadataValues>
             <field>Compounding_Frequency__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A2_3034918504</elementReference>
+                <elementReference>formula_2_myRule_1_A2_7505940029</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1069,7 +1069,7 @@
             </processMetadataValues>
             <field>Compounding_Interest__c</field>
             <value>
-                <elementReference>formula_3_myRule_1_A2_2592114406</elementReference>
+                <elementReference>formula_3_myRule_1_A2_5029865505</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1105,7 +1105,7 @@
             </processMetadataValues>
             <field>Interest_Deferral_Period__c</field>
             <value>
-                <elementReference>formula_4_myRule_1_A2_2943578047</elementReference>
+                <elementReference>formula_4_myRule_1_A2_7367651299</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1213,7 +1213,7 @@
             </processMetadataValues>
             <field>Minimum_Interest_Period__c</field>
             <value>
-                <elementReference>formula_5_myRule_1_A2_3114298646</elementReference>
+                <elementReference>formula_5_myRule_1_A2_7353801236</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
