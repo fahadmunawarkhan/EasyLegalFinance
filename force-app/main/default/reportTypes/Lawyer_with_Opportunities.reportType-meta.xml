@@ -16,6 +16,7 @@
     <sections>
         <columns>
             <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm Name</displayNameOverride>
             <field>Account_Name__c</field>
             <table>Contact</table>
         </columns>
@@ -86,11 +87,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>IGD__Collection_Id__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Company__c</field>
             <table>Contact</table>
         </columns>
@@ -122,11 +118,6 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>RecordType</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>wtn__HtmlContent__c</field>
             <table>Contact</table>
         </columns>
         <columns>
@@ -221,22 +212,7 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>wtn__KwagaMailId__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>wtn__LastKwagaUpdateDate__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>External_Id__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>wtn__FacebookUrl__c</field>
             <table>Contact</table>
         </columns>
         <columns>
@@ -367,11 +343,6 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>LegalRole__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>wtn__LinkedInUrl__c</field>
             <table>Contact</table>
         </columns>
         <columns>
@@ -616,22 +587,12 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>wtn__Skype__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>rcsfl__SMS_Number__c</field>
             <table>Contact</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Status__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>wtn__testwtn__c</field>
             <table>Contact</table>
         </columns>
         <columns>
@@ -666,11 +627,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>wtn__TwitterUrl__c</field>
-            <table>Contact</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Update_Address__c</field>
             <table>Contact</table>
         </columns>
@@ -687,6 +643,83 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Web_To_Lead_From__c</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing City</displayNameOverride>
+            <field>Account.BillingCity</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing Country</displayNameOverride>
+            <field>Account.BillingCountry</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing Address</displayNameOverride>
+            <field>Account.BillingAddress</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing State/Province</displayNameOverride>
+            <field>Account.BillingState</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing Street</displayNameOverride>
+            <field>Account.BillingStreet</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping City</displayNameOverride>
+            <field>Account.ShippingCity</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping Address</displayNameOverride>
+            <field>Account.ShippingAddress</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping Country</displayNameOverride>
+            <field>Account.ShippingCountry</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping State/Province</displayNameOverride>
+            <field>Account.ShippingState</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping Street</displayNameOverride>
+            <field>Account.ShippingStreet</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Shipping Zip/Postal Code</displayNameOverride>
+            <field>Account.ShippingPostalCode</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Law Firm: Billing Zip/Postal Code</displayNameOverride>
+            <field>Account.BillingPostalCode</field>
+            <table>Contact</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Account.Exclude_from_Payout__c</field>
             <table>Contact</table>
         </columns>
         <masterLabel>Contacts</masterLabel>
@@ -725,6 +758,11 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Type_of_Loan__c</field>
+            <table>Contact.Referred_Cases__r</table>
+        </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Account.Exclude_from_Payout__c</field>
             <table>Contact.Referred_Cases__r</table>
         </columns>
         <masterLabel>Referred Cases</masterLabel>

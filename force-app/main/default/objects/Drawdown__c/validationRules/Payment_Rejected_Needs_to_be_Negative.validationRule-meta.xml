@@ -4,7 +4,7 @@
     <active>false</active>
     <description>Payment Rejected needs a negative amount, please fix and try again.</description>
     <errorConditionFormula>AND(
-ISPICKVAL(Reference_Notes__c, &#39;Payment Rejected&#39;),
+ISPICKVAL(Reference_Notes__c, &apos;Payment Rejected&apos;),
 Amount__c &gt; 0
 )</errorConditionFormula>
     <errorMessage>Payment Rejected needs a negative amount, please fix and try again.</errorMessage>

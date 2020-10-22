@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 09-21-2020
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 09-28-2020
   @Modification Log   : 
   ===============================================================================
   Ver         Date                     Author      		      Modification
@@ -20,7 +20,8 @@
 	<aura:registerEvent name="loanReserved" type="c:ReserveLoanStateChangedEvent"/>
     <aura:attribute name="accountId" type="String" access="public" />
     <aura:attribute name="recordId" type="String" /> 
-    <aura:attribute name="oppObj" type="Opportunity" default="{ 'sobjectType': 'Opportunity' }"/> 
+    <aura:attribute name="oppObj" type="Opportunity" default="{ 'sobjectType': 'Opportunity' }"/>
+    <aura:attribute name="accObj" type="Opportunity" default="{ 'sobjectType': 'Account' }"/> 
     <aura:attribute name="drawDownList" type="Drawdown__c[]"/>
     <aura:attribute name="drawDownPaymentsList" type="Drawdown__c[]"/>
     <!--<aura:attribute name="criticalDateList" type="Critical_Date__c[]" />-->
@@ -113,6 +114,7 @@
     <aura:attribute name="invoiceTypeOptions" type="List" default="[]" />
     <aura:attribute name="insurerNameOptions" type="List" default="[]" />
     <aura:attribute name="selectedLookUpAssessmentProvider" type="sObject" default="{}"/>
+    <aura:attribute name="LTVCheck" type="Boolean" default="false" />
     
     <aura:attribute name="googleReviewOptions" type="List" default="[
     {'label': 'Yes', 'value': 'Yes'},
@@ -124,6 +126,7 @@
     <aura:attribute name="currentUser" type="User" /> 
     <aura:attribute name="canUpdateStageStatus" type="Boolean" default="true" />
     <aura:attribute name="canUpdateStageName" type="Boolean" default="true" />
+
     <!-- OVERLAY -->
     <aura:attribute name="overlayPanel" type="Object" />
     <lightning:overlayLibrary aura:id="overlayLib" />
@@ -137,10 +140,15 @@
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Cancel" onclick="{!c.doCancel}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Generate Loan Documents (PDF)" onclick="{!c.generateLoanDocuments}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Loan Documents" onclick="{!c.SendLoanDocuments}" />
+                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="xx - Send Loan Documents - (Conga Sign)" onclick="{!c.SendLoanDocumentsCongaSign}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Standard View" onclick="{!c.redirectUserToStandardView}" />
                 <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Delete" onclick="{!c.doDelete}" />         
             </aura:set>
             
+            <aura:if isTrue="{!v.LTVCheck}">
+                <c:CustomAlertComponent Warning = 'true' Message='please do not send loan application - document because LTV % is  > 15 % please take necessary measures'  />
+            </aura:if>
+
             <div class="slds-card__body_inner">
                 <aura:if isTrue="{!v.oppObj.VR_Fees_Generating_In_Progress__c == true}">
                     <lightning:layout>
@@ -160,7 +168,7 @@
                 </aura:if>
 
                 <aura:if isTrue="{!v.oppObj.Business_Unit__c=='Rhino'}">
-                <lightning:layout class="slds-m-left_xx-large slds-m-top_large">                  
+                <lightning:layout class="slds-m-left_xx-large slds-m-top_large">      
                     
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -343,7 +351,7 @@
                                                   value="{!v.oppObj.StageName}"
                                                   label="Stage"
                                                   onchange="{!c.onControllerFieldChange}"
-                                                  tabindex="12" 
+                                                  tabindex="12"
                                                   disabled="{!not(v.canUpdateStageName)}">
                                     <aura:iteration items="{!v.listControllingValues}" var="val">
                                         <option value="{!val}" selected="{!val == v.oppObj.StageName}">{!val}</option>
@@ -366,7 +374,7 @@
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                             <div class="slds-form-element__control">
-                                <lightning:select name="dependentFld" value="{!v.oppObj.Stage_Status__c}" label="Stage Status" tabindex="13" disabled="{!not(v.canUpdateStageStatus)}">
+                                <lightning:select name="dependentFld" value="{!v.oppObj.Stage_Status__c}" label="Stage Status" tabindex="13" onchange="{!c.StageStatusCheck}" disabled="{!not(v.canUpdateStageStatus)}">
                                     <aura:iteration items="{!v.listDependingValues}" var="val">
                                         <aura:if isTrue="{!!and(!v.oppObj.Is_Reserve_Applied__c, val=='Active - Collections')}">
                                             <option value="{!val}" selected="{!val == v.oppObj.Stage_Status__c}">{!val}</option>
@@ -453,6 +461,9 @@
                         </div>
                     </lightning:layoutItem>                     
                 </lightning:layout>
+                
+                
+                
                 <lightning:layout class="slds-m-left_xx-large">
                     <lightning:layoutItem size="4" class="slds-m-left_xx-large">                        
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">Name of Court</span>
@@ -854,11 +865,11 @@
                                             </div>
                                         </lightning:layoutItem>
                                     </lightning:layout>
-                                    <lightning:layout class="slds-m-left_xx-large">
-                                        <lightning:layoutItem size="8" class="slds-m-left_xx-large">
-                                            <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
-                                                <div class="slds-form-element__control">
-                                                    <span class="">
+                                    <lightning:layout class="slds-m-left_xx-large">	
+                                        <lightning:layoutItem size="8" class="slds-m-left_xx-large">	
+                                            <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">	
+                                                <div class="slds-form-element__control">	
+                                                    <span class="">	
                                                         <lightning:combobox label="Fee Type" tabindex="24" name="FeeType" value="{!v.oppObj.Fee_Type__c}" placeholder="--None--" options="{! v.feeTypeOptions }" onchange="{!c.onFeeTypeChange}"/>       	
                                                     </span>	
                                                 </div>	
@@ -896,8 +907,8 @@
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                                 <div class="slds-form-element__control">
                                                     <span class="">
-                                                        <lightning:input type="Number" formatter="currency" tabindex="19" value="{!v.oppObj.Amount_Paid_to_Borrower__c}" step="0.01"
-                                                                        label="Amount Paid to Borrower (Invoice)" />
+                                                        <lightning:input type="Number" formatter="currency" tabindex="19" value="{!v.oppObj.Amount_Paid_to_Borrower_Formula__c}" step="0.01"
+                                                                        disabled="true" label="Amount Paid to Borrower (Invoice)" />
                                                     </span>
                                                 </div>
                                             </div>
@@ -979,7 +990,7 @@
                                             </div>
                                         </lightning:layoutItem>                                        
                                     </lightning:layout>        
-                                        
+                                            
                                     <lightning:layout class="slds-m-left_xx-large">
                                         <lightning:layoutItem size="8" class="slds-m-left_xx-large">
                                             <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
@@ -992,7 +1003,7 @@
                                             </div>
                                         </lightning:layoutItem>                                        
                                     </lightning:layout>
-                                    
+                                            
                                         </div>
                                         <div class="slds-col slds-size_1-of-2 ">                                             
                                             <lightning:layout >
@@ -1235,8 +1246,8 @@
                                             </aura:if>
                                         </lightning:layout>                                        
                                     </aura:if>
-                                                </div>
                                             </div>                        
+                                                </div>
                                             </div>                        
                                 <div class="slds-m-top_large slds-text-align_center">                                    
                                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.saveLoanDetails}" />
@@ -1669,7 +1680,7 @@
                                     <aura:if isTrue="{!v.oppObj.Interest_Rate_Type__c == 'Variable'}">                                        
                                         <lightning:input type="number" tabindex="40" name="InterestRate" label="Interest Rate (Annual Rate)" value="" disabled="true" />
                                         <aura:set attribute="else">
-                                    <lightning:input type="number" tabindex="40" name="InterestRate" label="Interest Rate (Annual Rate)" value="{!v.oppObj.Interest_Rate__c}" formatter="percent-fixed" step="0.01" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}" />
+                                            <lightning:input type="number" tabindex="40" name="InterestRate" label="Interest Rate (Annual Rate)" value="{!v.oppObj.Interest_Rate__c}" formatter="percent-fixed" step="0.01" disabled="{!if(v.currentUser.Loan_Set_up__c, false, true)}" />
                                         </aura:set>
                                     </aura:if>                                    
                                     <!--<ui:inputCurrency class="field" value="{!v.oppObj.Interest_Rate__c}"/>-->

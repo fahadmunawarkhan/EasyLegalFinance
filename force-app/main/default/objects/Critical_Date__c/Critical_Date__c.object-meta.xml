@@ -158,7 +158,7 @@
         <label>Critical Date</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Critical Dates</pluralLabel>
+    <pluralLabel>Critical Date</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>

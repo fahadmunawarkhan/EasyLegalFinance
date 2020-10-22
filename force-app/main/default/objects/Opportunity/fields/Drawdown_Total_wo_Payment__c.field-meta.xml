@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Drawdown_Total_wo_Payment__c</fullName>
-    <description>including -ive payment halted drawdowns in roll up.</description>
+    <description>including -ive payment halted drawdowns in roll up</description>
     <externalId>false</externalId>
     <label>Drawdown Total w/o Payment</label>
     <summarizedField>Drawdown__c.Amount_Formula__c</summarizedField>

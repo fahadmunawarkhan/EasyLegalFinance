@@ -111,6 +111,10 @@
                 <behavior>Edit</behavior>
                 <field>First_Sent_to_Bank_Date__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>AFT_File_Number__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

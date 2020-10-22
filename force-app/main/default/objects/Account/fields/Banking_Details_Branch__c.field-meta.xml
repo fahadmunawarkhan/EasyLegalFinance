@@ -3,7 +3,7 @@
     <fullName>Banking_Details_Branch__c</fullName>
     <description>Payout Banking Details</description>
     <externalId>false</externalId>
-    <formula>$Setup.Banking_Details__c.Branch__c</formula>
+    <formula>IF(ISPICKVAL(Business_Unit__c, &quot;Rhino&quot;), $Setup.Banking_Details__c.Rhino_Branch__c, IF(ISPICKVAL(Business_Unit__c, &quot;Seahold&quot;),$Setup.Banking_Details__c.Seahold_Branch__c,$Setup.Banking_Details__c.ELFI_Branch__c))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Banking Details: Branch</label>
     <required>false</required>

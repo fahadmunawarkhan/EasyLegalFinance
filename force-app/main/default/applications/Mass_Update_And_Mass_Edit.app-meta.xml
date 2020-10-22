@@ -7,5 +7,6 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>Mass Update And Mass Edit</label>
     <tabs>About_Mass_Update_and_Mass_Edit</tabs>
-    <tabs>Critical_Date__c</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
 </CustomApplication>

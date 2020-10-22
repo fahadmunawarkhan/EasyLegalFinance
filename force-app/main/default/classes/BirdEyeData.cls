@@ -21,7 +21,7 @@ public with sharing class BirdEyeData {
 		public CustomerCheckIn(Contact contact, Integer emailTemplateId){
 			this.name = contact.FirstName+' '+contact.LastName;
 			this.emailId = contact.Email;
-			this.phone = contact.MobilePhone;
+			this.phone = contact.Phone;
 			this.smsEnabled = 1;
 			this.checkinConfig = new BirdEyeData.CheckInConfig();
 			this.checkinConfig.reviewEmailTemplateId = emailTemplateId;

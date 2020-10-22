@@ -17,6 +17,8 @@ Inputs:
 History
 <Date> <Authors Name> <Brief Description of Change>
 ------------------------------------------------------------*/
+    
+    public static List<Id> allocatedPaymentIds = new List<Id>();
 
 	// Define custom exception
 	public class PayoutDateInconsistentException extends Exception {} // Throws this if Payout date on Drawdown not consistent with Transaction Date on Payment. 
@@ -24,8 +26,10 @@ History
 
 	@InvocableMethod(label='Allocate Payments' description='Create Drawdown Payment Allocation records to associate Payment Drawdown with Advance Drawdown')
     public static void AllocatePayments (List<ID> paymentIds) {
-        allocate(paymentIds, true);
-        allocate(paymentIds, false);
+        List<Id> paymentIdsToAllocate = new List<Id>();
+        paymentIdsToAllocate.addAll(paymentIds);
+        allocate(paymentIdsToAllocate, true);
+        allocate(paymentIdsToAllocate, false);
     }       
 
     public static void allocate (List<ID> paymentIds, Boolean isFirstIteration) {
@@ -45,10 +49,9 @@ History
 									  from Drawdown__c
 									  where Opportunity__c in :opportunityIds AND Outstanding_Balance_as_of_Payout_Date__c > 0 and Payment_Method__c <> 'Payment' order by Opportunity__c,Date__c ASC];
 
-
 		list<Drawdown_Payment_Allocation__c> allocations = new list<Drawdown_Payment_Allocation__c> ();  // list of allocations to be inserted
 
-		for (Drawdown__c p:payments){            
+		for (Drawdown__c p:payments){  
             Boolean allocateToPrincipal = (p.Payout_Interest_First__c != isFirstIteration);
 			Decimal paymentBalance = 0.00 - p.Outstanding_Balance_as_of_Payout_Date__c;  //change sign            
                  
@@ -65,8 +68,7 @@ History
                 else{
                     Decimal advanceInterest = a.Outstanding_Balance_as_of_Payout_Date__c - advancePrincipal;
                     advanceAmountToAllocate = advanceInterest;
-                }
-                    
+                }                   
                 if (a.opportunity__c == p.opportunity__c && paymentBalance > 0 && advanceAmountToAllocate > 0  ){
                     Decimal AllocationAmount = 0.00;
                     
@@ -76,7 +78,7 @@ History
 					} else {
 						AllocationAmount += advanceAmountToAllocate;
 						paymentBalance -= advanceAmountToAllocate;						
-					}
+					}                                                       
                     Drawdown_Payment_Allocation__c newAllocation = 
 					    new Drawdown_Payment_Allocation__c (Amount__c=AllocationAmount, drawdown__c=a.id,payment__c=p.id, 
 															payout_date__c=a.payout_date__c, temp_payout_date__c=a.temp_payout_date__c, 
@@ -91,8 +93,7 @@ History
                         newAllocation.Interest_Repaid__c = AllocationAmount;
                         newAllocation.Principal_Repaid__c = 0.0;
                     }
-                        
-					allocations.add(newAllocation);	                    
+					allocations.add(newAllocation);	                                        
                 }
             }
         }

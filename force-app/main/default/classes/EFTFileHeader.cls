@@ -32,7 +32,7 @@ public with sharing class EFTFileHeader {
     private void setOriginatorIdNumber(){
         List<User> usersList = [SELECT Id, EFT_Originator_Id__c FROM User WHERE Id =: UserInfo.getUserId() LIMIT 1];
         if(!usersList.isEmpty()) {
-            if (usersList[0].EFT_Originator_Id__c.length() != 10) {
+            if (usersList[0].EFT_Originator_Id__c == null || usersList[0].EFT_Originator_Id__c.length() != 10) {
                 throw new EFTFileException(null, '', 'User has an invalid EFT Originator Id. Please have an admin update your user with a 10 character originator Id from the bank.');
             }
             this.eftFileHeader += usersList[0].EFT_Originator_Id__c;

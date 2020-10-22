@@ -1,3 +1,13 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 08-20-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   08-13-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="LawFirmCountController">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="startDate" type="date" />
@@ -12,7 +22,9 @@
                                                            {'label': 'Active only', 'value': 'Active'},
                                                            ]"/>
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="ELFI" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="List" />
+    <aura:attribute name="typeOfLoanOptions" type="List" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="List" />
     <aura:attribute name="selectedLoanFilter" type="String" default="Active" />
     <aura:attribute name="sortField" type="String" default="Name"/>
     <aura:attribute name="sortOrder" type="String" default="ASC" />
@@ -21,10 +33,13 @@
     <aura:attribute name="accountsList" type="Account[]"/>
     <aura:attribute name="currentUserId" type="Id"/>
     <aura:attribute name="viewUrl" type="String" />
+    <aura:attribute name="viewUrlViewAll" type="String" />
     <aura:attribute name="printUrl" type="String"/>
     <aura:attribute name="pv1" type="String" default="" />
     <aura:attribute name="pv2" type="String" default="" />
+    <aura:attribute name="pv5" type="String" default="" />
     <aura:attribute name="spinner" type="Boolean" default="false" />
+    <aura:attribute name="showWarning" type="Boolean" default="false" />
     
     <lightning:card title="Information" variant="base">
         <div class="slds-card__body_inner">
@@ -60,18 +75,36 @@
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
-                <lightning:layoutItem size="4">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <c:MultiSelect aura:id="businessunitMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
+                                                selectedOptions="{!v.selectedBusinessUnitFilter}"
+                                                comboboxcontainer="false" />
                                 </div>
                             </span>
                         </div>
                     </div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4">
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                selectedOptions="{!v.selectedTypeOfLoanFilter}" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
@@ -90,13 +123,13 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <a href="{!v.viewUrl}" target="_BLANK">
+                <a href="{!v.viewUrlViewAll}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (Excel)" />
                 </a>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.viewUrl +'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <a href="{!v.viewUrlViewAll +'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (PDF)" />
                 </a>
@@ -109,14 +142,36 @@
             </lightning:layoutItem>
         </lightning:layout>
     </lightning:card>
-    
+    <aura:if isTrue="{!v.showWarning}">
+        <lightning:card>
+            <lightning:layout horizontalAlign="center">
+                <lightning:layoutItem size="12">                                
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                            <lightning:icon iconName="utility:info_alt" alternativeText="info!" size="x-small" />
+                        </span>
+                        <h2>
+                            Note! Report will show only first 1000 records.
+                        </h2>
+                        <div class="slds-notify__close">                            
+                            <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.closeWarning}" >
+                                <lightning:icon iconName="utility:close" alternativeText="close" size="xx-small" />
+                                <span class="slds-assistive-text">Close</span>
+                            </button>
+                        </div>
+                    </div>                
+                </lightning:layoutItem>
+            </lightning:layout>
+        </lightning:card>
+    </aura:if>
     <lightning:card class="slds-card slds-card_boundary" title="{!'Showing '+ v.accountsList.length + ' records.'}" variant="base">
         <div style="overflow: auto; ">
             <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                 <thead>
                     <tr class="slds-text-title_caps">
-                        <th></th>                                     
-                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Account.Name" style="cursor: pointer;">                                        
+                                                             
+                        <th onclick="{!c.sort}" class="slds-is-sortable slds-is-resizable slds-is-sorted" data-field="Account.Name" style="cursor: pointer;padding-left: 24px !important;">                                        
                             <span class="slds-truncate" title="Law Firm">Law Firm</span>
                             <aura:if isTrue="{!and(v.sortOrder=='DESC',v.sortField=='Account.Name')}">
                                 <lightning:icon iconName="utility:arrowdown" size="xx-small"/>
@@ -133,7 +188,7 @@
                 <tbody>
                     <aura:iteration items="{!v.accountsList}" var="acc"> 
                         <tr class="slds-hint-parent">
-                            <td style="width: 5%;" ><div class="slds-cell-buffer_left slds-cell-buffer_right"><ui:inputCheckbox value="{!acc.checked}" change="{!c.check}"/></div></td>
+                            
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!acc.account.Name}</td>
                             <td class="slds-cell-buffer_left slds-cell-buffer_right">{!acc.noOfFiles}</td>
                         </tr>

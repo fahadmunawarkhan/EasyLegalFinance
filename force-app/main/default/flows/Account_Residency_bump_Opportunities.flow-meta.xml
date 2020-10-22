@@ -64,7 +64,7 @@
 &amp;&amp;
 ( ISBLANK([Account].RecordTypeId) || CONTAINS([Account].RecordType.DeveloperName,&quot;Client&quot;) ||
 CONTAINS(TEXT( [Account].Type), &quot;Client&quot;) )
-/* When Province of Residency changes on Account, and either there&#39;s no Record Type ID or they&#39;re marked a Client */</stringValue>
+/* When Province of Residency changes on Account, and either there&apos;s no Record Type ID or they&apos;re marked a Client */</stringValue>
             </value>
         </processMetadataValues>
         <name>formula_myRule_1</name>
@@ -73,7 +73,7 @@ CONTAINS(TEXT( [Account].Type), &quot;Client&quot;) )
 &amp;&amp;
 ( ISBLANK({!myVariable_current.RecordTypeId}) || CONTAINS({!myVariable_current.RecordType.DeveloperName},&quot;Client&quot;) ||
 CONTAINS(TEXT( {!myVariable_current.Type}), &quot;Client&quot;) )
-/* When Province of Residency changes on Account, and either there&#39;s no Record Type ID or they&#39;re marked a Client */</expression>
+/* When Province of Residency changes on Account, and either there&apos;s no Record Type ID or they&apos;re marked a Client */</expression>
     </formulas>
     <interviewLabel>Account_Residency_bump_Opportunities-3_InterviewLabel</interviewLabel>
     <label>Account Residency: bump Opportunities</label>

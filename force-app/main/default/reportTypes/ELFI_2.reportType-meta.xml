@@ -381,6 +381,12 @@
             <field>Opportunity__c.Loan_Type__c</field>
             <table>Drawdown__c</table>
         </columns>
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <displayNameOverride>Rhino Loan Number</displayNameOverride>
+            <field>Opportunity__c.Rhino_Loan_Number__c</field>
+            <table>Drawdown__c</table>
+        </columns>
         <masterLabel>Drawdowns</masterLabel>
     </sections>
 </ReportType>

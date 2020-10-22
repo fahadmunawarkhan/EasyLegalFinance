@@ -2,9 +2,10 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Current_Account_URL__c</fullName>
     <externalId>false</externalId>
-    <formula>&#39;/&#39; + Current_Account_Id__c</formula>
+    <formula>&apos;/&apos; + Current_Account_Id__c</formula>
     <label>Current Account URL</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

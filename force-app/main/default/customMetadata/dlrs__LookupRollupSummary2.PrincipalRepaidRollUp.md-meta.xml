@@ -52,11 +52,12 @@
     </values>
     <values>
         <field>dlrs__RelationshipCriteriaFields__c</field>
-        <value xsi:type="xsd:string">Payment_Method__c</value>
+        <value xsi:type="xsd:string">Payment_Method__c
+Reference_notes__c</value>
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:type="xsd:string">Payment_Method__c = &#39;Payment&#39;</value>
+        <value xsi:type="xsd:string">Payment_Method__c = &apos;Payment&apos; AND ( Reference_notes__c = &apos;Loan Payout&apos; OR Reference_notes__c = &apos;Partial Payment&apos; OR Reference_notes__c = &apos;Payment Surplus&apos; OR Reference_notes__c = &apos;Bad Debt Recovery&apos; OR Reference_notes__c = &apos;Client Rebate&apos;  )</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>

@@ -51,6 +51,7 @@
 .THIS .payment-instructions{
 	width: 1000px !important;
 	max-width: 1000px !important;    
-}.THIS .margin-adjust{
+}
+.THIS .margin-adjust{
     margin-left: 26px !important;
 }

@@ -1,0 +1,508 @@
+<aura:component controller="HistoricalDataController">
+     <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="loadRecordForm" type="Boolean" default="false"/>
+    <aura:attribute name="historicalData" type="List"  default="[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!empty(v.historicalData)}">
+        No historical data found for this Account
+        <aura:set attribute="else">
+            <aura:if isTrue="{!v.loadRecordForm}">
+                <lightning:tabset>
+                    <aura:iteration items="{!v.historicalData}" var="item">
+                        <lightning:tab label="{!item.Opportunity__r.Opportunity_Long_Name__c}">
+                            <lightning:recordEditForm recordId="{!item.Id}" objectApiName="Historical_Data__c"
+                                                      onload="{!c.onload}"
+                                                      onerror="{!c.onerror}"
+                                                      onsubmit="{!c.onsubmit}"
+                                                      onsuccess="{!c.onsuccess}"
+                                                      aura:id="historicalDataForm">
+                                <lightning:messages />
+                                <lightning:tabset variant="scoped">
+                                    <lightning:tab label="Plaintiff Application">
+                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Rhino_Loan_Number__c" disabled="true"/>
+                                            </div>
+
+                                            
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="How_did_you_hear_about_us__c" />
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Accident_Impact__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <label class="slds-form-element__label"> How long have you lived at your current address?</label>
+                                                <lightning:inputField fieldName="How_long_have_you_lived_at_your_current__c" variant="label-hidden"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Car_Damages__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Amount_that_you_would_like__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <label class="slds-form-element__label">When did you first seek medical attention?</label>
+                                                <lightning:inputField fieldName="When_did_you_first_seek_medical_attentio__c" variant="label-hidden"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Date_of_Accident__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Did_you_spend_time_in_the_hospital__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <label class="slds-form-element__label">Did the police arrive at the scene of the accident?</label>
+                                                <lightning:inputField fieldName="Did_the_police_arrive_at_the_scene_of_th__c" variant="label-hidden"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Annual_Income__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Who_got_the_Police_Traffice_Ticket__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <label class="slds-form-element__label">As a result of this accident, have you missed time from work?</label>
+                                                <lightning:inputField fieldName="have_you_missed_tme_from_work__c" variant="label-hidden"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <lightning:inputField fieldName="Type_of_Accident__c"/>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <label class="slds-form-element__label">If yes, approx lost wages to date: $</label>
+                                                <lightning:inputField fieldName="If_yes_approx_lost_wages_to_date__c" variant="label-hidden"/>
+                                            </div>
+                                            <div class="slds-col slds-size_12-of-12">
+                                                <div class="slds-text-align_right">
+                                                    <lightning:button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Save" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                    <lightning:tab label="Lawyer Application">
+                                        <div class="slds-grid slds-wrap slds-gutters_small">  
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                                    
+                                                    
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="Rhino_Loan_Number__c" disabled="true"/>
+                                                    </div>
+
+                                                    
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">How long has the CLAIMANT lived at the current address?</label>
+                                                        <lightning:inputField fieldName="How_long_has_the_CLAIMANT_lived_at_the_c__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="Are_you_the_first_lawyer_on_this_file__c" />
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="When_was_this_file_opened_at_your_firm__c" />
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="Lawyer_Date_of_Accident__c" />
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            Has the DEFENDENT or their insurance company
+                                                            admitted liability (without prejudice)?</label>
+                                                        <lightning:inputField fieldName="Has_DEFENDENT_admitted_liability__c" variant="label-hidden"/>   
+                                                        
+                                                        
+                                                        <label class="slds-form-element__label">
+                                                            If Yes, click appropriate box(es)</label>
+                                                        <lightning:inputField fieldName="DEFENDENTinsurancecompanyliability__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            Has the liability of the DEFENDENT been
+                                                            established to your satisfaction?
+                                                        </label>
+                                                        <lightning:inputField fieldName="liability_satisfaction__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <label class="slds-form-element__label">
+                                                                    Are there allegations of contributory negligence?
+                                                                </label>
+                                                                <lightning:inputField fieldName="Are_there_allegations_negligence__c" variant="label-hidden"/>
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <label class="slds-form-element__label">
+                                                                    If Yes, select appropriate values
+                                                                </label>
+                                                                <lightning:inputField fieldName="allegations_of_contributory_negligence__c"  variant="label-hidden"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Did_the_police_arrive__c" />
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Police_Arrive_Confirmed__c" />
+                                                            </div>
+                                                        </div> 
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Police_Report" /> 
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Police_Report_Confirmed" /> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Charges_were_laid_against__c" />
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Charges_were_laid_against_confirmed__c" />   
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Claimant_was__c" />
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Claimant_was_Confirmed__c" />  
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="TypeofAccident__c" />
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Type_of_Accident_Confirmed__c" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="AccidentImpact__c" />
+                                                            </div>
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Accident_Impact_Confirmed__c" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Damage_Amount__c" />
+                                                            </div>                                       	
+                                                            <div class="slds-col slds-size_6-of-12">
+                                                                <lightning:inputField fieldName="Damage_Amount_Confirmed__c" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">When did the CLAIMANT first seek medical attention?</label>
+                                                        <lightning:inputField fieldName="When_did_the_CLAIMANT_first_seek_medical__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="Length_of_Hospital_Stay__c" />
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <fieldset class="slds-form-element slds-p-around_x-small">
+                                                            <legend class="slds-form-element__legend slds-form-element__label">  
+                                                                As a result of this accident, has the CLAIMANT suffered a serious physical or
+                                                                cognitive impairment that has resulted in a substantial inability to perform the
+                                                                following?
+                                                            </legend>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-checkbox" style="display: flex;">
+                                                                    <lightning:inputField fieldName="CLAIMANTs_daily_living__c"  variant="label-hidden" />
+                                                                    <label class="slds-checkbox__label">
+                                                                        <span class="slds-form-element__label">Normal activities of the CLAIMANT's daily living.</span>
+                                                                    </label> 
+                                                                    
+                                                                </div>
+                                                                <div class="slds-checkbox" style="display: flex;">
+                                                                    <lightning:inputField fieldName="CLAIMANT_s_regular_employment__c"  variant="label-hidden" />
+                                                                    <label class="slds-checkbox__label">
+                                                                        <span class="slds-form-element__label">
+                                                                            Essential tasks of the CLAIMANT's regular employment,
+                                                                            occupation or profession.</span>
+                                                                    </label> 
+                                                                </div>
+                                                                <div class="slds-checkbox" style="display: flex;">
+                                                                    <lightning:inputField fieldName="CLAIMANT_s_training_or_education__c"  variant="label-hidden" />
+                                                                    <label class="slds-checkbox__label">
+                                                                        <span class="slds-form-element__label">Essential tasks of the CLAIMANT's training or education.</span>
+                                                                    </label> 
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </fieldset> 
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <fieldset class="slds-form-element slds-p-around_x-small">
+                                                            <legend class="slds-form-element__legend slds-form-element__label">  
+                                                                Do you have the CLAIMANT's medical documentation on file for the following:   
+                                                            </legend>
+                                                            <div class="slds-form-element__control">
+                                                                <div>
+                                                                    <lightning:inputField fieldName="Hospital_Visit__c" variant="standard"/>    
+                                                                </div>
+                                                                <div >
+                                                                    <lightning:inputField fieldName="Treating_Physician__c" variant="standard"/>  
+                                                                </div>
+                                                                <div>
+                                                                    <lightning:inputField fieldName="Specialists__c" variant="standard"/>  
+                                                                </div>
+                                                                <div>
+                                                                    <lightning:inputField fieldName="Other_Treatment_Giver_s__c" variant="standard"/>  
+                                                                </div>
+                                                            </div>
+                                                        </fieldset> 
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            Does the CLAIMANT have a pre-existing condition?
+                                                        </label>
+                                                        <lightning:inputField fieldName="has_a_pre_existing_condition__c"  variant="label-hidden"/>  
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <lightning:inputField fieldName="Permanent_Partial_Disability__c"/>  
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">Has Insurance Co. provided a settlement offer?</label>
+                                                        <lightning:inputField fieldName="Has_Insurance_Co_provided_a_settlement__c" variant="label-hidden" />
+                                                        <label class="slds-form-element__label">If yes, latest offer amount $</label>
+                                                        <lightning:inputField fieldName="Latest_offer_amount__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            Are there any prior assignments or liens?
+                                                        </label> 
+                                                        <lightning:inputField fieldName="Are_there_any_prior_assignments_or_liens__c" variant="label-hidden"/>
+                                                        <label class="slds-form-element__label">  Amount $</label>
+                                                        <lightning:inputField fieldName="Total_current_value_of_assignments_Amoun__c" variant="label-hidden"/>
+                                                        <label class="slds-form-element__label">  Lender</label>
+                                                        <lightning:inputField fieldName="TotalCurrentValueOfAssignmentsLender__c" variant="label-hidden"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            How would you describe CLAIMANT's history of following your (lawyer's) advice?
+                                                        </label>
+                                                        <lightning:inputField fieldName="history_of_following_your_advice__c" variant="label-hidden"/> 
+                                                    </div>
+                                                    
+                                                    <div class="slds-col slds-size_12-of-12">
+                                                        <label class="slds-form-element__label">
+                                                            How would you describe CLAIMANT's history of following medical advice and
+                                                            necessary treatment protocols?
+                                                        </label>
+                                                        <lightning:inputField fieldName="history_of_following_medical_advice__c" variant="label-hidden"/> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                    <lightning:tab label="Preliminary Assessment">
+                                        <div class="slds-text-align_center slds-text-heading_small">
+                                            PRELIMINARY ASSESSMENT<br/>
+                                            (You may select more than one)<br/>
+                                            What injuries did the CLAIMANT suffer in this accident?<br/>
+                                        </div>
+                                        <div class="slds-grid slds-wrap slds-gutters_small">
+                                            <div class="slds-col slds-size_6-of-12">
+                                                
+                                                <div class="slds-col slds-size_6-of-12">
+                                                    <lightning:inputField fieldName="Rhino_Loan_Number__c" disabled="true"/>
+                                                </div> 
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Soft Tissue</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Strains_Sprains_Ligament_Tears__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Surgery</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Surgery_Required_as_a_result_of_accide__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Most Severe Injuries</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Paralysis__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Substantiated_Brain_Injury__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fatality__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Head</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Jaw_TMJ__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Teeth__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Skull_Fracture__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Senses</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Sight__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Hearing__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Speech__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Taste_Smell__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Balance__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Body - internal</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox" style="display: flex;">
+                                                            <lightning:inputField fieldName="Damaged_Spine_WAD_III_or_IV__c"  variant="label-hidden" />
+                                                            <label class="slds-checkbox__label">
+                                                                <span class="slds-form-element__label">Fractured/Damaged Spine/Disc (WAD III or IV)</span>
+                                                            </label> 
+                                                        </div> 
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fractured_Shoulder_Bone_Collar_Bone__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fractured_Ribs__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fractured_Pelvis_Hip__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Cartilage_Damage__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Internal Organ Damage" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>  
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12">
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Skin</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Serious_Laceration_s_Scar_s_Burn_s__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Emotional</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Psychological_Emotional__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Chronic_Pain__c" variant="standard"/>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Arms</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Loss_of_Arm__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Loss_of_Hand_Finger_s_Thumb_s__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fractured_Arm_Wrist_Hand_Elbow__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Permanent_Impairment_to_Arm_Hand_Elbow__c" variant="standard"/>
+                                                        </div> 
+                                                    </div>
+                                                </fieldset>  
+                                                
+                                                <fieldset class="slds-form-element slds-p-around_x-small">
+                                                    <legend class="slds-form-element__legend slds-form-element__label">Legs</legend>
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Loss_of_Leg__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Loss_of_Foot_Toe__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fracture_of_Weight_Bearing_Bone_s__c" variant="standard"/>
+                                                        </div>
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Fractured_Ankle_Knee__c" variant="standard"/>
+                                                        </div> 
+                                                        <div class="slds-checkbox">
+                                                            <lightning:inputField fieldName="Permanent_Impairment_to_Leg_Foot__c" variant="standard"/>
+                                                        </div> 
+                                                    </div>
+                                                </fieldset>     
+                                            </div>
+                                            <div class="slds-col slds-size_12-of-12">
+                                                <div class="slds-text-align_right">
+                                                    <lightning:button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Save" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning:tab>
+                                </lightning:tabset>
+                            </lightning:recordEditForm>
+                        </lightning:tab>
+                    </aura:iteration>
+                </lightning:tabset>
+            </aura:if>
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-expressions */
 ({    
     doInit : function(component, event, helper) {
-        helper.getOpportunityInfo(component);        
+        helper.getOpportunityInfo(component);
+        helper.getAccountInfo(component);
         /*helper.getCriticalDatesList(component).then(
             $A.getCallback(function(result) {                
             }),
@@ -251,7 +252,7 @@
     },*/
     
     deleteDrawdownItem : function(component, event, helper){
-        component.set("v.spinner", true);
+                component.set("v.spinner", true);
         console.log('deleteDrawdownItem');
         var itemDescription = event.target.getElementsByClassName('drawdown-item-id')[0].value;           
         var recordId = component.get('v.recordId');
@@ -287,6 +288,7 @@
             component.set("v.spinner", false);
             return false;
         }
+
     },
     
     deleteServiceProviderDrawdownItem : function(component, event, helper){
@@ -411,6 +413,17 @@
         var currentOppSObj = component.get('v.oppObj');
         if (currentOppSObj.Send_Loan_Doc_Check__c==true){
             window.open(currentOppSObj.Conga_URL_Doc_Send__c, "_parent","width=650,height=250,menubar=0");
+        }
+        else{
+            //alert(currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Send Loan Documents').replace(/\\n/g, '\n'));
+            helper.showToast('ERROR', currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Send Loan Documents').replace(/\\n/g, '\n'));
+        } 
+    },
+    SendLoanDocumentsCongaSign: function(component, event, helper)
+    {
+        var currentOppSObj = component.get('v.oppObj');
+        if (currentOppSObj.Send_Loan_Doc_Check__c==true){
+            window.open(currentOppSObj.Conga_Sign_URL_Send__c, "_parent","width=650,height=250,menubar=0");
         }
         else{
             //alert(currentOppSObj.Conga_Doc_Error__c.replace('[ButtonName]', 'Send Loan Documents').replace(/\\n/g, '\n'));
@@ -761,5 +774,5 @@
                 }
             }
         )                	        
-    }                      
+    }                  
 })

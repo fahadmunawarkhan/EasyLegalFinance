@@ -3,8 +3,8 @@
  * @Description        : 
  * @Author             : Seth Boyd
  * @Group              : 
- * @Last Modified By   : Seth Boyd
- * @Last Modified On   : 5/11/2019, 5:36:17 AM
+ * @Last Modified By   : fahad.khan@toptal.com
+ * @Last Modified On   : 10-22-2020
  * @Modification Log   : 
  *==============================================================================
  * Ver         Date                     Author      		      Modification
@@ -47,7 +47,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c,
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower_Formula__c, Loan_Available_to_Drawdown__c,
                 Funding_Details_Status__c, Drawdown_Total__c,
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
@@ -87,7 +87,8 @@ public with sharing class FundingDetailsComponentCtlr {
                         Current_Account_Name__c,
                         Current_Account_URL__c,
                         Transaction_Reference_Number__c,
-                        Drawdown_Created__c
+                        Drawdown_Created__c,
+                        CWB_Sheet_Number__c
                     FROM Scheduled_Payments__r
                     WHERE Status__c in :spStasuses
                     ORDER BY Sent_to_Bank_Date__c ASC
@@ -404,7 +405,7 @@ public with sharing class FundingDetailsComponentCtlr {
             SELECT
                 Id, Name,
                 /* Table Fields */
-                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower__c, Loan_Available_to_Drawdown__c, 
+                Loan_Requests__c, Type_of_Loan__c, Admin_Fee__c, Amount, Amount_Paid_to_Borrower_Formula__c, Loan_Available_to_Drawdown__c, 
                 Account.AccountNumber, Account.Name, Account.Id,
                 /* Table Fields */
                 /* Loan Details Fields */
@@ -704,5 +705,59 @@ public with sharing class FundingDetailsComponentCtlr {
     public static void updateCWBFileSettings(CWB_File_Setting__c cwbFileSetting){
         update cwbFileSetting;
     }
+
+    @AuraEnabled
+    public static void sendBacktoRejections(Date startDate, Date endDate, String cwbSheetNumber){
+        String[] spStasuses = new String[]{'Processed by Bank'};
+        String[] allowedStatuses = new String[]{'Loan Setup Check', 'Process Drawdowns', 'Populate PPSA', 'Final Review'};
+        Map<Id, Opportunity> opportunityMap = new Map<Id, Opportunity>();
+        try{
+            Datetime compareStart = null;
+            if (startDate != null) {
+                compareStart = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day(), 0, 0, 0);
+            }
+            Datetime compareEnd = null;
+            if (endDate != null) {
+                compareEnd = Datetime.newInstance(endDate.year(), endDate.month(), endDate.day(), 23, 59, 59);
+            }
+            system.debug('cwbSheetNumber => ' + cwbSheetNumber);
+            if(cwbSheetNumber != null && !String.isEmpty(cwbSheetNumber)){
+
+                String strQuery = 'SELECT Id, Opportunity__c, Status__c, Payment_Type__c, Scheduled_Date__c,';
+                strQuery += ' Send_Cheque__c, Sent_to_Bank_Date__c, Drawdown_Created__c, CWB_Sheet_Number__c,';
+                strQuery += ' Opportunity__r.Funding_Details_Status__c, AFT_File__c, AFT_File_Number__c, EFT_File__c, EFT_Number__c';
+                strQuery += ' FROM Scheduled_Payment__c';
+                strQuery += ' WHERE Status__c in :spStasuses';
+                strQuery += compareStart != null? ' AND Sent_to_Bank_Date__c >= :compareStart' : '';
+                strQuery += compareEnd != null? ' AND Sent_to_Bank_Date__c <= :compareEnd' : '';
+                strQuery += ' AND CWB_Sheet_Number__c =:cwbSheetNumber';
+                strQuery += ' AND Opportunity__r.Funding_Details_Status__c In :allowedStatuses';
+
+                List<Scheduled_Payment__c> spList = Database.query(strQuery);
+
+                system.debug('spList => ' + spList.size());
+                
+                if(!spList.isEmpty()){
+                    for(Scheduled_Payment__c sp : spList){
+                        if(!opportunityMap.containsKey(sp.opportunity__c)){
+                            opportunityMap.put(sp.opportunity__c, new Opportunity(Id=sp.opportunity__c, Funding_Details_Status__c = 'Closed'));
+                        }
+                        sp.Status__c = 'Sent to Bank';
+                        sp.Send_Cheque__c = false;
+                    }
+
+                    update spList;
+                    system.debug('opportunityMap => ' + opportunityMap.size());
+                    if(!opportunityMap.isEmpty()) update opportunityMap.values();
+                }
+            }
+        } catch (Exception e){
+            system.debug('Exception 3');
+            system.debug(e.getMessage() + '- Line Number: ' + e.getLineNumber());
+            system.debug(e.getStackTraceString());
+            system.debug(e);
+            throw new AuraHandledException('Error: '+e.getMessage());
+        }
+    }        
 
 }
