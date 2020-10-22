@@ -183,5 +183,10 @@ public with sharing class OpportunityTriggerHandler {
             }
         }
     }
-    
+ 	public static void clearInterestRateForVariableRates(List<Opportunity> oppList){    
+        for (Opportunity opp : oppList){
+            if (opp.Interest_Rate_Type__c == 'Variable')
+                opp.Interest_Rate__c = 24.0;
+        }
+    }    
 }

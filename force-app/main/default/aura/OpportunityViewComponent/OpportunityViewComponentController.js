@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 ({    
     doInit : function(component, event, helper) {
-        helper.getOpportunityInfo(component);
+        helper.getOpportunityInfo(component);        
         /*helper.getCriticalDatesList(component).then(
             $A.getCallback(function(result) {                
             }),
@@ -32,6 +32,8 @@
         helper.getPickListValues(component, 'Opportunity','StageName','stageOptions');
         helper.getPickListValues(component, 'Opportunity','Stage_Status__c','statusOptions');
         helper.getPickListValues(component, 'Opportunity','Type_of_Loan__c','loanTypeOptions');
+        helper.getPickListValues(component, 'Opportunity','Interest_Rate_Type__c','interestRateTypeOptions', true);
+		helper.getPickListValues(component, 'Opportunity','Fee_Type__c','feeTypeOptions');        
         helper.getPickListValues(component, 'Opportunity','Interest_Compounding_Period__c','interestCompoundingPeriod');
         helper.getPickListValues(component, 'Opportunity','Compounding_Interest__c','compoundingInterest');
         helper.getPickListValues(component, 'Opportunity','Fee_Calculation_Method__c','feeCalculationMethod');
@@ -429,6 +431,7 @@
         console.log('index:'+index);
         console.log('newPaymentMethod:'+newPaymentMethod);
         helper.fetchRefNotesDepValues(component, newPaymentMethod, index);
+        helper.selectDefaultReferenceNotes(component, newPaymentMethod, index);
     },
     onPaymentMethodChangeTreatment: function(component, event, helper)
     {
@@ -643,5 +646,120 @@
         component.set("v.spinner", true);
         helper.applyReserve(component);
     } ,
+    onFeeTypeChange: function(component, event, helper)
+    {
+        let oppObj = component.get("v.oppObj");
+        var feeType = component.get("v.oppObj.Fee_Type__c");
+        console.log(feeType);
+        if (feeType == 'No Fee' || feeType == 'Waived Fee')
+        	component.set("v.oppObj.Admin_Fee__c", 0.0);        
+    },
+    loanDetailsReset: function(component, event, helper){  
+        var variableFeeComponent = component.find("variablefeecomponent");
+        if (variableFeeComponent){
+            variableFeeComponent.reset();
+        }
+    },
+    loanSetupReset: function(component, event, helper){  
+        var variableRateComponent = component.find("variableratecomponent");
+        if (variableRateComponent){
+            variableRateComponent.reset();
+        }
+    },
+    bomFeeReset: function(component, event, helper){  
+        var bomFeeComponent = component.find("bomfeecomponent");
+        if (bomFeeComponent){
+            bomFeeComponent.reset();
+        }
+    },                        
+	saveLoanSetup : function(component, event, helper){          
+        var interestRateType = component.get('v.oppObj.Interest_Rate_Type__c');
+        var variableRateComponent = component.find('variableratecomponent');
+        var success;                
+        success = helper.validateRequired(component, "Name");
+        if(!success)	return;        
+        success = helper.validateRequired(component, "selectedLookUpPrimaryContact");
+        if(!success)	return;        
+        component.set("v.spinner", true);
+        helper.saveOppty(component).then(
+            (result) => {
+                if (interestRateType=='Variable'){                    
+                    if (variableRateComponent){
+                		component.set("v.spinner", true);
+                        variableRateComponent.save();                
+                		component.set("v.spinner", false);
+                    }
+            	}
+            },
+            (errors) => {
+                component.set("v.spinner", false);
+                helper.handleErrors(errors);
+            }
+        );
+    },
+	saveLoanDetails : function(component, event, helper){                          
+        var feeType = component.get('v.oppObj.Fee_Type__c');
+        var variableFeeComponent = component.find('variablefeecomponent');
+        var success;                
+        success = helper.validateRequired(component, "Name");
+        if(!success)	return;        
+        success = helper.validateRequired(component, "selectedLookUpPrimaryContact");
+        if(!success)	return;        
+        component.set("v.spinner", true);
+        helper.saveOppty(component).then(
+            (result) => {
+                console.log(feeType);
+                if (feeType=='Variable Fee'){                    
+                	component.set("v.spinner", true);                	
+                    if (variableFeeComponent){
+                        variableFeeComponent.save(
+                            ()=>{
+                                component.set("v.spinner", false);
+                                //helper.reInitSomeData(component);                    
+                            }
+                		);                
+                    }
+            	}
+            },
+            (errors) => {
+                component.set("v.spinner", false);
+                helper.handleErrors(errors);
+            }
+        );
 
+    },
+	saveBOMFees : function(component, event, helper){                                  
+        var bomFeeComponent = component.find('bomfeecomponent');
+        if (bomFeeComponent){
+            component.set("v.spinner", true);
+            bomFeeComponent.save(
+                ()=>{
+                	component.set("v.spinner", false);
+                    //helper.reInitSomeData(component);                    
+            	}
+            );                
+        }            	        
+    },
+	generateVRDrawdowns : function(component, event, helper){ 
+        var recordId = component.get("v.recordId");        
+        component.set("v.spinner", true);
+        helper.runAction(component, 'c.createFees', {oppId: recordId})
+        .then(
+            (result) => {       
+                component.set("v.spinner", false);
+                helper.showToast('SUCCESS','Generating drawdowns. Modifying any loan fields now will result in error. Please wait for generation to complete','SUCCESS');
+                component.set("v.oppObj.VR_Fees_Generating_In_Progress__c", true);
+            },
+            (errors) => {    
+                component.set("v.spinner", false);
+                if (errors){
+                	if (errors[0] && errors[0].message) {
+               			helper.errorsHandler(errors)
+            		}else {
+            			helper.unknownErrorsHandler();
+    				}    
+                }
+            }
+        )                	        
+    }                      
 })

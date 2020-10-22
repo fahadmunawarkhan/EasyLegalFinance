@@ -7,8 +7,9 @@
 		ISPICKVAL(Reference_Notes__c,&quot;Refund&quot;),
 		ISPICKVAL(Reference_Notes__c,&quot;Payment Re-processed&quot;)),0,
 IF(  ISPICKVAL(Payment_Method__c , &quot;Payment&quot;),Sum_of_Payment_Allocations__c - Amount__c,
+IF(ISPICKVAL(Interest_Rate_Type__c, &quot;Variable&quot;), MAX(Outstanding_Balance_VR__c, 0.0),
 IF(Compounding_Interest__c,(Amount_Adjusted_for_Repayments__c*(EXP(LN(1 + (Interest_Rate__c/Compounding_Frequency__c))*   
-(Compounding_Frequency__c*Interest_Accrual_Years__c)))),Amount_Adjusted_for_Repayments__c*(1+((Interest_Rate__c/365)* Interest_Accrual_Days__c)))))</formula>
+(Compounding_Frequency__c*Interest_Accrual_Years__c)))),Outstanding_Balance_Simple_Interest__c))))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Outstanding Balance as it will be at the Payout Date.  This Accounts for compounding interest or Simple Interest depending on the Loan.  This is set to zero when Drawdown is Payment.   For Payments, negative amounts represent unallocated payment amounts.</inlineHelpText>
     <label>Outstanding Balance</label>
