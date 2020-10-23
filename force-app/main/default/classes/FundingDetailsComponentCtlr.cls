@@ -707,7 +707,7 @@ public with sharing class FundingDetailsComponentCtlr {
     }
 
     @AuraEnabled
-    public static void sendBacktoRejections(Date startDate, Date endDate, String cwbSheetNumber){
+    public static void sendBacktoRejections(Date startDate, Date endDate, String cwbSheetNumber, String opportunityId, String schedulePaymentId){
         String[] spStasuses = new String[]{'Processed by Bank'};
         String[] allowedStatuses = new String[]{'Loan Setup Check', 'Process Drawdowns', 'Populate PPSA', 'Final Review'};
         Map<Id, Opportunity> opportunityMap = new Map<Id, Opportunity>();
@@ -749,6 +749,27 @@ public with sharing class FundingDetailsComponentCtlr {
                     update spList;
                     system.debug('opportunityMap => ' + opportunityMap.size());
                     if(!opportunityMap.isEmpty()) update opportunityMap.values();
+                }
+            }else{
+                Opportunity opp = null;
+                Scheduled_Payment__c spToUpdate = null;
+                if(opportunityId !=null && opportunityId != ''){
+                    opp = [SELECT Id, Funding_Details_Status__c, (SELECT Id FROM Scheduled_Payments__r WHERE Status__c in :spStasuses) FROM Opportunity
+                    WHERE Funding_Details_Status__c In :allowedStatuses AND Id=:opportunityId];
+
+                    
+                    if(opp.Scheduled_Payments__r.size() == 1){
+                        opp.Funding_Details_Status__c = 'Closed';
+                        update opp;
+                    }
+                }
+                if(schedulePaymentId != null && schedulePaymentId != '' ){ 
+                    spToUpdate = new Scheduled_Payment__c();                   
+                    spToUpdate.Status__c = 'Sent to Bank';
+                    spToUpdate.Send_Cheque__c = false;
+                    spToUpdate.Id = Id.valueOf(schedulePaymentId);
+
+                    update spToUpdate;
                 }
             }
         } catch (Exception e){
