@@ -77,9 +77,10 @@
         var data = tableComp.getData();
         var feeTypeOptions = this.getFeeTypeOptions();
         var effectiveAtOptions = this.getEffectiveAtOptions(component);
+        var monthDefault = effectiveAtOptions[0].value == 'Loan Setup' ? '' : '12';
         var items = [
             { value: effectiveAtOptions[0].value, align: 'left', type: 'combobox', options: effectiveAtOptions, editable: true, bold: false, hideEditButton: true, label: 'Effective At'  },
-            { value: '12', align: 'center', type: 'number', editable: true, bold: false, hideEditButton: true, label: 'Month'  },
+            { value: monthDefault, align: 'center', type: 'number', editable: true, bold: false, hideEditButton: true, label: 'Month'  },
             { value: feeTypeOptions[0].value, align: 'center', type: 'radiogroup', editable: true, options: feeTypeOptions, bold: false, hideEditButton: true  },
             { value: 0.0, align: 'right', type: feeTypeOptions[0].value=='%' ? 'percentage' : 'currency', editable: true, bold: false, hideEditButton: true, label: feeTypeOptions[0].value=='%' ? 'Amount %' : 'Amount' },
             { value: '', align: 'left', type: 'none', editable: false, hideEditButton: true, hideDeleteButton: false}
