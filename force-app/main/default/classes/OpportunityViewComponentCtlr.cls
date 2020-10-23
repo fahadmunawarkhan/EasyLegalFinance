@@ -651,7 +651,8 @@ public class OpportunityViewComponentCtlr {
         if (opp.VR_Fees_Generating_In_Progress__c == true)
             throw new AuraHandledException('The process has already started');
         opp.VR_Fees_Generating_In_Progress__c = true;
+        opp.VR_Fees_Generating_Start_Time__c = DateTime.now();
         update opp;
         System.enqueueJob(new CreateFeesForOppQueueable(oppId));                
-    }    
+    }        
 }
