@@ -29,7 +29,7 @@
                     <lightning:layoutItem size="6">
                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label">File No</span>
                             <div class="slds-form-element__control"><span class="slds-form-element__static">
-                                <ui:inputText value="{!v.leadObj.ELF_File_No__c}" />
+                                <ui:outputText value="{!v.leadObj.ELF_File_No__c}" />
                                 </span></div>
                         </div>
                     </lightning:layoutItem>

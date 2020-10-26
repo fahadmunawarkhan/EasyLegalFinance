@@ -194,7 +194,7 @@ public class PaymentAllocatorTest {
 		}
         System.assertEquals(0.0,advancePrincipalRepaidSum);
         Test.stopTest();
-    }  
+    }
 	public static testMethod void deletePaymentAllocationsTest(){
         Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity 0' LIMIT 1];
         List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
@@ -219,5 +219,5 @@ public class PaymentAllocatorTest {
         allocations = [select Id from Drawdown_Payment_Allocation__c];
         System.assertEquals(true, allocations.isEmpty());
         Test.stopTest();
-    }     
+    }    
 }

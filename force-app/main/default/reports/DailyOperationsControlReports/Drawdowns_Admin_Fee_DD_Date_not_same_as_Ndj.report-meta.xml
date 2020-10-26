@@ -7,6 +7,9 @@
         <field>Opportunity.File_No__c</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -40,28 +43,31 @@
     <columns>
         <field>Drawdown__c.Reference_Notes__c</field>
     </columns>
-    <description>admin fee dd date doesn&#39;t match with first dd date</description>
+    <description>admin fee dd date doesn&apos;t match with first dd date</description>
     <filter>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Admin Fee</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Admin_Fee_Matches_First_Drawdown_Date__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>STAGE_NAME</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

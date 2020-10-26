@@ -61,6 +61,7 @@ export default class RejectedPaymentForm extends LightningElement {
         fields.Principal_Reversed__c = this.drawdown.Amount__c;
         var drawdownDateInput = this.template.querySelector(".drawdown-date-input");
         fields.Date__c = drawdownDateInput.value;
+        fields.Drawdown_To_Reverse_Date__c = this.drawdownToReverseDate;
         var rejectionNotesInput = this.template.querySelector(".rejection-notes-input");
         fields.Rejection_Notes__c = rejectionNotesInput.value;
         fields.Opportunity_Service_Provider__c = this.drawdown.Opportunity_Service_Provider__c;        

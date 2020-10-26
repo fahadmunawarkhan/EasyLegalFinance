@@ -57,7 +57,7 @@ CloseDate</value>
     </values>
     <values>
         <field>dlrs__RelationshipCriteria__c</field>
-        <value xsi:type="xsd:string">StageName = &#39;Prospecting&#39; AND CloseDate = THIS_YEAR</value>
+        <value xsi:type="xsd:string">StageName = &apos;Prospecting&apos; AND CloseDate = THIS_YEAR</value>
     </values>
     <values>
         <field>dlrs__RelationshipField__c</field>

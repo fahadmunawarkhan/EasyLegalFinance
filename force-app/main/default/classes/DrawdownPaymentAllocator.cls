@@ -1,13 +1,22 @@
 public class DrawdownPaymentAllocator {
     public static List<Id> idsToDelete = new List<Id>();
-    public static Set<Id> processedAdvancesIds = new Set<Id>();    
+    public static Set<Id> processedAdvancesIds = new Set<Id>();  
+    public static Set<Id> allocatedPaymentIds = new Set<Id>();    
     public static void allocate(Boolean isInsert, Map<Id, Drawdown__c> oldDrawdownsMap, List<Drawdown__c> newDrawdowns){
-        updatePayoutDate(isInsert, oldDrawdownsMap, newDrawdowns);        
-        deletePaymentAllocations(isInsert, newDrawdowns, oldDrawdownsMap);        
-        removeLoanSetup(newDrawdowns);
-        allocatePayments(isInsert, newDrawdowns, oldDrawdownsMap);
-        clearPaymentAllocationFlag(newDrawdowns);
-        allocateAnotherPayments(isInsert, oldDrawdownsMap, newDrawdowns);
+        List<Drawdown__c> paymentsToAllocate = new List<Drawdown__c>();
+        for (Drawdown__c d : newDrawdowns){
+            if (!allocatedPaymentIds.contains(d.Id)){  
+                //paymentsToAllocate.add(d);
+                allocatedPaymentIds.add(d.Id);
+			}
+        }
+		paymentsToAllocate.addAll(newDrawdowns);
+        updatePayoutDate(isInsert, oldDrawdownsMap, paymentsToAllocate);        
+        deletePaymentAllocations(isInsert, paymentsToAllocate, oldDrawdownsMap);        
+        removeLoanSetup(paymentsToAllocate);
+        allocatePayments(isInsert, paymentsToAllocate, oldDrawdownsMap);
+        clearPaymentAllocationFlag(paymentsToAllocate);
+        allocateAnotherPayments(isInsert, oldDrawdownsMap, paymentsToAllocate);
     }
         
     public static void updatePayoutDate(Boolean isInsert,  Map<Id, Drawdown__c> oldDrawdownsMap, List<Drawdown__c> newDrawdowns){
@@ -141,7 +150,7 @@ public class DrawdownPaymentAllocator {
         }
         if (!oppIds.isEmpty()){           
             List<Id> unallocatedPaymentIds = new List<Id>();
-            List<Opportunity> opps = [select Id, Payout_Date__c, Oldest_Unallocated_Payment__c, Oldest_Unallocated_Payment__r.Date__c from Opportunity where Id in :oppIds and Oldest_Unallocated_Payment__c != null and Oldest_Unallocated_Payment__c not in :idsToDelete];
+            List<Opportunity> opps = [select Id, Payout_Date__c, Oldest_Unallocated_Payment__c, Oldest_Unallocated_Payment__r.Date__c from Opportunity where Id in :oppIds and Oldest_Unallocated_Payment__c != null and (Oldest_Unallocated_Payment__c not in :idsToDelete) and (Oldest_Unallocated_Payment__c not in :allocatedPaymentIds)];
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
             Map<Id, Date> oppsDates = new Map<Id, Date>();
             Map<Id, Date> oppsOldDates = new Map<Id, Date>();

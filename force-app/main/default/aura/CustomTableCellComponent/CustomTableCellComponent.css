@@ -5,3 +5,15 @@
 .THIS .bold{
     font-weight: bold;
 }
+
+.THIS .link-button:focus{
+   box-shadow:none;
+}
+
+.THIS.horizontalRadioCls .slds-form-element__control .slds-radio{
+    display : inline-block !important;
+}
+
+.THIS .customInput{    
+    padding: 2px;
+}

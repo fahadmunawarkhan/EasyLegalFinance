@@ -26,6 +26,11 @@
                 <default>false</default>
                 <label>Rhino</label>
             </value>
+            <value>
+                <fullName>Seahold</fullName>
+                <default>false</default>
+                <label>Seahold</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

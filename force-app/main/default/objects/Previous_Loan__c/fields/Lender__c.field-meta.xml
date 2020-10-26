@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Lender__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>Previous Lender&#39;s Account</description>
+    <description>Previous Lender&apos;s Account</description>
     <externalId>false</externalId>
     <label>Lender</label>
     <lookupFilter>

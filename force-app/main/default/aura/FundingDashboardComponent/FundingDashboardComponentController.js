@@ -10,9 +10,12 @@
         ];
         component.set("v.businessUnitOptions", options);
 
+        helper.setDefaultTypeOfLoan(component);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
-        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions');
+        helper.setDefaultBussinessUnit(component);
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.getPickListValues(component, 'Account', 'Business_Unit__c', 'businessUnitOptions', 'selectedBusinessUnitFilter');
 
         helper.getCustomSettings(component).then($A.getCallback(
             function(result) {
@@ -46,7 +49,15 @@
         component.set("v.spinner", true);
 
         helper.setBUCustomSettings(component);
-        helper.getData(component).then($A.getCallback(
+        helper.validation(component, 'businessunitMS').then($A.getCallback(
+            function(result){
+                return helper.validation(component, 'typeOfLoanMS');
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.getData(component);
+            }
+        )).then($A.getCallback(
             function(result) {
                 helper.setDateCustomSettings(component);
                 component.set('v.mainData', result);
@@ -100,9 +111,10 @@
         );
     },
     viewAllButton: function(component, event, helper) {
-
+        let typeofloanArr = helper.getSelectedPickListValue(component, "", component.find("typeOfLoanMS").get("v.selectedOptions"));
+        let businessunitArr = helper.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions"));
         let newWin;
-        let url = '/apex/FundingDashboardViewAll?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter");
+        let url = '/apex/FundingDashboardViewAll?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + businessunitArr + '&typeOfLoan=' + typeofloanArr;
         try {
             newWin = window.open(url);
         } catch (e) {}
@@ -111,9 +123,10 @@
         }
     },
     printButton: function(component, event, helper) {
-
+        let typeofloanArr = helper.getSelectedPickListValue(component, "", component.find("typeOfLoanMS").get("v.selectedOptions"));
+        let businessunitArr = helper.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions"));
         let newWin;
-        let url = '/apex/FundingDashboardPrintReport?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + component.get('v.selectedBusinessUnitFilter') + '&typeOfLoan=' + component.get("v.selectedTypeOfLoanFilter");
+        let url = '/apex/FundingDashboardPrintReport?StartDate=' + component.get('v.startDate') + '&EndDate=' + component.get('v.endDate') + '&BusinessUnit=' + businessunitArr + '&typeOfLoan=' + typeofloanArr;
         try {
             newWin = window.open(url);
         } catch (e) {}

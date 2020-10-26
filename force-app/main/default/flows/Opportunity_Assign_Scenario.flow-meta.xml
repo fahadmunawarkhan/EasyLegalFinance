@@ -79,9 +79,46 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_1_A1</targetReference>
+                <targetReference>myRule_1_pmetdec</targetReference>
             </connector>
             <label>Fields changed or no Scenario?</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>myRule_1_pmetdec</name>
+        <label>Previously Met Decision</label>
+        <locationX>100</locationX>
+        <locationY>100</locationY>
+        <defaultConnector>
+            <targetReference>myRule_1_A1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
+        <rules>
+            <name>myRule_1_pmetnullrule</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_1_A1</targetReference>
+            </connector>
+            <label>Previously Met - Null</label>
+        </rules>
+        <rules>
+            <name>myRule_1_pmetrule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>formula_myRule_1_pmetrule</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Previously Met - Prev</label>
         </rules>
     </decisions>
     <description>If any of the key inputs for Scenario have changed, assign a Scenario.</description>
@@ -92,7 +129,7 @@
                 <stringValue>ISNEW() ||
 ISCHANGED([Opportunity].AC_Recalc__c ) 
 || ISCHANGED([Opportunity].Type_of_Loan__c)
-|| ISBLANK([Opportunity].Scenario__c)</stringValue>
+|| ( ISCHANGED([Opportunity].Scenario__c) &amp;&amp;  ISBLANK([Opportunity].Scenario__c) ) </stringValue>
             </value>
         </processMetadataValues>
         <name>formula_myRule_1</name>
@@ -100,9 +137,26 @@ ISCHANGED([Opportunity].AC_Recalc__c )
         <expression>ISNEW() ||
 ISCHANGED({!myVariable_current.AC_Recalc__c} ) 
 || ISCHANGED({!myVariable_current.Type_of_Loan__c})
-|| ISBLANK({!myVariable_current.Scenario__c})</expression>
+|| ( ISCHANGED({!myVariable_current.Scenario__c}) &amp;&amp;  ISBLANK({!myVariable_current.Scenario__c}) )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Assign_Scenario-3_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>ISNEW() ||
+ISCHANGED([Opportunity].AC_Recalc__c ) 
+|| ISCHANGED([Opportunity].Type_of_Loan__c)
+|| ( ISCHANGED([Opportunity].Scenario__c) &amp;&amp;  ISBLANK([Opportunity].Scenario__c) ) </stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_myRule_1_pmetrule</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW() ||
+ISCHANGED({!myVariable_old.AC_Recalc__c} ) 
+|| ISCHANGED({!myVariable_old.Type_of_Loan__c})
+|| ( ISCHANGED({!myVariable_old.Scenario__c}) &amp;&amp;  ISBLANK({!myVariable_old.Scenario__c}) )</expression>
+    </formulas>
+    <interviewLabel>Opportunity_Assign_Scenario-5_InterviewLabel</interviewLabel>
     <label>Opportunity: Assign Scenario</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -120,12 +174,6 @@ ISCHANGED({!myVariable_current.AC_Recalc__c} )
         <name>OldObjectVariable</name>
         <value>
             <elementReference>myVariable_old</elementReference>
-        </value>
-    </processMetadataValues>
-    <processMetadataValues>
-        <name>RecursiveCountVariable</name>
-        <value>
-            <elementReference>RecursiveCountVariable</elementReference>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -152,13 +200,5 @@ ISCHANGED({!myVariable_current.AC_Recalc__c} )
         <isInput>true</isInput>
         <isOutput>false</isOutput>
         <objectType>Opportunity</objectType>
-    </variables>
-    <variables>
-        <name>RecursiveCountVariable</name>
-        <dataType>Number</dataType>
-        <isCollection>false</isCollection>
-        <isInput>true</isInput>
-        <isOutput>false</isOutput>
-        <scale>2</scale>
     </variables>
 </Flow>

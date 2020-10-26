@@ -1,3 +1,14 @@
+<!--
+  @File Name          : AssessmentLoans.cmp
+  @Description        : 
+  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Group              : 
+  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Last Modified On   : 02/07/2020, 10:51:23 am
+  @Modification Log   : 
+  Ver       Date            Author      		    Modification
+  1.0    02/07/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
     <body> 
             <!-- <<<<<<<<<< PAGE HEADER, TITLE AND BUTTONS >>>>>>>>>> -->

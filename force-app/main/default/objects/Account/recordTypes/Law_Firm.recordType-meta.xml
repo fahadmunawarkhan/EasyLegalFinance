@@ -97,6 +97,17 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Collections__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Industry</picklist>
         <values>
             <fullName>Agriculture</fullName>
@@ -228,6 +239,39 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Judgement__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Notice_of_assignment__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Offers_to_Settle__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Ownership</picklist>
         <values>
             <fullName>Other</fullName>
@@ -243,6 +287,25 @@
         </values>
         <values>
             <fullName>Subsidiary</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Primary_Insurance_Provider__c</picklist>
+        <values>
+            <fullName>ACE INA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chartis Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ICBC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lloyd%27s</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -313,6 +376,29 @@
         </values>
         <values>
             <fullName>Warm</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason_for_LTV__c</picklist>
+        <values>
+            <fullName>Assessment Loan - NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Development</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lawyer Relationship</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Settled File</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Strong Case</fullName>
             <default>false</default>
         </values>
     </picklistValues>

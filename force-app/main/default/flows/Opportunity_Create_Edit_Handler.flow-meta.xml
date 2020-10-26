@@ -330,7 +330,7 @@
             </processMetadataValues>
             <name>OpportunityName</name>
             <value>
-                <elementReference>formula_2_myRule_1_A1_5313153483</elementReference>
+                <elementReference>formula_2_myRule_1_A1_0765324776</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -532,7 +532,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_12_A1</targetReference>
+                <targetReference>myRule_12_pmetdec</targetReference>
             </connector>
             <label>Re-Assessment Opp Completed</label>
         </rules>
@@ -725,7 +725,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_4_A1</targetReference>
+                <targetReference>myRule_4_pmetdec</targetReference>
             </connector>
             <label>Re-Assessment Opp F/U with Facility</label>
         </rules>
@@ -835,7 +835,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_8_A1</targetReference>
+                <targetReference>myRule_8_pmetdec</targetReference>
             </connector>
             <label>Re-Assessment Opp File Sent for EFT</label>
         </rules>
@@ -955,6 +955,70 @@
             </conditions>
             <connector>
                 <targetReference>myDecision11</targetReference>
+            </connector>
+            <label>Previously Met - Prev</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>myRule_12_pmetdec</name>
+        <label>Previously Met Decision</label>
+        <locationX>1200</locationX>
+        <locationY>100</locationY>
+        <defaultConnector>
+            <targetReference>myRule_12_A1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
+        <rules>
+            <name>myRule_12_pmetnullrule</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_12_A1</targetReference>
+            </connector>
+            <label>Previously Met - Null</label>
+        </rules>
+        <rules>
+            <name>myRule_12_pmetrule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_old.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Re-Assessment - Completed</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myDecision13</targetReference>
             </connector>
             <label>Previously Met - Prev</label>
         </rules>
@@ -1242,6 +1306,70 @@
         </rules>
     </decisions>
     <decisions>
+        <name>myRule_4_pmetdec</name>
+        <label>Previously Met Decision</label>
+        <locationX>400</locationX>
+        <locationY>100</locationY>
+        <defaultConnector>
+            <targetReference>myRule_4_A1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
+        <rules>
+            <name>myRule_4_pmetnullrule</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_4_A1</targetReference>
+            </connector>
+            <label>Previously Met - Null</label>
+        </rules>
+        <rules>
+            <name>myRule_4_pmetrule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_old.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Re-Assessment - F/U with PC/Facility</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myDecision5</targetReference>
+            </connector>
+            <label>Previously Met - Prev</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>myRule_6_pmetdec</name>
         <label>Previously Met Decision</label>
         <locationX>600</locationX>
@@ -1305,6 +1433,70 @@
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>myRule_8_pmetdec</name>
+        <label>Previously Met Decision</label>
+        <locationX>800</locationX>
+        <locationY>100</locationY>
+        <defaultConnector>
+            <targetReference>myRule_8_A1</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
+        <rules>
+            <name>myRule_8_pmetnullrule</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myRule_8_A1</targetReference>
+            </connector>
+            <label>Previously Met - Null</label>
+        </rules>
+        <rules>
+            <name>myRule_8_pmetrule</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_old.StageName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Re-Assessment - File Sent for EFT</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myDecision9</targetReference>
+            </connector>
+            <label>Previously Met - Prev</label>
+        </rules>
+    </decisions>
     <description>Create &amp; Edit Handler</description>
     <formulas>
         <processMetadataValues>
@@ -1313,7 +1505,7 @@
                 <stringValue>$User.Id</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_16_A1_4423478621</name>
+        <name>formula_17_myRule_16_A1_4560468447</name>
         <dataType>String</dataType>
         <expression>{!$User.Id}</expression>
     </formulas>
@@ -1324,7 +1516,7 @@
                 <stringValue>NOW() </stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_18_myRule_16_A1_7123148443</name>
+        <name>formula_18_myRule_16_A1_8494151233</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1335,7 +1527,7 @@
                 <stringValue>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_5313153483</name>
+        <name>formula_2_myRule_1_A1_0765324776</name>
         <dataType>String</dataType>
         <expression>&quot;Re-Assessment: &quot; &amp; TEXT(Today())</expression>
     </formulas>
@@ -1344,19 +1536,19 @@
             <name>originalFormula</name>
             <value>
                 <stringValue>AND(
-    ISPICKVAL(PRIORVALUE([Opportunity].Payment_Schedule__c), &#39;Yes&#39;),
-    ISPICKVAL([Opportunity].Payment_Schedule__c, &#39;No&#39;)
+    ISPICKVAL(PRIORVALUE([Opportunity].Payment_Schedule__c), &apos;Yes&apos;),
+    ISPICKVAL([Opportunity].Payment_Schedule__c, &apos;No&apos;)
 )</stringValue>
             </value>
         </processMetadataValues>
         <name>formula_myRule_14</name>
         <dataType>Boolean</dataType>
         <expression>AND(
-    ISPICKVAL(PRIORVALUE({!myVariable_current.Payment_Schedule__c}), &#39;Yes&#39;),
-    ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &#39;No&#39;)
+    ISPICKVAL(PRIORVALUE({!myVariable_current.Payment_Schedule__c}), &apos;Yes&apos;),
+    ISPICKVAL({!myVariable_current.Payment_Schedule__c}, &apos;No&apos;)
 )</expression>
     </formulas>
-    <interviewLabel>Opportunity_Create_Edit_Handler-15_InterviewLabel</interviewLabel>
+    <interviewLabel>Opportunity_Create_Edit_Handler-12_InterviewLabel</interviewLabel>
     <label>Opportunity Create &amp; Edit Handler</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -1712,7 +1904,7 @@
             </processMetadataValues>
             <field>Verified_By__c</field>
             <value>
-                <elementReference>formula_17_myRule_16_A1_4423478621</elementReference>
+                <elementReference>formula_17_myRule_16_A1_4560468447</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1748,7 +1940,7 @@
             </processMetadataValues>
             <field>Verified_Date__c</field>
             <value>
-                <elementReference>formula_18_myRule_16_A1_7123148443</elementReference>
+                <elementReference>formula_18_myRule_16_A1_8494151233</elementReference>
             </value>
         </inputAssignments>
         <object>Scheduled_Payment__c</object>

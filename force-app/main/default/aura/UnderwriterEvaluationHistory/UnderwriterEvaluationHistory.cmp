@@ -1,0 +1,71 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 09-25-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   09-17-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="UnderwriterEvaluationHistoryCtrl">
+        <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+        <aura:attribute name="recordId" type="String" />
+        <aura:attribute name="HistoryList" type="Underwriter_Evaluation_History__c[]"/>
+        <aura:attribute name="spinner" type="Boolean" default="true" />
+        <aura:attribute name="updater" type="String" />
+        <aura:handler name="change" value="{!v.updater}" action="{!c.doInit}"/>
+
+            <div style="margin-top: -19px;">
+                <!-- <<<<<<<<<< SPINNER FOR PROCESSING PURPORSES >>>>>>>>>> -->
+                <aura:if isTrue="{!v.spinner}">
+                    <lightning:spinner alternativeText="Loading" size="small" />
+                </aura:if>
+                <lightning:card title="Underwriter Evaluation History:" iconName="standard:channel_program_history" variant="base">
+                        <div style="max-height:200px;overflow:auto;">
+                            <table class="slds-table slds-table_bordered slds-table_col-bordered" style="word-break: break-word;">
+                                <thead>
+                                    <tr class="slds-text-title_caps">
+                                        <th class="" style="width: 72px;">
+                                            <div class="slds-truncate slds-cell-wrap" title="Field Update Date">Date</div>
+                                        </th>
+                                        <th class="" style="width: 78px;">
+                                            <div class="slds-truncate slds-cell-wrap" title="Name of field">Field</div>
+                                        </th>
+                                        <!-- <th class="" style="width: 100px;">
+                                            <div class="slds-truncate slds-cell-wrap" title="Loan to Estimated Value">Loan to Estimated Value (old)</div>
+                                        </th> -->
+                                        <th class="" style="width: 100px;">
+                                            <div class="slds-truncate slds-cell-wrap" title="Loan to Estimated Value">Value</div>
+                                        </th>
+                                        <th class="" style="width: 89px;">
+                                            <div class="slds-truncate slds-cell-wrap" title="Modified By">Modified By</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.HistoryList}" var="item" indexVar="i">
+                                        <tr class="slds-hint-parent">
+                                            <td class="slds-cell-wrap" style="vertical-align:top;">
+                                                <lightning:formattedDateTime value="{!item.HistoryCreateDate__c}"/>
+                                            </td>
+                                            <td class="slds-cell-wrap" style="vertical-align:top;">
+                                                {!item.Field_Name__c}
+                                            </td>
+                                            <!-- <td class="slds-cell-wrap">
+                                                {!item.Old_Value__c}
+                                            </td> -->
+                                            <td class="slds-cell-wrap">
+                                                <lightning:formattedRichText value="{!item.New_Value__c}"/>
+                                            </td>
+                                            <td class="slds-cell-wrap" style="vertical-align:top;">
+                                                <lightning:formattedText value="{!item.CreatedBy.Name}" />
+                                            </td>
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                        </div>
+                </lightning:card>
+            </div>
+</aura:component>

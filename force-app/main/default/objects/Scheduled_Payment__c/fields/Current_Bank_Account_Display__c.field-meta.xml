@@ -30,7 +30,7 @@
                 IF(
                     NOT(Bank_Account__r.Client__c = Opportunity__r.AccountId),
                     Bank_Account__r.Client__r.Name + &quot;&lt;br&gt;&quot;,
-                    &#39;&#39;
+                    &apos;&apos;
                 )
                 + Bank_Account__r.Full_Display__c
             )
@@ -40,6 +40,7 @@
 )</formula>
     <label>Current Bank Account Display</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>

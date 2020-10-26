@@ -4,6 +4,7 @@
     <externalId>false</externalId>
     <label>Status</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
@@ -51,9 +52,9 @@
                 <label>Closed</label>
             </value>
             <value>
-                <fullName>Won&#39;t Send</fullName>
+                <fullName>Won&apos;t Send</fullName>
                 <default>false</default>
-                <label>Won&#39;t Send</label>
+                <label>Won&apos;t Send</label>
             </value>
             <value>
                 <fullName>Approved</fullName>

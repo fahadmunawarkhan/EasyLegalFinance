@@ -12,6 +12,51 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>Forceea</label>
     <navType>Standard</navType>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Admin - Sales</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Case Management</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Assessment_Provider_Account_Layout</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Assessment_Provider</recordType>
+        <type>Flexipage</type>
+        <profile>ELFI - Operations</profile>
+    </profileActionOverrides>
     <tabs>FObjectOne__c</tabs>
     <tabs>FObjectTwo__c</tabs>
     <tabs>FObjectThree__c</tabs>

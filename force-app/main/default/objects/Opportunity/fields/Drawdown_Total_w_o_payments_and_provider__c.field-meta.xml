@@ -25,6 +25,11 @@
         <operation>notEqual</operation>
         <value>Refund</value>
     </summaryFilterItems>
+    <summaryFilterItems>
+        <field>Drawdown__c.Reason_to_Reverse_Payment_NSF__c</field>
+        <operation>equals</operation>
+        <value/>
+    </summaryFilterItems>
     <summaryForeignKey>Drawdown__c.Opportunity__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

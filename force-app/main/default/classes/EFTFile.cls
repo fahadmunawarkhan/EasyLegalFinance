@@ -178,6 +178,7 @@ public with sharing class EFTFile {
                 eftFileData = eftFileHeader.getFileHeaderAsString() + '\r\n' + eftFileData; // Prepend header 
                 for (Scheduled_Payment__c sp : spList) {
                     sp.EFT_File__c = eftFileObj.Id;
+                    sp.AFT_File__c = null;
                 }
             } catch (EFTFileException e) {
                 errorList.add(e);

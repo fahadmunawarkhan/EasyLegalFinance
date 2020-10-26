@@ -179,7 +179,15 @@
     <tabs>standard-Case</tabs>
     <tabs>standard-Opportunity</tabs>
     <tabs>standard-Lead</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
     <workspaceConfig>
+        <mappings>
+            <tab>Integration_Log__c</tab>
+        </mappings>
+        <mappings>
+            <tab>Underwriter_Evaluation_History__c</tab>
+        </mappings>
         <mappings>
             <tab>standard-Account</tab>
         </mappings>

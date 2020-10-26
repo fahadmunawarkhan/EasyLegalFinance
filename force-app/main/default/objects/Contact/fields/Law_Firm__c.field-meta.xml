@@ -5,7 +5,7 @@
     <externalId>false</externalId>
     <label>Law Firm</label>
     <lookupFilter>
-        <active>true</active>
+        <active>false</active>
         <booleanFilter>1 OR 2 OR 3</booleanFilter>
         <filterItems>
             <field>Account.Account_Type__c</field>

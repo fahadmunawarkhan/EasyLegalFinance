@@ -8,8 +8,8 @@
 &quot;&amp;QueryId=[BadDebtSummaryPrint]a0p0L00000J9Opv&quot; &amp;
 &quot;%3Fpv0%3D&quot;&amp;Conga_Bad_Debt_Summary_Rpt_Start_Date__c &amp;
 &quot;~pv1%3D&quot;&amp;Conga_Bad_Debt_Summary_Rpt_End_Date__c&amp; 
-&quot;~pv2%3D&quot;&amp; IF($Setup.Bad_Debt_Summary_Report__c.BusinessUnit__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Bad_Debt_Summary_Report__c.BusinessUnit__c)&amp;
-&quot;~pv3%3D&quot;&amp; IF($Setup.Bad_Debt_Summary_Report__c.Type_of_Loan__c = &#39;Consolidated&#39;,&#39;&#39;,$Setup.Bad_Debt_Summary_Report__c.Type_of_Loan__c)&amp;
+&quot;~pv2%3D&quot;&amp; $Setup.Bad_Debt_Summary_Report__c.BusinessUnit__c&amp;
+&quot;~pv3%3D&quot;&amp; $Setup.Bad_Debt_Summary_Report__c.Type_of_Loan__c &amp;
 &quot;&amp;TemplateId=a0x0L00000PYLgk&amp;DS7=3&quot;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Conga Bad Debt Summary Report Print All</label>

@@ -591,8 +591,8 @@
             <value>
                 <stringValue>NOT(
 OR(
-    ISPICKVAL([Scheduled_Payment__c].Status__c, &#39;Rejected&#39;),
-    ISPICKVAL([Scheduled_Payment__c].Status__c, &#39;Scheduled&#39;)
+    ISPICKVAL([Scheduled_Payment__c].Status__c, &apos;Rejected&apos;),
+    ISPICKVAL([Scheduled_Payment__c].Status__c, &apos;Scheduled&apos;)
 ))</stringValue>
             </value>
         </processMetadataValues>
@@ -600,8 +600,8 @@ OR(
         <dataType>Boolean</dataType>
         <expression>NOT(
 OR(
-    ISPICKVAL({!myVariable_current.Status__c}, &#39;Rejected&#39;),
-    ISPICKVAL({!myVariable_current.Status__c}, &#39;Scheduled&#39;)
+    ISPICKVAL({!myVariable_current.Status__c}, &apos;Rejected&apos;),
+    ISPICKVAL({!myVariable_current.Status__c}, &apos;Scheduled&apos;)
 ))</expression>
     </formulas>
     <formulas>
@@ -1277,7 +1277,7 @@ OR(
             <name>referenceTargetField</name>
         </processMetadataValues>
         <name>myRule_5_A1</name>
-        <label>Update Invoices&#39; Paid Status</label>
+        <label>Update Invoices&apos; Paid Status</label>
         <locationX>500</locationX>
         <locationY>200</locationY>
         <connector>

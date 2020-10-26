@@ -2,7 +2,9 @@ import { LightningElement, api, track, wire } from 'lwc';
 //import { registerListener, unregisterAllListeners, fireEvent } from 'c/pubsub';
 import { CurrentPageReference } from 'lightning/navigation';
 import getOpportunitiesWithScheduledPayments from '@salesforce/apex/FundingDetailsComponentCtlr.getOpportunitiesWithScheduledPayments';
+import wireSendBacktoRejections from '@salesforce/apex/FundingDetailsComponentCtlr.sendBacktoRejections';
 import { flatten } from 'c/flatley';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class FundingDetailsOpportunityTable extends LightningElement {
     @wire(CurrentPageReference) pageRef;
@@ -27,8 +29,8 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
         this.refresh();
     }
 
-
-
+    @api sheetNumber = '';
+    @track loading = false;
     @api refresh() {
         this.refreshData();
     }
@@ -43,10 +45,11 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
         { label: '', type: 'button-icon', initialWidth: 20, typeAttributes:
             { title: 'Select', name: 'select', iconName: 'action:check', class: 'slds-hide' } }, // Empty row to handle graphical issues with chevron
         {label: 'Select', type: 'button', initialWidth: 100, typeAttributes:
-            { label: 'Select', title: 'Select', name: 'select_row',
+            { label: {fieldName: 'cbutton'}, title: {fieldName: 'cbutton'}, name: 'select_row',
                 class: {fieldName: 'showButton'}, variant: 'brand'} },
         { label: 'Stage', fieldName: 'stage', initialWidth: 160 },
         { label: 'File #', fieldName: 'file', initialWidth: 100 },
+        { label: 'Sheet #', fieldName: 'CWBSheetNumber', initialWidth: 130 },
         { label: 'Name', fieldName: 'accountUrl', type: 'url', typeAttributes: { label: { fieldName: 'name'}, target: '_blank'} },
         { label: 'Loan Amount', fieldName: 'loanAmount', type: 'currency', initialWidth: 140 },
         { label: 'Admin Fee', fieldName: 'adminFee', type: 'currency', initialWidth: 120 },
@@ -113,6 +116,55 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
                 this.loading = false;
             });
     }
+    sheetNumberChange(event){
+        this.sheetNumber = event.target.value;
+    }
+    sendBacktoRejectionsButton(){
+        console.log('sheetNumber ' + this.sheetNumber);
+        if(this.sheetNumber != null && this.sheetNumber != ''){
+            this.sendBackToRejectionScreen(null, null);
+        }else {
+            this.showToast('Info', 'Please enter a sheet number to send back schedule payments to rejections tab.', 'info');
+        }
+    }
+
+    sendBackToRejectionScreen(oppId, spId){
+        return new Promise((resolve, reject) => {
+            this.loading = true;
+            wireSendBacktoRejections({
+                startDate: this.filters.startDate,
+                endDate: this.filters.endDate,
+                cwbSheetNumber : this.sheetNumber,
+                opportunityId : oppId,
+                schedulePaymentId :spId
+            })
+            .then(result => {
+                this.showToast('Success', 'Records are successfully sent back to rejections screen.', 'success');                    
+                return this.refreshData();                    
+            }).then(result => {
+                this.loading = false;
+                resolve(true);
+            })
+            .catch(error => {
+                this.loading = false;
+                this.error = error;
+                this.data = undefined;
+                this._oppList = undefined;
+                this.selectedOpportunity = undefined;
+                reject(error);
+            });
+        });
+    }
+
+    showToast(title, message, variant) {
+        const event = new ShowToastEvent({
+            title: '' + title,
+            message: '' + message,
+            variant: '' + variant,
+            mode: 'dismissable'
+        });
+        this.dispatchEvent(event);
+    }
 
     /*
     // Tree Grid does not support sorting, and Shadow Dom prevents meddling with underlying table...
@@ -148,6 +200,7 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
                 let newOpp = {
                     Id: opp.Id,
                     showButton: 'slds-show',
+                    cbutton: 'Select',
                     stage: opp.Funding_Details_Status__c,
                     file: opp.Account.AccountNumber,
                     accountUrl: `/lightning/r/Account/${opp.Account.Id}/view`,
@@ -163,9 +216,11 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
                     opp.Scheduled_Payments__r.forEach(sp => {
                         let newSp = {
                             Id: `${opp.Id}-${sp.Id}`,
-                            showButton: 'slds-hide',
+                            showButton: sp.Status__c == 'Processed by Bank'? 'slds-m-left_small slds-show' : 'slds-hide',
+                            cbutton: 'Reject',
                             stage: sp.Status__c,
                             file: undefined,
+                            CWBSheetNumber: sp.CWB_Sheet_Number__c,
                             accountUrl: `/lightning/r/Account/${opp.Account.Id}/view`,
                             name: `Payment to ${opp.Account.Name}`,
                             loanAmount: undefined,
@@ -208,8 +263,17 @@ export default class FundingDetailsOpportunityTable extends LightningElement {
     }
 
     handleRowAction(event) {
-        let oppIndex = this.oppList.findIndex(record => {return record.Id === event.detail.row.Id})
-        this.selectRow(oppIndex);
+        console.log('row Id => ' + event.detail.row.Id);
+        let selectedId = event.detail.row.Id;
+        if(selectedId.indexOf('-') == -1){
+            let oppIndex = this.oppList.findIndex(record => {return record.Id === event.detail.row.Id})
+            this.selectRow(oppIndex);
+        }else{
+            console.log('Opp Id => ' + selectedId.split("-")[0]);
+            console.log('SP Id => ' + selectedId.split("-")[1]);
+            this.sheetNumber = '';
+            this.sendBackToRejectionScreen(selectedId.split("-")[0], selectedId.split("-")[1]);
+        }
     }
 
     selectRow(oppIndex) {

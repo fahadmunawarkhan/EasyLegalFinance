@@ -39,6 +39,7 @@ public with sharing class FundingSummaryReportCtlr {
         	String closedWithLoan = 'Closed With Loan';
         	String statusActive = 'Active';
             String statusActiveCollections = 'Active - Collections';
+            String statusActiveContingent = 'Active - Contingent Loan';
             String reAssessment = 'Re-Assessment';
             
             strQuery = 'Select Opportunity__r.Account.Business_Unit__c businessunit, Opportunity__r.Account.ProvinceResidency__c province,'; 
@@ -48,7 +49,7 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
             strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveContingent OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';
@@ -103,6 +104,7 @@ public with sharing class FundingSummaryReportCtlr {
         String reAssessment = 'Re-Assessment';
         String active = 'Active';
         String activeCollections = 'Active - Collections';
+        String activeContingent = 'Active - Contingent Loan';
         
         try{
             Date startDt = Date.valueOf(startDate);
@@ -115,7 +117,7 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeContingent OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';			
@@ -126,7 +128,7 @@ public with sharing class FundingSummaryReportCtlr {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND (Opportunity__r.StageName =:closedWithLoan OR Opportunity__r.StageName =:reAssessment)';
-            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
+            //strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeContingent OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment)';
             strQuery += ' AND (Payment_Method__c =:adminFee or Reference_Notes__c =:adminFee)'; 
             strQuery += ' AND Is_Rejected__c = false';
             strQuery += (businessUnit.isEmpty()) ? '': ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';			
