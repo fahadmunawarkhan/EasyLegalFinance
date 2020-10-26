@@ -696,13 +696,15 @@
         component.set("v.spinner", true);
         helper.saveOppty(component).then(
             (result) => {
-                if (interestRateType=='Variable'){                    
-                    if (variableRateComponent){
-                		component.set("v.spinner", true);
-                        variableRateComponent.save();                
-                		component.set("v.spinner", false);
-                    }
+                if (interestRateType=='Variable'){                              	
+                    variableRateComponent.save(
+                        ()=>{                            
+                            helper.reInitSomeData(component);                    
+                        }
+                    );                                		                    
             	}
+            	else
+            		helper.reInitSomeData(component);     
             },
             (errors) => {
                 component.set("v.spinner", false);
@@ -728,11 +730,13 @@
                         variableFeeComponent.save(
                             ()=>{
                                 component.set("v.spinner", false);
-                                //helper.reInitSomeData(component);                    
+                                helper.reInitSomeData(component);                    
                             }
                 		);                
                     }
             	}
+                else
+                	helper.reInitSomeData(component);     
             },
             (errors) => {
                 component.set("v.spinner", false);
