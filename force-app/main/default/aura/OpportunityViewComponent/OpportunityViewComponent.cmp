@@ -897,7 +897,7 @@
                                                 <div class="slds-form-element__control">
                                                     <span class="">
                                                         <lightning:input type="Number" formatter="currency" tabindex="19" value="{!v.oppObj.Amount_Paid_to_Borrower__c}" step="0.01"
-                                                                        label="Amount Paid to Borrower (Invoice)" />
+                                                                        label="{!(v.oppObj.Type_of_Loan__c == 'Assessment') ? 'Amount Paid to Borrower (Invoice)' : 'Amount Paid to Borrower'}" />
                                                     </span>
                                                 </div>
                                             </div>
