@@ -6,7 +6,10 @@
     <formula>IF(
 ISPICKVAL(Business_Unit__c,&quot;Rhino&quot;)
 , &quot;a0x0L00000ObLGn&quot;
-, &quot;a0x0L00000LQTKY&quot;
+, IF(ISPICKVAL(Business_Unit__c,&quot;Seahold&quot;)
+					,&quot;a0xL0000008BYDP&quot;
+					,&quot;a0x0L00000LQTKY&quot;
+				)
 )</formula>
     <label>CM: Application Template Id</label>
     <required>false</required>

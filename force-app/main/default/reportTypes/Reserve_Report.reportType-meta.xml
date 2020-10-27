@@ -113,11 +113,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>Amount_Paid_to_Borrower__c</field>
-            <table>Opportunity</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Amount_Paid_to_Client__c</field>
             <table>Opportunity</table>
         </columns>

@@ -1,3 +1,13 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 08-19-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   08-13-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
 <aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" access="global" controller="LawyerCountController">
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="startDate" type="date" />
@@ -12,7 +22,7 @@
                                                            {'label': 'Active only', 'value': 'Active'},
                                                            ]"/>
     <aura:attribute name="businessUnitOptions" type="List" />
-    <aura:attribute name="selectedBusinessUnitFilter" type="String" default="ELFI" />
+    <aura:attribute name="selectedBusinessUnitFilter" type="List" />
     <aura:attribute name="selectedLoanFilter" type="String" default="Active" />
     <aura:attribute name="sortField" type="String" default="Name"/>
     <aura:attribute name="sortOrder" type="String" default="ASC" />
@@ -21,10 +31,14 @@
     <aura:attribute name="contactsList" type="Contact[]"/>
     <aura:attribute name="currentUserId" type="Id"/>
     <aura:attribute name="viewUrl" type="String" />
+    <aura:attribute name="viewUrlAll" type="String" />
     <aura:attribute name="printUrl" type="String"/>
     <aura:attribute name="pv1" type="String" default="" />
     <aura:attribute name="pv2" type="String" default="" />
+    <aura:attribute name="pv5" type="String" default="" />
     <aura:attribute name="spinner" type="Boolean" default="false" />
+    <aura:attribute name="typeOfLoanOptions" type="list" />
+    <aura:attribute name="selectedTypeOfLoanFilter" type="list" />
     
     <lightning:card title="Information" variant="base">
         <div class="slds-card__body_inner">
@@ -60,18 +74,36 @@
     <lightning:card title="Filter" variant="base">
         <div class="slds-card__body_inner">
             <lightning:layout horizontalAlign="center">
-                <lightning:layoutItem size="4">
-                    <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
                                 <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
-                                    <lightning:combobox aura:id="businessUnitFilter" label="Business Unit" value="{!v.selectedBusinessUnitFilter}" placeholder="Business Unit" options="{! v.businessUnitOptions }"/>
+                                    <c:MultiSelect aura:id="businessunitMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Business Unit" msoptions="{!v.businessUnitOptions}"
+                                                selectedOptions="{!v.selectedBusinessUnitFilter}"
+                                                comboboxcontainer="false" />
                                 </div>
                             </span>
                         </div>
                     </div>
                 </lightning:layoutItem>
-                <lightning:layoutItem size="4">
+                <lightning:layoutItem size="2">
+                    <div class="slds-form-element slds-m-bottom_small">
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">
+                                <div class="slds-media__body slds-m-left_xx-large slds-m-bottom_medium">
+                                    <c:MultiSelect aura:id="typeOfLoanMS" showFilterInput="false" 
+                                                showClearButton="false" showRefreshButton="false" 
+                                                mslabel="Type of Loan" msoptions="{!v.typeOfLoanOptions}"
+                                                selectedOptions="{!v.selectedTypeOfLoanFilter}" />
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="2">
                     <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                         <div class="slds-form-element__control">
                             <span class="slds-form-element__static">
@@ -90,13 +122,13 @@
     <lightning:card>
         <lightning:layout horizontalAlign="center" >
             <lightning:layoutItem >
-                <a href="{!v.viewUrl}" target="_BLANK">
+                <a href="{!v.viewUrlAll}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (Excel)" />
                 </a>
             </lightning:layoutItem>
             <lightning:layoutItem >
-                <a href="{!v.viewUrl +'%26'+'DefaultPDF=1'}" target="_BLANK">
+                <a href="{!v.viewUrlAll +'%26'+'DefaultPDF=1'}" target="_BLANK">
                     <lightning:button class="slds-theme_neutral" iconPosition="left" 
                                       variant="neutral" type="button" label="View All (PDF)" />
                 </a>
@@ -148,7 +180,7 @@
                             </aura:if> 
                         </th>                                    
                         <th>
-                            <div class="slds-truncate" title="Column 1"># of Files</div>
+                            <div class="slds-truncate" title="Column 1"># of Accounts</div>
                         </th>        
                         <th width="5px;">
                         </th>

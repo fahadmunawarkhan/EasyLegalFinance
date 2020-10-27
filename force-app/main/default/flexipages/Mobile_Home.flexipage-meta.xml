@@ -3,63 +3,6 @@
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
-                <name>cacheAge</name>
-                <value>30</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>reportName</name>
-                <value>Monthly_Opportunities_Performance_Report_QqI</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>showRefreshButton</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:reportChart</componentName>
-        </componentInstances>
-        <name>region1</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>cacheAge</name>
-                <value>30</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>label</name>
-                <value>Monthly Opportunity Performance</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>reportName</name>
-                <value>YTD_Monthly_Opportunities_Performanc_kK1</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>showRefreshButton</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:reportChart</componentName>
-        </componentInstances>
-        <name>region2</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>cacheAge</name>
-                <value>30</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>reportName</name>
-                <value>YTD_Opportunities_Performance_Report_Nyu</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>showRefreshButton</name>
-                <value>true</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:reportChart</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
                 <name>enableInlineEdit</name>
                 <value>true</value>
             </componentInstanceProperties>
@@ -85,12 +28,235 @@
             </componentInstanceProperties>
             <componentName>flexipage:filterListCard</componentName>
         </componentInstances>
-        <name>region3</name>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>MTD - Settlement Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>Monthly_Opportunities_Performance_Report_QqI</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>LTM - Settlement Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Monthly_Opportunities_Performanc_ZUd</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>YTD - Settlement Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Opportunities_Performance_Report_Nyu</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>MTD - Assessment Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>MTD_Assessment_Loans_dzX</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>LTM - Assessment Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>LTM_Assessment_Loans_PLX</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>YTD - Assessment Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Assessment_Loans_SqP</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>MTD - Lawyer Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>MTD_Lawyer_Loans_vTi</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>LTM - Lawyer Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>LTM_Lawyer_Loans_xno</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>YTD - Lawyer Loans</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Lawyer_Loans_kZq</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>YTD Bad Debt &amp; Shortfall</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Bad_Debt_Shortfall_IgP</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!$User.Profile.Name}</leftValue>
+                    <operator>CONTAINS</operator>
+                    <rightValue>System Administrator</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>cacheAge</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>label</name>
+                <value>YTD Admin Fee</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>reportName</name>
+                <value>YTD_Admin_Fee_e0x</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showRefreshButton</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:reportChart</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!$User.Profile.Name}</leftValue>
+                    <operator>CONTAINS</operator>
+                    <rightValue>System Administrator</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>Mobile Home</masterLabel>
     <template>
-        <name>flexipage:appHomeTemplateThreeColumns</name>
+        <name>flexipage:defaultAppHomeTemplate</name>
     </template>
     <type>AppPage</type>
 </FlexiPage>

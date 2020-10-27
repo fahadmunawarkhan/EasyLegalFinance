@@ -1,0 +1,257 @@
+<apex:page renderAs="{!renderAs}" contentType="{!contentType}" controller="PreApprovedInvoiceCtlr" applyBodyTag="false" >
+    <head>
+        <style type="text/css" media="print">
+            @page {
+            @top-center {
+            content: element(header);
+            }
+            @bottom-left {
+            content: element(footer);
+            }
+            }
+            div.header {
+            padding: 10px;
+            position: running(header);
+            }
+            div.footer {
+            display: block;
+            padding: 5px;
+            position: running(footer);
+            }
+            .pagenumber:before {
+            content: counter(page);
+            }
+            .pagecount:before {
+            content: counter(pages);
+            }
+            .content {
+            margin-top: 15px !important;
+            font-family: sans-serif;
+            font-size: 12px;
+            }
+            .elfi-tableHeader{
+            background-color:#fd5e26;
+            padding-left: 5px;
+            padding-right: 5px;
+            }
+            .rhino-tableHeader{
+            background-color:#0a3b63;color:#ffffff;
+            padding-left: 5px;
+            padding-right: 5px;
+            }
+            .td-column{
+            padding-left: 5px;
+            padding-right: 5px;
+            }
+        </style>
+        
+    </head>
+    <apex:pageBlock >
+        <div class="header">
+            <div>
+                <apex:outputPanel rendered="{!if(renderAs == 'PDF', false, true)}">
+                    <span style="">
+                        <apex:image width="250" height="75" value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), 'https://www.easylegal.ca/wp-content/uploads/2016/06/easy-legal-finance-logo.png', 'https://rhinofinance.com/wp-content/uploads/2015/04/rhino-logo4-190x75.png')}" />
+                    </span>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
+                    <span>
+                        <apex:image value="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), URLFOR($Resource.ELFI_Logo), URLFOR($Resource.Rhino_Logo))}" />
+                    </span>
+                </apex:outputPanel>
+            </div>
+        </div>
+        <apex:outputPanel rendered="{!if(renderAs == 'PDF', true, false)}">
+            <div class="footer" style="{!if(renderAs == 'PDF', '', 'display:none;')}">
+                <div>
+                    <table style="width:100%">
+                        <tbody>
+                            <tr style="line-height:0.75;">
+                                <td style="width:30%;" align="left" valign="top">
+                                    <span style="font-size: 11px;">
+                                        <span style="{!if(businessUnit == 'ELFI', '','display:none;')}">www.easylegal.ca</span> 
+                                        <span style="{!if(businessUnit == 'Rhino', '','display:none;')}">www.rhinofinance.com</span>
+                                    </span>
+                                </td>
+                                <td align="center">
+                                    <span style="font-size: 11px;">
+                                        TD Canada Trust Tower, 161 Bay Street, 27th Floor
+                                        PO Box 508, Toronto, Ontario M5J 2S1
+                                    </span>
+                                </td>
+                                <td style="width:30%;" align="right" valign="top">
+                                    <span style="font-size: 11px;">
+                                        <span style="{!if(businessUnit == 'ELFI', '','display:none;')}">T. 1-866-800-2100<br/>
+                                            F. 1-888-209-9330
+                                        </span> 
+                                        <span style="{!if(businessUnit == 'Rhino', '','display:none;')}">T. 1-888-291-4488<br/>
+                                            F. 1-780-428-4488
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </apex:outputPanel>
+        <br/>
+        <br />
+        <div class="content" >
+            <p>
+                <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                    <apex:param value="{!NOW()}" />
+                </apex:outputText>
+            </p>
+            <br/>
+            <div style="text-align:center;">
+                <h1>
+                    Pre-Approved Invoices
+                </h1>
+            </div>
+            <br />
+            
+            <div>
+                <apex:outputPanel rendered="{!if(or(businessUnit == 'Consolidated', businessUnit == 'ELFI'), true, false)}">
+                    <apex:pageBlockTable value="{!PreApprovedInvoicesVF}" var="item" headerClass="elfi-tableHeader" columnClasses="td-column" border="{!if(renderAs == 'PDF', 0, 1)}" width="100%" >
+                        <apex:column headerValue="Lawyer" value="{!item.lawyer}"  />
+                        <apex:column headerValue="Law Firm" value="{!item.firm}"   />
+                        <apex:column headerValue="Assessment Provider" value="{!item.assessmentProvider}"  />
+                        <apex:column headerValue="Pre-Approved Date" >
+                            <apex:outputText value="{0, date, d'-'MM'-'yyyy}">
+                                <apex:param value="{!item.preApprovedDate}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="{!if(businessUnit == 'Consolidated', 'Amount (ELFI)', 'Amount')}"  rendered="{!or(businessUnit == 'ELFI', businessUnit == 'Consolidated')}">
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{!item.amountElfi}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Amount (Rhino)" rendered="{!or(businessUnit == 'Rhino', businessUnit == 'Consolidated')}" >
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{!item.amountRhino}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Available Credit" >
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{!item.availableCredit}" />
+                            </apex:outputText>
+                        </apex:column>
+                        
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                
+                <apex:outputPanel rendered="{!if(businessUnit == 'Rhino', true, false)}">
+                    <apex:pageBlockTable value="{!PreApprovedInvoicesVF}" var="item" headerClass="rhino-tableHeader" columnClasses="td-column" border="{!if(renderAs == 'PDF', 0, 1)}" width="100%" >
+                        <apex:column headerValue="Lawyer" value="{!item.lawyer}"  />
+                        <apex:column headerValue="Law Firm" value="{!item.firm}"   />
+                        <apex:column headerValue="Assessment Provider" value="{!item.assessmentProvider}"  />
+                        <apex:column headerValue="Pre-Approved Date" >
+                            <apex:outputText value="{0, date, d'-'MM'-'yyyy}">
+                                <apex:param value="{!item.preApprovedDate}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Amount" rendered="{!businessUnit == 'Rhino'}" >
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{!item.amountRhino}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Available Credit" >
+                            <apex:outputText value="{0, Number, Currency}">
+                                <apex:param value="{!item.availableCredit}" />
+                            </apex:outputText>
+                        </apex:column>
+                        
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                
+                <!--<table style="width:100%; border:none; border-spacing: 0px;">
+                    <thead>
+                        <tr style="height:30px;{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated'), 'background-color:#fd5e26;', 'background-color:#0a3b63;color:#ffffff')}">
+                            <td style="padding-left:5px;padding-right:5px;">
+                                <span style="font-weight:bold;">Lawyer</span>
+                            </td>
+                            <td style="padding-left:5px;padding-right:5px;">
+                                <span style="font-weight:bold;">Law Firm</span>
+                            </td>
+                            <td style="padding-left:5px;padding-right:5px;">
+                                <span style="font-weight:bold;">Assessment Provider</span>
+                            </td>
+                            <td style="padding-left:5px;padding-right:5px;">
+                                <span style="font-weight:bold;">Pre-Approved Date</span>
+                            </td>
+                            <td style="{!if(businessUnit == 'Consolidated', 'padding-left:5px;padding-right:5px;','padding-left:5px;padding-right:5px;display:none;')}">
+                                <span >
+                                    <span style="font-weight:bold;">Amount (ELFI)</span>
+                                </span>
+                            </td>
+                            <td style="{!if(businessUnit == 'Consolidated', 'padding-left:5px;padding-right:5px;','padding-left:5px;padding-right:5px;display:none;')}">
+                                <span >
+                                    <span style="font-weight:bold;">Amount (Rhino)</span>
+                                </span>
+                            </td>
+                            <td style="{!if(businessUnit != 'Consolidated', 'padding-left:5px;padding-right:5px;','padding-left:5px;padding-right:5px;display:none;')}">
+                                <span >
+                                    <span style="font-weight:bold;">Amount</span>
+                                </span>
+                            </td>
+                            <td style="padding-left:5px;padding-right:5px;">
+                                <span style="font-weight:bold;">Available Credit</span>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!PreApprovedInvoicesVF}" var="item">
+                            <tr style="height:20px;">
+                                <td style="padding-left:5px;padding-right:5px;">
+                                    <span>
+                                        {!item.lawyer}
+                                    </span>
+                                </td>
+                                <td style="padding-left:5px;padding-right:5px;">
+                                    <span>
+                                        {!item.firm}
+                                    </span>
+                                </td>
+                                <td style="padding-left:5px;padding-right:5px;">
+                                    <span>
+                                        {!item.assessmentProvider}
+                                    </span>
+                                </td>
+                                <td style="padding-left:5px;padding-right:5px;" align="center">
+                                    <span>
+                                        <apex:outputText value="{0, date, d'-'MM'-'yyyy}">
+                                            <apex:param value="{!item.preApprovedDate}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                                <td align="right" style="{!if(or(businessUnit == 'ELFI', businessUnit == 'Consolidated') , 'padding-left:5px;padding-right:5px;','padding-left:5px;padding-right:5px;display:none;')}">
+                                    <span >
+                                        <apex:outputText value="{0, Number, Currency}">
+                                            <apex:param value="{!item.amountElfi}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                                <td align="right" style="{!if(or(businessUnit == 'Rhino', businessUnit == 'Consolidated') , 'padding-left:5px;padding-right:5px;','padding-left:5px;padding-right:5px;display:none;')}">
+                                    <span >
+                                        <apex:outputText value="{0, Number, Currency}">
+                                            <apex:param value="{!item.amountRhino}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                                <td style="padding-left:5px;padding-right:5px;" align="right" >
+                                    <span >
+                                        <apex:outputText value="{0, Number, Currency}">
+                                            <apex:param value="{!item.availableCredit}" />
+                                        </apex:outputText>
+                                    </span>
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                    </tbody>
+                </table>-->
+            </div>
+            
+        </div>
+    </apex:pageBlock>
+</apex:page>

@@ -55,7 +55,7 @@
             <column>Opportunity.Loan_Status__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment</value>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>

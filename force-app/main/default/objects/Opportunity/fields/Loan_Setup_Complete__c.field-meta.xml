@@ -5,15 +5,15 @@
     <formula>NOT(
     OR( 
         AND(
-            ISPICKVAL(Minimum_Interest_Period__c, &#39;&#39;), 
-            NOT(OR(IsPickVal(Interest_Deferral_Period__c,&#39;0&#39;), 
-                IsPickVal(Interest_Deferral_Period__c,&#39;&#39;)))
+            ISPICKVAL(Minimum_Interest_Period__c, &apos;&apos;), 
+            NOT(OR(IsPickVal(Interest_Deferral_Period__c,&apos;0&apos;), 
+                IsPickVal(Interest_Deferral_Period__c,&apos;&apos;)))
             ),
         ISBLANK( Interest_Rate__c), 
-        ISPICKVAL(Interest_Compounding_Period__c,&#39;&#39;),
+        ISPICKVAL(Interest_Compounding_Period__c,&apos;&apos;),
         AND(
-            ISPICKVAL(Compounding_Interest__c, &#39;&#39;),
-            ISPICKVAL(Interest_Compounding_Period__c,&#39;Compounding Interest&#39;)
+            ISPICKVAL(Compounding_Interest__c, &apos;&apos;),
+            ISPICKVAL(Interest_Compounding_Period__c,&apos;Compounding Interest&apos;)
         )
     ) 
 )</formula>

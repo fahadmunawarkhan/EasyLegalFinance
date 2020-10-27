@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Conga_Client_Summary_Report__c</fullName>
+    <externalId>false</externalId>
+    <formula>&quot;&amp;solmgr=1&quot; &amp;
+&quot;&amp;Id=&quot;&amp; AccountId &amp;
+&quot;&amp;QueryId=[AccOppty]a0p0L00000JSOkK?pv0=&quot;&amp; AccountId &amp; &quot;,&quot;&amp;
+&quot;[AccTrans]a0pL0000007q6ERIAY?pv0=&quot;&amp; AccountId &amp; &quot;~pv1%3D&quot;&amp; IF($Setup.Client_Summary_Report__c.Type_of_Loan__c = &apos;&apos;, &quot;&apos;Facility Loan&apos;|&apos;Lump-Sum&apos;|&apos;Treatment Loan&apos;|&apos;Treatment Loan 2&apos;|&apos;Assessment&apos;|&apos;Lawyer Loan&apos;&quot;, $Setup.Client_Summary_Report__c.Type_of_Loan__c) &amp; &quot;,&quot;&amp;
+&quot;[AccOutStandingBal]a0pL0000007q6EWIAY?pv0=&quot;&amp; AccountId &amp; &quot;~pv1%3D&quot;&amp; IF($Setup.Client_Summary_Report__c.Type_of_Loan__c = &apos;&apos;, &quot;&apos;Facility Loan&apos;|&apos;Lump-Sum&apos;|&apos;Treatment Loan&apos;|&apos;Treatment Loan 2&apos;|&apos;Assessment&apos;|&apos;Lawyer Loan&apos;&quot;, $Setup.Client_Summary_Report__c.Type_of_Loan__c) &amp;
+&quot;&amp;TemplateId=&quot; &amp; IF( ISPICKVAL( Account.Business_Unit__c , &quot;Rhino&quot;) , &quot;a0x0L00000PH6HP&quot;, IF( ISPICKVAL( Account.Business_Unit__c , &quot;Seahold&quot;), &quot;a0x0L00000QCQoEQAX&quot;, &quot;a0x0L00000PVUC7&quot;)) &amp; &quot;&amp;DefaultPDF=1&quot; &amp;
+&quot;&amp;attachmentparentid=&quot; &amp; AccountId &amp; 
+&quot;&amp;ac0=1&quot; &amp;
+&quot;&amp;sc0=1&quot; &amp;
+&quot;&amp;sc1=SalesforceFile&quot; &amp;
+&quot;&amp;DS7=5&quot; &amp;
+&quot;&amp;qmode=Attachments&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Conga Client Summary Report</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

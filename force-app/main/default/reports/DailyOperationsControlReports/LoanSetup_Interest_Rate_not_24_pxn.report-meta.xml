@@ -7,6 +7,9 @@
         <field>Opportunity.File_No__c</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -23,6 +26,9 @@
         <field>Opportunity.Stage_Status__c</field>
     </columns>
     <columns>
+        <field>Opportunity.Effective_Date__c</field>
+    </columns>
+    <columns>
         <field>Opportunity.Date_Applied__c</field>
     </columns>
     <columns>
@@ -30,26 +36,54 @@
         <field>Opportunity.Interest_Rate__c</field>
     </columns>
     <filter>
+        <booleanFilter>1 AND 2 AND 3 AND 4 AND 5 AND ((6 AND 7) OR 8)</booleanFilter>
         <criteriaItems>
             <column>Opportunity.Interest_Rate__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>24</value>
         </criteriaItems>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
-            <operator>notEqual</operator>
-            <value>Closed No Loan</value>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>RECORDTYPE</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Opportunity.Client_Opportunity_Record_Type</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Assessment,Lawyer Loan,Lawyer Loan-Contingency Fee Acceleration</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Effective_Date__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>4/1/2020</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Rhino</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.Business_Unit__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>ELFI</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

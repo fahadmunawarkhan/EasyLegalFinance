@@ -178,15 +178,43 @@ public with sharing class OpportunityTriggerHandler {
     
     public static void updateLoanStatus(List<Opportunity> oppList, Map<Id,Opportunity> oldMap){
         for (Opportunity opp : oppList){
-            if ((opp.Stage_Status__c != oldMap.get(opp.Id).Stage_Status__c) && (opp.Stage_Status__c == 'Active' || opp.Stage_Status__c == 'Active - Collections')){
+            if ((opp.Stage_Status__c != oldMap.get(opp.Id).Stage_Status__c) && (opp.Stage_Status__c == 'Active' || opp.Stage_Status__c == 'Active - Collections'
+                                                                               || opp.Stage_Status__c == 'Active - Contingent Loan')){
                 opp.Loan_Status__c = opp.Stage_Status__c;
             }
         }
-    }
+    }        
+        
+    public static void sendEmailOnReserveChange(Boolean isInsert, Map<Id,Opportunity> oldMap, List<Opportunity> oppList){        
+        List<String> addressesTo = null;
+        for (Opportunity opp : oppList){            
+            Opportunity oldOpp = !isInsert ? oldMap.get(opp.Id) : opp;
+            String subject = ReserveHelper.getReserveEMailSubject(isInsert, oldOpp, opp);            
+            if (!String.isBlank(subject)){
+                if (addressesTo == null)
+                    addressesTo = ReserveHelper.getEMailRecipients();
+                if (!addressesTo.isEmpty()){
+                    String message = ReserveHelper.getReserveEMailMessage(isInsert, oldOpp, opp);
+                    MailHelper.sendSingleMessage('info@easylegal.ca', addressesTo, subject, message, true);
+                }
+            }
+        }
+    }    
+    public static void clearReserveAmountWhenClosed(List<Opportunity> oppList, Map<Id,Opportunity> oldMap){
+        for (Opportunity opp : oppList){
+            if (opp.Is_Reserve_Applied__c && (opp.Stage_Status__c != oldMap.get(opp.Id).Stage_Status__c)){
+                if (opp.Stage_Status__c.startsWith('Closed -'))
+                	opp.Reserve_Amount__c = 0.0;
+                else
+                    opp.Reserve_Amount_Without_Clearing__c = opp.Reserve_Amount__c;
+            }
+        }
+    }        
+    
  	public static void clearInterestRateForVariableRates(List<Opportunity> oppList){    
         for (Opportunity opp : oppList){
             if (opp.Interest_Rate_Type__c == 'Variable')
                 opp.Interest_Rate__c = 24.0;
         }
-    }    
+    }
 }

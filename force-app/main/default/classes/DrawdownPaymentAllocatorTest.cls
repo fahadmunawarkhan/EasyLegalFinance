@@ -45,20 +45,26 @@ public class DrawdownPaymentAllocatorTest {
     }
     public static void insertDrawdowns(List<Opportunity> oppList){
         List<Drawdown__c> drawdownList = new List<Drawdown__c>();
+        List<Drawdown__c> paymentList = new List<Drawdown__c>();
         for(Opportunity opp : oppList){
             
             drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.newInstance(2018,01,01), Opportunity__c = opp.Id,
                                              Amount__c = 10000, Payment_Method__c ='e-Transfer', Payout_Date__c = Date.newInstance(2018,01,01),
-                                             Reference_Notes__c = 'Payment to Client')); 
-            
-            drawdownList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.newInstance(2018,01,01), Opportunity__c = opp.Id,
-                                             Amount__c = 2000, Payment_Method__c ='Payment', Payout_Date__c = Date.newInstance(2018,01,01),
-                                             Reference_Notes__c = 'Partial Payment'));            
-            
+                                             Reference_Notes__c = 'Payment to Client'));             
         }
-        
         if(drawdownList.size() > 0){
             insert drawdownList;
+        }
+
+        
+        for(Opportunity opp : oppList){            
+            paymentList.add(new Drawdown__c(Type__c = 'Facility Drawdown', Date__c = Date.newInstance(2018,01,01), Opportunity__c = opp.Id,
+                                             Amount__c = 2000, Payment_Method__c ='Payment', Payout_Date__c = Date.newInstance(2018,01,01),
+                                             Reference_Notes__c = 'Partial Payment'));                        
+        }       
+        
+        if(paymentList.size() > 0){
+            insert paymentList;
         }
     }
     

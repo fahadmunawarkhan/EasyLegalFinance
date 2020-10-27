@@ -1,7 +1,7 @@
 <!--
   @File Name          : CustomerViewComponent.cmp
   @Description        : 
-  @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
+  @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
   @Last Modified On   : 10-01-2020
@@ -23,6 +23,7 @@
     <aura:attribute name="contactsHistory" type="Contact[]" />
     <aura:attribute name="firmHistory" type="Firm__c[]" />
     <aura:attribute name="PaymentSummaryItems" type="Object[]" />
+    <aura:attribute name="paymentDetailsItems" type="Object[]" />
     <aura:attribute name="TransactionItems" type="Object[]" />
     <aura:attribute name="OpportunityTransactions" type="Object[]" />
     <aura:attribute name="LoanSummary" type="Object" />
@@ -42,6 +43,8 @@
     <aura:attribute name="paymentActionsMap" type="Map" default="{}" />
     <aura:attribute name="paymentActionsValidationMap" type="Map" default="{}" />
     <aura:attribute name="displayPaymentValidationErrors" type="Boolean" default="false" />
+    <aura:attribute name="underwriterNotes" type="String" />
+    <aura:attribute name="reasonavailability" type="boolean" default="true" />
 
     <aura:handler name="change" value="{!v.conObj.Phone}" action="{!c.formatPhone}" />
     <aura:handler name="change" value="{!v.conObj.OtherPhone}" action="{!c.formatOtherPhone}" />
@@ -99,6 +102,7 @@
     <aura:attribute name="ReasonForLTV" type="List" default="[{'label': 'Business Development', 'value': 'Business Development'},
     {'label': 'Lawyer Relationship', 'value': 'Lawyer Relationship'},{'label': 'Assessment Loan', 'value': 'Assessment Loan'}]" />
     <aura:attribute name="selectedReasonForLTV" type="String" default="" />
+    <aura:attribute name="updatehistoy" type="String" />
 
     <!--
     <aura:attribute name="businessUnitOptions" type="List" default="[
@@ -149,15 +153,18 @@
                                                                     ]"/>    
     
     <aura:attribute name="currentUser" type="User" /> 
-
-    <aura:attribute name="showUnderwriterEvaluationModal" type="Boolean" default="false" />
-    <aura:attribute name="offersToSettleOptions" type="List" default="[]" />
     
     <aura:attribute name="insuranceProviderOptions" type="List" default="[]" />
     
     <!-- Payment Instruction Variables -->    
     <aura:attribute name="paymentInstructionModalPromise" type="Aura.Action"/>
+      
+    <aura:attribute name="availableCreditApplicable" type="Boolean" default="false" />
     <lightning:overlayLibrary aura:id="overlayLib"/>
+    
+    <aura:attribute name="showUnderwriterEvaluationModal" type="Boolean" default="false" />  
+    <aura:attribute name="offersToSettleOptions" type="List" default="[]" />
+    
     <body> 
         <!-- <<<<<<<<<< PAGE HEADER, TITLE AND BUTTONS >>>>>>>>>> -->
         <div class="slds-page-header">
@@ -173,6 +180,7 @@
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Standard View" onclick="{!c.redirectToStandardView}" />
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Contact Sheet" onclick="{!c.showPrintableView}" />
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Send Application Document" onclick="{!c.sendApplicationDocument}" />
+                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="xx - Send Application Document - (Conga Sign)" onclick="{!c.sendApplicationDocumentCongaSign}" />
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="PDF Application Document" onclick="{!c.pdfApplicationDocument}" />
                 </lightning:buttonGroup>
             </div>
@@ -214,7 +222,7 @@
                                 <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large">
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:input class="field" value="{!v.conObj.ELF_File_No__c}" tabindex="1" label="File No" />
+                                            <lightning:input class="field" value="{!v.accountObj.AccountNumber}" tabindex="1" label="File No" disabled="{!!v.currentUser.Modify_Notes__c}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -248,9 +256,7 @@
                                 <div class="slds-form-element"><span class="slds-form-element__label"></span>
                                     <div class="slds-form-element__control">
                                         <aura:if isTrue="{!notequals(v.clickSource , 'AccountOwner')}">
-                                            <button data-source ="AccountOwner" onclick="{!c.inlineEditName}"
-                                                    class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small"
-                                                    tabindex="0" title="Edit Owner">
+                                            <button data-source="AccountOwner" onclick="{!c.inlineEditName}" class="slds-button slds-button_icon slds-cell-edit__button slds-m-left_x-small slds-m-top_small" tabindex="0" title="Edit Owner">
                                                 <lightning:icon iconName="utility:search" size="xx-small" alternativeText="search" tabindex="4" />
                                             </button>
                                         </aura:if>
@@ -740,11 +746,12 @@
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large"><span class="slds-form-element__label"></span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
+                                                    <c:UnderwriterEvaluationHistory recordId = "{!v.recordId}" updater = "{!v.updatehistoy}"/>
                                                 </span>
                                             </div>
                                         </div>
                                     </lightning:layoutItem>
-                                    <lightning:layoutItem size="5" class="slds-m-left_xx-large slds-m-bottom_x-small">
+                                    <lightning:layoutItem size="5" class="slds-m-left_xx-large slds-m-bottom_x-small margin-adjust">
                                         <lightning:card title="Approvals:" iconName="standard:approval" variant="base">
                                                 <div style="max-height:200px;overflow:auto;">
                                                     <table class="slds-table slds-table_bordered slds-table_col-bordered" style="width:90%">
@@ -943,7 +950,7 @@
                         <aura:set attribute="label">
                             ***NEW***
 
-                            <lightning:icon iconName="action:approval"  />
+                            <lightning:icon iconName="action:approval" />
                         </aura:set>
                         <c:OpportunityViewComponent accountId="{!v.recordId}" refreshAllOppties="{!c.refreshOpportunityList}" />
                     </lightning:tab>
@@ -987,7 +994,12 @@
                             <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.paymentSummaryTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-5">
                                 Payment Summary
                             </a>
-                        </li>                           
+                        </li>                        
+                        <li class="slds-tabs--scoped__item customClassForTab" title="Historical Data Tab" role="presentation" aura:id="historicalDataId">
+                            <a class="slds-tabs_scoped__link" href="javascript:void(0);" onclick="{!c.historicalDataTab}" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-6">
+                                Historical Data Tab
+                            </a>
+                        </li>
                     </ul>
                     <div id="tab-scoped-1" class="slds-tabs_scoped__content slds-show customClassForTabData" role="tabpanel" aria-labelledby="tab-default-1" aura:id="loanSummaryTabDataId">
                         <!-- <<<<<<<<<< LOAN SUMMARY >>>>>>>>>> -->
@@ -1156,7 +1168,12 @@
                                             <span class="slds-form-element__label">Available Credit</span>
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
+                                                    <aura:if isTrue="{!v.availableCreditApplicable}">
                                                         <ui:outputCurrency value="{!v.LoanSummary.availableCredit}"/>
+                                                        <aura:set attribute="else">
+                                                            N/A
+                                                        </aura:set>
+                                                    </aura:if>
                                                 </span>
                                             </div>
                                         </div>
@@ -1179,7 +1196,7 @@
                                     <lightning:layoutItem size="6" class="slds-m-top_small">
                                         <div class="slds-form-element slds-m-bottom_small slds-m-left_xx-large" style="margin-top:-1%;">
                                             <span class="slds-form-element__label">
-                                                 Client Rebate
+                                                Available Client Rebate
                                             </span>
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
@@ -1341,8 +1358,8 @@
                                             <aura:if isTrue="{!opp.transactions.length > 0}">
                                                 <tr>
                                                     <td Colspan="2">
-                                                        <lightning:icon iconName="standard:opportunity" size="small" alternativeText="Opportunity" />
-                                                        &nbsp;<b>Opportunity Name: {!opp.Name}</b>
+                                                        <lightning:icon iconName="standard:opportunity" size="small" alternativeText="Opportunity" /> &nbsp;
+                                                        <b>Opportunity Name: {!opp.Name}</b>
                                                     </td>
                                                     <td Colspan="12">
                                                         <b>{!opp.opportunityNumber}</b>
@@ -1355,7 +1372,9 @@
                                                     <!--<aura:if isTrue="{!item.paymentMethod != 'Admin Fee'}">-->
                                                     <tr class="slds-hint-parent">
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right">{!item.line}</td>
-                                                        <td class="slds-cell-buffer_left slds-cell-buffer_right slds-cell-wrap" width="400px;"><a href="{!'/lightning/r/Drawdown__c/'+item.Id+'/view'}">{!item.description}</a></td>
+                                                        <td class="slds-cell-buffer_left slds-cell-buffer_right slds-cell-wrap" width="400px;">
+                                                            <a href="{!'/lightning/r/Drawdown__c/'+item.Id+'/view'}">{!item.description}</a>
+                                                        </td>
                                                         <!--<td class="slds-cell-buffer_left slds-cell-buffer_right">{!item.opportunityNumber}</td>-->
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right"></td>
                                                         <td class="slds-cell-buffer_left slds-cell-buffer_right">{!item.paymentDate}</td>
@@ -1408,7 +1427,7 @@
                                                     <!--<td>
                                                         <b><ui:outputCurrency aura:id="curr" value="{!opp.advanceSubtotal}" format="$##,##,###,###.00"/></b>
                                                     </td>-->
-                                                    <td colspan="3" ></td>
+                                                    <td colspan="3"></td>
                                                     <td>
                                                         <b><lightning:formattedNumber value="{!opp.accruedInterestSubtotal}" style="currency" /></b>
                                                     </td>
@@ -1434,7 +1453,7 @@
                                             <!--<td>
                                                 <b><ui:outputCurrency aura:id="curr" value="{!v.advanceTotal}" format="$##,##,###,###.00"/></b>
                                             </td>-->
-                                            <td colspan="3" ></td>
+                                            <td colspan="3"></td>
                                             <td>
                                                 <b><lightning:formattedNumber value="{!v.accruedInterestTotal}" style="currency" /></b>
                                             </td>
@@ -1528,7 +1547,7 @@
                                                             <div class="slds-col">
                                                                 <div class="slds-form_horizontal">
                                                                 	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
-                                                                </div>
+                                                                </div>                                                                
                                                                 <ui:inputCurrency label="Wire Fee" value="{!v.WireFee}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>                                                                                                                                                                                                
                                                             </div>
                                                             <div class="slds-col">
@@ -1837,7 +1856,7 @@
                                                                 	<ui:inputText label="EFT#" value="{!v.EFT}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
                                                                 </div>
                                                                 <ui:inputCurrency label="Wire Fee" value="{!v.WireFee}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>                                                                                                                        
-                                                            </div>
+                                                            </div>                                                                                                                                                             
                                                             <div class="slds-col">
                                                                 <div class="slds-form_horizontal">
                                                                 	<ui:inputText label="CHQ#" value="{!v.CHQ}" keyup="{!c.handlePaymentFieldsChange}" updateOn="keyup"/>
@@ -1892,7 +1911,8 @@
 
                                             <lightning:card class="slds-card slds-card_boundary" title="{!opp.Loan_Requests__c + (opp.Stage_Status__c == 'Bad Debt' ? ' (Bad Debt) ' : '')}" variant="base">
                                                 <aura:set attribute="actions">
-                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors= "{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}" stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" />
+                                                    <c:PaymentActionsComponent searchType="{!v.paymentSearchTypeSelected}" displayPaymentValidationErrors="{!v.displayPaymentValidationErrors}" oppId="{!opp.Id}" surplus="{!opp.Calculated_Balance__c}" totalPayout="{!opp.Total_Payout__c}" tempPaymentReceived="{!opp.Temp_Payment_Received__c}"
+                                                        stageStatus="{!opp.Stage_Status__c}" stageName="{!opp.StageName}" paymentActionSelected="{!c.handlePaymentActionSelected}" paymentActionValidated="{!c.handlePaymentActionValidated}" />
                                                 </aura:set>
                                                 <table class="slds-table slds-table_bordered slds-table_striped slds-table_col-bordered">
                                                     <thead>
@@ -1965,6 +1985,7 @@
 
                         </aura:if>
                     </div>
+                    <aura:if isTrue="{!v.currentUser.Reserve__c}">
                     <!-- <<<<<<<<<< RESERVE TAB >>>>>>>>>> -->
                     <div id="tab-scoped-4" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-4" aura:id="reserveTabDataId">
                         <lightning:card class="slds-card slds-card_boundary" title="Reserve Applied" variant="base">                                                        
@@ -1978,17 +1999,28 @@
                                 <div class="slds-media__body slds-m-top_large slds-m-bottom_medium">
                                 	<h2 class="slds-text-heading--small slds-m-top_medium slds-truncate hd-lbl">Reserve Applied</h2>
                                 </div>
-                            </div>
+                            </div>                            
                             <c:CustomTableComponent columns="{!v._reserveColumns}" data="{!v._reserveData}" aura:id="reservetable"/>                            
                         </lightning:card>                        						
                     </div>    
+                    </aura:if>
                     <!-- <<<<<<<<<< Payment Summary >>>>>>>>>> -->
                     <div id="tab-scoped-5" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="tab-default-5" aura:id="paymentSummaryTabDataId">
                         <lightning:card class="slds-card slds-card_boundary" title="Payment Summary" variant="base"> 
                             <div class="payment-instructions">
-                            	<c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.PaymentSummaryItems}"/>
+                                <c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.paymentDetailsItems}" isTransactionDetails="false"/>
+                            </div>
+                        </lightning:card>
+                        <lightning:card class="slds-card slds-card_boundary" title="Transaction Details" variant="base"> 
+                            <div class="payment-instructions">
+                            	<c:PaymentInstructionSummaryComponent paymentSummaryItems="{!v.PaymentSummaryItems}" isTransactionDetails="true"/>
                             </div>
                         </lightning:card>                        						
+                    </div>                        
+                    <!-- <<<<<<<<<< HISTORICAL DATA TAB >>>>>>>>>> -->
+                    <div id="tab-scoped-6" class="slds-tabs_scoped__content slds-hide customClassForTabData" role="tabpanel" 
+                         aria-labelledby="tab-default-6" aura:id="historicalDataTabDataId">
+                        <!-- <c:HistoricalDataTab oppList="{!v.oppList}"></c:HistoricalDataTab> -->
                     </div>                        
                     
                 </div>       
@@ -2256,9 +2288,9 @@
                     <aura:set attribute="actions">
                         <div class="slds-button-group" role="group">
                             <aura:if isTrue="{!v.applicantInfoEditMode == true}">
-                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.SaveApplicantInfo}"  />
+                                <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Save" onclick="{!c.SaveApplicantInfo}" />
                                 <aura:set attribute="else">
-                                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Edit" onclick="{!c.editApplicantInfo}"  />
+                                    <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Edit" onclick="{!c.editApplicantInfo}" />
                                 </aura:set>
                             </aura:if>
 
@@ -2274,7 +2306,7 @@
                                         </span>
                                         <div class="slds-form-element__control">
                                             <span class="">
-                                                <ui:inputText class="field" value="{!v.conObj.ELF_File_No__c}" disabled="true" />
+                                                <ui:inputText class="field" value="{!v.accountObj.AccountNumber}" disabled="true" />
                                             </span>
                                         </div>
                                     </div>
@@ -2874,7 +2906,7 @@
                                             </span>
                                             <div class="slds-form-element__control">
                                                 <span class="">
-                                                    <lightning:input type="Text" tabindex="1" class="field" value="{!v.conObj.ELF_File_No__c}"  />
+                                                    <lightning:input type="Text" tabindex="1" class="field" value="{!v.accountObj.AccountNumber}" disabled="{!!v.currentUser.Modify_Notes__c}" />
                                                 </span>
                                             </div>
                                         </div>
@@ -3538,20 +3570,22 @@
                                 </div>
                             </lightning:layoutItem>
                         </lightning:layout>
-                        <lightning:layout class="">
-                            <lightning:layoutItem size="10" class="slds-m-left_xx-large">
-                                <div class="slds-form-element slds-m-bottom_small">
-                                    <span class="slds-form-element__label">
-                                        Reason:
-                                    </span>
-                                    <div class="slds-form-element__control">
-                                        <span class="">
-                                            <lightning:radioGroup aura:id="reasonForLTVRadioGroup" name="radioGroup" variant="label-hidden" label="" class="customRadioCls" options="{! v.ReasonForLTV }" value="{! v.selectedReasonForLTV}" type="radio" />
+                        <aura:if isTrue="{!v.reasonavailability}">
+                            <lightning:layout class="">
+                                <lightning:layoutItem size="10" class="slds-m-left_xx-large">
+                                    <div class="slds-form-element slds-m-bottom_small">
+                                        <span class="slds-form-element__label">
+                                            Reason:
                                         </span>
+                                        <div class="slds-form-element__control">
+                                            <span class="">
+                                                <lightning:radioGroup aura:id="reasonForLTVRadioGroup" name="radioGroup" variant="label-hidden" label="" class="customRadioCls" options="{! v.ReasonForLTV }" value="{! v.selectedReasonForLTV}" type="radio" />
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </lightning:layoutItem>
-                        </lightning:layout>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
                         <lightning:layout class="">
                             <lightning:layoutItem size="10" class="slds-m-left_xx-large slds-m-top_small">
                                 <div class="slds-form-element slds-m-bottom_small">
@@ -3560,7 +3594,7 @@
                                     </span>
                                     <div class="slds-form-element__control">
                                         <span class="">
-                                            <lightning:inputRichText value="{!v.accountObj.Underwriter_Notes__c}" placeholder="Underwriter Notes...."/>
+                                            <lightning:inputRichText value="{!v.underwriterNotes}" placeholder="Underwriter Notes...."/>
                                         </span>
                                     </div>
                                 </div>

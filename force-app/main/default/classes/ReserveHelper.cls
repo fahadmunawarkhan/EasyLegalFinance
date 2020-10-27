@@ -57,8 +57,8 @@ public class ReserveHelper {
         }            
         else{
             if (reserveInfoMap.get('Reserve_Date__c') != null){
-            Date reserveDate = reserveInfoMap.get('Reserve_Date__c') instanceOf Date ? Date.valueOf(reserveInfoMap.get('Reserve_Date__c')) : Date.valueOf((String)reserveInfoMap.get('Reserve_Date__c'));
-            opp.Reserve_Date__c = reserveDate;
+                Date reserveDate = reserveInfoMap.get('Reserve_Date__c') instanceOf Date ? Date.valueOf(reserveInfoMap.get('Reserve_Date__c')) : Date.valueOf((String)reserveInfoMap.get('Reserve_Date__c'));
+                opp.Reserve_Date__c = reserveDate;
             }
             else 
                 opp.Reserve_Date__c = null;
@@ -128,7 +128,7 @@ public class ReserveHelper {
     public static void notifyUponPayment(String accountId){          
         Account account = [select Id, Name, Is_Reserve_Applied__c from Account where Id=:accountId];            
         if (account.Is_Reserve_Applied__c){            
-            String accountLink = URL.getSalesforceBaseUrl().toExternalForm() + '/lightning/r/Account/' + accountId + '/view';            
+            String accountLink = URL.getSalesforceBaseUrl().toExternalForm() + '/lightning/r/Account/' + accountId + '/view';  
             List<String> emailRecipients = getEmailRecipients();
             if (!emailRecipients.isEmpty())
             	MailHelper.sendSingleMessage('info@easylegal.ca', emailRecipients, 'Payment received on account marked "Reserve"', 'Payment has been received on account marked "Reserve". Follow the link below to access the account: ' + accountLink, true);
@@ -166,4 +166,52 @@ public class ReserveHelper {
         }
         return new List<String>();
     }
+    
+    public static String getReserveEMailSubject(Boolean isNew, Opportunity oldOpp, Opportunity opp){
+        String subject = '';
+        if ((isNew && opp.Is_Reserve_Applied__c) || opp.Is_Reserve_Applied__c != oldOpp.Is_Reserve_Applied__c){
+            if (opp.Is_Reserve_Applied__c){
+                subject = 'Reserve Enabled on ' + opp.Name + ' account';                
+            }
+            else
+                subject = 'Reserve Disabled on ' + opp.Name + ' account';
+        }
+        else if (opp.Is_Reserve_Applied__c && (opp.Reserve_Date__c != oldOpp.Reserve_Date__c || opp.Stop_Interest__c != oldOpp.Stop_Interest__c || opp.Reserve_Amount__c != oldOpp.Reserve_Amount__c)){
+            subject = 'Reserve Details Updated on ' + opp.Name + ' account';
+        }
+        
+        return subject;
+    }
+    
+    public static String getReserveEMailMessage(Boolean isNew, Opportunity oldOpp, Opportunity opp){
+        String message = '';
+        if ((isNew && opp.Is_Reserve_Applied__c) || opp.Is_Reserve_Applied__c != oldOpp.Is_Reserve_Applied__c){
+            if (opp.Is_Reserve_Applied__c){                
+                message = 'Reserve date of ' + Utils.formatDate(opp.Reserve_Date__c, 'MMM dd, yyyy') + ' was set for this account.';
+            }
+        }
+        else{
+            Integer updatesCount = 0;
+            if (opp.Stop_Interest__c != oldOpp.Stop_Interest__c){
+                //message = 'Interest was frozen';
+                updatesCount += 1;
+            }
+            if (opp.Reserve_Amount__c != oldOpp.Reserve_Amount__c){
+                if (opp.Reserve_Amount__c == 0.0 && oldOpp.Reserve_Amount__c != null && oldOpp.Reserve_Amount__c > 0.0)
+                    message = 'Reserve amount was cleared for this account';
+                else
+                	message = 'Reserve of ' + Utils.formatCurrency(opp.Reserve_Amount__c) + '$ was added to account ' + opp.Name;
+                updatesCount += 1;
+            }
+            if (opp.Reserve_Date__c != oldOpp.Reserve_Date__c){
+                message = 'Reserve date of ' + Utils.formatDate(opp.Reserve_Date__c, 'MMM dd, yyyy') + ' was set for this account.';
+                updatesCount += 1;
+            }                
+            if (updatesCount > 1)
+                message = 'Multiple fields updated';
+        }
+        
+        return message;
+    }
+    
 }
