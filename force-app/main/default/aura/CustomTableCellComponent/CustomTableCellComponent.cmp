@@ -49,7 +49,7 @@
                             <lightning:formattedNumber class="{!v.cellItem.bold ? 'bold' : ''}" value="{!v.cellItem.value}" />
                     	</aura:if>                        
                         <aura:if isTrue="{!v.cellItem.type=='radiogroup'}">
-                            <lightning:radioGroup name="{!'radioGroup' + v.tableName + ' ' +v.rowIndex}"
+                            <lightning:radioGroup name="{!'radioGroup' + v.tableName + ' ' +v.rowIndex + ' '  + globalId }"
                                                   label=""
                                                   options="{! v.cellItem.options }"
                                                   value="{! v.cellItem.value }"
