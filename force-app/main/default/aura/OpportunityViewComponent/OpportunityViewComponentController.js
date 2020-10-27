@@ -62,6 +62,7 @@
         //console.log('listControllingValues' + component.get("v.listControllingValues")); 
         helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
         helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+        helper.waitForDrawdownsGenerating(component, false);
         /*
         setTimeout(function(){
            // helper.fetchTreatmentRefNotesDepValues(component);
@@ -753,16 +754,11 @@
                 component.set("v.spinner", false);
                 helper.showToast('SUCCESS','Generating drawdowns. Modifying any loan fields now will result in error. Please wait for generation to complete','SUCCESS');
                 component.set("v.oppObj.VR_Fees_Generating_In_Progress__c", true);
+                helper.waitForDrawdownsGenerating(component, true);
             },
             (errors) => {    
                 component.set("v.spinner", false);
-                if (errors){
-                	if (errors[0] && errors[0].message) {
-               			helper.errorsHandler(errors)
-            		}else {
-            			helper.unknownErrorsHandler();
-    				}    
-                }
+                helper.handleErrors(errors);
             }
         )                	        
     }                      
