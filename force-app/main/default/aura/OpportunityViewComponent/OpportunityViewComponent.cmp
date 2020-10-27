@@ -1649,9 +1649,8 @@
                                 <span class="slds-form-element__label"></span>
                                 <div class="slds-form-element__control">
                                     <span class="">
-                                        <lightning:radioGroup 
-                                                              aura:id="interestRateType"
-                                                              name="interestRateTypeGroup"
+                                        <lightning:radioGroup                                                               
+                                                              name="{!'radioGroup_interestRateTypeGroup'+ '_'  + globalId }"
                                                               label="Interest Rate Type"
                                                               options="{! v.interestRateTypeOptions }"
                                                               value="{! v.oppObj.Interest_Rate_Type__c}"
