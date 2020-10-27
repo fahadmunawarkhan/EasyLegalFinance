@@ -27,7 +27,7 @@
     <columns>
         <field>TASK</field>
     </columns>
-    <description>Lee&#39;s Tasks</description>
+    <description>Lee&apos;s Tasks</description>
     <filter>
         <criteriaItems>
             <column>ASSIGNED</column>
@@ -42,7 +42,7 @@
         <field>ASSIGNED</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <name>Lee&#39;s Tasks</name>
+    <name>Lee&apos;s Tasks</name>
     <params>
         <name>closed</name>
         <value>open</value>

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Amount_Paid_to_Assessment_Provider__c</fullName>
     <externalId>false</externalId>
-    <formula>Amount_Paid_to_Borrower__c  * (1 - Discount_Rate__c)</formula>
+    <formula>Amount_Paid_to_Borrower_Formula__c  * (1 - Discount_Rate__c)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Amount Paid to Assessment Provider</label>
     <precision>18</precision>

@@ -11,65 +11,79 @@
         var max = year+'-12-31';
         component.set("v.calendarMax", max);                
     },
-    setDefaultDates : function(component){
-        let dt = new Date();
-        
-        let defaultPayoutDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate() + '';
-        component.set("v.payoutDate", defaultPayoutDate);
-        
-        let defaultReportDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + dt.getDate() + '';
-        component.set("v.reportDate", defaultReportDate); 
-
-        let defaultEndDate = dt.getFullYear() +'-'+ (dt.getMonth() + 1) +'-' + new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate() + '';
-        let defaultStartDate = dt.getFullYear() +'-'+ (dt.getMonth()) +'-01';
-        component.set("v.endDate", defaultEndDate);
-        component.set("v.startDate", defaultStartDate); 
-        
+    setDefaultBussinessUnit: function(component){
+        let selectedBusinessUnitFilter = [];
+        selectedBusinessUnitFilter.push({Id:"ELFI",Name:"ELFI"});
+        component.set("v.selectedBusinessUnitFilter", selectedBusinessUnitFilter); 
     },
-	getPickListValues : function(component, object, field, attributeId){
+    setDefaultTypeOfLoan : function(component){
+        let selectedTypeOfLoanFilter = [];
+        selectedTypeOfLoanFilter.push({Id:"Lump-Sum",Name:"Lump-Sum"});
+        component.set("v.selectedTypeOfLoanFilter", selectedTypeOfLoanFilter);  
+    },
+    setDefaultDates : function(component){
+        let action = component.get("c.GetCustomSettings");
+        return new Promise(function(resolve, reject) { 
+            action.setCallback(this, function(response){
+                let state = response.getState();
+                let result = response.getReturnValue();
+                if(state == 'SUCCESS'){
+                    component.set("v.startDate", result.Start_Date_Law_Firm_Report__c);
+                    component.set("v.endDate", result.End_Date_Law_Firm_Report__c);
+                    // setBusinessUnitTypeofLoan(component, result.Business_Unit_Law_Firm_Report__c);
+                    resolve(result);
+                } else if(state == 'ERROR') {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            this.errorsHandler(errors)
+                        }
+                    } else {
+                        this.unknownErrorsHandler();
+                    }
+                    reject(new Error(response.getError()));
+                }
+            });
+            $A.enqueueAction(action);
+        });
+    },
+	getPickListValues : function(component, object, field, attributeId, selectedFilterValue){
         var picklistgetter = component.get('c.getPickListValues');
         picklistgetter.setParams({
             objectType: object,
             field: field
         });
-        
-        
         picklistgetter.setCallback(this, function(response){
             var opts = [];
+            let selectedFilter = component.get("v."+selectedFilterValue);
             if(response.getState() == 'SUCCESS')
             {
                 var allValues = response.getReturnValue();
- 
-               /*if (allValues != undefined && allValues.length > 0) {
-                    opts.push({
-                        class: "optionClass",
-                        label: "All",
-                        value: "All"
-                    });
-                }*/
                 for (var i = 0; i < allValues.length; i++) {
                     if(allValues[i].includes('===SEPERATOR==='))
                     {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i].split('===SEPERATOR===')[0],
-                            value: allValues[i].split('===SEPERATOR===')[1]
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
                         });
                     }
                     else
                     {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i],
-                            value: allValues[i]
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
                         });
                     }
-                } 
-                opts.push({
-                    class: "optionClass",
-                    label: 'Consolidated',
-                    value: 'Consolidated'
-                });                 
+                }
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedFilter.length; j++){
+                        if(opts[i].Name == selectedFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
                 component.set('v.'+attributeId, opts);
             }
         });
@@ -89,22 +103,23 @@
         let field = component.get('v.sortField');
         let sortOrder = component.get('v.sortOrder');
         let loanFilterValue = component.get("v.selectedLoanFilter");
-        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+        let businessUnitFilterValue = this.getSelectedPickListValue(component, "'", component.find("businessunitMS").get("v.selectedOptions"));
+        let typeofloanFilterValue = this.getSelectedPickListValue(component, "'", component.find("typeOfLoanMS").get("v.selectedOptions"));
         let strQuery = component.get('v.query');
         
         searchString = searchString ? "'%"+searchString+"%'" : "'%%'";
         sortOrder = sortOrder? sortOrder : "ASC";
         field = field ? field : "Name";
         loanFilterValue = loanFilterValue ? loanFilterValue : "All";
-        businessUnitFilterValue = businessUnitFilterValue ? businessUnitFilterValue : 'All';
         
         strQuery += " AND Name Like " + searchString + "";
         strQuery += " AND Id in (SELECT Law_Firm__c FROM Opportunity WHERE accountId !=null";
-        strQuery += businessUnitFilterValue == 'Consolidated'? "" : " AND Account.Business_Unit__c = \'"+businessUnitFilterValue+"\'";
-        strQuery += loanFilterValue == "Active"? " AND isClosed = true AND isWon = true AND Stage_Status__c != 'Paid Off')" : ")";
+        strQuery += businessUnitFilterValue.length == 0? "" : " AND Account.Business_Unit__c IN ("+businessUnitFilterValue.join()+")";
+        strQuery += typeofloanFilterValue.length == 0 ? "" : " AND Type_of_Loan__c IN (" + typeofloanFilterValue.join() + ")";
+        strQuery += loanFilterValue == "Active"? " AND stagename = 'Closed With Loan' AND Stage_Status__c != 'Paid Off')" : ")";
         if(component.get("v.startDate") && component.get("v.endDate")) strQuery += " AND CreatedDate >= "+this.formatDate(component.get("v.startDate"))+" AND CreatedDate <= "+this.formatDate(component.get("v.endDate"));
         strQuery += " order by " + field + " " + sortOrder + " limit 10000";
-        
+        // console.log(strQuery);
         return strQuery;
     },
     
@@ -113,23 +128,26 @@
         component.set('v.spinner', true);
         let loanFilterValue = component.get("v.selectedLoanFilter");
         let strQuery = this.getQueryString(component);             
-        let businessUnitFilterValue = component.get("v.selectedBusinessUnitFilter");
+        let businessUnitFilterValue = this.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions"));
+        let typeofloanArr = this.getSelectedPickListValue(component, "", component.find("typeOfLoanMS").get("v.selectedOptions"));
         this.getViewUrl(component);
-        
+
         var action = component.get('c.getLawfirmAccounts');
         action.setParams({
             strQuery : strQuery, 
             LoanFilter: loanFilterValue,
             businessUnitFilter: businessUnitFilterValue,
             startDate : component.get("v.startDate"),
-            endDate : component.get("v.endDate")
+            endDate : component.get("v.endDate"),
+            typeofloan: typeofloanArr
         });
         
         action.setCallback(this, function (response) {
             var state = response.getState();
             component.set('v.spinner', false);
             if (state === 'SUCCESS') {
-                component.set("v.accountsList", response.getReturnValue());                
+                component.set("v.accountsList", response.getReturnValue());
+                component.set('v.showWarning', (component.get("v.accountsList").length > 1000) ? true : false);                
             } else if (state === 'ERROR') {
                 var errors = response.getError();
                 if (errors) {
@@ -142,6 +160,35 @@
             }
         });
         $A.enqueueAction(action);    
+    },
+    SaveCustomSettings : function(component){
+        let businessUnitFilterArr = this.getSelectedPickListValue(component, "'", component.find("businessunitMS").get("v.selectedOptions"));
+        let typeofloanFilterArr = this.getSelectedPickListValue(component, "'", component.find("typeOfLoanMS").get("v.selectedOptions"));
+        let action = component.get("c.SaveCustomSettings");
+        action.setParams({
+            startdate: component.get("v.startDate"),
+            enddate: component.get("v.endDate"),
+            payoutDate: component.get("v.payoutDate"),
+            reportDate: component.get("v.reportDate"),
+            LoanFilter: component.get("v.selectedLoanFilter"),
+            businessUnitFilter: businessUnitFilterArr,
+            typeofloanFilter: typeofloanFilterArr
+        });
+        action.setCallback(this, function(response){
+            let state = response.getState();
+            if(state == 'SUCCESS'){
+            } else if(state == 'ERROR') {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.errorsHandler(errors)
+                    }
+                } else {
+                    this.unknownErrorsHandler();
+                }
+            }
+        });
+        $A.enqueueAction(action);
     },
     check: function(component, event){
         //console.log('---- ' + event.getSource().get("v.value"));
@@ -378,16 +425,37 @@
         }
     },
     setBusinessUnitFilter : function(component){
-        var businessUnit = component.get("v.selectedBusinessUnitFilter");
-        if(businessUnit == 'Consolidated'){
-            component.set("v.pv1","ELFI");
-            component.set("v.pv2","Rhino");
-        }else{
-            component.set("v.pv1",businessUnit);
-            component.set("v.pv2","");
-        }
+        let businessUnit = this.getSelectedPickListValue(component, "'", component.find("businessunitMS").get("v.selectedOptions"));
+        let typeofloan = this.getSelectedPickListValue(component, "'", component.find("typeOfLoanMS").get("v.selectedOptions"));
+        component.set("v.pv1",businessUnit.join('|'));
+        component.set("v.pv2","");
+        component.set("v.pv5", typeofloan.join('|'));
     },
     getViewUrl : function(component){
-        component.set("v.viewUrl","/apex/APXTConga4__Conga_Composer?SolMgr=1&serverUrl="+$A.get("$Label.c.Partner_API_Server_Url")+"&Id="+$A.get("$SObjectType.CurrentUser.Id")+"&QueryId=[lawyerCount]"+$A.get("$Label.c.Law_Firm_Count_Query_Id")+"?pv1=\'"+component.get("v.pv1")+"\'~pv2=\'"+component.get("v.pv2")+"\'~pv3="+this.formatDate(component.get("v.startDate"))+"~pv4="+this.formatDate(component.get("v.endDate"))+"&TemplateId="+$A.get("$Label.c.Law_Count_Firm_Template_Id")+"&DS7=3");
+        component.set("v.viewUrl","/apex/APXTConga4__Conga_Composer?SolMgr=1&serverUrl="+$A.get("$Label.c.Partner_API_Server_Url")+"&Id="+$A.get("$SObjectType.CurrentUser.Id")+"&QueryId=[lawyerCount]"+$A.get("$Label.c.Law_Firm_Count_Query_Id")+"?pv1="+component.get("v.pv1")+"~pv2=\'"+component.get("v.pv2")+"\'~pv3="+this.formatDate(component.get("v.startDate"))+"~pv4="+this.formatDate(component.get("v.endDate"))+"~pv5="+component.get("v.pv5")+"&TemplateId="+$A.get("$Label.c.Law_Count_Firm_Template_Id")+"&DS7=3");
+    },
+    getViewUrlViewAll : function(component) {
+        component.set("v.viewUrlViewAll", "/apex/APXTConga4__Conga_Composer?SolMgr=1&serverUrl="+$A.get("$Label.c.Partner_API_Server_Url")+"&Id="+$A.get("$Label.c.Drawdown_Id")+"&QueryId=[Drawdown]"+$A.get("$Label.c.Law_Firm_Count_Query_Id_View_All")+"?pv1="+component.get("v.pv1")+"~pv2=\'"+component.get("v.pv2")+"\'~pv3="+this.formatDate(component.get("v.startDate"))+"~pv4="+this.formatDate(component.get("v.endDate"))+"~pv5="+component.get("v.pv5")+"&TemplateId="+$A.get("$Label.c.Law_Count_Firm_Template_Id_View_All")+"&DS7=3");
+    },
+    getSelectedPickListValue : function(component, quote, selectedOptions){
+        let arr = [];
+        for(let i=0; i<selectedOptions.length; i++){
+            arr.push(quote + selectedOptions[i].Name + quote);
+        }
+        return arr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

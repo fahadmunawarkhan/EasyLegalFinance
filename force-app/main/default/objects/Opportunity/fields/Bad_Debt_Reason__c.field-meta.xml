@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bad_Debt_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Bad Debt Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Plaintiff default</fullName>
+                <default>false</default>
+                <label>Plaintiff default</label>
+            </value>
+            <value>
+                <fullName>Plaintiff misrepresentation</fullName>
+                <default>false</default>
+                <label>Plaintiff misrepresentation</label>
+            </value>
+            <value>
+                <fullName>Unsuccessful Trial</fullName>
+                <default>false</default>
+                <label>Unsuccessful Trial</label>
+            </value>
+            <value>
+                <fullName>Negotiated shortage</fullName>
+                <default>false</default>
+                <label>Negotiated shortage</label>
+            </value>
+            <value>
+                <fullName>Plaintiff expired</fullName>
+                <default>false</default>
+                <label>Plaintiff expired</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

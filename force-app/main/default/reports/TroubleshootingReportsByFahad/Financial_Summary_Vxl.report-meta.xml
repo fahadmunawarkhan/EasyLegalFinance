@@ -19,35 +19,30 @@
     <filter>
         <criteriaItems>
             <column>STAGE_NAME</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Closed With Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Opportunity.Stage_Status__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>Active,Active - Partial Payment</value>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Payment_Method__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>Cheque,e-Transfer</value>
         </criteriaItems>
         <criteriaItems>
             <column>Account.Business_Unit__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>ELFI</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c.Is_Rejected__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
             <value>0</value>

@@ -49,6 +49,7 @@ public with sharing class FinancialSummaryReportCtrl {
             String closedWithLoan = 'Closed With Loan';
             String statusActive = 'Active';
             String statusActiveCollections = 'Active - Collections';
+            String statusActiveContingent = 'Active - Contingent Loan';
             String closedSurplus = 'Closed - Surplus';
             String closedShortfall = 'Closed - Shortfall';
             String closedPaid = 'Closed - Paid';
@@ -62,7 +63,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
             strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:statusActive OR Opportunity__r.Stage_Status__c =:statusActiveContingent OR Opportunity__r.Stage_Status__c =:statusActiveCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)';
@@ -189,6 +190,7 @@ public with sharing class FinancialSummaryReportCtrl {
         String closedWithLoan = 'Closed With Loan';
         String active = 'Active';
         String activeCollections = 'Active - Collections';
+        String activeContingent = 'Active - Contingent Loan';
         String closedSurplus = 'Closed - Surplus';
         String closedShortfall = 'Closed - Shortfall';
         String closedPaid = 'Closed - Paid';
@@ -205,7 +207,7 @@ public with sharing class FinancialSummaryReportCtrl {
             strQuery += ' AND Date__c <= :endDt';
             strQuery += (typeOfLoan.isEmpty())? '' : ' AND Opportunity__r.Type_of_Loan__c IN :typeOfLoan';
             strQuery += ' AND Opportunity__r.StageName =:closedWithLoan';
-            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
+            strQuery += ' AND (Opportunity__r.Stage_Status__c =:active OR Opportunity__r.Stage_Status__c =:activeContingent OR Opportunity__r.Stage_Status__c =:activeCollections OR Opportunity__r.Stage_Status__c =:activePartialPayment';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedPaid OR Opportunity__r.Stage_Status__c =:closedShortfall';
             strQuery += ' OR Opportunity__r.Stage_Status__c =:closedSurplus OR Opportunity__r.Stage_Status__c =:closedBadDebt)';
             strQuery += ' AND (Payment_Method__c =:cheque or Payment_Method__c =:eTransfer)'; 

@@ -1,0 +1,32 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 09-28-2020
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   09-28-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+<aura:component>
+    <aura:attribute name="Warning" type="Boolean" default="false" />
+    <aura:attribute name="Message" type="String" />
+
+    <aura:if isTrue="{!v.Warning}">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+            <span class="slds-assistive-text">warning</span>
+                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                    <lightning:icon iconName="utility:warning" alternativeText="warning!" size="x-small" />
+                </span>
+            <h2>
+                {!v.Message}
+            </h2>
+            <div class="slds-notify__close">
+                <button class="slds-button slds-button_icon slds-button_icon-small" title="Close" onclick="{!c.Closewarning}">
+                    <lightning:icon iconName="utility:close" alternativeText="close!" size="x-small" />
+                <span class="slds-assistive-text">Close</span>
+                </button>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

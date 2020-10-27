@@ -22,12 +22,12 @@
         );
 
         helper.getApprovalProcessHistoryInfo(component).then(
-            function(result){
+            function(result) {
                 component.set("v.approvalHistory", result);
                 console.log("v.approvalHistory " + JSON.stringify(result));
             }
         ).catch(
-            function(errors){
+            function(errors) {
                 console.log(errors);
                 helper.errorsHandler(errors);
             }
@@ -49,7 +49,7 @@
         helper.getPickListValues(component, 'Account', 'Account_Type__c', 'accountTypeOptions');
         helper.getPickListValues(component, 'Account', 'ProvinceResidency__c', 'provinceResidencyOptions');
         helper.getPickListValues(component, 'Account', 'Offers_to_Settle__c', 'offersToSettleOptions');
-        
+
         helper.getPickListValues(component, 'Contact', 'Citizenship_Status__c', 'citizenshipStatusOptions');
         helper.getPickListValues(component, 'Contact', 'Marital_Status__c', 'meritalStatusOptions');
         helper.getPickListValues(component, 'Contact', 'Any_SpousalChild_support_payment__c', 'spousalChildSupportPmtOptions');
@@ -174,7 +174,12 @@
         component.find("reserveTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
         helper.reloadReserveTable(component);
     },
-    showPrintableView:function(component, event, helper) {
+    historicalDataTab: function(component, event, helper) {
+        helper.clearAllTabs(component, event);
+        component.find("historicalDataId").getElement().className = 'slds-tabs--scoped__item slds-active customClassForTab';
+        component.find("historicalDataTabDataId").getElement().className = 'slds-tabs--scoped__content slds-show customClassForTabData';
+    },
+    showPrintableView: function(component, event, helper) {
         var accObj = component.get('v.accountObj');
         var baseURL = accObj.Conga_Printable_Preview_URL__c;
         //var baseURL = "/apex/RDS_AccountPrintableView?Id="+component.get('v.recordId');
@@ -199,9 +204,6 @@
                 baseURL = accObj.Conga_Send_Lawyer_Payout_Email_URL__c;
             
             baseURL += "&EmailSubject=Loan+Payout+Statement+-+" + oppObj.Primary_Contact_Name__c.trim().split(" ").join("+");
-            
-            console.log('ofn = ' + ofn);
-            
             baseURL += ofn;
             baseURL += "&Id=" + oppObj.Lawyer__c + "&EmailToId=" + oppObj.Lawyer__c;
             //baseURL += "&EmailCC=" + oppObj.Lawyer__r.Email + "&DS7=2";
@@ -234,12 +236,11 @@
             $A.get("e.force:navigateToURL").setParams({
                 "url": baseURL
             }).fire();
-        } 
-        else{
+        } else {
             helper.showToast('Error', 'Payout date is not set!');
         }
     },
-    pdfApplicationDocument:function(component, event, helper) {
+    pdfApplicationDocument: function(component, event, helper) {
         var oppObj = component.get('v.oppObj');
         var BaseUrl = "/apex/APXTConga4__Conga_Composer?id=" + oppObj.Id + "&TemplateID=" + component.get('v.accountObj.CM_Application_Template_Id__c') + "&DS7=3&DefaultPDF=1&ReturnPath=" + component.get('v.recordId');
         $A.get("e.force:navigateToURL").setParams({
@@ -258,9 +259,17 @@
             "url": BaseUrl
         }).fire();
     },
-
+    sendApplicationDocumentCongaSign: function(component, event, helper) {
+        let account = component.get('v.accountObj');
+        let brandingParam = '&DocuSignBrandName=' + account.Business_Unit__c + 'Signing';
+        var oppObj = component.get('v.oppObj');
+        var BaseUrl = '/apex/APXTConga4__Conga_Composer?SolMgr=1&id=' + oppObj.Id + '&CSVisible=1&QueryStringField=Conga_Sign_Parameters_Loan_App__c&CSRecipient1=' + oppObj.Primary_Contact__c + '&DocuSignR1Type=Signer&csRole1=SIGNER&TemplateID=' + component.get('v.accountObj.CM_Application_Template_Id__c') + '&CSBusinessUnit='+component.get("v.accountObj.Business_Unit__c")+'&CSRoutingType=SERIAL&DS7=1142' + brandingParam;
+        console.log(BaseUrl);
+        $A.get("e.force:navigateToURL").setParams({
+            "url": BaseUrl
+        }).fire();
+	},
     saveAll: function(component, event, helper) {
-
             let businessUnit = component.get("v.accountObj.Business_Unit__c");
 
             if (businessUnit != '' && businessUnit != null) {
@@ -324,18 +333,15 @@
         // show the name edit field popup 
 
         component.set("v.clickSource", clickSource);
-        if (clickSource == 'Law_Firm__c')
-        {
-            component.set('v.selectedLookUpLawFirm.Id','');
-            component.set('v.selectedLookUpLawFirm.Name','');
+        if (clickSource == 'Law_Firm__c') {
+            component.set('v.selectedLookUpLawFirm.Id', '');
+            component.set('v.selectedLookUpLawFirm.Name', '');
 
-            component.set('v.selectedLookUpLawyer.Id','');
-            component.set('v.selectedLookUpLawyer.Name','');
-        } 
-        else if(clickSource == 'Lawyer__c')
-        {
-            component.set('v.selectedLookUpLawyer.Id','');
-            component.set('v.selectedLookUpLawyer.Name','');
+            component.set('v.selectedLookUpLawyer.Id', '');
+            component.set('v.selectedLookUpLawyer.Name', '');
+        } else if (clickSource == 'Lawyer__c') {
+            component.set('v.selectedLookUpLawyer.Id', '');
+            component.set('v.selectedLookUpLawyer.Name', '');
         }
         // after the 100 millisecond set focus to input field   
         setTimeout(function() {
@@ -712,7 +718,7 @@
         helper.saveReserveTable(component, changedRecords)
             .then(
                 (result) => {
-                    helper.showToast('SUCCESS','Your changes were successfully saved!', 'SUCCESS');
+                    helper.showToast('SUCCESS', 'Your changes were successfully saved!', 'SUCCESS');
                     return helper.getOpportunitiesList(component);
                 },
                 (errors) => {
@@ -768,11 +774,14 @@
     saveUnderwriterEvaluationModal : function(component, event, helper) {
         component.set("v.showUnderwriterEvaluationModal", false);
         component.set("v.spinner", true);
+        component.set("v.updatehistoy", "true");
         helper.validateLTV(component).then(
             function(isValid) {
                 if (isValid) {
                     let accountObj = component.get("v.accountObj");
                     accountObj.Reason_for_LTV__c = component.get("v.selectedReasonForLTV");
+                    accountObj.Underwriter_Notes__c = component.get("v.underwriterNotes");
+                    component.set("v.underwriterNotes", "");
                     component.set("v.accountObj", accountObj);
 
                     helper.saveAccountPromise(component).then($A.getCallback(
@@ -783,6 +792,7 @@
                     )).then(
                         function(result) {
                             component.set("v.spinner", false);
+                            component.set("v.updatehistoy", "false");
                             component.set("v.approvalHistory", result);
                             helper.getAccountInfo(component);
                         }

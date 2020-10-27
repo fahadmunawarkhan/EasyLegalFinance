@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ELFI</label>
+    <protected>false</protected>
+    <values>
+        <field>Account_Number_for_Returns__c</field>
+        <value xsi:type="xsd:string">101012369773</value>
+    </values>
+    <values>
+        <field>Destination_Data_Centre__c</field>
+        <value xsi:type="xsd:string">86990</value>
+    </values>
+    <values>
+        <field>File_Number__c</field>
+        <value xsi:type="xsd:double">12.0</value>
+    </values>
+    <values>
+        <field>Institutional_ID_for_Returns__c</field>
+        <value xsi:type="xsd:string">03003979</value>
+    </values>
+    <values>
+        <field>Originator_Id__c</field>
+        <value xsi:type="xsd:string">3074330801</value>
+    </values>
+    <values>
+        <field>Originator_Long_Name__c</field>
+        <value xsi:type="xsd:string">EASY LEGAL FINANCE INC.</value>
+    </values>
+    <values>
+        <field>Originator_Short_Name__c</field>
+        <value xsi:type="xsd:string">EASY LEGAL FIN</value>
+    </values>
+</CustomMetadata>

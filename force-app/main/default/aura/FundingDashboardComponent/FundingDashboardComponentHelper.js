@@ -2,14 +2,23 @@
     getCalendarMin: function(component) {
         var year = new Date().getFullYear() - 5;
         //var min = year+'-01-01';
-        var min = '2010-01-01';
+        var min = '1980-01-01';
         component.set("v.calendarMin", min);
     },
-
+    setDefaultTypeOfLoan : function(component){
+        let selectedTypeOfLoanFilter = [];
+        selectedTypeOfLoanFilter.push({Id:"Facility Loan",Name:"Facility Loan"});
+        component.set("v.selectedTypeOfLoanFilter", selectedTypeOfLoanFilter);  
+    },
     getCalendarMax: function(component) {
         var year = new Date().getFullYear() + 5;
         var max = year + '-12-31';
         component.set("v.calendarMax", max);
+    },
+    setDefaultBussinessUnit: function(component){
+        let selectedBusinessUnitFilter = [];
+        selectedBusinessUnitFilter.push({Id:"ELFI",Name:"ELFI"});
+        component.set("v.selectedBusinessUnitFilter", selectedBusinessUnitFilter); 
     },
     setBUCustomSettings: function(component) {
         return new Promise($A.getCallback(function(resolve, reject) {
@@ -47,13 +56,15 @@
     },
 
     getData: function(component) {
+        let typeofloanArr = this.getSelectedPickListValue(component, "", component.find("typeOfLoanMS").get("v.selectedOptions"));
+        let businessunitArr = this.getSelectedPickListValue(component, "", component.find("businessunitMS").get("v.selectedOptions"));
         return new Promise($A.getCallback(function(resolve, reject) {
             let action = component.get('c.getData');
             action.setParams({
                 startDate: component.get('v.startDate'),
                 endDate: component.get('v.endDate'),
-                BusinessUnit: component.get("v.selectedBusinessUnitFilter"),
-                typeOfLoan: component.get("v.selectedTypeOfLoanFilter")
+                BusinessUnit: businessunitArr,
+                typeOfLoan: typeofloanArr
             });
             action.setCallback(this, function(response) {
                 let state = response.getState();
@@ -141,41 +152,117 @@
         toastEvent.fire();
     },
 
-    getPickListValues: function(component, object, field, attributeId) {
+    getPickListValues : function(component, object, field, attributeId, selectedFilterValue){
         var picklistgetter = component.get('c.getPickListValues');
         picklistgetter.setParams({
             objectType: object,
             field: field
         });
-
-
-        picklistgetter.setCallback(this, function(response) {
+        picklistgetter.setCallback(this, function(response){
             var opts = [];
-            if (response.getState() == 'SUCCESS') {
+            let selectedFilter = component.get("v."+selectedFilterValue);
+            if(response.getState() == 'SUCCESS')
+            {
                 var allValues = response.getReturnValue();
                 for (var i = 0; i < allValues.length; i++) {
-                    if (allValues[i].includes('===SEPERATOR===')) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i].split('===SEPERATOR===')[0],
-                            value: allValues[i].split('===SEPERATOR===')[1]
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
                         });
-                    } else {
+                    }
+                    else
+                    {
                         opts.push({
-                            class: "optionClass",
-                            label: allValues[i],
-                            value: allValues[i]
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
                         });
                     }
                 }
-                opts.push({
-                    class: "optionClass",
-                    label: 'Consolidated',
-                    value: 'Consolidated'
-                });
-                component.set('v.' + attributeId, opts);
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedFilter.length; j++){
+                        if(opts[i].Name == selectedFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
+                component.set('v.'+attributeId, opts);
             }
         });
         $A.enqueueAction(picklistgetter);
+    },
+    getTypeofLoanPickList : function(component, object, field, attributeId){
+        var picklistgetter = component.get('c.getPickListValues');
+        picklistgetter.setParams({
+            objectType: object,
+            field: field
+        });
+        picklistgetter.setCallback(this, function(response){
+            var opts = [];
+            let selectedTypeOfLoanFilter = component.get("v.selectedTypeOfLoanFilter");
+            if(response.getState() == 'SUCCESS')
+            {
+                var allValues = response.getReturnValue();
+                for (var i = 0; i < allValues.length; i++) {
+                    if(allValues[i].includes('===SEPERATOR==='))
+                    {
+                        opts.push({
+                            Id: allValues[i].split('===SEPERATOR===')[0],
+                            Name: allValues[i].split('===SEPERATOR===')[1],
+                            selected : false
+                        });
+                    }
+                    else
+                    {
+                        opts.push({
+                            Id: allValues[i],
+                            Name: allValues[i],
+                            selected : false
+                        });
+                    }
+                }
+                for(let i=0; i<opts.length; i++){
+                    for(let j=0; j< selectedTypeOfLoanFilter.length; j++){
+                        if(opts[i].Name == selectedTypeOfLoanFilter[j].Name){
+                            opts[i].selected = true;
+                        }
+                    }
+                }                
+                component.set('v.'+attributeId, opts);
+            }
+        });
+        $A.enqueueAction(picklistgetter);
+    },
+    getSelectedTypeOfLoanArr : function(component, quote){
+        let selectedTypeOfLoanOptions = component.find("typeOfLoanMS").get("v.selectedOptions");
+        let typeOfLoanArr = [];
+        for(let i=0; i<selectedTypeOfLoanOptions.length; i++){
+            typeOfLoanArr.push(quote + selectedTypeOfLoanOptions[i].Name + quote);
+        }
+        return typeOfLoanArr;
+    },
+    getSelectedPickListValue : function(component, quote, selectedOptions){
+        let arr = [];
+        for(let i=0; i<selectedOptions.length; i++){
+            arr.push(quote + selectedOptions[i].Name + quote);
+        }
+        return arr;
+    },
+    validation : function(component, multiListId){
+        const selectedTypeOfLoanOptions = component.find(multiListId).get("v.selectedOptions");
+        let msgidentifier = '';
+        return new Promise($A.getCallback(
+            function(resolve, reject){
+                if(selectedTypeOfLoanOptions.length >= 1){
+                    resolve(true);
+                }else{
+                    msgidentifier = (multiListId == 'typeOfLoanMS')? 'type of loan' : 'business unit';
+                    reject([{message: 'Please select at least one '+msgidentifier+' filter from dropdown.'}]);
+                }
+            })
+        );
     }
 })

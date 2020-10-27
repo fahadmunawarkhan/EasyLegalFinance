@@ -191,7 +191,7 @@ export default class FundingDetails_Parent extends LightningElement {
         //debugger;
     }
     CWBSheetsStatusButton(){
-        window.open("/00O4W000003rWkQUAU");
+        window.open("/00OL0000000s3CLMAY");
     }
     selectTab(stageName) {
         this.currentStage = stageName;

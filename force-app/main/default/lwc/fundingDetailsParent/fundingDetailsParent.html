@@ -4,7 +4,7 @@
   @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 08-05-2020
+  @Last Modified On   : 10-21-2020
   @Modification Log   : 
   ==============================================================================
   Ver         Date                     Author      		      Modification
@@ -20,7 +20,7 @@
         </lightning-tab>
         <lightning-tab if:true={canSendPayments} label="Send Banking Sheet" value="BankingSheet" onactive={tabSelected}>
         </lightning-tab>
-        <lightning-tab if:true={canInputEFTNumbers} label="Input EFT Numbers" value="InputEfts" onactive={tabSelected}>
+        <lightning-tab if:true={canInputEFTNumbers} label="Input EFT Numbers/Rejections" value="InputEfts" onactive={tabSelected}>
         </lightning-tab>
         <lightning-tab if:true={canSendPayments} label="Validate Cheques" value="ValidateCheques" onactive={tabSelected}>
         </lightning-tab>

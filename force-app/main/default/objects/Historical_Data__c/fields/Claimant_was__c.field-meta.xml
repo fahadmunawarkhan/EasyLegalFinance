@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Claimant_was__c</fullName>
+    <externalId>false</externalId>
+    <label>Claimant was</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Driver</fullName>
+                <default>false</default>
+                <label>Driver</label>
+            </value>
+            <value>
+                <fullName>Passenger Back Seat</fullName>
+                <default>false</default>
+                <label>Passenger Back Seat</label>
+            </value>
+            <value>
+                <fullName>Pedestrian/Bicyclist</fullName>
+                <default>false</default>
+                <label>Pedestrian/Bicyclist</label>
+            </value>
+            <value>
+                <fullName>Motorcycle Driver</fullName>
+                <default>false</default>
+                <label>Motorcycle Driver</label>
+            </value>
+            <value>
+                <fullName>Motorcycle Passenger</fullName>
+                <default>false</default>
+                <label>Motorcycle Passenger</label>
+            </value>
+            <value>
+                <fullName>Taxi Passenger</fullName>
+                <default>false</default>
+                <label>Taxi Passenger</label>
+            </value>
+            <value>
+                <fullName>Bus/Transit Passenger</fullName>
+                <default>false</default>
+                <label>Bus/Transit Passenger</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-12-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-12-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public with sharing class LeadsPerMonthReportCtlr {
     @AuraEnabled
     public static Lead getSampleLead()
@@ -10,7 +20,7 @@ public with sharing class LeadsPerMonthReportCtlr {
         return LFSR;
     }    
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -19,7 +29,7 @@ public with sharing class LeadsPerMonthReportCtlr {
             
             psr.End_date__c = endDt;
             psr.Start_Date__c = startDt;
-            psr.Business_Unit__c = businessUnit;
+            psr.Business_Unit__c = String.join(businessUnit, '|');
             
             upsert psr; 
         }catch(Exception ex){
@@ -28,7 +38,7 @@ public with sharing class LeadsPerMonthReportCtlr {
         }
     }
     @AuraEnabled
-    public static List<wrapperClass> getLeadsByMonth(String startDate, String endDate, String businessUnit) {
+    public static List<wrapperClass> getLeadsByMonth(String startDate, String endDate, List<String> businessUnit) {
         
         Date startDt = Date.valueOf(startDate);
         Date endDt = Date.valueOf(endDate);
@@ -36,10 +46,11 @@ public with sharing class LeadsPerMonthReportCtlr {
         List<wrapperClass> result = new List<wrapperClass>();
         Set<String> months = new Set<String>();
         
-        List<Lead> leads = Database.query(
-            ' SELECT Created_Month__c, IsConverted, Id, Business_Unit__c FROM Lead Where Business_Unit__c LIKE \'%'+(businessUnit == 'Consolidated' ? '' : businessUnit)+'%\''+
-            ' AND CreatedDate >= :startDt and CreatedDate<= :endDt '
-        );        
+        String query = ' SELECT Created_Month__c, IsConverted, Id, Business_Unit__c FROM Lead WHERE';
+        query += (businessUnit.isEmpty()) ? '' : ' Business_Unit__c IN :businessUnit AND';
+        query += ' CreatedDate >= :startDt and CreatedDate<= :endDt ';
+
+        List<Lead> leads = Database.query(query);        
         Map<String, List<Lead>> leadsByMonth = new Map<String, List<Lead>>();
         Map<String, List<Lead>> convertedLeadsByMonth = new Map<String, List<Lead>>();
         for(lead ld : leads){
@@ -58,14 +69,13 @@ public with sharing class LeadsPerMonthReportCtlr {
             }
         }
         
-        List<Drawdown__c> drawdowns = Database.query(
-            'SELECT Created_Month__c, Amount__c, Opportunity__r.Account.Business_Unit__c FROM Drawdown__c WHERE ' +
-            '( Payment_Method__c = \'Cheque\' OR Payment_Method__c =\'e-Transfer\' OR '+
-            'Payment_Method__c = \'Admin Fee\' OR Reference_Notes__c = \'Admin Fee\' OR Reference_Notes__c = \'Assessment Fee\') '+
-            ' AND Is_Rejected__c = false' +
-            ' AND Opportunity__r.Account.Business_Unit__c LIKE \'%'+(businessUnit == 'Consolidated' ? '' : businessUnit)+'%\' '+
-            ' AND Date__c >= :startDt and Date__c<= :endDt and Opportunity__r.StageName = \'Closed with Loan\' '
-        );        
+        String query2 = 'SELECT Created_Month__c, Amount__c, Opportunity__r.Account.Business_Unit__c FROM Drawdown__c WHERE ';
+        query2 += '( Payment_Method__c = \'Cheque\' OR Payment_Method__c =\'e-Transfer\' OR ';
+        query2 += 'Payment_Method__c = \'Admin Fee\' OR Reference_Notes__c = \'Admin Fee\' OR Reference_Notes__c = \'Assessment Fee\') ';
+        query2 += ' AND Is_Rejected__c = false';
+        query2 += businessUnit.isEmpty() ? '' : ' AND Opportunity__r.Account.Business_Unit__c IN :businessUnit';
+        query2 += ' AND Date__c >= :startDt and Date__c<= :endDt and Opportunity__r.StageName = \'Closed with Loan\' ';
+        List<Drawdown__c> drawdowns = Database.query(query2);
         
         Map<String, List<Drawdown__c>> drawdownsByMonth = new Map<String, List<Drawdown__c>>();        
         for(Drawdown__c dd : drawdowns){

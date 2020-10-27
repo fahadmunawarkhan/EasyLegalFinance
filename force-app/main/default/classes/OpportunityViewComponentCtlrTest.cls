@@ -390,7 +390,7 @@ public class OpportunityViewComponentCtlrTest {
         //System.assertEquals(null, clientOpportunity.Accrued_Interest_as_of_Reserve_Date__c);
 
         Test.stopTest();
-    }    
+    }   
     public static testMethod void needAsyncDeleteTest() {        
         Opportunity clientOpportunity = [SELECT Id FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];        
         Test.startTest();
@@ -404,5 +404,5 @@ public class OpportunityViewComponentCtlrTest {
         Test.startTest();        
 		OpportunityViewComponentCtlr.deleteDrawdownAsync(d.Id, clientOpportunity.AccountId);
         Test.stopTest();
-    }        
+    }            
 }

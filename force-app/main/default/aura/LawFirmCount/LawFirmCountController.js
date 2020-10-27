@@ -21,19 +21,47 @@
         component.set("v.query", strQuery); 
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
-        helper.setDefaultDates(component);
-        helper.setBusinessUnitFilter(component);
-        helper.getViewUrl(component);
-        helper.getLawfirmList(component,event);
-        
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity','Type_Of_Loan__c','typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.setDefaultBussinessUnit(component);
+        helper.setDefaultTypeOfLoan(component);
+
+        helper.setDefaultDates(component).then($A.getCallback(function(result){
+            helper.setBusinessUnitFilter(component);
+            helper.getViewUrl(component);
+            helper.getViewUrlViewAll(component);
+            helper.getLawfirmList(component,event);
+        })).catch(
+            (errors) => {
+                helper.errorsHandler(errors);
+                component.set('v.spinner', false);
+            }
+        );
 	},
 
     searchButton: function(component, event, helper) {
-        component.set("v.recordSelected", false);
-        helper.getLawfirmList(component,event);
-        helper.setBusinessUnitFilter(component);
-        helper.getViewUrl(component);
+        helper.validation(component, 'businessunitMS').then($A.getCallback(function(result){
+            return helper.validation(component, 'typeOfLoanMS');
+        })).then($A.getCallback(
+            function(){
+                component.set("v.recordSelected", false);
+                helper.getLawfirmList(component,event);
+                helper.setBusinessUnitFilter(component);
+                helper.getViewUrl(component);
+            }
+        )).then($A.getCallback(function(result){
+            helper.getViewUrlViewAll(component);
+        })).then($A.getCallback(function(result){
+            helper.SaveCustomSettings(component);
+        })).catch(
+            (errors) => {
+                helper.errorsHandler(errors);
+                component.set('v.spinner', false);
+            }
+        );
+    },
+    closeWarning : function(component, event, helper){        
+        component.set('v.showWarning', false);
     },
     sort: function(component, event, helper) {  
         
@@ -48,7 +76,7 @@
         component.set('v.sortOrder',sortOrder);
         component.set("v.recordSelected", false);
         
-        helper.getLawyersList(component,event);         
+        helper.getLawfirmList(component,event);         
 	},
     check:function(component, event, helper) {
         helper.check(component, event);

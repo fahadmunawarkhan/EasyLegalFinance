@@ -1,3 +1,13 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-12-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-12-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public class LeadsPerMonthReportPrintController {
     public List<LeadsPerMonthReportCtlr.wrapperClass> data{get; private set;}
     public Actual_Sales_by_Month_Report__c LFSR{get;set;}
@@ -9,7 +19,12 @@ public class LeadsPerMonthReportPrintController {
 	public LeadsPerMonthReportPrintController()
     {
         LFSR = Actual_Sales_by_Month_Report__c.getOrgDefaults();
-        data = LeadsPerMonthReportCtlr.getLeadsByMonth(LFSR.start_Date__c+'',LFSR.End_Date__c+'',LFSR.Business_Unit__c);
+        List<String> businessUnit = new List<String>();
+        for(String bu : LFSR.Business_Unit__c.replace('|', ',').split(',')){
+            String bunit = bu.replace('\'', '');
+            businessUnit.add(bunit);
+        }
+        data = LeadsPerMonthReportCtlr.getLeadsByMonth(LFSR.start_Date__c+'',LFSR.End_Date__c+'',businessUnit);
         
         Count = 0;
         ConvertedCount = 0;
