@@ -404,5 +404,22 @@ public class OpportunityViewComponentCtlrTest {
         Test.startTest();        
 		OpportunityViewComponentCtlr.deleteDrawdownAsync(d.Id, clientOpportunity.AccountId);
         Test.stopTest();
+    }
+    public static testMethod void createFeesTest() {        
+        Opportunity clientOpportunity = [SELECT AccountId FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        Test.startTest();        
+        OpportunityViewComponentCtlr.createFees(clientOpportunity.Id);
+        Test.stopTest();
+        clientOpportunity = [SELECT VR_Fees_Generating_In_Progress__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        System.assertEquals(false, clientOpportunity.VR_Fees_Generating_In_Progress__c);
+    }      
+    public static testMethod void checkAreFeesGeneratedTest() {        
+        Opportunity clientOpportunity = [SELECT VR_Fees_Generating_In_Progress__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
+        clientOpportunity.VR_Fees_Generating_In_Progress__c = true;
+        update clientOpportunity;
+        Test.startTest();        
+        Opportunity opp = OpportunityViewComponentCtlr.checkAreFeesGenerated(clientOpportunity.Id);
+        System.assertEquals(true, opp.VR_Fees_Generating_In_Progress__c);
+        Test.stopTest();                
     }            
 }

@@ -673,5 +673,10 @@ public class OpportunityViewComponentCtlr {
         opp.VR_Fees_Generating_Start_Time__c = DateTime.now();
         update opp;
         System.enqueueJob(new CreateFeesForOppQueueable(oppId));                
+    }    
+    @AuraEnabled
+    public static Opportunity checkAreFeesGenerated(String oppId){
+        Opportunity opp = [select Id, VR_Fees_Generating_In_Progress__c from Opportunity where Id=:oppId];
+        return opp;        
     }        
 }
