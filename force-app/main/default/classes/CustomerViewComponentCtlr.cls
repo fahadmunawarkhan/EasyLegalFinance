@@ -417,8 +417,10 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         
         opp = getSingleOpportunity(oppId);
         opp.Temp_Payment_Received__c = 0;   
-        opp.Stage_Status__c = 'Active - Partial Payment';
-        opp.Loan_Status__c = 'Active - Partial Payment';
+        if (opp.Stage_Status__c != 'Active - Collections'){
+            opp.Stage_Status__c = 'Active - Partial Payment';
+            opp.Loan_Status__c = 'Active - Partial Payment';
+        }
         update opp;
         
         return new List<Drawdown__c>{dd};
@@ -1724,6 +1726,24 @@ return allOpts;*/
     @AuraEnabled 
     public static List<PaymentSummaryItem> getLastPaymentSummaryItems(String accountId, List<Id> paymentIds){
         return PaymentSummaryItemHelper.getLastPaymentSummaryItems(accountId, paymentIds);
+	}    
+
+    @AuraEnabled 
+    public static List<PaymentDetailsInfo> getPaymentItems(String accountId){
+        List<PaymentDetailsInfo> result = PaymentSummaryItemHelper.getPaymentDetails(accountId);                       
+        return result;
+	}
+	@AuraEnabled 
+    public static void linkPayments(String accountId, List<String> drawdownIds, Decimal balance){
+        Payment__c payment = new Payment__c();
+        payment.FV_at_Payout_Date__c = balance;
+        payment.Account__c = accountId;
+        insert payment;
+        List<Drawdown__c> drawdowns = [select Id, Payment__c from Drawdown__c where Id in :drawdownIds];
+        for (Drawdown__c drawdown : drawdowns){
+            drawdown.Payment__c = payment.Id;
+		}
+        update drawdowns;        
 	}    
 
     public Class ApprovalHistoryWrapper{

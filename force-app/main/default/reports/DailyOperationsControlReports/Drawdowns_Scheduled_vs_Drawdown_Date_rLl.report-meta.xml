@@ -7,6 +7,9 @@
         <field>ACCOUNT_NUMBER</field>
     </columns>
     <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
@@ -24,11 +27,22 @@
     <description>Loans on which Drawdown Date is not same as scheduled date.</description>
     <filter>
         <criteriaItems>
-            <column>FK_$Drawdown__c.Date__c</column>
-            <columnToColumn>true</columnToColumn>
+            <column>STAGE_NAME</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Closed With Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Active,Active - Partial Payment,Active - Collections,Active - Contingent Loan</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Type_of_Loan__c</column>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
-            <value>00N0L000006Zg1f</value>
+            <value>Facility Loan,Treatment Loan 2</value>
         </criteriaItems>
     </filter>
     <format>Tabular</format>

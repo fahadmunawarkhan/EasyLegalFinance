@@ -15,20 +15,53 @@
         let strQuery = "SELECT " + fieldSet.join(",");
             strQuery += " FROM Contact WHERE RecordType.Name = \'Lawyers\'";
         component.set("v.query", strQuery);        
-        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions');
+        helper.getPickListValues(component, 'Account','Business_Unit__c','businessUnitOptions', 'selectedBusinessUnitFilter');
+        helper.getPickListValues(component, 'Opportunity', 'Type_of_Loan__c', 'typeOfLoanOptions', 'selectedTypeOfLoanFilter');
+        helper.setDefaultBussinessUnit(component);
+        helper.setDefaultTypeOfLoan(component);
         helper.getCalendarMin(component);
         helper.getCalendarMax(component);
-        helper.setDefaultDates(component);
-        helper.getLawyersList(component,event);
-        helper.setDefaultDates(component);
-        helper.setBusinessUnitFilter(component);
-        helper.getViewUrl(component);
-        
+        helper.setDefaultDatesEndStart(component).then($A.getCallback(
+            function(result){
+                helper.getLawyersList(component,event);
+                helper.setDefaultDates(component);
+                helper.setBusinessUnitFilter(component);
+                helper.getViewUrl(component);
+                helper.getViewUrlAll(component);
+            }
+        )).catch(
+            (errors) => {
+                helper.errorsHandler(errors);
+                component.set('v.spinner', false);
+            }
+        );
 	},
     searchButton: function(component, event, helper) {
-        helper.getLawyersList(component,event);
-        helper.setBusinessUnitFilter(component);
-        helper.getViewUrl(component);
+        helper.validation(component, 'businessunitMS').then($A.getCallback(function(result){
+            return helper.validation(component, 'typeOfLoanMS');
+        })).then($A.getCallback(
+            function(result){
+                helper.getLawyersList(component,event);
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.setBusinessUnitFilter(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                return helper.saveCustomSettings(component);
+            }
+        )).then($A.getCallback(
+            function(result){
+                helper.getViewUrl(component);
+                helper.getViewUrlAll(component);
+            }
+        )).catch(
+            (errors) => {
+                helper.errorsHandler(errors);
+                component.set('v.spinner', false);
+            }
+        );
     },
     sort: function(component, event, helper) {  
         

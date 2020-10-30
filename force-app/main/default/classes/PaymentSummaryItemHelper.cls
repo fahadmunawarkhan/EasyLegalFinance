@@ -102,8 +102,7 @@ public class PaymentSummaryItemHelper {
         }
 
         DateTime dt = DateTime.newInstance(drawdown.Date__c.year(), drawdown.Date__c.month(), drawdown.Date__c.day());
-        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');                            
-        
+        paymentSummaryItem.paymentDateString = dt.format('dd-MMM-yy');                                    
         return paymentSummaryItem;
     }
     
@@ -209,6 +208,7 @@ public class PaymentSummaryItemHelper {
         paymentSummaryItem.paymentDate = payment.Date__c;
         paymentSummaryItem.opportunityName = oppName;
         paymentSummaryItem.wireFee = payment.Wire_Fee__c;
+        paymentSummaryItem.referenceNotes = payment.Reference_Notes__c;
         if (reserveAmount != null)
             paymentSummaryItem.reserve = reserveAmount;
         DateTime dt = DateTime.newInstance(payment.Date__c.year(), payment.Date__c.month(), payment.Date__c.day());
@@ -247,10 +247,9 @@ public class PaymentSummaryItemHelper {
 	public static List<PaymentSummaryItem> getPaymentSummaryItems(String accountId){
         List<Opportunity> opps = [select Name, Loan_Requests__c, Is_Reserve_Applied__c, Stop_Interest__c, Reserve_Amount_Without_Clearing__c, Opportunity_Long_Name__c, Account.AccountNumber, Reserve_Date__c,
                                   Outstanding_Balance_as_of_Reserve_Date__c, Interest_Accrued_as_of_Reserve_Date__c, Principal_Advanced_To_Reserve_Date__c from Opportunity where AccountId=:accountId order by Loan_Requests__c asc];
-        Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>(opps);
         List<PaymentSummaryItem> paymentSummaryItems = new List<PaymentSummaryItem>();        
         List<Drawdown__c> drawdownList = [SELECT Amount__c, Total_Amount__c, Reference_Notes__c, Date__c, Opportunity__c, Payment_Method__c, Principal_Repaid__c, Include_in_Principal__c,
-                                      	  Interest_Repaid__c, Wire_Fee__c FROM Drawdown__c where (Payment_Method__c='Payment' or Reference_Notes__c='Refund') and Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc, Name asc ];  
+                                      	  Interest_Repaid__c, Wire_Fee__c FROM Drawdown__c where Opportunity__r.AccountId =: accountId order by Opportunity__r.Loan_Requests__c asc, Date__c asc, Name asc ];  
         return getPaymentSummaryItemsWithReserve(opps, drawdownList);
     }
     public static List<PaymentSummaryItem> getLastPaymentSummaryItems(String accountId, List<Id> paymentIds){
@@ -261,5 +260,118 @@ public class PaymentSummaryItemHelper {
                 items.add(item);
         }
         return items;
-    }	         
+    }
+    public static List<PaymentDetailsInfo> getPaymentDetails(List<Drawdown__c> drawdowns){
+        List<PaymentDetailsInfo> paymentDetails = new List<PaymentDetailsInfo>();
+        List<PaymentDetailsInfo> additionalPayments = new List<PaymentDetailsInfo>();
+        for (Drawdown__c d : drawdowns){
+            if (d.Payment_Method__c=='Payment' && (d.Reference_Notes__c=='Partial Payment' || d.Reference_Notes__c=='Loan Payout' || d.Reference_Notes__c=='Payment Surplus'
+                                                  || d.Reference_Notes__c=='Payment Shortfall' || d.Reference_Notes__c=='Bad Debt' || d.Reference_Notes__c=='Client Rebate'
+                                                  || d.Reference_Notes__c=='Bad Debt Recovery')
+               									|| d.Reference_Notes__c=='Refund'){
+                if (d.Reference_Notes__c!='Payment Surplus'){
+                    PaymentDetailsInfo info = new PaymentDetailsInfo();
+                    info.id = d.Id;
+                    info.opportunityId = d.Opportunity__c;
+                    info.referenceNotes = d.Reference_Notes__c;
+                    info.amount = d.Amount__c;
+                    info.paymentDate = d.Date__c;
+                    info.chequeNumber = d.CHQ__c;
+                    info.principal = d.Principal_Repaid__c;
+                    info.interest = d.Interest_Repaid__c;
+                    info.opportunityName = d.Opportunity__r.Name;
+                    info.fvAtPayoutDate = d.Is_Reserve_Applied__c ? d.Opportunity__r.FV_at_Freeze_Date__c : d.Payment__r.FV_at_Payout_Date__c;
+                    info.paymentId = d.Payment__c;
+                    if (d.Wire_Fee__c != null)
+                        info.wireFee = d.Wire_Fee__c;
+                    if (info.referenceNotes == 'Partial Payment' || info.referenceNotes == 'Loan Payout')
+                        paymentDetails.add(info);
+                    else
+                    	additionalPayments.add(info);
+                }
+                else if (d.Reference_Notes__c=='Payment Surplus'){
+                    paymentDetails[paymentDetails.size()-1].amount += d.Amount__c;
+                    paymentDetails[paymentDetails.size()-1].surplus = d.Amount__c;
+                }
+            }
+		}
+        appendAdditionalPayments(paymentDetails, additionalPayments);
+        return groupPaymentDetails(paymentDetails);
+    }
+    public static void appendAdditionalPayments(List<PaymentDetailsInfo> paymentDetails, List<PaymentDetailsInfo> additionalPayments){
+        for (Integer i=0; i < additionalPayments.size(); i++){
+            PaymentDetailsInfo additionalPaymentDetails = additionalPayments[i];            
+            for (Integer j = paymentDetails.size() - 1; j >= 0; j--){
+                if (additionalPaymentDetails.opportunityId==paymentDetails[j].opportunityId &&                     
+                     (paymentDetails[j].referenceNotes == 'Partial Payment' || paymentDetails[j].referenceNotes == 'Loan Payout')){
+                         if (additionalPaymentDetails.referenceNotes == 'Client Rebate' && additionalPaymentDetails.paymentDate==paymentDetails[j].paymentDate){                    
+                            paymentDetails[j].amount += additionalPaymentDetails.amount;
+                            paymentDetails[j].clientRebate = additionalPaymentDetails.amount;
+                            break;
+                         }
+                         else if (additionalPaymentDetails.referenceNotes != 'Client Rebate'){
+                             if (additionalPaymentDetails.referenceNotes=='Payment Shortfall')
+                                 paymentDetails[j].shortfall = additionalPaymentDetails.amount;
+                             if (additionalPaymentDetails.referenceNotes=='Bad Debt')
+                                 paymentDetails[j].badDebt = additionalPaymentDetails.amount;                    
+                             if (additionalPaymentDetails.referenceNotes=='Bad Debt Recovery')
+                                 paymentDetails[j].badDebtRecovery = additionalPaymentDetails.amount;       
+                             if (additionalPaymentDetails.referenceNotes=='Refund')
+                                 paymentDetails[j].refund = additionalPaymentDetails.amount;                                                            
+                             break;
+                         }
+                }
+            }
+        }        
+    }
+    public static List<PaymentDetailsInfo> groupPaymentDetails(List<PaymentDetailsInfo> paymentDetailsList){
+        List<PaymentDetailsInfo> groupedPaymentDetailsList = new List<PaymentDetailsInfo>();
+        Set<Integer> processedIndexes = new Set<Integer>();
+        for (Integer i=0; i < paymentDetailsList.size(); i++){ 
+            if (processedIndexes.contains(i))
+                continue;
+            PaymentDetailsInfo info1 = paymentDetailsList[i];            
+            List<PaymentDetailsInfo> listToCombine = new List<PaymentDetailsInfo>{info1};
+            for (Integer j=i+1; j < paymentDetailsList.size(); j++){
+               PaymentDetailsInfo info2 = paymentDetailsList[j];
+               if ( info1.paymentDate == info2.paymentDate && ((info1.chequeNumber == info2.chequeNumber && info1.chequeNumber != null) || 
+                                                               (info1.paymentId == info2.paymentId && info1.paymentId != null)) ){
+                    processedIndexes.add(j);                                               
+               		listToCombine.add(info2);                                                                                                                                      
+               }               
+            }
+            groupedPaymentDetailsList.add(listToCombine.get(0));
+            if (listToCombine.size() > 1){
+                for (Integer k = 1; k < listToCombine.size(); k++){                    
+                    listToCombine.get(0).amount += listToCombine.get(k).amount;                    
+                    listToCombine.get(0).principal += listToCombine.get(k).principal;                    
+                    listToCombine.get(0).interest += listToCombine.get(k).interest;
+                    listToCombine.get(0).surplus = appendValue(listToCombine.get(0).surplus, listToCombine.get(k).surplus);
+                    listToCombine.get(0).shortfall = appendValue(listToCombine.get(0).shortfall, listToCombine.get(k).shortfall);
+                    listToCombine.get(0).clientRebate = appendValue(listToCombine.get(0).clientRebate, listToCombine.get(k).clientRebate);
+                    listToCombine.get(0).refund = appendValue(listToCombine.get(0).refund, listToCombine.get(k).refund);
+                    listToCombine.get(0).badDebt = appendValue(listToCombine.get(0).badDebt, listToCombine.get(k).badDebt);
+                    listToCombine.get(0).badDebtRecovery = appendValue(listToCombine.get(0).badDebtRecovery, listToCombine.get(k).badDebtRecovery);
+                    listToCombine.get(0).wireFee = appendValue(listToCombine.get(0).wireFee, listToCombine.get(k).wireFee);
+				}
+            }
+		}
+        return groupedPaymentDetailsList;
+    }
+    private static Decimal appendValue(Decimal value, Decimal appendedValue){
+        if (appendedValue == null)
+            return value;
+        if (value != null)
+            return value + appendedValue;
+        return appendedValue;
+    }
+    public static List<PaymentDetailsInfo> getPaymentDetails(String accountId){
+        List<PaymentSummaryItem> paymentSummaryItems = new List<PaymentSummaryItem>();        
+        
+        List<Drawdown__c> drawdownList = [SELECT Amount__c, CHQ__c, Total_Amount__c, Reference_Notes__c, Date__c, Opportunity__c, Payment_Method__c, 
+                                          Principal_Repaid__c, Include_in_Principal__c, Interest_Repaid__c, Wire_Fee__c, Opportunity__r.Name, Payment__c, 
+                                          Is_Reserve_Applied__c, Opportunity__r.FV_at_Freeze_Date__c, Payment__r.FV_at_Payout_Date__c 
+                                          FROM Drawdown__c where  Opportunity__r.AccountId =: accountId order by Date__c asc, Opportunity__r.Loan_Requests__c asc, Name asc  ];  
+        return getPaymentDetails(drawdownList);
+    }
 }

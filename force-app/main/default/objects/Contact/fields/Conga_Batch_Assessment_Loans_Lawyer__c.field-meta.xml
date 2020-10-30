@@ -4,11 +4,9 @@
     <externalId>false</externalId>
     <formula>&quot;&amp;solmgr=1&quot; &amp;
 &quot;&amp;id=&quot; &amp; Id &amp; 
-&quot;&amp;queryid=&quot; &amp; IF($Setup.Assessment_Summary_Report__c.Business_Unit__c = &quot;ELFI&quot; , &quot;[LawyerActiveClient]a0p0L00000KAmx2QAD&quot;, &quot;[LawyerActiveClient]a0p0L00000KAmxHQAT&quot;)
-&amp; &quot;?pv0=&quot; &amp; Id &amp;
-
-&quot;,[aggregate]&quot; &amp; IF($Setup.Assessment_Summary_Report__c.Business_Unit__c = &quot;ELFI&quot; , &quot;a0p0L00000KAmy0QAD&quot;, &quot;a0p0L00000KAmxMQAT&quot;)
-&amp;&quot;&amp;%3Fpv0%3D=&quot; &amp; Id &amp;
+&quot;&amp;queryid=[LawyerActiveClient]a0p0L00000KAmx2QAD&quot; 
+&amp; &quot;?pv0=&quot; &amp; Id 
+&amp; &quot;~pv1%3D&quot;&amp; IF($Setup.Assessment_Summary_Report__c.Business_Unit__c  = &quot;Consolidated&quot;, &quot;&quot;, $Setup.Assessment_Summary_Report__c.Business_Unit__c) &amp;
 
 &quot;&amp;templateid=&quot; &amp;  IF($Setup.Assessment_Summary_Report__c.Business_Unit__c  = &quot;Rhino&quot;, &quot;a0x0L00000PEzSPQA1&quot;, &quot;a0x0L00000PEzSUQA1&quot;) &amp;
 

@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Conga_Formula_Per_Diem__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( ISPICKVAL(Payment_Method__c, &#39;Payment&#39;) , 0, Total_Per_Diem__c)</formula>
+    <formula>IF( ISPICKVAL(Payment_Method__c, &apos;Payment&apos;) , 0, Total_Per_Diem__c)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Conga Formula Per Diem</label>
     <precision>18</precision>

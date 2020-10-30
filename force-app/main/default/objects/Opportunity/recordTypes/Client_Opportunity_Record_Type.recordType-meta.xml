@@ -61,6 +61,13 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Bad_Debt_Reason__c</picklist>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Compounding_Interest__c</picklist>
         <values>
             <fullName>Annual</fullName>
@@ -133,6 +140,25 @@
         <values>
             <fullName>Fixed Amount</fullName>
             <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Fee_Type__c</picklist>
+        <values>
+            <fullName>Admin Fee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Fee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Variable Fee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waived Fee</fullName>
+            <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
@@ -246,6 +272,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Cayuga Mutual Insurance Company</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Certas</fullName>
             <default>false</default>
         </values>
@@ -270,6 +300,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Desjardins Financial Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Dominion</fullName>
             <default>false</default>
         </values>
@@ -290,6 +324,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Federated</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Gore</fullName>
             <default>false</default>
         </values>
@@ -307,6 +345,10 @@
         </values>
         <values>
             <fullName>Jevco</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MVACF</fullName>
             <default>false</default>
         </values>
         <values>
@@ -394,6 +436,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Travelers</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Unica</fullName>
             <default>false</default>
         </values>
@@ -441,6 +487,17 @@
         </values>
         <values>
             <fullName>48</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Interest_Rate_Type__c</picklist>
+        <values>
+            <fullName>Simple</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Variable</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -646,6 +703,10 @@
             <fullName>Active</fullName>
             <default>false</default>
         </values>
+        <values>
+            <fullName>Active - Contingent Loan</fullName>
+            <default>false</default>
+        </values>
     </picklistValues>
     <picklistValues>
         <picklist>Loan_Type__c</picklist>
@@ -659,6 +720,18 @@
         </values>
         <values>
             <fullName>12 - Uncategorized</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>13 - Assessment Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>14 - Lawyer Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>15 - Lawyer Loan-Contingency Fee Acceleration</fullName>
             <default>false</default>
         </values>
         <values>
@@ -776,6 +849,17 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Police_Report__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Products_of_Interest__c</picklist>
         <values>
             <fullName>ATE</fullName>
@@ -821,6 +905,10 @@
         </values>
         <values>
             <fullName>Active</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Contingent Loan</fullName>
             <default>false</default>
         </values>
         <values>
@@ -904,6 +992,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Invoice Pre-Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Legal Representative Declined</fullName>
             <default>false</default>
         </values>
@@ -933,6 +1025,17 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Statement_of_Defense__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Type</picklist>
         <values>
             <fullName>Existing Business</fullName>
@@ -951,6 +1054,14 @@
         </values>
         <values>
             <fullName>Facility Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lawyer Loan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lawyer Loan-Contingency Fee Acceleration</fullName>
             <default>false</default>
         </values>
         <values>

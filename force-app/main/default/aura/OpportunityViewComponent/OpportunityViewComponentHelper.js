@@ -43,8 +43,10 @@
                                                                 
                     //set restrictCommunication
                     component.set("v.restrictCommunication", component.get("v.oppObj").Restrict_Communication__c? 'Yes' : 'No');
+
                     component.set("v.canUpdateStageStatus", component.get("v.oppObj").Stage_Status__c != undefined && component.get("v.oppObj").StageName == 'Closed With Loan' && (component.get("v.oppObj").Stage_Status__c.includes('Closed') || component.get("v.oppObj").Stage_Status__c.includes('Active')) && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
                     component.set("v.canUpdateStageName", component.get("v.oppObj").StageName == 'Closed With Loan' && !component.get("v.currentUser").Can_Change_Opportunity_Status__c? false : true);
+                    
                     self.firePaymentsChangedEvent(component);
                     resolve(true);
                     
@@ -64,6 +66,42 @@
             
         }));
                 
+    },
+    getAccountInfo : function(component){
+        return new Promise($A.getCallback( function(resolve, reject){
+            var accountId = component.get("v.accountId");
+            var action = component.get('c.getAccountDetails');             
+            action.setParams(
+                {
+                    AccId: accountId
+                });
+            
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                console.log("statis uis " + state);
+                if (state === 'SUCCESS') {
+                    let result = response.getReturnValue();
+                    component.set("v.accObj", result);
+                    let AccObj = result;
+                    if(AccObj.Total_Amount_Loaned__c > 0 && AccObj.Projected_Loan_Value__c > 0){
+                        if(AccObj.Total_Amount_Loaned__c / AccObj.Projected_Loan_Value__c > 0.15){
+                            component.set("v.LTVCheck", true);
+                        }
+                    }
+                } else if (state === 'ERROR') {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            self.errorsHandler(errors)
+                        }
+                    } else {
+                        self.unknownErrorsHandler();
+                    }
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }));
     },
     validateRequired : function(component, Id) {
         var inputCmp = component.find(Id);
