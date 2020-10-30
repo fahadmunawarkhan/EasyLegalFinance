@@ -142,7 +142,7 @@ public with sharing class DrawdownTriggerHandlerTest {
         System.assertEquals(true, clientOpportunity.Client_Rebate_Applied__c);
         
         Test.stopTest();
-    }    
+    }
 	public static testMethod void rejectPaymentFromClientNSFChequeTest(){
         Opportunity clientOpportunity = [SELECT Id,Name,Primary_Contact__c FROM Opportunity WHERE Name = 'Test Opportunity' LIMIT 1];
         List<Drawdown__c> dlistOriginal = new List<Drawdown__c>();
@@ -203,7 +203,7 @@ public with sharing class DrawdownTriggerHandlerTest {
         rejection.Date__c = payments[0].Date__c;
         rejection.Amount__c = payments[0].Amount__c;        
         rejection.CHQ__c = '123';
-        rejection.Reason_to_Reverse_Payment_NSF__c = 'ELFI Error';
+        rejection.Reason_to_Reverse_Payment_NSF__c = 'Other';
         rejection.Payment_Method__c = 'Other';
         rejection.Reference_Notes__c = 'Payment to Client';
         rejection.Opportunity_Service_Provider__c = null;

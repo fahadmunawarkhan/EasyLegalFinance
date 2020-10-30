@@ -7,32 +7,14 @@
         <field>ACCOUNT</field>
     </columns>
     <columns>
-        <field>OPPORTUNITY</field>
-    </columns>
-    <columns>
-        <field>CONTACT</field>
-    </columns>
-    <columns>
-        <field>LEAD</field>
-    </columns>
-    <columns>
         <field>SUBJECT</field>
-    </columns>
-    <columns>
-        <field>PRIORITY</field>
-    </columns>
-    <columns>
-        <field>STATUS</field>
-    </columns>
-    <columns>
-        <field>TASK</field>
     </columns>
     <filter>
         <criteriaItems>
             <column>ASSIGNED</column>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>,lissette calderon,stephen wong,Karla Torres,Chelsea Williams,Karen Kerr,Susan Nunez</value>
+            <value>,Karla Torres,Chelsea Williams,Karen Kerr,Susan Nunez,Jane Scott,Anthony Songvilay</value>
         </criteriaItems>
     </filter>
     <format>Summary</format>
@@ -63,8 +45,7 @@
     <sortOrder>Asc</sortOrder>
     <timeFrameFilter>
         <dateColumn>DUE_DATE</dateColumn>
-        <endDate>2019-09-03</endDate>
+        <endDate>2020-06-16</endDate>
         <interval>INTERVAL_CUSTOM</interval>
-        <startDate>2019-05-01</startDate>
     </timeFrameFilter>
 </Report>

@@ -16,6 +16,9 @@
         <field>Drawdown__c$Opportunity__c.Loan_Requests__c</field>
     </columns>
     <columns>
+        <field>Drawdown__c$Opportunity__c.Rhino_Loan_Number__c</field>
+    </columns>
+    <columns>
         <field>Drawdown__c$Name</field>
     </columns>
     <columns>
@@ -107,21 +110,18 @@
     <filter>
         <criteriaItems>
             <column>Drawdown__c$Accrued_Interest_In_Reporting_Period__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>false</isUnlocked>
             <operator>greaterOrEqual</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c$Outstanding_Balance_as_of_To_Date__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>false</isUnlocked>
             <operator>greaterThan</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>Drawdown__c$Reporting_To_Date__c</column>
-            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>lessOrEqual</operator>
             <value>12/31/2020</value>

@@ -68,7 +68,7 @@ public with sharing class LoanSimulatorController {
 	* @return List<Payment__c> List of payments to create
 	**/
 	private static Account createAccount(Id recordTypeId,String accountName){
-		Account account  =  new Account(Name = accountName, Authorization_Clause__c = 'No', RecordTypeId = recordTypeId,Phone='123456789');
+		Account account  =  new Account(Name = accountName, Authorization_Clause__c = 'No', RecordTypeId = recordTypeId,Phone='123456789', Conversion_Flag__c = true);
         insert account;        
         
 		return account;

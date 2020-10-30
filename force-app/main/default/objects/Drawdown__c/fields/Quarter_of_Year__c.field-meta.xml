@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Quarter_of_Year__c</fullName>
     <externalId>false</externalId>
-    <formula>&#39;Q&#39;+TEXT(CEILING( MONTH ( Date__c ) / 3 ))</formula>
+    <formula>&apos;Q&apos;+TEXT(CEILING( MONTH ( Date__c ) / 3 ))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Quarter of Year</label>
     <required>false</required>

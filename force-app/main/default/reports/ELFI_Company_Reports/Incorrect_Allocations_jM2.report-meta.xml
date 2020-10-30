@@ -7,6 +7,12 @@
         <field>OPPORTUNITY_NAME</field>
     </columns>
     <columns>
+        <field>Opportunity.File_No__c</field>
+    </columns>
+    <columns>
+        <field>Account.Business_Unit__c</field>
+    </columns>
+    <columns>
         <field>STAGE_NAME</field>
     </columns>
     <columns>
@@ -36,6 +42,12 @@
             <operator>notEqual</operator>
             <value>0</value>
         </criteriaItems>
+        <criteriaItems>
+            <column>Opportunity.Stage_Status__c</column>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>Closed - Surplus</value>
+        </criteriaItems>
     </filter>
     <format>Tabular</format>
     <name>Incorrect Allocations</name>
@@ -58,6 +70,6 @@
     <showSubTotals>true</showSubTotals>
     <timeFrameFilter>
         <dateColumn>CLOSE_DATE</dateColumn>
-        <interval>INTERVAL_CURRENT</interval>
+        <interval>INTERVAL_CUSTOM</interval>
     </timeFrameFilter>
 </Report>

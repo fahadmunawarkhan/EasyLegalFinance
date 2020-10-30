@@ -7,7 +7,7 @@
 NOT(ISBLANK(Opportunity_Service_Provider__c)),
 ISCHANGED(Amount__c),
 Amount__c &gt; Service_Provider_Allowed_Balance__c,
-NOT( ISPICKVAL( Payment_Method__c , &#39;Payment&#39;) )
+NOT( ISPICKVAL( Payment_Method__c , &apos;Payment&apos;) )
 )</errorConditionFormula>
     <errorMessage>This Service Provider Drawdown record cannot be saved as it will exceed the Service Provider Allowance.</errorMessage>
 </ValidationRule>

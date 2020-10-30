@@ -4,7 +4,7 @@
  * @Author             : ChangeMeIn@UserSettingsUnder.SFDoc
  * @Group              : 
  * @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
- * @Last Modified On   : 29/04/2020, 1:37:00 pm
+ * @Last Modified On   : 08-12-2020
  * @Modification Log   : 
  * Ver       Date            Author      		    Modification
  * 1.0    16/04/2020   ChangeMeIn@UserSettingsUnder.SFDoc     Initial Version
@@ -78,7 +78,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     // ===================================================================================================
 
     @AuraEnabled
-    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, String BusinessUnit, String searchByName, String typeOfLoan, String expiryDateFilter, String statusFilter){
+    public static List<Wrapper> getPPSExpiryLoans(String startDate, String endDate, String field, String direction, List<String> BusinessUnit, String searchByName, List<String> typeOfLoan, String expiryDateFilter, String statusFilter){
         try{
             Date startDt = Date.valueOf(startDate);
             Date endDt = Date.valueOf(endDate);
@@ -91,13 +91,11 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             String ClosedNoLoan = 'Closed No Loan';
 
             String query = '';
-            BusinessUnit = (BusinessUnit != null && !String.isEmpty(BusinessUnit)) ? BusinessUnit : 'ELFI';
-            typeOfLoan = (typeOfLoan != null && !String.isEmpty(typeOfLoan)) ? typeOfLoan : 'Facility Loan';
 
             query = 'SELECT Id';
             query += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
-            query += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
-            query += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
+            query += (BusinessUnit.isEmpty())? '' : ' AND Account.Business_Unit__c IN :BusinessUnit'; 
+            query += (typeOfLoan.isEmpty()) ? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
             query += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
             query += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
             query += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
@@ -115,8 +113,8 @@ public with sharing class PpsaExpiryReportComponentCtrl {
                 String PPSAExpiryQuery = '';
                 PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, AccountId, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c, Stage_Status__c, StageName';
                 PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
-                PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit'; 
-                PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
+                PPSAExpiryQuery += (BusinessUnit.isEmpty())? '' : ' AND Account.Business_Unit__c IN :BusinessUnit'; 
+                PPSAExpiryQuery += (typeOfLoan.isEmpty()) ? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
                 PPSAExpiryQuery += (!String.isEmpty(expiryDateFilter) && expiryDateFilter != null) ? ' AND Date_Financing_Statement_Expires__c = : ExpiryDtFilter' : '';
                 PPSAExpiryQuery += (!String.isEmpty(statusFilter) && statusFilter != null) ? ' AND Stage_Status_Report__c = : statusFilter' : '';
                 PPSAExpiryQuery += !String.isEmpty(searchByName) && searchByName != null ? ' AND (Law_firm__r.name LIKE \'%' + searchByName + '%\')'  : '';
@@ -178,7 +176,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     }
 
     @AuraEnabled
-    public static void saveCustomSettings(String startDate, String endDate, String businessUnit, String typeOfLoan, String searchByName){
+    public static void saveCustomSettings(String startDate, String endDate, List<String> businessUnit, List<String> typeOfLoan, String searchByName){
         system.debug(startDate+ '|' + endDate+ '|' + businessUnit+ '|' + typeOfLoan + '|' +searchByName);
         try{
             Date startDt = Date.valueOf(startDate);
@@ -186,8 +184,8 @@ public with sharing class PpsaExpiryReportComponentCtrl {
             PPSA_Expiry_Summary_Report__c pesr = PPSA_Expiry_Summary_Report__c.getOrgDefaults();
             pesr.End_date__c = endDt;
             pesr.Start_Date__c = startDt;
-            pesr.Business_Unit__c = businessUnit;
-            pesr.Type_of_Loan__c = typeOfLoan;
+            pesr.Business_Unit__c = String.join(businessUnit, '|');
+            pesr.Type_of_Loan__c = String.join(typeOfLoan, '|');
             pesr.Search_By_Name__c = searchByName;
             update pesr; 
         }catch(Exception ex){
@@ -196,7 +194,7 @@ public with sharing class PpsaExpiryReportComponentCtrl {
     }
 
     @AuraEnabled
-    public static SummaryDataWrapper getSummarizeData(String startDate, String endDate, String BusinessUnit, String typeOfLoan){
+    public static SummaryDataWrapper getSummarizeData(String startDate, String endDate, List<String> BusinessUnit, List<String> typeOfLoan){
         Date startDt = Date.valueOf(startDate);
         Date endDt = Date.valueOf(endDate);
         String PPSAExpiryQuery = '';
@@ -210,8 +208,8 @@ public with sharing class PpsaExpiryReportComponentCtrl {
         try{
             PPSAExpiryQuery = 'SELECT Id, Date_Financing_Statement_Expires__c, Primary_Contact__r.FirstName, Primary_Contact__r.LastName, Account.Business_Unit__c, Type_of_Loan__c, Loan_No__c, Stage_Status_Report__c, Registration_Number__c, Days_To_Expire__c';
             PPSAExpiryQuery += ' FROM Opportunity Where (Date_Financing_Statement_Expires__c >= :startDt AND Date_Financing_Statement_Expires__c <= :endDt)';
-            PPSAExpiryQuery += (BusinessUnit == 'Consolidated')? '' : ' AND Account.Business_Unit__c = :BusinessUnit';
-            PPSAExpiryQuery += (String.isEmpty(typeOfLoan) || typeOfLoan == 'Consolidated') ? '' : ' AND Type_of_Loan__c = : typeOfLoan';
+            PPSAExpiryQuery += (BusinessUnit.isEmpty())? '' : ' AND Account.Business_Unit__c IN :BusinessUnit';
+            PPSAExpiryQuery += (typeOfLoan.isEmpty()) ? '' : ' AND Type_of_Loan__c IN :typeOfLoan';
             PPSAExpiryQuery += ' AND (Stage_Status__c != : ClosedPaid AND Stage_Status__c != : ClosedSurplus AND Stage_Status__c != : ClosedShortFall AND StageName != : ClosedNoLoan)';
 
             List<Opportunity> PPSAExpiryListSummary = Database.query(PPSAExpiryQuery);

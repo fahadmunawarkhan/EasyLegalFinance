@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Year_Quarter_Formula__c</fullName>
     <externalId>false</externalId>
-    <formula>TEXT(YEAR(Date_Applied__c)) + &#39; - &#39; +  CASE( MONTH(Date_Applied__c) , 1, &#39;Q1&#39;, 2, &#39;Q1&#39;, 3, &#39;Q1&#39;, 4, &#39;Q2&#39;, 5,&#39;Q2&#39;, 6, &#39;Q2&#39;, 7, &#39;Q3&#39;, 8, &#39;Q3&#39;, 9, &#39;Q3&#39;, 10, &#39;Q4&#39;, 11, &#39;Q4&#39;, 12, &#39;Q4&#39;, NULL)</formula>
+    <formula>TEXT(YEAR(Date_Applied__c)) + &apos; - &apos; +  CASE( MONTH(Date_Applied__c) , 1, &apos;Q1&apos;, 2, &apos;Q1&apos;, 3, &apos;Q1&apos;, 4, &apos;Q2&apos;, 5,&apos;Q2&apos;, 6, &apos;Q2&apos;, 7, &apos;Q3&apos;, 8, &apos;Q3&apos;, 9, &apos;Q3&apos;, 10, &apos;Q4&apos;, 11, &apos;Q4&apos;, 12, &apos;Q4&apos;, NULL)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Year Quarter Formula</label>
     <required>false</required>

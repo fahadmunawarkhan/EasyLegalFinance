@@ -1,0 +1,21 @@
+<aura:component >
+	<aura:attribute name="chequePaymentInfo" type="Object" />
+    <div class="slds-grid">    
+        <div class="slds-col slds-size_5-of-5 slds-text-align_center text-title">
+        	{!v.chequePaymentInfo.description}
+    	</div>
+    </div>
+    <br/>
+    <br/>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-2">
+            <lightning:input type="number" value="{!v.chequePaymentInfo.amount}" label="Cheque Amount" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="date" value="{!v.chequePaymentInfo.paymentDate}" label="Cheque Date" variant="label-inline"/>
+            <lightning:input type="text" value="{!v.chequePaymentInfo.chequeNumber}" label="Cheque#" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.chequePaymentInfo.fvAtPayoutDate}" label="FV at time of payout" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.chequePaymentInfo.principal}" label="Principal" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.chequePaymentInfo.interest}" label="Interest" formatter="currency" step="0.01" variant="label-inline"/>
+            <lightning:input type="number" value="{!v.chequePaymentInfo.surplus}" label="Surplus" formatter="currency" step="0.01" variant="label-inline"/>
+        </div>
+    </div>
+</aura:component>

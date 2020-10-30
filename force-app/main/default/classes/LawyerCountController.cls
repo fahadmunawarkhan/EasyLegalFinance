@@ -1,10 +1,19 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 08-18-2020
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+ * Modifications Log 
+ * Ver   Date         Author                               Modification
+ * 1.0   08-13-2020   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+**/
 public class LawyerCountController {
     /******************* Method to return all lawyers *********************/
     @AuraEnabled
-    public static List<ContactInfo> getLawyersContacts(String strQuery, String LoanFilter, String businessUnitFilter, String startDate, String endDate) {
+    public static List<ContactInfo> getLawyersContacts(String strQuery, String LoanFilter, List<String> businessUnitFilter, List<String> typeofloans, String startDate, String endDate) {
         try{
             LoanFilter = String.isEmpty(LoanFilter) ? 'All' : LoanFilter;
-            businessUnitFilter = String.isEmpty(businessUnitFilter) ? 'ELFI' :businessUnitFilter;
             
             // Initializing the contact variable
             List<ContactInfo> contactInfo = new List<ContactInfo>();
@@ -32,8 +41,10 @@ public class LawyerCountController {
 
             
             strQuery = 'Select Law_Firm_Lawyer__c, Lawyer__c, AccountId, Loan_Available_to_Drawdown__c from Opportunity where Lawyer__c in :contactIds ';
-            strQuery += LoanFilter == 'Active'? ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'' : '';
-            strQuery += (businessUnitFilter == '' || businessUnitFilter == null) ? ' AND Account.Business_Unit__c = \'ELFI\'' : (businessUnitFilter == 'Consolidated' ? ' AND (Account.Business_Unit__c = \'ELFI\' OR Account.Business_Unit__c = \'Rhino\')' : ' AND Account.Business_Unit__c = :businessUnitFilter');
+            strQuery += (typeofloans.isEmpty()) ? '' : ' AND Type_of_Loan__c IN :typeofloans';
+            strQuery += ' AND StageName = \'Closed With Loan\' AND Account.Exclude_from_Payout__c = false AND Drawdown_Total__c > 0 AND Stage_Status__c LIKE \'%Active%\'';
+            // strQuery += LoanFilter == 'Active'? ' AND isClosed = true AND isWon = true AND Stage_Status__c != \'Paid Off\'' : '';
+            strQuery += (businessUnitFilter.isEmpty()) ? '' : ' AND Account.Business_Unit__c IN :businessUnitFilter';
             List<Opportunity> oppties = new List<Opportunity>();
             oppties = Database.query(strQuery);
             System.debug('Oppty: Query: '+strQuery);
@@ -70,7 +81,7 @@ public class LawyerCountController {
         return OpportunityViewComponentCtlr.getPickListValues(objectType, field);
     }
     @AuraEnabled
-    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailBody, String LoanFilter, String businessUnitFilter){       
+    public static Id send(String query, List<String> selectedIds, String payoutDate, String reportDate, String emailBody, String LoanFilter, List<String> businessUnitFilter, List<String> typeofloans){       
         try{
             system.debug('-Here in Send function -');
             system.debug(selectedIds);
@@ -84,11 +95,12 @@ public class LawyerCountController {
             }
             
             Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());        
-            customSettings.Payout_Date_Lawyer_Summary_Report__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date_Lawyer_Summary_Report__c;
-            customSettings.Report_Date_Lawyer_Summary_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Lawyer_Summary_Report__c;
-            customSettings.Business_Unit_Lawyer_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
+            customSettings.Lawyer_Count_Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Lawyer_Count_Payout_Date__c;
+            customSettings.Lawyer_Count_Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Lawyer_Count_Report_Date__c;
+            customSettings.Lawyer_Count_Business_Unit__c = String.join(businessUnitFilter, '|');
             customSettings.Email_Additional_Notes_Lawyer_Summary__c = emailBody;
-            customSettings.Query_Selector_Lawyer_Summary_Report__c = LoanFilter;        
+            customSettings.Query_Selector_Lawyer_Count_Report__c = LoanFilter;
+            customSettings.Lawyer_Count_Type_Of_Loan__c = String.join(typeofloans, '|');        
             
             if(String.isEmpty(customSettings.Conductor_Id_Lawyer_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Lawyer summary conductor query - ' + UserInfo.getName(),
@@ -96,13 +108,13 @@ public class LawyerCountController {
                                                                   APXTConga4__Query__c = query);
                 insert congaQuery;
                 conductor = new APXT_BPM__Conductor__c(APXT_BPM__Title__c = 'Mass Lawyer Summary - ' + UserInfo.getName(), APXT_BPM__Query_Id__c = congaQuery.Id,
-                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary_Send_Email__c');
+                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Count_Send_Email__c');
                 insert conductor;            
                 customSettings.Conductor_Id_Lawyer_Summary_Report__c = conductor.Id;
             }else{
                 conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:customSettings.Conductor_Id_Lawyer_Summary_Report__c];
                 congaQuery = [SELECT Id, APXTConga4__Query__c FROM APXTConga4__Conga_Merge_Query__c WHERE Id =:conductor.APXT_BPM__Query_Id__c];
-                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary_Send_Email__c';
+                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Count_Send_Email__c';
                 update conductor;
                 congaQuery.APXTConga4__Query__c = query;
                 update congaQuery;
@@ -114,9 +126,30 @@ public class LawyerCountController {
             throw new AuraHandledException('Error Message' + e.getMessage()+e.getStackTraceString());
         }
     }
+
+    @AuraEnabled
+    public static void SaveCustomSettings(String startdate, String enddate, String payoutDate, String reportDate, List<String> typeofloans, List<String> businessUnitFilter, String LoanFilter){
+        
+        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
+        customSettings.Lawyer_Count_Start_Date__c = (!String.isEmpty(startdate) || startdate != null) ? Date.valueOf(startdate) : customSettings.Lawyer_Count_Start_Date__c;
+        customSettings.Lawyer_Count_End_Date__c = (!String.isEmpty(enddate) || enddate != null) ? Date.valueOf(enddate) : customSettings.Lawyer_Count_End_Date__c;
+        customSettings.Lawyer_Count_Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Lawyer_Count_Payout_Date__c;
+        customSettings.Lawyer_Count_Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Lawyer_Count_Report_Date__c;
+        customSettings.Lawyer_Count_Type_Of_Loan__c = String.join(typeofloans, '|');
+        customSettings.Lawyer_Count_Business_Unit__c = String.join(businessUnitFilter, '|');
+        customSettings.Query_Selector_Lawyer_Count_Report__c = LoanFilter;
+        upsert customSettings;
+
+    }
     
     @AuraEnabled
-    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, String businessUnitFilter){
+    public static Conga_batch_setting__c GetCustomSettings(){
+        Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());
+        return customSettings;
+    }
+
+    @AuraEnabled
+    public static Id generate(String query, List<String> selectedIds, String payoutDate, String reportDate, String LoanFilter, List<String> businessUnitFilter, List<String> typeofloans){
         try{
             APXT_BPM__Conductor__c conductor;
             APXTConga4__Conga_Merge_Query__c congaQuery;        
@@ -128,10 +161,11 @@ public class LawyerCountController {
             }
             
             Conga_batch_setting__c customSettings = Conga_batch_setting__c.getInstance(UserInfo.getUserId());        
-            customSettings.Payout_Date_Lawyer_Summary_Report__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Payout_Date_Lawyer_Summary_Report__c;
-            customSettings.Report_Date_Lawyer_Summary_Report__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Report_Date_Lawyer_Summary_Report__c;
-            customSettings.Business_Unit_Lawyer_Summary__c = (!String.isEmpty(businessUnitFilter) && businessUnitFilter != null) ? businessUnitFilter : 'ELFI';
-            customSettings.Query_Selector_Lawyer_Summary_Report__c = LoanFilter;
+            customSettings.Lawyer_Count_Payout_Date__c = (!String.isEmpty(payoutDate) && payoutDate != null) ? Date.valueOf(payoutDate) : customSettings.Lawyer_Count_Payout_Date__c;
+            customSettings.Lawyer_Count_Report_Date__c = (!String.isEmpty(reportDate) && reportDate != null) ? Date.valueOf(reportDate) : customSettings.Lawyer_Count_Report_Date__c;
+            customSettings.Lawyer_Count_Business_Unit__c = String.join(businessUnitFilter, '|');
+            customSettings.Lawyer_Count_Type_Of_Loan__c = String.join(typeofloans, '|');
+            customSettings.Query_Selector_Lawyer_Count_Report__c = LoanFilter;
             
             if(String.isEmpty(customSettings.Conductor_Id_Lawyer_Summary_Report__c)){
                 congaQuery = new APXTConga4__Conga_Merge_Query__c(APXTConga4__Name__c = 'Lawyer summary conductor query - ' + UserInfo.getName(),
@@ -139,13 +173,13 @@ public class LawyerCountController {
                                                                   APXTConga4__Query__c = query);
                 insert congaQuery;
                 conductor = new APXT_BPM__Conductor__c(APXT_BPM__Title__c = 'Mass Lawyer Summary - ' + UserInfo.getName(), APXT_BPM__Query_Id__c = congaQuery.Id,
-                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary__c');
+                                                       APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Count__c');
                 insert conductor;            
                 customSettings.Conductor_Id_Lawyer_Summary_Report__c = conductor.Id;
             }else{
                 conductor = [SELECT Id, APXT_BPM__Query_Id__c, APXT_BPM__URL_Field_Name__c FROM APXT_BPM__Conductor__c WHERE Id =:customSettings.Conductor_Id_Lawyer_Summary_Report__c];
                 congaQuery = [SELECT Id, APXTConga4__Query__c FROM APXTConga4__Conga_Merge_Query__c WHERE Id =:conductor.APXT_BPM__Query_Id__c];
-                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Summary__c';
+                conductor.APXT_BPM__URL_Field_Name__c = 'Conga_Batch_Lawyer_Count__c';
                 update conductor;
                 congaQuery.APXTConga4__Query__c = query;
                 update congaQuery;

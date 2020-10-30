@@ -11,4 +11,6 @@
     <tabs>standard-Contact</tabs>
     <tabs>standard-report</tabs>
     <tabs>standard-Dashboard</tabs>
+    <tabs>Integration_Log__c</tabs>
+    <tabs>Underwriter_Evaluation_History__c</tabs>
 </CustomApplication>

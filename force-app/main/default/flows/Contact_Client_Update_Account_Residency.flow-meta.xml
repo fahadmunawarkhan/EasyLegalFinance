@@ -60,8 +60,8 @@
         <processMetadataValues>
             <name>originalFormula</name>
             <value>
-                <stringValue>/* Contact must have an account that is a Client, and either a blank Account Province of Residency, and the Province formula guess must not be blank. Also, either the Residency picklist is blank or the Contact&#39;s &quot;BillingState&quot; has been adjusted. */
-!ISBLANK([Contact].AccountId) &amp;&amp; [Contact].Account.RecordType.Name = &#39;Client&#39;
+                <stringValue>/* Contact must have an account that is a Client, and either a blank Account Province of Residency, and the Province formula guess must not be blank. Also, either the Residency picklist is blank or the Contact&apos;s &quot;BillingState&quot; has been adjusted. */
+!ISBLANK([Contact].AccountId) &amp;&amp; [Contact].Account.RecordType.Name = &apos;Client&apos;
 &amp;&amp; !ISBLANK([Contact].Province_fm__c) &amp;&amp;
 OR(
 ISBLANK(TEXT([Contact].Account.ProvinceResidency__c))
@@ -72,8 +72,8 @@ ISCHANGED([Contact].MailingState)
         </processMetadataValues>
         <name>formula_myRule_1</name>
         <dataType>Boolean</dataType>
-        <expression>/* Contact must have an account that is a Client, and either a blank Account Province of Residency, and the Province formula guess must not be blank. Also, either the Residency picklist is blank or the Contact&#39;s &quot;BillingState&quot; has been adjusted. */
-!ISBLANK({!myVariable_current.AccountId}) &amp;&amp; {!myVariable_current.Account.RecordType.Name} = &#39;Client&#39;
+        <expression>/* Contact must have an account that is a Client, and either a blank Account Province of Residency, and the Province formula guess must not be blank. Also, either the Residency picklist is blank or the Contact&apos;s &quot;BillingState&quot; has been adjusted. */
+!ISBLANK({!myVariable_current.AccountId}) &amp;&amp; {!myVariable_current.Account.RecordType.Name} = &apos;Client&apos;
 &amp;&amp; !ISBLANK({!myVariable_current.Province_fm__c}) &amp;&amp;
 OR(
 ISBLANK(TEXT({!myVariable_current.Account.ProvinceResidency__c}))

@@ -70,6 +70,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Assessment Provider</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Client</fullName>
             <default>true</default>
         </values>
@@ -93,6 +97,21 @@
         </values>
         <values>
             <fullName>Rhino</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Seahold</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Collections__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -228,6 +247,39 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Judgement__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Notice_of_assignment__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Offers_to_Settle__c</picklist>
+        <values>
+            <fullName>No</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yes</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>Ownership</picklist>
         <values>
             <fullName>Other</fullName>
@@ -243,6 +295,361 @@
         </values>
         <values>
             <fullName>Subsidiary</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Primary_Insurance_Provider__c</picklist>
+        <values>
+            <fullName>ACE INA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>AIG</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Alberta Motors Association</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Allstate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aviva</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ayr Farmers Mutual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Belair Direct</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CAA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>COSECO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CUMIS</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canadian Medical Protection Association</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cayuga</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cayuga Mutual Insurance Company</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Certas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chartis Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chubb</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cigna</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Co-operators</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coachman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commonwealth</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commonwell Mutual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Crawoford</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Desjardins Financial Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dominion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Durham Region Transit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Echelon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Economical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Edge Mutual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Erie</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Federal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Federated</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gore</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Great West Life</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Green Shield</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guarantee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Heartland Farm</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ICBC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ING</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Intact</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jevco</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Liberty</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lloyd%27s</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MVACF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manitoba Public Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manulife</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>McKillop</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meloche Monnex</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Middlesex Mutual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Motors Insurance Promutual de L%27est</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nordic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Northbridge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Old Republic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ontario Blue Cross</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Optimum</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pafco</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pease Hills</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Peel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pembridge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Personal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Progressive</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RBC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Regional Municipality of York</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Regional Municipalty of York</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Royal %26 Sun Alliance %28RSA%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SGI</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - AC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - Bell</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - City of Toronto</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - Fly Jamaica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - J%26J</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SIR - Medtronic Inc%2E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security National</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sovereign</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St%2E Paul Fire %26 Marine</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>State Farm</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sun Life</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TTC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trafalgar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Travelers</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unifund</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wawanesa</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Western Assurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ZENITH</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zurich</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -313,6 +720,29 @@
         </values>
         <values>
             <fullName>Warm</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason_for_LTV__c</picklist>
+        <values>
+            <fullName>Assessment Loan - NA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Development</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lawyer Relationship</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Settled File</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Strong Case</fullName>
             <default>false</default>
         </values>
     </picklistValues>

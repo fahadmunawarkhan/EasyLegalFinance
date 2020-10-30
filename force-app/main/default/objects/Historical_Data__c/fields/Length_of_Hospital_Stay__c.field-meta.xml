@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Length_of_Hospital_Stay__c</fullName>
+    <externalId>false</externalId>
+    <label>Length of Hospital Stay</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No hospital visit</fullName>
+                <default>false</default>
+                <label>No hospital visit</label>
+            </value>
+            <value>
+                <fullName>A couple of hours</fullName>
+                <default>false</default>
+                <label>A couple of hours</label>
+            </value>
+            <value>
+                <fullName>Overnight</fullName>
+                <default>false</default>
+                <label>Overnight</label>
+            </value>
+            <value>
+                <fullName>Two to seven days</fullName>
+                <default>false</default>
+                <label>Two to seven days</label>
+            </value>
+            <value>
+                <fullName>More than seven days</fullName>
+                <default>false</default>
+                <label>More than seven days</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

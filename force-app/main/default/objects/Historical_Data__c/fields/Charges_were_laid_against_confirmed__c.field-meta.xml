@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Charges_were_laid_against_confirmed__c</fullName>
+    <externalId>false</externalId>
+    <label>Charges were laid against confirmed?</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Confirmed</fullName>
+                <default>false</default>
+                <label>Confirmed</label>
+            </value>
+            <value>
+                <fullName>I Can&apos;t Confirm</fullName>
+                <default>false</default>
+                <label>I Can&apos;t Confirm</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
