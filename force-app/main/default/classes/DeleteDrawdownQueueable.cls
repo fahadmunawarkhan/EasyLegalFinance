@@ -7,8 +7,14 @@ public class DeleteDrawdownQueueable implements Queueable{
     }
     public void execute(QueueableContext context) {
         try{
-            Drawdown__c d = [select Id from Drawdown__c where Id=:drawdownId];
-            delete d;
+            Drawdown__c dd = [select Id, Opportunity__c, Payment_Method__c, Opportunity__r.Interest_Rate_Type__c from Drawdown__c where Id=:drawdownId];
+            Id oppId = dd.Opportunity__c;
+            Boolean needRecalcVariableRates = false;
+            if (dd.Payment_Method__c == 'Payment' && dd.Opportunity__r.Interest_Rate_Type__c == 'Variable')
+                needRecalcVariableRates = true;
+            delete dd;            
+            if (needRecalcVariableRates)
+                InterestCalculator.calculateVariableRates(new List<Id>{oppId});
         }
         catch(Exception ex){
             

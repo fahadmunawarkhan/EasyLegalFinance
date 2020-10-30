@@ -39,12 +39,12 @@ public class InterestCalculator {
         }
         calculateVariableRates(opps);
     }    
-    public static Date getInterestStartDate(Drawdown__c d, Opportunity opp){
-        if (d.Interest_Start_Date__c != null)
-            return d.Interest_Start_Date__c;
-        Date interestStartDate = d.Date__c;
-        if (opp.Interest_Deferral_Period__c != null && Integer.valueOf(opp.Interest_Deferral_Period__c) > 0)
-            return interestStartDate.addMonths(Integer.valueOf(opp.Interest_Deferral_Period__c));
+    public static Date getInterestStartDate(Date fundingDate, Drawdown__c d, Opportunity opp){        
+        if (opp.Interest_Deferral_Period__c != null && Integer.valueOf(opp.Interest_Deferral_Period__c) > 0){
+            Date deferralDate = fundingDate.addMonths(Integer.valueOf(opp.Interest_Deferral_Period__c));
+            if (deferralDate > d.Date__c)
+                return deferralDate;
+        }
         if (d.Date_of_Last_Repayment__c != null)
             return d.Interest_End_Date_at_Last_Repayment__c.addDays(1);
         return d.Date__c;        
@@ -56,6 +56,8 @@ public class InterestCalculator {
         return payoutDate > minimumInterestPeriodDate ? payoutDate.addDays(0) : minimumInterestPeriodDate;
     }
     public static void calculateVariableRates(List<Drawdown__c> drds, List<Variable_Rate__c> vrs, Date payoutDate, Opportunity opp, Boolean isBOMGenerating){
+        if (payoutDate == null)
+            return;
         if (!isBOMGenerating)
         	payoutDate = payoutDate.addDays(1);
         for (Drawdown__c d : drds){
@@ -70,7 +72,7 @@ public class InterestCalculator {
                 Date effectiveDate = opp.Date_Of_Advance__c;
                 Decimal totalMultiplier = 1.0;
                 Boolean isBOM = d.Reference_Notes__c == 'Admin Fee - BOM';
-                Date drawdownInterestStartDate = getInterestStartDate(d, opp);                
+                Date drawdownInterestStartDate = getInterestStartDate(effectiveDate, d, opp);                
                 Date drawdownInterestEndDate = getInterestEndDate(payoutDate, effectiveDate, d, opp);
                 System.debug(drawdownInterestEndDate);
                 for (Variable_Rate__c vr : vrs){
@@ -116,6 +118,10 @@ public class InterestCalculator {
                                        Compounding_Interest__c, Compounding_Frequency__c, Interest_Start_Date__c, Interest_End_Date__c, Reference_Notes__c, Outstanding_Balance_VR__c 
                                        from Drawdown__c where Opportunity__c in :vrOppIds and Has_Interest__c = true];
         return drawdowns;
+    }
+    public static void calculateVariableRates(List<Id> vrOppIds){
+        List<Opportunity> opps = getOpps(vrOppIds);
+        calculateVariableRates(opps);
     }
     public static void calculateVariableRates(List<Opportunity> vrOpps){
         System.debug('calculateVariableRates');

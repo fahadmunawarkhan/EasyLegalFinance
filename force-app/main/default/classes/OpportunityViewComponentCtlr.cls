@@ -350,8 +350,13 @@ public class OpportunityViewComponentCtlr {
     @AuraEnabled
     public static List<Drawdown__c> deleteDrawdownRecord(String drawdownId, String oppId){
         try{
-            Drawdown__c dd = new Drawdown__c(Id=drawdownId);
-            delete dd;
+            Drawdown__c dd = [select Id, Payment_Method__c, Opportunity__r.Interest_Rate_Type__c from Drawdown__c where Id=:drawdownId];
+            Boolean needRecalcVariableRates = false;
+            if (dd.Payment_Method__c == 'Payment' && dd.Opportunity__r.Interest_Rate_Type__c == 'Variable')
+                needRecalcVariableRates = true;
+            delete dd;            
+            if (needRecalcVariableRates)
+                InterestCalculator.calculateVariableRates(new List<Id>{oppId});
             return getDrawdownList(oppId);
         }
         catch (DMLException e){

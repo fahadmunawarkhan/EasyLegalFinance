@@ -62,18 +62,18 @@ public class InterestCalculatorTest {
     }    
 	@isTest
     public static void testGetInterestStartDate(){    
-        Opportunity opp = [select Id, Interest_Deferral_Period__c from Opportunity LIMIT 1];
-        Drawdown__c d = [select Interest_Start_Date__c, Date__c from Drawdown__c LIMIT 1];
-        Date dt = InterestCalculator.getInterestStartDate(d, opp);
+        Opportunity opp = [select Id, Date_Of_Advance__c, Interest_Deferral_Period__c from Opportunity LIMIT 1];
+        Drawdown__c d = [select Interest_Start_Date__c, Date__c, Date_of_Last_Repayment__c, Interest_End_Date_at_Last_Repayment__c from Drawdown__c LIMIT 1];
+        Date dt = InterestCalculator.getInterestStartDate(opp.Date_Of_Advance__c, d, opp);
         System.assertEquals(d.Interest_Start_Date__c, dt);
     }
 	@isTest
     public static void testGetInterestStartDate1(){    
-        Opportunity opp = [select Id, Interest_Deferral_Period__c from Opportunity LIMIT 1];
+        Opportunity opp = [select Id, Date_Of_Advance__c, Interest_Deferral_Period__c from Opportunity LIMIT 1];
         Drawdown__c d  = new Drawdown__c();
         d.Opportunity__c = opp.Id;
         d.Date__c = Date.newInstance(2020, 1, 1);        
-        Date dt = InterestCalculator.getInterestStartDate(d, opp);
+        Date dt = InterestCalculator.getInterestStartDate(opp.Date_Of_Advance__c, d, opp);
         System.assertEquals(d.Date__c, dt);
     } 
 	@isTest

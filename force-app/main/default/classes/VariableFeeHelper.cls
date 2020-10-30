@@ -48,7 +48,7 @@ public class VariableFeeHelper {
         }
         System.debug(variableFees.size());
         Opportunity opp = [select Id, Minimum_Interest_Period_Number__c, Interest_Rate_Type__c, Interest_Rate__c, Date_Of_Advance__c, Compounding_Frequency__c, Interest_Deferral_Period__c from Opportunity where Id=:oppId];
-        List<Drawdown__c> advances = [select Id, Date__c, BOM_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
+        List<Drawdown__c> advances = [select Id, Date__c, Date_of_Last_Repayment__c, Interest_End_Date_at_Last_Repayment__c, BOM_Fees_Generated__c, BOM_Fee_Advance__c, Payment_Method__c, Reference_Notes__c, No_Interest__c, Minimum_Interest_Period__c, Interest_Start_Date__c, Amount_Adjusted_for_Repayments__c, Compounding_Frequency__c, Opportunity__r.Date_Of_Advance__c from Drawdown__c where Opportunity__c=:oppId and Payment_Method__c != 'Payment'];
         Integer advancesCount = advances.size();
         List<Drawdown__c> drawdownsToInsert = new List<Drawdown__c>();
         List<Drawdown__c> newDrawdowns = createBOMDrawdowns(advances, advancesCount, variableFees, opp);
