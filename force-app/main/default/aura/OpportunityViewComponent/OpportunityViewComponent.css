@@ -64,7 +64,10 @@
 }
 .THIS .generating-drawdowns-banner {    
     position:fixed;    
-    width:50%;
+    width:45%;
     z-index:100;    
-    height: 100px;
+    height: 110px;    
+}
+.THIS .generating-drawdowns-banner h2{
+    font-size: 1.3rem;
 }

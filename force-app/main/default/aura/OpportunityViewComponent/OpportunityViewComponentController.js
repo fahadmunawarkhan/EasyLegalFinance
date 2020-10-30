@@ -62,7 +62,7 @@
         helper.fetchPicklistValues(component,objDetails,controllingFieldAPI, dependingFieldAPI);  
         //console.log('listControllingValues' + component.get("v.listControllingValues")); 
         helper.getRefNotesDependantPicklistMap(component, 'drawDownObj', 'referenceNotesDepPicklistMap');
-        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap'); 
+        helper.getRefNotesDependantPicklistMap(component, 'providerDrawDownObj', 'providerReferenceNotesDepPicklistMap');
         helper.waitForDrawdownsGenerating(component, false);
         /*
         setTimeout(function(){
@@ -746,7 +746,7 @@
         );
 
     },
-	saveBOMFees : function(component, event, helper){                                  
+    saveBOMFees : function(component, event, helper){                                  
         var bomFeeComponent = component.find('bomfeecomponent');
         if (bomFeeComponent){
             component.set("v.spinner", true);
