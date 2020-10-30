@@ -1758,6 +1758,8 @@
     waitForDrawdownsGenerating : function(component, needRefresh){ 
         console.log('waitForDrawdownsGenerating');
         var oppId = component.get('v.recordId'); 
+        if (oppId == null)
+            return;
         var self = this;
         this.runAction(component, 'c.checkAreFeesGenerated', {oppId: oppId})
         .then(

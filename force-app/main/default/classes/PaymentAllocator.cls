@@ -17,13 +17,13 @@ Inputs:
 History
 <Date> <Authors Name> <Brief Description of Change>
 ------------------------------------------------------------*/
-
+        
 	// Define custom exception
 	public class PayoutDateInconsistentException extends Exception {} // Throws this if Payout date on Drawdown not consistent with Transaction Date on Payment. 
     public class PaymentToReverseIsNotSetException extends Exception {}     
 
 	@InvocableMethod(label='Allocate Payments' description='Create Drawdown Payment Allocation records to associate Payment Drawdown with Advance Drawdown')
-    public static void AllocatePayments (List<ID> paymentIds) {
+    public static void AllocatePayments (List<ID> paymentIds) {            
         allocate(paymentIds, true);
         allocate(paymentIds, false);
     }       
@@ -41,14 +41,14 @@ History
 
 		// Get all drawdowns which are not payments but are under the same Opportunity - calling them customer "advances"
 		list<Drawdown__c> advances = [select Name,date__c,Outstanding_Balance_as_of_Payout_Date__c,Id, Opportunity__c, Payout_Date__c, Temp_Payout_Date__c, 
-                                      Interest_End_Date__c, Accrued_Interest_as_of_Payout_Date__c,Amount__c, Interest_repaid__c, Principal_repaid__c, Advance_Principal_Repaid__c
+                                      Interest_End_Date__c, Accrued_Interest_as_of_Payout_Date__c,Amount__c, Interest_repaid__c, Principal_repaid__c, Advance_Principal_Repaid__c,
+                                      Opportunity__r.Interest_Rate_Type__c
 									  from Drawdown__c
 									  where Opportunity__c in :opportunityIds AND Outstanding_Balance_as_of_Payout_Date__c > 0 and Payment_Method__c <> 'Payment' order by Opportunity__c,Date__c ASC];
 
-
 		list<Drawdown_Payment_Allocation__c> allocations = new list<Drawdown_Payment_Allocation__c> ();  // list of allocations to be inserted
 
-		for (Drawdown__c p:payments){            
+		for (Drawdown__c p:payments){  
             Boolean allocateToPrincipal = (p.Payout_Interest_First__c != isFirstIteration);
 			Decimal paymentBalance = 0.00 - p.Outstanding_Balance_as_of_Payout_Date__c;  //change sign            
                  
@@ -65,8 +65,7 @@ History
                 else{
                     Decimal advanceInterest = a.Outstanding_Balance_as_of_Payout_Date__c - advancePrincipal;
                     advanceAmountToAllocate = advanceInterest;
-                }
-                    
+                }                   
                 if (a.opportunity__c == p.opportunity__c && paymentBalance > 0 && advanceAmountToAllocate > 0  ){
                     Decimal AllocationAmount = 0.00;
                     
@@ -76,7 +75,7 @@ History
 					} else {
 						AllocationAmount += advanceAmountToAllocate;
 						paymentBalance -= advanceAmountToAllocate;						
-					}
+					}                                                       
                     Drawdown_Payment_Allocation__c newAllocation = 
 					    new Drawdown_Payment_Allocation__c (Amount__c=AllocationAmount, drawdown__c=a.id,payment__c=p.id, 
 															payout_date__c=a.payout_date__c, temp_payout_date__c=a.temp_payout_date__c, 
@@ -91,12 +90,25 @@ History
                         newAllocation.Interest_Repaid__c = AllocationAmount;
                         newAllocation.Principal_Repaid__c = 0.0;
                     }
-                        
-					allocations.add(newAllocation);	                    
+					allocations.add(newAllocation);	                                        
                 }
             }
         }
         insert allocations;
+        recalculateVariableInterest(advances);
+    }
+    
+    public static void recalculateVariableInterest(List<Drawdown__c> advances){
+        Set<Id> oppIdsWithVariableInterest = new Set<Id>();
+        for (drawdown__c a : advances){                                                
+            if (a.Opportunity__r.Interest_Rate_Type__c == 'Variable')
+                oppIdsWithVariableInterest.add(a.Opportunity__c);
+        }
+        if (!oppIdsWithVariableInterest.isEmpty()){   
+            List<Id> oppIds = new List<Id>();
+            oppIds.addAll(oppIdsWithVariableInterest);
+            InterestCalculator.calculateVariableRates(oppIds);
+        }
     }
     public static void allocateRejectionDrawdowns(List<Id> paymentDrawdownIds){
         List<Drawdown__c> paymentDrawdowns = [select name, Payment_To_Reverse__c, Amount__c, Principal_Reversed__c, Outstanding_Balance_as_of_Payout_Date__c, Date__c,Id, 
@@ -105,8 +117,9 @@ History
         for (Drawdown__c paymentDrawdown : paymentDrawdowns){
 			advanceDrawdownIds.add(paymentDrawdown.Payment_To_Reverse__c);            
         }
-        List<Drawdown__c> drawdownsToReverse = [select Id, Name, Payout_Date__c, temp_payout_date__c, Opportunity__c, Outstanding_Balance_as_of_Payout_Date__c,
-                                                Accrued_Interest_as_of_Payout_Date__c, Interest_End_Date__c
+        List<Drawdown__c> drawdownsToReverse = [select Id, Name, Payout_Date__c, temp_payout_date__c, Opportunity__c, Outstanding_Balance_as_of_Payout_Date__c,                                                
+                                                Accrued_Interest_as_of_Payout_Date__c, Interest_End_Date__c,
+                                                Opportunity__r.Interest_Rate_Type__c
                                                 from Drawdown__c where Id in :advanceDrawdownIds];
         List<Drawdown_Payment_Allocation__c> allocations = new List<Drawdown_Payment_Allocation__c>();
         for (Drawdown__c paymentDrawdown : paymentDrawdowns){
@@ -128,6 +141,7 @@ History
             }
         }
         insert allocations;
+        recalculateVariableInterest(drawdownsToReverse);
     }
     
     public static Drawdown_Payment_Allocation__c createAllocationForRejection(Drawdown__c paymentDrawdown, Drawdown__c advanceDrawdown){        
