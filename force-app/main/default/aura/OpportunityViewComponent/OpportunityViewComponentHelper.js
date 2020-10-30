@@ -1754,5 +1754,29 @@
                 	notes[index].set("v.value",feeType);
             }
         }
+    },
+    waitForDrawdownsGenerating : function(component, needRefresh){ 
+        console.log('waitForDrawdownsGenerating');
+        var oppId = component.get('v.recordId'); 
+        var self = this;
+        this.runAction(component, 'c.checkAreFeesGenerated', {oppId: oppId})
+        .then(
+            (result) => {                
+                if (result.VR_Fees_Generating_In_Progress__c == true)
+                    window.setTimeout(
+                        $A.getCallback(function() {
+                            self.waitForDrawdownsGenerating(component, true);
+                        }
+                    ), 30000); 
+        		else{                    
+                    if (needRefresh)
+                    	this.reInitSomeData(component); 
+                    component.set('v.oppObj.VR_Fees_Generating_In_Progress__c', result.VR_Fees_Generating_In_Progress__c);
+                }
+    		},
+            (errors) => {                
+                self.handleErrors(errors);
+            }
+        );            
     }        
 })
