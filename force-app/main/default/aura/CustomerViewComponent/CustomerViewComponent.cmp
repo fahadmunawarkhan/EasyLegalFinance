@@ -3,8 +3,8 @@
   @Description        : 
   @Author             : fahad.khan@toptal.com
   @Group              : 
-  @Last Modified By   : ChangeMeIn@UserSettingsUnder.SFDoc
-  @Last Modified On   : 10-01-2020
+  @Last Modified By   : fahad.khan@toptal.com
+  @Last Modified On   : 11-02-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -173,8 +173,15 @@
                     <lightning:icon iconName="standard:user" size="medium" />
                 </div>
                 <div class="slds-media__body">
-                    <p class="slds-text-body_small slds-line-height_reset">ACCOUNT</p>
-                    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!v.accountObj.Name}">{!v.accountObj.Name}</h1>
+                    <div>
+                        <p class="slds-text-body_small slds-line-height_reset">ACCOUNT</p>
+                        <h1 class="slds-page-header__title slds-truncate slds-align-middle" style="display:inline-block;" title="{!v.accountObj.Name}">{!v.accountObj.Name}</h1>
+                        
+                        <div class="slds-m-left_x-small" style="display:inline-block;">
+                            <lightning:badge label="{! 'File # ' + v.accountObj.AccountNumber}"/>
+                            <lightning:badge label="{! 'Business Unit: ' + v.accountObj.Business_Unit__c}"/>
+                        </div> 
+                    </div>
                 </div>
                 <lightning:buttonGroup>
                     <lightning:button class="slds-theme_neutral" iconPosition="left" variant="neutral" type="button" label="Standard View" onclick="{!c.redirectToStandardView}" />
@@ -203,6 +210,9 @@
         </aura:if>
         <lightning:tabset aura:id="primaryTabs" selectedTabId="{!v._selectedTabId}" onselect="{!c.onPrimaryTabSelect}" variant="default">
             <lightning:tab id="ACCOUNT" label="ACCOUNT" onactive="{!c.onfocusAccountTab}">
+
+                <!--DUPLICATE RECORDS COMPONENT-->
+                <c:DuplicateRecordsComp accountId="{!v.recordId}" />
 
                 <!-- <<<<<<<<<< ACCOUNT INFORMATION >>>>>>>>>> -->
                 <lightning:card title="Account Information" iconName="standard:case" variant="base">
