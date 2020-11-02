@@ -1,0 +1,112 @@
+<!--
+  @description       : 
+  @author            : fahad.khan@toptal.com
+  @group             : 
+  @last modified on  : 10-27-2020
+  @last modified by  : fahad.khan@toptal.com
+  Modifications Log 
+  Ver   Date         Author                  Modification
+  1.0   10-27-2020   fahad.khan@toptal.com   Initial Version
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction,force:hasRecordId" access="global" controller="DuplicateRecordsCompCtlr">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="accountId" type="String" default="" />
+    <aura:attribute name="duplicateRecords" type="List" /> 
+    <aura:attribute name="recordsFound" type="Boolean" default="false" />
+    <aura:attribute name="expandedSections" type="Map" default="{}"/>
+    
+    <aura:if isTrue="{!v.recordsFound}">
+        <div class="custom-background">
+            <lightning:card>            
+                <div class="{!v.expandedSections.duplicateRecordsSection? 'slds-section slds-card__body_inner slds-is-open': 'slds-section slds-card__body_inner slds-is-closed'}">
+                    <h3 class="slds-section__title">
+                        <button aria-expanded="true" class="slds-button slds-section__title-action custom-wbutton" data-section="duplicateRecordsSection" onclick="{!c.toggleSection}">
+                            <lightning:icon
+                                            iconName="utility:switch"
+                                            size="x-small"
+                                            class="slds-section__title-action-icon slds-button__icon_left"
+                                            alternativeText="button icon" 
+                                            />
+                            <lightning:icon
+                                            iconName="custom:custom15"
+                                            variant="base"
+                                            size="small"
+                                            class="slds-button__icon_left slds-m-horizontal__small"
+                                            alternativeText="" 
+                                            />
+                            <span class="slds-truncate" title="Potential Duplicates">Potential Duplicates</span>
+                        </button>
+                    </h3>
+                    <div aria-hidden="{! !v.expandedSections.loanDetails }" class="slds-section__content">
+                        <lightning:layout>
+                            <lightning:layoutItem padding="around-small" size="12">
+                                <!-- the container element determine the height of the datatable -->
+                                <div style="">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Name">Name</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="File #">File #</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Business Unit">Business Unit</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Outstanding Balance">Outstanding Balance</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Lawyer">Lawyer</div>
+                                                </th>
+                                                <th class="" scope="col">
+                                                    <div class="slds-truncate" title="Law Firm">Law Firm</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <aura:iteration items="{!v.duplicateRecords}" var="d">
+                                                <tr class="slds-hint-parent">                                    
+                                                    <td data-label="Name" scope="row">
+                                                        <div class="slds-truncate" title="{!d.Account.Name}">
+                                                            <a href="{! '/' + d.AccountId}" tabindex="-1">{!d.Account.Name}</a>
+                                                        </div>
+                                                    </td>
+                                                    <td data-label="File #">
+                                                        <div class="slds-truncate" title="{!d.Account.AccountNumber}">{!d.Account.AccountNumber}</div>
+                                                    </td>
+                                                    <td data-label="Business Unit">
+                                                        <div class="slds-truncate" title="{!d.Account.Business_Unit__c}">{!d.Account.Business_Unit__c}</div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="slds-truncate">
+                                                            <lightning:formattedNumber value="{!d.Account.All_Payout_Balance__c}" style="decimal" maximumFractionDigits="0" />
+                                                        </div>
+                                                    </td>
+                                                    <aura:iteration items="{!d.Opportunities1__r}" var="p">
+                                                        <td>
+                                                            <div class="slds-truncate">
+                                                                <a href="{! '/' + p.Lawyer__c}" tabindex="-1">{!p.Lawyer__r.Name}</a>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="slds-truncate">
+                                                                <a href="{! '/' + p.Law_Firm__c}" tabindex="-1">{!p.Law_Firm__r.Name}</a>
+                                                            </div>
+                                                        </td>
+                                                    </aura:iteration>
+                                                </tr>
+                                            </aura:iteration>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                </div>
+            </lightning:card>
+        </div>
+    </aura:if>
+</aura:component>
