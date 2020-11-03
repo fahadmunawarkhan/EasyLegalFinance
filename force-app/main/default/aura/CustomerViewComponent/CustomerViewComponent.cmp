@@ -4,7 +4,7 @@
   @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 11-02-2020
+  @Last Modified On   : 11-03-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -178,8 +178,8 @@
                         <h1 class="slds-page-header__title slds-truncate slds-align-middle" style="display:inline-block;" title="{!v.accountObj.Name}">{!v.accountObj.Name}</h1>
                         
                         <div class="slds-m-left_x-small" style="display:inline-block;">
-                            <lightning:badge label="{! 'File # ' + v.accountObj.AccountNumber}"/>
-                            <lightning:badge label="{! 'Business Unit: ' + v.accountObj.Business_Unit__c}"/>
+                            <lightning:badge class="slds-theme_success" label="{! 'File # ' + v.accountObj.AccountNumber}"/>
+                            <lightning:badge class="slds-theme_success" label="{! 'Business Unit: ' + v.accountObj.Business_Unit__c}"/>
                         </div> 
                     </div>
                 </div>
@@ -1369,7 +1369,12 @@
                                                 <tr>
                                                     <td Colspan="2">
                                                         <lightning:icon iconName="standard:opportunity" size="small" alternativeText="Opportunity" /> &nbsp;
-                                                        <b>Opportunity Name: {!opp.Name}</b>
+                                                        <b>
+                                                            Opportunity Name: {!opp.Name} 
+                                                            <aura:if isTrue="{!opp.loanType != null}">
+                                                                - {!opp.loanType}
+                                                            </aura:if>
+                                                        </b>
                                                     </td>
                                                     <td Colspan="12">
                                                         <b>{!opp.opportunityNumber}</b>

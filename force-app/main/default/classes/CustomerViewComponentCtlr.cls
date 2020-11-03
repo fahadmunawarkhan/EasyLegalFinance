@@ -334,7 +334,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Loan_Status__c = 'Closed - Bad Debt';
         opp.Bad_Debt_Reason__c = (OppBadDebts == '' || OppBadDebts == null) ? '' : OppBadDebts;
         update opp;
-        
+
         return new List<Drawdown__c>{dd};        
     }
     
@@ -362,7 +362,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Stage_Status__c = 'Closed - Surplus';
         opp.Loan_Status__c = 'Closed - Surplus';
         update opp;        
-        
+
         return new List<Drawdown__c>{dd};
     }
     
@@ -384,7 +384,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         opp.Stage_Status__c = 'Closed - Shortfall';
         opp.Loan_Status__c = 'Closed - Shortfall';
         update opp;
-        
+
         return new List<Drawdown__c>{dd};
     }    
     
@@ -617,6 +617,8 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
         public Double outstandingBalanceSubtotal{get;set;}
         @AuraEnabled
         public Double perDiemSubtotal{get;set;}
+        @AuraEnabled
+        public String loanType{get;set;}
         
     }
     
@@ -659,7 +661,7 @@ Date_Financing_Statement_Expires__c = (lastOppty == null ? null : lastOppty.Date
                 t.Id = d.Id;
                 t.line = lineAux;
                 t.eft = d.EFT__c;
-                t.chq = d.CHQ__c;
+                t.chq = d.CHQ__c;                
                 t.description = d.Reference_Notes__c;
                 t.opportunityNumber = d.Opportunity__r.Loan_Requests__c;
                 t.interestRateType = d.Opportunity__r.Interest_Rate_Type__c;
@@ -732,6 +734,7 @@ t.adminFee =  d.Amount__c;
                 opt.opportunityNumber = o.Loan_Requests__c;
                 opt.advanceSubtotal = o.Amount;
                 opt.transactions = oppToTrans.get(o.Id);
+                opt.loanType = o.Type_of_Loan_Formula__c;
                 oppTrans.add(opt);
             }
             for(OpportunityTransaction ot : oppTrans)
@@ -1381,7 +1384,7 @@ return allOpts;*/
         @AuraEnabled
         public string paymentMethod {get;set;}   
         @AuraEnabled
-        public string referenceNotes {get;set;}          
+        public string referenceNotes {get;set;}   
         @AuraEnabled
         public string interestRateType {get;set;}          
         @AuraEnabled
@@ -1542,7 +1545,7 @@ return allOpts;*/
                 if (action == 'Closed Paid' || action == 'Partial Payment')                
                 	ReserveHelper.notifyUponPayment(accountId);
             }
-            deletePaymentApplyingErrorTasks(accountId, oppId);
+            deletePaymentApplyingErrorTasks(accountId, oppId);            
         }
         catch (DMLException e){
             if (sp != null)
