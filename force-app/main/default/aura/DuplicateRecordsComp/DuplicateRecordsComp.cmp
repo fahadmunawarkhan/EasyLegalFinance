@@ -2,7 +2,7 @@
   @description       : 
   @author            : fahad.khan@toptal.com
   @group             : 
-  @last modified on  : 10-27-2020
+  @last modified on  : 11-02-2020
   @last modified by  : fahad.khan@toptal.com
   Modifications Log 
   Ver   Date         Author                  Modification
@@ -82,7 +82,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="slds-truncate">
-                                                            <lightning:formattedNumber value="{!d.Account.All_Payout_Balance__c}" style="decimal" maximumFractionDigits="0" />
+                                                            <ui:outputCurrency value="{!d.Account.All_Payout_Balance__c}" />
                                                         </div>
                                                     </td>
                                                     <aura:iteration items="{!d.Opportunities1__r}" var="p">
