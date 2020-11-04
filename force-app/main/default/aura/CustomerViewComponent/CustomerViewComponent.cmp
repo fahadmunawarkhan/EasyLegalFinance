@@ -4,7 +4,7 @@
   @Author             : fahad.khan@toptal.com
   @Group              : 
   @Last Modified By   : fahad.khan@toptal.com
-  @Last Modified On   : 11-03-2020
+  @Last Modified On   : 11-04-2020
   @Modification Log   : 
   Ver       Date            Author      		    Modification
   1.0    5/1/2020   fahad.khan@toptal.com     Initial Version
@@ -178,8 +178,10 @@
                         <h1 class="slds-page-header__title slds-truncate slds-align-middle" style="display:inline-block;" title="{!v.accountObj.Name}">{!v.accountObj.Name}</h1>
                         
                         <div class="slds-m-left_x-small" style="display:inline-block;">
-                            <lightning:badge class="slds-theme_success" label="{! 'File # ' + v.accountObj.AccountNumber}"/>
-                            <lightning:badge class="slds-theme_success" label="{! 'Business Unit: ' + v.accountObj.Business_Unit__c}"/>
+                            <lightning:badge class="slds-theme_success slds-text-heading_small" label="{! 'File # ' + v.accountObj.AccountNumber}"/>
+                            <aura:if isTrue="{!v.accountObj.Business_Unit__c != ''}">
+                                <lightning:badge class="slds-theme_success slds-text-heading_small" label="{!v.accountObj.Business_Unit__c}"/>
+                            </aura:if>
                         </div> 
                     </div>
                 </div>
