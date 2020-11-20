@@ -262,9 +262,16 @@
             
             for (var i = 0; i < paymentData.length; i++) {
                 
-                fileTotal += (paymentData[i].FileCount == null) ? 0 : paymentData[i].FileCount;
-                ActiveFileTotal += (paymentData[i].ActiveFileCount == null) ? 0 : paymentData[i].ActiveFileCount;
-                OpptyTotal += (paymentData[i].OpptyCount == null) ? 0 : paymentData[i].OpptyCount;
+                fileTotal = (paymentData[i].FileCountTotal == null) ? 0 : paymentData[i].FileCountTotal;
+                ActiveFileTotal = (paymentData[i].ActiveFileTotal == null) ? 0 : paymentData[i].ActiveFileTotal;
+                OpptyTotal = (paymentData[i].OpptyCountTotal == null) ? 0 : paymentData[i].OpptyCountTotal;
+                OverageTotal = (paymentData[i].OverageFileTotal == null) ? 0 : paymentData[i].OverageFileTotal;
+                ClosedFileTotal = (paymentData[i].ClosedFileTotal == null) ? 0 : paymentData[i].ClosedFileTotal;
+                BadDebtTotal = (paymentData[i].BadDebtFileTotal == null) ? 0 : paymentData[i].BadDebtFileTotal;
+                ShortfallTotal = (paymentData[i].ShortfallFileTotal == null) ? 0 : paymentData[i].ShortfallFileTotal;
+                TotalActivePartialFileCount = (paymentData[i].ActivePartialFileTotal == null) ? 0 : 
+                paymentData[i].ActivePartialFileTotal;
+
                 amountTotal += (paymentData[i].PrincipalAdvanced == null) ? 0 : paymentData[i].PrincipalAdvanced;
                 PrincipalAdvancedOpen += (paymentData[i].PrincipalAdvancedOpen == null) ? 0 : paymentData[i].PrincipalAdvancedOpen;
                 PrincipalAdvancedClosed += (paymentData[i].PrincipalAdvancedClosed == null) ? 0 : paymentData[i].PrincipalAdvancedClosed;
@@ -272,16 +279,16 @@
                 AdminFeeReceivedTotal += (paymentData[i].AdminFeeReceived == null) ? 0 : paymentData[i].AdminFeeReceived;
                 
                 ClosedAmtTotal += (paymentData[i].ClosedAmount == null) ? 0 : paymentData[i].ClosedAmount;
-                ClosedFileTotal += (paymentData[i].ClosedFileCount == null) ? 0 : paymentData[i].ClosedFileCount;
                 
-                BadDebtTotal += (paymentData[i].BadDebtFileCount == null) ? 0 : paymentData[i].BadDebtFileCount;
+                
+                
                 BadDebtAmtTotal += (paymentData[i].BadDebtAmount == null) ? 0 : paymentData[i].BadDebtAmount;
-                ShortfallTotal += (paymentData[i].ShortfallFileCount == null) ? 0 : paymentData[i].ShortfallFileCount;
+                
                 ShortfallAmtTotal += (paymentData[i].ShortfallAmount == null) ? 0 : paymentData[i].ShortfallAmount;
-                OverageTotal += (paymentData[i].OverageFileCount == null) ? 0 : paymentData[i].OverageFileCount;
+                
                 OverageAmtTotal += (paymentData[i].OverageAmount == null) ? 0 : paymentData[i].OverageAmount;
                 
-                TotalActivePartialFileCount += (paymentData[i].ActivePartialFileCount == null) ? 0 : paymentData[i].ActivePartialFileCount;
+                
                 TotalNetAmount += (paymentData[i].NetAmount == null) ? 0 : paymentData[i].NetAmount;
                 TotalPrincipalRepaid += (paymentData[i].PrincipalRepaid == null) ? 0 : paymentData[i].PrincipalRepaid;
                 TotalROI += (paymentData[i].ROI == null) ? 0 : parseFloat(paymentData[i].ROI);
@@ -289,6 +296,7 @@
                 
             }
         }
+        console.log('FileTotal has values: ' + fileTotal);
         component.set("v.fileTotal", fileTotal);
         component.set("v.ActiveFileTotal", ActiveFileTotal);
         component.set("v.AdminFeeReceivedTotal", AdminFeeReceivedTotal);

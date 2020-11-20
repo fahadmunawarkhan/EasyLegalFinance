@@ -193,5 +193,117 @@ console.log(component.get("v.businessUnitOptions"));
         {
             reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
         }
+    },
+    openTotalFileReport: function(component, event, helper){
+        
+        var ctarget = event.currentTarget;
+        var lawyerId = ctarget.dataset.lawyer;
+        var lawfirmId = ctarget.dataset.lawfirm;
+        var typeOfColumn = ctarget.dataset.column;
+
+        var startDate = component.get("v.startDate");
+        var endDate = component.get("v.endDate");
+        
+        let typeofloanArr = helper.getSelectedTypeOfLoanArr(component, "");
+        let businessunitArr = helper.getSelectedBusinessUnitArr(component, "");
+
+        // LawyerIdSet=0030L00001zCnvu,003E000001YbpjW
+
+        let singleReportURL = '';
+
+        if(typeOfColumn == "totalAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCKwMAM/view?';
+        }else if(typeOfColumn == "activeAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCQBMA2/view?';
+        }else if(typeOfColumn == "closedAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCQGMA2/view?';
+        }else if(typeOfColumn == "baddebtAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCQLMA2/view?';
+        }else if(typeOfColumn == "shortfallAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCQQMA2/view?';
+        }else if(typeOfColumn == "surplusAccounts"){
+
+            singleReportURL = '/lightning/r/Report/00OL0000000sCQVMA2/view?';
+        }
+
+        if(singleReportURL != '')
+        singleReportURL += 'fv0=' + startDate + '&fv1=' + endDate + '&fv2=' + typeofloanArr + '&fv3=' + businessunitArr
+           + '&fv4=' + lawyerId.substring(0,15) + '&fv5=' + lawfirmId.substring(0,15);
+
+        var RecordIdsString = '';
+
+        /// get the lawyer id string
+        var paymentData = component.get('v.AmountByLawyer');
+        if(paymentData != null && paymentData != undefined){
+
+            var RecordIds;
+
+            if(paymentData[0].LawyerIds.indexOf("[") > -1){
+
+                RecordIds = paymentData[0].LawyerIds.replace("[", '');
+
+                if(RecordIds.indexOf("]") > -1){
+
+                    RecordIds = RecordIds.replace("]", '');
+                }
+
+                if(RecordIds.indexOf(",") > -1){
+
+                    RecordIds = RecordIds.split(",");
+                }
+
+                for(var i = 0; i < RecordIds.length; i++){
+
+                    RecordIdsString += RecordIds[i].replaceAll('"', '').substring(0,15);
+    
+                    if(i < RecordIds.length - 1){
+                        RecordIdsString += ',';
+                    }
+                }
+            }else{
+                RecordIdsString = 'NoIDs';
+            }
+        }
+
+        // For Totals
+        let completeReportURL = '';
+
+        if(typeOfColumn == "totalAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWTMA2/view?';
+        }else if(typeOfColumn == "activeAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWiMAM/view?';
+        }else if(typeOfColumn == "closedAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWnMAM/view?';
+        }else if(typeOfColumn == "baddebtAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWoMAM/view?';
+        }else if(typeOfColumn == "shortfallAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWsMAM/view?';
+        }else if(typeOfColumn == "surplusAccountsTotal"){
+
+            completeReportURL = '/lightning/r/Report/00OL0000000sCWxMAM/view?';
+        }
+
+        if(completeReportURL != '')
+            completeReportURL += 'fv0=' + startDate + '&fv1=' + endDate + '&fv2=' + typeofloanArr + 
+            '&fv3=' + businessunitArr + '&fv6=' + RecordIdsString;
+
+        let newWin;
+        try{                       
+            newWin = window.open(singleReportURL != ''?singleReportURL:completeReportURL);
+        }catch(e){}
+        if(!newWin || newWin.closed || typeof newWin.closed=='undefined')
+        {
+            reject([{message: 'Pop-up is blocked please click allow in the top right corner of browser in address bar!'}]);
+        }
     }
 })

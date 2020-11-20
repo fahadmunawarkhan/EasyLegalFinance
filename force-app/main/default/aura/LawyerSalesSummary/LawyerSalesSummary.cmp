@@ -298,25 +298,50 @@
                                         </aura:if>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}"
+                                        data-column="totalAccounts" 
+                                        data-lawfirm="{!item.firmId}" 
+                                        onclick="{!c.openTotalFileReport}"> 
+                                            <lightning:formattedNumber value="{!item.FileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}" 
+                                        data-column="activeAccounts" 
+                                        data-lawfirm="{!item.firmId}" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!item.ActiveFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}" 
+                                            data-column="closedAccounts" 
+                                            data-lawfirm="{!item.firmId}" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!item.ClosedFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}" 
+                                            data-column="baddebtAccounts" 
+                                            data-lawfirm="{!item.firmId}" onclick="{!c.openTotalFileReport}">
+                                                <lightning:formattedNumber value="{!item.BadDebtFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}" 
+                                            data-column="shortfallAccounts" 
+                                            data-lawfirm="{!item.firmId}" onclick="{!c.openTotalFileReport}">
+                                                <lightning:formattedNumber value="{!item.ShortfallFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer="{!item.lawyerId}" 
+                                            data-column="surplusAccounts"
+                                            data-lawfirm="{!item.firmId}" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!item.OverageFileCount}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
-                                        <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
+                                            <lightning:formattedNumber value="{!item.OpptyCount}" style="decimal" maximumFractionDigits="0" />
                                     </td>
                                     <td class="slds-cell-wrap slds-text-align_right">
                                         <lightning:formattedNumber value="{!item.PrincipalAdvancedOpen}" style="currency" maximumFractionDigits="2" />
@@ -362,32 +387,56 @@
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm="" 
+                                                data-column="totalAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.fileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm=""
+                                            data-column="activeAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.ActiveFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>                                
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.ClosedFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm=""
+                                                data-column="closedAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.ClosedFileTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm=""
+                                                data-column="baddebtAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.BadDebtTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.ShortfallTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm="" 
+                                                data-column="shortfallAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.ShortfallTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
                                     <span class="makeBoldBlue" title="File Grand Total">
-                                        <lightning:formattedNumber value="{!v.OverageTotal}" style="decimal" maximumFractionDigits="0" />
+                                        <div style="color: #0000EE; cursor: pointer;" data-lawyer=""
+                                        data-lawfirm=""
+                                                data-column="surplusAccountsTotal" onclick="{!c.openTotalFileReport}">
+                                            <lightning:formattedNumber value="{!v.OverageTotal}" style="decimal" maximumFractionDigits="0" />
+                                        </div>
                                     </span>
                                 </td>
                                 <td class="slds-cell-wrap slds-text-align_right">
